@@ -4,30 +4,49 @@ the odds that genes in an orthogroup are missing, in single copy,
 or in multiple copies differs significantly between orb-weavers
 and non-orb-weavers"""
 
+import copy
 import random
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm, skew, skewnorm
+from scipy.stats import norm, skew  # , skewnorm
 from tqdm.auto import tqdm
 import seaborn as sns
 import src.id_converter as id_converter
 from src.orthogroup_filter import drop_empty_cols
 
 
+def occupancy_filter(arr, minimum, maximum, total_occ_arr):
+    """Function to filter an array of values according to whether the
+    orthogroup meets a certain occupancy threshold."""
+
+    idx = np.asarray((total_occ_arr >= minimum) & (total_occ_arr <= maximum)).nonzero()[
+        0
+    ]
+    fltrd_arr = arr[idx]
+
+    return fltrd_arr
+
+
 class OddsRatioResults:
     """Class to hold the results of the odds ratio calculations"""
 
     def __init__(
-        self, genecount_csv, test, orb_list_filename, nonorb_list_filename=None
+        self,
+        genecount_csv,
+        hog_node_genes_tsv,
+        test,
+        orb_list_filename,
+        nonorb_list_filename=None,
     ):
         """Initialize the inputs for the odds ratio calculations"""
         self.genecount_csv = genecount_csv
+        self.hog_node_genes_tsv = hog_node_genes_tsv
         self.test = test
         self.orb_list_filename = orb_list_filename
         self.nonorb_list_filename = nonorb_list_filename
 
-        tests = ["dup", "loss"]
+        tests = ["duplication", "loss"]
         if test not in tests:
             raise ValueError("Invalid test. Expected one of: %s" % tests)
 
@@ -126,13 +145,6 @@ class OddsRatioResults:
         self.orb_bool_arr = orb_bool_arr
         self.nonorb_bool_arr = nonorb_bool_arr
 
-    # def get_args(genecount_csv, test, orb_list_arr, nonorb_list_arr=None):
-    #     """Function to generate all arguments and arrays needed for LOR test"""
-
-    #     genecount_args = get_genecount_arrays(genecount_csv, test)
-    #     all_args = define_orb(genecount_args, orb_list_arr, nonorb_list_arr)
-    #     return all_args
-
     def calculate_odds(self):
         """Function to calculate the odds ratio and log odds ratio"""
 
@@ -167,30 +179,101 @@ class OddsRatioResults:
         # Calculate odds missing for orb & non-orb, odds ratio, and log odds ratio
 
         ## odds
-        odds_orb_list_arr = orb_yes_arr / orb_no_arr
-        odds_nonorb_list_arr = nonorb_yes_arr / nonorb_no_arr
+        odds_orb_arr = orb_yes_arr / orb_no_arr
+        odds_nonorb_arr = nonorb_yes_arr / nonorb_no_arr
 
         ## odds ratio
-        odds_ratio_arr = odds_orb_list_arr / odds_nonorb_list_arr
+        odds_ratio_arr = odds_orb_arr / odds_nonorb_arr
 
         ## log odds ratio
         log_odds_ratio_arr = np.log(odds_ratio_arr)
 
-        self.odds_orb_list_arr = odds_orb_list_arr
-        self.odds_nonorb_list_arr = odds_nonorb_list_arr
+        self.odds_orb_arr = odds_orb_arr
+        self.odds_nonorb_arr = odds_nonorb_arr
         self.log_odds_ratio_arr = log_odds_ratio_arr
 
+    def results_to_df(
+        self, occupancy_threshold=0, maximum=None, save_csv=False, results_dir=None
+    ):
+        """Function to convert the results of the odds ratio calculations
+        into a DataFrame for easier analysis and plotting"""
 
-def occupancy_filter(arr, minimum, maximum, total_occ_arr):
-    """Function to filter an array of values according to whether the
-    orthogroup meets a certain occupancy threshold."""
+        # Create a DataFrame with the results
+        results_df = pd.DataFrame(
+            {
+                "HOG": self.hog_list,
+                "occupany": self.total_occ_arr.flatten(),
+                f"odds {self.test}, orb": self.odds_orb_arr.flatten(),
+                f"odds {self.test}, non-orb": self.odds_nonorb_arr.flatten(),
+                "log_odds_ratio": self.log_odds_ratio_arr.flatten(),
+            }
+        )
+        results_df = results_df.set_index("HOG")
 
-    idx = np.asarray((total_occ_arr >= minimum) & (total_occ_arr <= maximum)).nonzero()[
-        0
-    ]
-    fltrd_arr = arr[idx]
+        # Filter the results based on the occupancy threshold
+        if occupancy_threshold > 0:
+            results_df = results_df[
+                results_df["occupany"] >= occupancy_threshold
+            ].copy()
 
-    return fltrd_arr
+        # If a maximum occupancy is specified, filter the results further
+        if maximum is not None:
+            results_df = results_df[
+                (results_df["occupany"] >= occupancy_threshold)
+                & (results_df["occupany"] <= maximum)
+            ].copy()
+        else:
+            maximum = "none"
+
+        # Save the results to a CSV file if specified
+        if save_csv:
+            results_df.to_csv(
+                f"{results_dir}/{self.test}_odds_results_occ_min_{occupancy_threshold}_max_{maximum}.csv",
+                index=True,
+            )
+
+        return results_df
+
+    def plot_log_odds_ratios(
+        self,
+        results_dir,
+        occupancy_threshold=0,
+        maximum=None,
+        save_fig=False,
+    ):
+        """Function to plot the log odds ratio results for a certain test,
+        given occupancy thresholds (no bootstrapping)"""
+
+        fig, ax = plt.subplots()
+        fig.suptitle(f"Log odds ratio of {self.test}, orb:non-orb")
+
+        fltrd_log_odds_ratios = occupancy_filter(
+            self.log_odds_ratio_arr, occupancy_threshold, maximum, self.total_occ_arr
+        )
+
+        # Plotting the LORs
+        sns.histplot(
+            data=fltrd_log_odds_ratios,
+            kde=False,
+            bins=100,
+            stat="density",
+            ax=ax,
+            legend=False,
+        )
+
+        ax.set_title(f"Occupancy >= {occupancy_threshold}, max occupancy {maximum}")
+        ax.set(xlabel="Log odds ratio", ylabel="Density")
+
+        plt.tight_layout()
+        if save_fig:
+            plt.savefig(
+                f"{results_dir}/LOR_dists_{self.test}_occ_min_{occupancy_threshold}_max_{maximum}.png",
+                dpi=300,
+            )
+
+        plt.show()
+
+        return fig, ax
 
 
 class BootstrapTest:
@@ -215,6 +298,8 @@ class BootstrapTest:
         self.bootstrap_reps = bootstrap_reps
 
         # Unpack the odds ratio results
+        self.hog_node_genes_tsv = odds_ratio_results.hog_node_genes_tsv
+        self.genecount_csv = odds_ratio_results.genecount_csv
         self.true_orb_bool_arr = odds_ratio_results.orb_bool_arr
         self.true_nonorb_bool_arr = odds_ratio_results.nonorb_bool_arr
         self.test_bool_mat = odds_ratio_results.test_bool_mat
@@ -280,13 +365,15 @@ class BootstrapTest:
         # Create a new set of orb and non-orb arrays for bootstrapping
         new_orbs, new_nonorbs = self.define_orb_random()
 
+        dummy_odds_ratio_results = copy.deepcopy(self.odds_ratio_results)
+
         # Create a new OddsRatioResults object with the new orb and non-orb arrays
-        self.odds_ratio_results.orb_bool_arr = new_orbs
-        self.odds_ratio_results.nonorb_bool_arr = new_nonorbs
+        dummy_odds_ratio_results.orb_bool_arr = new_orbs
+        dummy_odds_ratio_results.nonorb_bool_arr = new_nonorbs
 
-        self.odds_ratio_results.calculate_odds()
+        dummy_odds_ratio_results.calculate_odds()
 
-        new_log_odds_ratio = self.odds_ratio_results.log_odds_ratio_arr
+        new_log_odds_ratio = dummy_odds_ratio_results.log_odds_ratio_arr
         new_log_odds_ratio_fltrd = occupancy_filter(
             new_log_odds_ratio,
             self.occupancy_threshold,
@@ -522,306 +609,201 @@ class BootstrapTest:
         plt.savefig(f"{results_dir}/{plot_name}_bootstrap_results.png", dpi=300)
         plt.show()
 
-## THIS IS HOW FAR I GOT
-def results_to_df(
-    args,
-    test,
-    results_dir,
-    save_csv=False,
-    threshold=None,
-):
-    """Function to convert the results of the odds ratio test into a pandas DataFrame
-    and save it to a CSV file if specified."""
-
-    results_df = pd.DataFrame(
-        {
-            "HOG": args["hog_list"],
-            "Occupancy": args["total_occ_arr"].flatten(),
-            f"Odds {test}, orb": args["odds_orb_list_arr"].flatten(),
-            f"Odds {test}, non-orb": args["odds_nonorb_list_arr"].flatten(),
-            "Log odds ratio": args["log_odds_ratio_arr"].flatten(),
-        }
-    )
-    results_df = results_df.set_index("HOG")
-
-    if threshold:
-        results_df = results_df[
-            (results_df["Occupancy"] >= threshold[0])
-            & (results_df["Occupancy"] <= threshold[1])
-        ]
-
-        if save_csv:
-            results_df.to_csv(
-                f"{results_dir}/odds_ratio_results_{test}_{threshold[0]}-{threshold[1]}.csv",
-                index=True,
-            )
-        else:
-            pass
-
-    else:
-        if save_csv:
-            results_df.to_csv(
-                f"{results_dir}/odds_ratio_results_{test}_all.csv", index=True
-            )
-        else:
-            pass
-
-    return results_df
-
-
-def get_hits_annots(
-    args,
-    results,
-    test,
-    hog_node_genes_tsv,
-    results_dir,
-    udiv=False,
-    merge_and_save=False,
-):
-    """Export significant results with annotations"""
-
-    df = results_to_df(
-        args,
-        test,
-        results_dir,
-        save_csv=merge_and_save,
-    )
-
-    dfs = []
-    total_hits_list = []
-    udiv_hits_list = []
-
-    for i, minimum in enumerate(tqdm(results["thresholds"], leave=False)):
-
-        alpha = results["bootstrap_alphas"][i]
-
-        filename = f"{results_dir}/{test}_sig_hog_list_{minimum}-{results["max"]}_udiv_annots.csv"
-
-        print(
-            f"************** Exporting significant hits and annotations for {test}, \
-                occ {minimum} to {results["max"]} **************\n"
-        )
-
-        if test == "sc":
+    def filter_for_hits(self, df, minimum, maximum, alpha):
+        """Filter the DataFrame based on the occupancy and log odds ratio"""
+        if self.alternative == "greater":
             df_fltrd = df[
                 (df["Occupancy"] >= minimum)
-                & (df["Occupancy"] <= results["max"])
+                & (df["Occupancy"] <= maximum)
                 & (df["Log odds ratio"] > alpha)
             ]
         else:
             df_fltrd = df[
                 (df["Occupancy"] >= minimum)
-                & (df["Occupancy"] <= results["max"])
+                & (df["Occupancy"] <= maximum)
                 & (df["Log odds ratio"] < alpha)
             ]
 
-        total_hits = len(df_fltrd)
-        print("Total no. hits: " + str(total_hits) + "\n")
-        total_hits_list.append(total_hits)
+        self.total_hits = len(df_fltrd)
+        print("Total no. hits: " + str(self.total_hits) + "\n")
 
-        # Filter out the hits that include u.diversus
-        if udiv:
-            # the udiv present function needs unfiltered LOR df
-            udiv_present = args["genecount_df"].index[
-                args["genecount_df"]["Uloborus_diversus"] != 0
-            ]
-            df_ud = df.loc[udiv_present]
+        return df_fltrd, self.total_hits
 
-            if test == "sc":
-                df_ud_fltrd = df_ud[
-                    (df_ud["Occupancy"] >= minimum)
-                    & (df_ud["Occupancy"] <= results["max"])
-                    & (df_ud["Log odds ratio"] > alpha)
-                ]
-            else:
-                df_ud_fltrd = df_ud[
-                    (df_ud["Occupancy"] >= minimum)
-                    & (df_ud["Occupancy"] <= results["max"])
-                    & (df_ud["Log odds ratio"] < alpha)
-                ]
+    def filter_for_udiv(self, df_fltrd):
+        """Filter the DataFrame for hits that include U. diversus"""
 
-            udiv_hits = len(df_ud_fltrd)
-            print("No. hits after filtering for U. div: " + str(udiv_hits) + "\n")
-            udiv_hits_list.append(udiv_hits)
+        genecount_df = self.odds_ratio_results.genecount_df
+        udiv_present = genecount_df[genecount_df["Uloborus_diversus"] != 0]
 
-            # Get annotations and save, or just return filtered dataframe and counts of hits
-            if merge_and_save:
-                df_ud_fltrd.to_csv(filename)
-                merged_df = id_converter.main(filename, hog_node_genes_tsv)
-                merged_df.to_csv(filename, index=False)
-                print(f"Merged results file with annotations saved to {filename}.\n\n")
+        udiv_present_hogs = udiv_present.index.values
+        udiv_present_hogs = set(udiv_present_hogs)
+        df_ud_fltrd = df_fltrd[df_fltrd.index.isin(udiv_present_hogs)]
 
-                dfs.append(merged_df)
-            else:
-                dfs.append(df_ud_fltrd)
+        self.udiv_hits = len(df_ud_fltrd)
+        print("No. hits after filtering for U. div: " + str(self.udiv_hits) + "\n")
 
-        # or don't
-        else:
-            if merge_and_save:
-                df_fltrd.to_csv(filename)
-                merged_df = id_converter.main(filename, hog_node_genes_tsv)
-                merged_df.to_csv(filename, index=False)
-                print(f"Merged results file with annotations saved to {filename}.\n\n")
+        return df_ud_fltrd, self.udiv_hits
 
-                dfs.append(merged_df)
-
-            else:
-                dfs.append(df_fltrd)
-
-    if udiv:
-        return dfs, total_hits_list, udiv_hits_list
-    else:
-        return dfs, total_hits_list
-
-
-def save_test_stats(
-    args,
-    results,
-    test,
-    orb_list_filename,
-    genecount_csv,
-    hog_node_genes_tsv,
-    results_dir,
-    alternative,
-):
-    """Save the test stats to a tsv file"""
-
-    num_thr = len(results["thresholds"])
-    means = [np.mean(results["fltrd_log_odds_ratioss"][i]) for i in range(num_thr)]
-    skews = [skew(results["fltrd_log_odds_ratioss"][i])[0] for i in range(num_thr)]
-    stddevs = [np.std(results["fltrd_log_odds_ratioss"][i]) for i in range(num_thr)]
-
-    hits = get_hits_annots(
-        args,
-        results,
-        test,
-        hog_node_genes_tsv,
+    def get_hits_annots(
+        self,
         results_dir,
         udiv=True,
         merge_and_save=False,
-    )
+    ):
+        """Export significant results with annotations"""
 
-    d = {
-        "thresholds": results["thresholds"],
-        "mean of true LOR dist": means,
-        "std dev of true LOR dist": stddevs,
-        "skew of true LOR dist": skews,
-        "avg mean of BSd LOR dists": results["bootstrap_means"],
-        "avg std dev of BSd LOR dists": results["bootstrap_stddevs"],
-        "BSd alpha threshold": results["bootstrap_alphas"],
-        "p-value for mean": results["pvals_mean"],
-        "p-value for std dev": results["pvals_stddev"],
-        "p-value for skew": results["pvals_skew"],
-        "total no. significant hog_list": hits[1],
-        "No. significant hog_list inc. U. div": hits[2],
-    }
-
-    stats_df = pd.DataFrame(data=d)
-
-    filename = f"{results_dir}/{test}_bs_results_stats.tsv"
-
-    stats_df.to_csv(filename, sep="\t", index=False)
-
-    if alternative:
-        tail = "right-tailed"
-    else:
-        tail = "left-tailed"
-
-    comments = (
-        f"# Orbweaver list used: {orb_list_filename}\n"
-        + f"# Genecount file used: {genecount_csv}\n"
-        + f"# This analysis includes {str(args['total_spider_count'])} total spiders, \
-        with {str(args['orb_count'])} designated as orbweavers, and \
-        {str(args['nonorb_count'])} designated as non-orbweavers.\n"
-        + f"# Maximum occupancy set to {str(results['max'])}\n"
-        + f"# Bootsrapping of log odds ratio distribution of {test}, \
-        orbweavers to non-orbweavers, {tail}"
-    )
-
-    with open(filename, "r+", encoding="utf-8") as f:
-        content = f.read()
-        f.seek(0, 0)
-        f.write(comments.rstrip("\r\n") + "\n" + content)
-        f.close()
-
-
-def plot_log_odds_ratios(
-    thresholds, log_odds_ratio_arr, test, maximum, total_occ_arr, results_dir
-):
-    """Function to plot the log odds ratio results for a certain test,
-    given occupancy thresholds (no bootstrapping)"""
-
-    a = len(thresholds)
-    fig, axs = plt.subplots(1, len(thresholds))
-    fig.set_figwidth(3.5 * a)
-    fig.set_figheight(4)
-    fig.suptitle(f"Log odds ratio of {test}, orb:non-orb")
-
-    for i, threshold in enumerate(thresholds):
-        fltrd_log_odds_ratios = occupancy_filter(
-            log_odds_ratio_arr, threshold, maximum, total_occ_arr
+        df = self.odds_ratio_results.results_to_df(
+            occupancy_threshold=self.occupancy_threshold,
+            save_csv=merge_and_save,
+            results_dir=results_dir,
         )
 
-        # Plotting the LORs
-        sns.histplot(
-            data=fltrd_log_odds_ratios,
-            kde=False,
-            bins=100,
-            stat="density",
-            ax=axs[i],
-            legend=False,
+        alpha = self.alpha_av
+        minimum = self.occupancy_threshold
+        maximum = self.maximum
+        test = self.odds_ratio_results.test
+
+        filename = f"{results_dir}/{test}_sig_hog_list_\
+            {minimum}-{maximum}_occ_udiv_annots.csv"
+
+        print(
+            f"************** Exporting significant hits and annotations for {test}, \
+                occ {minimum} to {maximum} **************\n"
         )
 
-        axs[i].set_title(f"Occupancy >= {threshold}")
-        axs[i].set(xlabel="Log odds ratio", ylabel="Density")
+        # Filter the DataFrame for significant hits
+        df_fltrd, self.total_hits = self.filter_for_hits(df, minimum, maximum, alpha)
 
-    plt.tight_layout()
-    plt.savefig(f"{results_dir}/LOR_dists_{test}.png", dpi=300)
-    plt.show()
+        if udiv:
+            # Filter out the hits that include u.diversus
+            df_fltrd, self.udiv_hits = self.filter_for_udiv(df_fltrd)
+
+        # Get annotations and save, or just return filtered dataframe and counts of hits
+        if merge_and_save:
+            merged_df = id_converter.main(df_fltrd, self.hog_node_genes_tsv)
+            merged_df.to_csv(filename, index=False)
+            print(f"Merged results file with annotations saved to {filename}.\n\n")
+
+            return merged_df, self.total_hits, self.udiv_hits
+
+        else:
+            print(
+                "No annotations saved, just returning filtered DataFrame and counts of hits.\n\n"
+            )
+            return df_fltrd, self.total_hits, self.udiv_hits
+
+    #### FIX
+    # def save_bootstrap_stats(
+    #     self,
+    #     results_dir,
+    #     udiv=True,
+    #     merge_and_save=False
+    # ):
+    #     """Save the bootstrap stats to a text file"""
+
+    #     df, self.total_hits, ud_hits = self.get_hits_annots(
+    #         results_dir,
+    #         udiv,
+    #         merge_and_save
+    #     )
+
+    #     stats_df = pd.DataFrame(
+    #         {
+    #             "thresholds": self.occupancy_threshold,
+    #             "mean of true LOR dist": self.true_mean,
+    #             "std dev of true LOR dist": self.true_stddev,
+    #             "skew of true LOR dist": self.true_skewness,
+    #             "avg mean of BSd LOR dists": self.mean_av,
+    #             "avg std dev of BSd LOR dists": self.stddev_av,
+    #             "BSd alpha threshold": self.alpha_av,
+    #             "p-value for mean": self.p_value,
+    #             "p-value for std dev": self.p_value,
+    #             "p-value for skew": self.p_value,
+    #             "total no. significant hog_list": self.total_hits,
+    #             "No. significant hog_list inc. U. div": ud_hits,
+    #         }
+
+    #     )
+
+    #     filename = f"{results_dir}/{test}_bs_results_stats.tsv"
+
+    #     stats_df.to_csv(filename, sep="\t", index=False)
+
+    #     if alternative:
+    #         tail = "right-tailed"
+    #     else:
+    #         tail = "left-tailed"
+
+    #     comments = (
+    #         f"# Orbweaver list used: {orb_list_filename}\n"
+    #         + f"# Genecount file used: {genecount_csv}\n"
+    #         + f"# This analysis includes {str(args['total_spider_count'])} total spiders, \
+    #         with {str(args['orb_count'])} designated as orbweavers, and \
+    #         {str(args['nonorb_count'])} designated as non-orbweavers.\n"
+    #         + f"# Maximum occupancy set to {str(results['max'])}\n"
+    #         + f"# Bootsrapping of log odds ratio distribution of {test}, \
+    #         orbweavers to non-orbweavers, {tail}"
+    #     )
+
+    #     with open(filename, "r+", encoding="utf-8") as f:
+    #         content = f.read()
+    #         f.seek(0, 0)
+    #         f.write(comments.rstrip("\r\n") + "\n" + content)
+    #         f.close()
+
+    def print_bootstrap_results(self):
+        """Function to print the results of the bootstrapping test"""
+
+        if self.alternative == "greater":
+            self.alternative = "right-tailed"
+        else:
+            self.alternative = "left-tailed"
+
+        if self.maximum is None:
+            self.maximum = "no"
+
+        print(
+            f"Bootstrapping test with {self.bootstrap_reps} repetitions for \
+              {self.odds_ratio_results.test} ({self.alternative})\n \
+              with {self.occupancy_threshold} minimum occupancy and \
+              {self.maximum} maximum occupancy \n\n"
+        )
+
+        print(f"Orb-weaver list: {self.odds_ratio_results.orb_list_filename}\n")
+        if self.odds_ratio_results.nonorb_list_filename is not None:
+            print(
+                f"Non-orb-weaver list: {self.odds_ratio_results.nonorb_list_filename}\n"
+            )
+        print(f"Hierarchical orthogroup file: {self.hog_node_genes_tsv}\n\n")
+
+        print(
+            f"Total spiders: {self.total_spider_count}\n"
+            f"Orb-weavers: {self.orb_count}, Non-orb-weavers: {self.nonorb_count}\n"
+            f"True skewness: {self.true_skewness}\n"
+            f"True mean: {self.true_mean}\n"
+            f"True standard deviation: {self.true_stddev}\n\n"
+        )
+
+        print(
+            f"Bootstrapped average skewness: {self.skew_av}\n"
+            f"Bootstrapped average mean: {self.mean_av}\n"
+            f"Bootstrapped average standard deviation: {self.stddev_av}\n"
+            f"Bootstrapped average alpha threshold: {self.alpha_av}\n"
+            f"Bootstrapping p-value: {self.p_value}\n"
+            f"Total significant hits: {self.total_hits}\n"
+            f"Total significant hits including U. diversus: \
+                {self.udiv_hits}\n"
+        )
 
 
-def display_and_save(
-    results,
-    args,
-    test,
-    results_dir,
-    orb_list_filename,
-    genecount_csv,
-    hog_node_genes_tsv,
-    alternative="less",
-):
-    """Display results and save test stats"""
-
-    hits = get_hits_annots(
-        args,
-        results,
-        test,
-        hog_node_genes_tsv,
-        results_dir,
-        udiv=True,
-        merge_and_save=True,
-    )
-
-    display_bootstrap_res(results, test, results_dir)
-
-    save_test_stats(
-        hits,
-        args,
-        results,
-        test,
-        orb_list_filename,
-        genecount_csv,
-        results_dir,
-        alternative,
-    )
-
-
+### NEED TO GO THROUGH THIS
 def odds_ratio_test(
     genecount_csv,
     orb_list_filename,
+    hog_node_genes_tsv,
     results_dir,
     test,
-    thresholds,
+    occupancy_threshold=0,
     max_occ=None,
     alternative="less",
     bootstrap_reps=10000,
@@ -829,30 +811,48 @@ def odds_ratio_test(
 ):
     """Run the full odds ratio test"""
 
-    tests = ["sc", "dup", "loss"]
-    if test not in tests:
-        raise ValueError("Invalid test. Expected one of: %s" % tests)
+    # Initialize the OddsRatioResults object
+    odds_ratio_results = OddsRatioResults(
+        genecount_csv=genecount_csv,
+        hog_node_genes_tsv=hog_node_genes_tsv,
+        test=test,
+        orb_list_filename=orb_list_filename,
+        nonorb_list_filename=nonorb_list_filename,
+    )
 
-    orb_list_arr = np.loadtxt(orb_list_filename, dtype=str)
+    # Get the gene count arrays and define orb-weavers
+    odds_ratio_results.get_genecount_arrays()
+    odds_ratio_results.define_orb()
+    odds_ratio_results.calculate_odds()
 
-    if nonorb_list_filename is not None:
-        nonorb_list_arr = np.loadtxt(nonorb_list_filename, dtype=str)
-    else:
-        nonorb_list_arr = None
-
-    args = get_args(genecount_csv, test, orb_list_arr, nonorb_list_arr)
-
-    odds = calculate_odds(args)
-
-    res = bootstrap(
-        thresholds,
-        results_dir,
-        args,
-        odds,
-        hist_txt=test,
+    # Run bootstrapping test
+    bootstrap_test = BootstrapTest(
+        odds_ratio_results=odds_ratio_results,
+        stat="mean",  # or "stddev" or "skew"
+        occupancy_threshold=occupancy_threshold,
         maximum=max_occ,
         alternative=alternative,
         bootstrap_reps=bootstrap_reps,
     )
+    bootstrap_test.run_bootstrap()
+    bootstrap_test.print_bootstrap_results()
+    bootstrap_test.plot_bootstrap_stats(
+        hist_txt=f"{odds_ratio_results.test}_odds_ratio",
+        results_dir=results_dir,
+    )
+    bootstrap_test.display_bootstrap_res(
+        plot_name=f"{odds_ratio_results.test}_odds_ratio",
+        results_dir=results_dir,
+    )
+    bootstrap_test.get_hits_annots(
+        results_dir=results_dir,
+        udiv=True,
+        merge_and_save=True,
+    )
+    # bootstrap_test.save_bootstrap_stats(
+    #     results_dir=results_dir,
+    #     udiv=True,
+    #     merge_and_save=True,
+    # )
 
-    return args, odds, res
+    return bootstrap_test

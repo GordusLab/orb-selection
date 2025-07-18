@@ -15,7 +15,7 @@ def main(loc_list, top10=False):
     data = os.path.join(scripts, "..", "data")
 
     with open(loc_list, encoding="utf-8") as f:
-        LOCs = f.read().splitlines()
+        locs = f.read().splitlines()
 
     silk_genes_udiv_blast_df = pd.read_csv(
         f"{data}/silk_gland_genes_udiv_tblastn.csv",
@@ -39,7 +39,7 @@ def main(loc_list, top10=False):
     silk_genes_udiv = id_converter["txpt"].isin(silk_genes_udiv_blast_df["txpt"])
     silk_locs = id_converter[silk_genes_udiv]["LOC"].dropna().unique()
 
-    intersect_list = list(set(silk_locs) & set(LOCs))
+    intersect_list = list(set(silk_locs) & set(locs))
 
     print(f"{len(intersect_list)} overlapping LOCs")
 

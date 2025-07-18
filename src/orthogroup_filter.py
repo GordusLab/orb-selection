@@ -6,7 +6,7 @@ import argparse
 import pandas as pd
 
 
-def drop_empty_cols(df):
+def drop_empty_cols(df, print_txt=False):
     """Drops columns where all entries (ignoring headers) are 0,
     to get rid of species not included in the current node/hierarchy"""
 
@@ -19,8 +19,10 @@ def drop_empty_cols(df):
 
     # Print the number of columns after cleaning
     num_columns_after = df_cleaned.shape[1]
-    print(f"Number of columns after dropping empty columns: {num_columns_after}")
-    print("Species with no sequences in any orthogroup have been dropped.")
+
+    if print_txt:
+        print(f"Number of columns after dropping empty columns: {num_columns_after}")
+        print("Species with no sequences in any orthogroup have been dropped.")
 
     return df_cleaned
 

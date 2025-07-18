@@ -47,7 +47,7 @@ def get_udiv_dmel_genes(hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_
     for a given list (csv or df) of hogs. The orthogroup file for the hierarchical orthogroup node
     of interest must be provided."""
 
-    hog_node_df = pd.read_csv(hog_node_genes_tsv, sep="\t", index_col="hog", dtype=str)
+    hog_node_df = pd.read_csv(hog_node_genes_tsv, sep="\t", index_col="HOG", dtype=str)
 
     ortholog_df = pd.read_csv(ortholog_tsv, sep="\t", dtype=str)
     ortholog_df["Uloborus_diversus"] = ortholog_df["Uloborus_diversus"].str.split(", ")
@@ -56,7 +56,7 @@ def get_udiv_dmel_genes(hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_
     # Attempt to read the hog DataFrame, if it fails, assume it's already a DataFrame
     # and assign empty columns for udiv_genes and dmel_orthologs
     try:
-        df = pd.read_csv(hogs_of_interest, index_col="hog", dtype=str)
+        df = pd.read_csv(hogs_of_interest, index_col="HOG", dtype=str)
         df = df.assign(udiv_genes="", dmel_orthologs="")
     except pd.errors.EmptyDataError:
         df = hogs_of_interest
@@ -121,9 +121,13 @@ def main(res_df, hog_node_genes_tsv):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "results_csv", help="Path to the results CSV file containing hogs of interest"
+        "results", 
+        help="Path to the results CSV file containing hogs of interest, \
+            OR a DataFrame with HOGs as index"
     )
-    parser.add_argument("hog_node_genes_tsv", help="Path to the hierarchical orthogroup file")
+    parser.add_argument(
+        "hog_node_genes_tsv", 
+        help="Path to the hierarchical orthogroup file")
     args = parser.parse_args()
 
     main(args.results_csv, args.hog_node_genes_tsv)

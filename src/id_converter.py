@@ -8,8 +8,8 @@ import random
 import os
 import pandas as pd
 
-scripts = os.path.dirname(__file__)
-data = os.path.join(scripts, "..", "data")
+src_path = os.path.dirname(__file__)
+data = os.path.join(src_path, "..", "data")
 
 
 def make_id_converter():

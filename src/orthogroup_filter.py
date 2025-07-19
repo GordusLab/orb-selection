@@ -6,13 +6,14 @@ import argparse
 import pandas as pd
 
 
-def drop_empty_cols(df, print_txt=False):
+def drop_empty_cols(df, print_txt=True):
     """Drops columns where all entries (ignoring headers) are 0,
     to get rid of species not included in the current node/hierarchy"""
 
     # Print the number of columns before cleaning
     num_columns_before = df.shape[1]
-    print(f"Number of columns before dropping empty columns: {num_columns_before}")
+    if print_txt:
+        print(f"Number of columns before dropping empty columns: {num_columns_before}")
 
     # Drop columns where all entries (ignoring headers) are 0
     df_cleaned = df.loc[:, (df.ne(0)).any(axis=0)]

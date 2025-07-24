@@ -7,6 +7,8 @@ group in a phylogeny
 
 import sys
 import random
+import pickle
+from datetime import datetime
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,8 +21,10 @@ import orthogroup_gene_count
 random.seed(42)
 
 def drop_empty_cols(df, print_txt=True):
-    """Drops columns where all entries (ignoring headers) are 0,
-    to get rid of species not included in the current node/hierarchy"""
+    """
+    Drops columns where all entries (ignoring headers) are 0,
+    to get rid of species not included in the current node/hierarchy.
+    """    
 
     # Print the number of columns before cleaning
     num_columns_before = df.shape[1]
@@ -41,8 +45,17 @@ def drop_empty_cols(df, print_txt=True):
 
 
 def occupancy_filter(arr, minimum, maximum, total_occ_arr):
-    """Function to filter an array of values according to whether the
-    orthogroup meets a certain occupancy threshold."""
+    """
+    Function to filter an array of values according to whether the
+    orthogroup meets a certain occupancy threshold.
+
+    Args:
+        arr, minimum, maximum, total_occ_arr
+
+    Returns:
+        fltrd_arr (numpy array): occupancy array filtered according 
+        to thresholds provided
+    """    
 
     if maximum is None:
         maximum = total_occ_arr.max()
@@ -129,6 +142,7 @@ class OddsRatioResults:
         genecount_csv,
         hog_node_genes_tsv,
         test,
+        time,
         foreground_list_filename,
         background_list_filename=None,
     ):
@@ -136,6 +150,7 @@ class OddsRatioResults:
         self.genecount_csv = genecount_csv
         self.hog_node_genes_tsv = hog_node_genes_tsv
         self.test = test
+        self.time = time
         self.foreground_list_filename = foreground_list_filename
         self.background_list_filename = background_list_filename
 
@@ -316,6 +331,10 @@ class OddsRatioResults:
         """Function to plot the log odds ratio results for a certain test,
         given occupancy thresholds (no bootstrapping)"""
           
+        # Making the text bold deletes spaces
+        fg_name = fg_name.replace(" ", "\ ")
+        bg_name = bg_name.replace(" ", "\ ")
+        
         fig, ax = plt.subplots(figsize=(8, 6))
 
         fig.suptitle(
@@ -342,8 +361,6 @@ class OddsRatioResults:
         ax.set(xlabel="Log odds ratio", ylabel="Density")
 
         plt.tight_layout()
-
-        plt.show()
 
         return fig, ax
 
@@ -410,7 +427,6 @@ class BootstrapTestResults:
     def __init__(
         self,
         true_odds,
-        #        stat,
         occupancy_threshold=0,
         maximum=None,
         alternative="less",
@@ -421,12 +437,6 @@ class BootstrapTestResults:
         """Initialize the bootstrapping test for a given odds ratio results object"""
 
         self.true_odds = true_odds
-
-        # stats = ["mean", "stddev", "skew"]
-        # if stat not in stats:
-        #     raise ValueError("Invalid bootstrapping statistic. Expected one of: %s" % stats)
-
-        # self.stat = stat
 
         self.occupancy_threshold = occupancy_threshold
 
@@ -622,6 +632,10 @@ class BootstrapTestResults:
         else:
             alt = "left-tailed"
 
+        # Making the text bold deletes spaces
+        fg_name = fg_name.replace(" ", "\ ")
+        bg_name = bg_name.replace(" ", "\ ")
+
         fig.suptitle(
             rf"$\bf{{Bootstrapped\ distribution\ stats\ for\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
             f"Maximum occupancy = {self.maximum}, "
@@ -669,7 +683,6 @@ class BootstrapTestResults:
         axs[2].axvline(x=self.stddev_av, linestyle="dotted")
 
         plt.tight_layout()
-        plt.show()
 
         return fig, axs
 
@@ -682,6 +695,10 @@ class BootstrapTestResults:
         histcolor="lightblue",
     ):
         """Function to plot the results of the bootstrapping test"""
+        
+        # Making the text bold deletes spaces
+        fg_name = fg_name.replace(" ", "\ ")
+        bg_name = bg_name.replace(" ", "\ ")
 
         fig, ax = plt.subplots(figsize=(10, 8))
 
@@ -758,7 +775,6 @@ class BootstrapTestResults:
 
         plt.legend(fontsize=10)
         plt.tight_layout()
-        plt.show()
 
         return fig, ax
 
@@ -794,8 +810,11 @@ class BootstrapTestResults:
 
         self.hits_hogs_list = self.results_fltrd_df.index.tolist()
 
-    def print_bootstrap_results(self, f=sys.stdout):
+    def print_bootstrap_results(self, fname=sys.stdout):
         """Function to print the results of the bootstrapping test"""
+
+        if fname is not sys.stdout:
+            fname = open(fname, 'w')
 
         if self.alternative == "greater":
             alt = "right-tailed"
@@ -807,19 +826,21 @@ class BootstrapTestResults:
         else:
             maximum = self.maximum
 
+
         print(
             "*********************** RESULTS ***********************\n\n"
             f"Bootstrapping test with {self.bootstrap_reps} repetitions "
             f"for {self.true_odds.test} ({alt})\n"
             f"with minimum occupancy *{self.occupancy_threshold}* and "
             f"maximum occupancy *{maximum}* \n"
-        , file=f)
+            f"Analysis run on {self.true_odds.time}"
+        , file=fname)
 
-        print(f"Foreground list: {self.true_odds.foreground_list_filename}", file=f)
+        print(f"Foreground list: {self.true_odds.foreground_list_filename}", file=fname)
         if self.true_odds.background_list_filename is not None:
-            print(f"Background list: {self.true_odds.background_list_filename}", file=f)
-        print(f"Gene count file: {self.true_odds.genecount_csv}", file=f)
-        print(f"Hierarchical orthogroup file: {self.true_odds.hog_node_genes_tsv}\n", file=f)
+            print(f"Background list: {self.true_odds.background_list_filename}", file=fname)
+        print(f"Gene count file: {self.true_odds.genecount_csv}", file=fname)
+        print(f"Hierarchical orthogroup file: {self.true_odds.hog_node_genes_tsv}\n", file=fname)
 
         print(
             f"Total number of HOGs in node: {len(self.true_odds.hog_list)}\n"
@@ -831,35 +852,45 @@ class BootstrapTestResults:
             f"True mean: {self.true_mean}\n"
             f"True standard deviation: {self.true_stddev}\n"
             f"True skew: {self.true_skew}\n"
-        , file=f)
+        , file=fname)
 
         print(
             "** BOOTSTRAPPING P-VALUES ** \n\n"
             f"Probability that the null is true for MEAN: {self.p_values['mn']}\n"
             f"Probability that the null is true for STANDARD DEVIATION: {self.p_values['sd']}\n"
             f"Probability that the null is true for SKEW: {self.p_values['sk']}\n"
-        , file=f)
+        , file=fname)
 
         print(
             f"Bootstrapped average mean: {self.mean_av}\n"
             f"Bootstrapped average standard deviation: {self.stddev_av}\n"
             f"Bootstrapped average skew: {self.skew_av}\n"
-            f"Significance threshold: {self.a}\n"
+            f"User-defined significance threshold: {self.a}\n"
             f"Bootstrap-derived alpha threshold: {self.ci_av}\n\n"
             "Total HOGs with significantly different LORs between\n"
             f"foreground and background (two-tailed): {self.all_hits_count}\n"
-        , file=f)
+        , file=fname)
 
         if self.species_of_interest is not None:
             print(
                 "Total HOGs with significantly different LORs between\n"
                 f"foreground and background (two-tailed, {self.species_of_interest} "
                 f"present): {self.sp_of_int_hits_count}\n"
-            , file=f)
+            , file=fname)
+
+    def save_pickle_file(self, fname):
+        """
+        Saves the bootstrap results object to a pickle file.
+        """
+
+        with open(fname, 'wb') as file:
+            pickle.dump(self, file)
 
     def save_results_files(self, results_dir, fg_name, bg_name="background"):
-        """Takes in bootstrap test results instance and saves all
-        relevant plots and tables"""
+        """
+        Takes in bootstrap test results instance and saves all
+        relevant plots and tables.
+        """
 
         # Save the full table of odds and odds ratios to a csv
         self.true_odds.results_df.to_csv(
@@ -869,23 +900,23 @@ class BootstrapTestResults:
 
         filename = (
             f"{results_dir}/{self.true_odds.test}"
-            f"_occ_min_{self.occupancy_threshold}"
-            f"_max_{self.maximum}"
+            f"_occ{self.occupancy_threshold}-"
+            f"{self.maximum}"
         )
 
         if self.alternative == "greater":
-            alt = "_rt_"
+            alt = "_RT"
         else:
-            alt = "_lt_"
+            alt = "_LT"
 
         # Save the table filtered to HOGs considered "hits"
         if self.species_of_interest is not None:
             self.results_fltrd_df.to_csv(
                 (
-                    filename + 
-                    f"_{self.species_of_interest}" +
+                    filename +
                     f"{alt}" +
-                    "fltrd_bootstrap_hits.csv"
+                    f"_{self.species_of_interest}" +
+                    "_fltrd_bootstrap_hits.csv"
                     ),
                 index=True
             )
@@ -894,10 +925,24 @@ class BootstrapTestResults:
                 (
                     filename + 
                     f"{alt}" +
-                    "fltrd_bootstrap_hits.csv"
+                    "_fltrd_bootstrap_hits.csv"
                     ),
                 index=True
             )
+
+        # Save a text file summarizing results from the analysis
+        self.print_bootstrap_results(
+            fname = filename +
+                f"{alt}" +
+                "_results_summary.txt"
+            )
+        
+        # Save the bootstrapping results object as a pickle file
+        self.save_pickle_file(
+            fname = filename +
+            f"{alt}" +
+            ".pkl"
+        )
 
         #### Save figures ####
 
@@ -921,7 +966,7 @@ class BootstrapTestResults:
             (
                 filename + 
                 f"{alt}" +
-                "bootstrap_stats_dists.png"
+                "_bootstrap_stats_dists.png"
                 ),
             dpi=300
         )
@@ -933,10 +978,29 @@ class BootstrapTestResults:
             (
                 filename + 
                 f"{alt}" +
-                "bootstrap_results.png"
+                "_bootstrap_results.png"
                 ),
             dpi=300
         )
+
+        print(
+            f"Results files saved to {results_dir}\n\n"
+            "Files include: \n"
+            "\t 1. [test]_LOR_hist.png: Histogram of log odds ratios\n"
+            "\t 2. [test]_bootstrap_results.png: True LORs distribution\n" 
+            "\t\tvs. average bootstrapped distribution\n"
+            "\t 3. [test]_bootstrap_stats_dists.png: Histograms of the\n"
+            "\t\tmeans, standard deviations, and skews of all 10,000\n"
+            "\t\tbootstrapped LOR distributions\n"
+            "\t 4. [test]_results_summary.txt: Text file summarizing results\n"
+            "\t 5. [test].pkl: Pickle file storing the BoostrapTestResults\n"
+            "\t\tinstance generated by this analysis\n"
+            "\t 6. [test]_[species]_fltrd_bootstrap_hits.csv: Results table \n"
+            "\t\tfiltered for occupancy, species of interest (if specified),\n"
+            "\t\tand surpassing bootstrapping-derived significance thresholds\n"
+            "\t 7. All odds and log odds ratios (not filtered for occupancy,\n"
+            "\t\tspecies, or significance)"
+            )
 
 def odds_ratio_test(
     foreground_list_filename,
@@ -950,8 +1014,22 @@ def odds_ratio_test(
     bootstrap_reps=10000,
     background_list_filename=None,
     species_of_interest=None,
+    results_dir=None,
+    fg_name=None,
+    bg_name=None,
 ):
     """Run the full odds ratio test"""
+
+    if results_dir is not None: 
+        if fg_name is None: 
+            raise ValueError(
+                "Please provide a descriptive name for your test group, \n"
+                "e.g. fg_name = 'orbweavers'. "
+                "You may also name your background, e.g.\n"
+                "bg_name = 'non-orbweavers'")
+
+    time = datetime.now()
+    time_fmtd = time.strftime("%Y-%m-%d at %H:%M:%S")
 
     # Generate the genecount file if not provided
     if genecount_csv is None:
@@ -962,8 +1040,9 @@ def odds_ratio_test(
         genecount_csv=genecount_csv,
         hog_node_genes_tsv=hog_node_genes_tsv,
         test=test,
+        time=time_fmtd,
         foreground_list_filename=foreground_list_filename,
-        background_list_filename=background_list_filename,
+        background_list_filename=background_list_filename, 
     )
 
     # Run bootstrapping test
@@ -976,5 +1055,14 @@ def odds_ratio_test(
         bootstrap_reps=bootstrap_reps,
         species_of_interest=species_of_interest,
     )
+
+    bootstrap_test_results.print_bootstrap_results()
+
+    if results_dir is not None:
+        bootstrap_test_results.save_results_files(
+            results_dir=results_dir,
+            fg_name=fg_name,
+            bg_name=bg_name
+        )
 
     return bootstrap_test_results

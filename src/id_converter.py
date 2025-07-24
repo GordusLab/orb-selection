@@ -58,7 +58,7 @@ def get_udiv_dmel_genes(hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_
     try:
         df = pd.read_csv(hogs_of_interest, index_col="HOG", dtype=str)
         df = df.assign(udiv_genes="", dmel_orthologs="")
-    except pd.errors.EmptyDataError:
+    except TypeError:
         df = hogs_of_interest
         df = df.assign(udiv_genes="", dmel_orthologs="")
 
@@ -130,4 +130,4 @@ if __name__ == "__main__":
         help="Path to the hierarchical orthogroup file")
     args = parser.parse_args()
 
-    main(args.results_csv, args.hog_node_genes_tsv)
+    main(args.results, args.hog_node_genes_tsv)

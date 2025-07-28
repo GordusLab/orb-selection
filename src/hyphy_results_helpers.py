@@ -50,7 +50,7 @@ def filter_omega_rev(df: pd.DataFrame, omega_threshold: float) -> pd.DataFrame:
     return df[(df['ω_mean_test'] >= omega_threshold) | (df['ω_mean_ref'] >= omega_threshold)]
 
 
-def get_fltrd_LOCs(LOCs_df: pd.DataFrame, omega: float, test: str) -> Union[Tuple, None]:
+def get_fltrd_LOCs(LOCs_df: pd.DataFrame, omega: float, test: str, relax_result: str|None) -> Union[Tuple, None]:
     """
     Get filtered LOC lists based on omega filtering and test type.
     
@@ -62,27 +62,31 @@ def get_fltrd_LOCs(LOCs_df: pd.DataFrame, omega: float, test: str) -> Union[Tupl
     Returns:
         Tuple of LOC arrays based on test type
     """
-    all_LOCs = LOCs_df['LOC'].dropna().unique()
     df_fltrd = filter_omega(LOCs_df, omega)
-    all_LOCs_fltrd = df_fltrd['LOC'].dropna().unique()
-    df_ns = df_fltrd[df_fltrd['result'] == 'not significant']
-    ns_LOCs = df_ns['LOC'].dropna().unique()
 
     if test == 'relax':
-        df_rel = df_fltrd[df_fltrd['result'] == 'relaxed']
-        df_int = df_fltrd[df_fltrd['result'] == 'intensified']
-        df_hits = df_fltrd[(df_fltrd['result'] == 'intensified') | (df_fltrd['result'] == 'relaxed')]
-        rel_LOCs = df_rel['LOC'].dropna().unique()
-        int_LOCs = df_int['LOC'].dropna().unique()
+
+        if relax_result is None:
+            df_hits = df_fltrd[(df_fltrd['result'] == 'intensified') | (df_fltrd['result'] == 'relaxed')]
+
+        elif relax_result == 'relaxed':
+            df_hits = df_fltrd[df_fltrd['result'] == 'relaxed']
+
+        elif relax_result == 'intensified':
+            df_hits = df_fltrd[df_fltrd['result'] == 'intensified']
+
+        else:
+            raise ValueError(f"Relax result '{relax_result}' not recognized. Use 'relaxed', 'intensified', or None.")
+
         hit_LOCs = df_hits['LOC'].dropna().unique()
 
-        return all_LOCs, all_LOCs_fltrd, hit_LOCs, ns_LOCs, rel_LOCs, int_LOCs
+        return hit_LOCs
     
     elif test == 'busted-ph':
         df_hits = df_fltrd[df_fltrd['result'] == 'hit']
         hit_LOCs = df_hits['LOC'].dropna().unique()
 
-        return all_LOCs, all_LOCs_fltrd, hit_LOCs, ns_LOCs
+        return hit_LOCs
     
     else:
         raise ValueError(f"Test type '{test}' not supported. Use 'relax' or 'busted-ph'.")
@@ -126,45 +130,6 @@ def count_rel_int(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-
-def get_universe_LOCs(NX_genecount_tsv: str, thresholds: List[int], output_path: str) -> None:
-    """
-    Generate universe LOC files for topGO analysis at different occupancy thresholds.
-    Uses the id_converter module from orb-selection.
-    
-    Args:
-        NX_genecount_tsv: Path to gene count TSV file
-        thresholds: List of occupancy thresholds
-        output_path: Output directory path
-    """
-    if convert_hogs_to_locs is None:
-        print("Error: id_converter module not available. Cannot generate universe LOCs.")
-        return
-    
-    try:
-        genecount_df = pd.read_csv(NX_genecount_tsv, sep='\t', index_col='HOG')
-        
-        # Use the id_converter to get LOCs - assumes N5.tsv is in ../data/
-        data_dir = os.path.join(src_dir, '..', 'data')
-        n5_tsv_path = os.path.join(data_dir, 'N5.tsv')
-        
-        LOCs_df = convert_hogs_to_locs(genecount_df, n5_tsv_path)
-        LOCs_df = LOCs_df.set_index('HOG')
-        LOCs_df['occupancy'] = LOCs_df.select_dtypes(include='number').astype('bool').sum(axis=1)
-
-        for threshold in thresholds:
-            LOCs_fltrd = LOCs_df[LOCs_df['occupancy'] >= threshold]
-            LOC_list = LOCs_fltrd['LOC'].dropna().unique()
-            
-            os.makedirs(output_path, exist_ok=True)
-            with open(f'{output_path}/occ_{threshold}_universe.txt', 'w+') as f:
-                for line in LOC_list:
-                    f.write(f'{line}\n')
-            
-            print(f"Generated universe LOC file for occupancy >= {threshold}: {len(LOC_list)} LOCs")
-            
-    except Exception as e:
-        print(f"Error generating universe LOCs: {e}")
 
 
 def calculate_mean_omega(df: pd.DataFrame, branch_type: str = 'both') -> pd.DataFrame:

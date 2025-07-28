@@ -7,6 +7,8 @@ import argparse
 import random
 import os
 import pandas as pd
+from tqdm.auto import tqdm
+
 
 src_path = os.path.dirname(__file__)
 data = os.path.join(src_path, "..", "data")
@@ -66,7 +68,7 @@ def get_udiv_dmel_genes(hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_
     # and their Drosophila melanogaster orthologs
     # If one_random_gene is True, select one random gene per orthogroup
     # Otherwise, list all genes and their orthologs
-    for hog in df.index.to_list():
+    for hog in tqdm(df.index.to_list(), desc="Processing HOGs"):
         try:
             ud_genes = hog_node_df.at[hog, "Uloborus_diversus"].split(", ")
 

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0070552	BRISC complex	3	2	0.17	0.0095
+2	GO:0070531	BRCA1-A complex	3	2	0.17	0.0095
+3	GO:0060170	ciliary membrane	3	2	0.17	0.0095
+4	GO:0000421	autophagosome membrane	4	2	0.23	0.0182
+5	GO:0022627	cytosolic small ribosomal subunit	7	2	0.4	0.0568
+6	GO:1990246	uniplex complex	1	1	0.06	0.0574
+7	GO:0031213	RSF complex	1	1	0.06	0.0574
+8	GO:0071598	neuronal ribonucleoprotein granule	1	1	0.06	0.0574
+9	GO:0070319	Golgi to plasma membrane transport vesicle	1	1	0.06	0.0574
+10	GO:0016012	sarcoglycan complex	1	1	0.06	0.0574
+11	GO:0097255	R2TP complex	1	1	0.06	0.0574
+12	GO:0016035	zeta DNA polymerase complex	1	1	0.06	0.0574
+13	GO:0016282	eukaryotic 43S preinitiation complex	1	1	0.06	0.0574
+14	GO:0009331	glycerol-3-phosphate dehydrogenase (FAD) complex	1	1	0.06	0.0574
+15	GO:0035550	urease complex	1	1	0.06	0.0574
+16	GO:0043197	dendritic spine	1	1	0.06	0.0574
+17	GO:0016592	mediator complex	17	3	0.98	0.0698
+18	GO:0035267	NuA4 histone acetyltransferase complex	9	2	0.52	0.0904
+19	GO:0071006	U2-type catalytic step 1 spliceosome	2	1	0.11	0.1115
+20	GO:0071007	U2-type catalytic step 2 spliceosome	2	1	0.11	0.1115
+21	GO:0016514	SWI/SNF complex	2	1	0.11	0.1115
+22	GO:0031390	Ctf18 RFC-like complex	2	1	0.11	0.1115
+23	GO:0005673	transcription factor TFIIE complex	2	1	0.11	0.1115
+24	GO:0000145	exocyst	2	1	0.11	0.1115
+25	GO:0071541	eukaryotic translation initiation factor 3 complex, eIF3m	2	1	0.11	0.1115
+26	GO:0005918	septate junction	2	1	0.11	0.1115
+27	GO:0019774	proteasome core complex, beta-subunit complex	2	1	0.11	0.1115
+28	GO:1990131	Gtr1-Gtr2 GTPase complex	2	1	0.11	0.1115
+29	GO:0035102	PRC1 complex	3	1	0.17	0.1626
+30	GO:0005787	signal peptidase complex	3	1	0.17	0.1626
+31	GO:0005663	DNA replication factor C complex	3	1	0.17	0.1626
+32	GO:0005581	collagen trimer	3	1	0.17	0.1626
+33	GO:0016460	myosin II complex	3	1	0.17	0.1626
+34	GO:0005742	mitochondrial outer membrane translocase complex	3	1	0.17	0.1626
+35	GO:0014069	postsynaptic density	3	1	0.17	0.1626
+36	GO:0000445	THO complex part of transcription export complex	3	1	0.17	0.1626
+37	GO:0016607	nuclear speck	3	1	0.17	0.1626
+38	GO:0000812	Swr1 complex	3	1	0.17	0.1626
+39	GO:0043527	tRNA methyltransferase complex	3	1	0.17	0.1626
+40	GO:0031982	vesicle	140	6	8.04	0.1652
+41	GO:0008021	synaptic vesicle	13	2	0.75	0.1689
+42	GO:0005741	mitochondrial outer membrane	18	3	1.03	0.2099
+43	GO:0072669	tRNA-splicing ligase complex	4	1	0.23	0.2107
+44	GO:0032797	SMN complex	4	1	0.23	0.2107
+45	GO:0044613	nuclear pore central transport channel	4	1	0.23	0.2107
+46	GO:0097550	transcription preinitiation complex	4	1	0.23	0.2107
+47	GO:0035145	exon-exon junction complex	4	1	0.23	0.2107
+48	GO:0097730	non-motile cilium	4	1	0.23	0.2107
+49	GO:0005802	trans-Golgi network	28	3	1.61	0.2148
+50	GO:0005762	mitochondrial large ribosomal subunit	28	3	1.61	0.2148
+51	GO:0071013	catalytic step 2 spliceosome	31	4	1.78	0.2279
+52	GO:0031080	nuclear pore outer ring	5	1	0.29	0.2560
+53	GO:0048188	Set1C/COMPASS complex	5	1	0.29	0.2560
+54	GO:0016593	Cdc73/Paf1 complex	5	1	0.29	0.2560
+55	GO:0008250	oligosaccharyltransferase complex	5	1	0.29	0.2560
+56	GO:0005730	nucleolus	107	8	6.14	0.2697
+57	GO:0005654	nucleoplasm	112	10	6.43	0.2858
+58	GO:0000932	P-body	19	2	1.09	0.2985
+59	GO:0000974	Prp19 complex	6	1	0.34	0.2988
+60	GO:0005885	Arp2/3 protein complex	6	1	0.34	0.2988
+61	GO:0008540	proteasome regulatory particle, base subcomplex	6	1	0.34	0.2988
+62	GO:0072546	EMC complex	6	1	0.34	0.2988
+63	GO:0005682	U5 snRNP	6	1	0.34	0.2988
+64	GO:0005685	U1 snRNP	6	1	0.34	0.2988
+65	GO:0005847	mRNA cleavage and polyadenylation specificity factor complex	6	1	0.34	0.2988
+66	GO:0005832	chaperonin-containing T-complex	6	1	0.34	0.2988
+67	GO:0031011	Ino80 complex	6	1	0.34	0.2988
+68	GO:0043025	neuronal cell body	6	1	0.34	0.2988
+69	GO:0005759	mitochondrial matrix	67	6	3.85	0.3380
+70	GO:0000176	nuclear exosome (RNase complex)	7	1	0.4	0.3391
+71	GO:0000177	cytoplasmic exosome (RNase complex)	7	1	0.4	0.3391
+72	GO:0005680	anaphase-promoting complex	7	1	0.4	0.3391
+73	GO:0019773	proteasome core complex, alpha-subunit complex	7	1	0.4	0.3391
+74	GO:0005852	eukaryotic translation initiation factor 3 complex	10	2	0.57	0.3756
+75	GO:0005657	replication fork	11	2	0.63	0.3757
+76	GO:0005814	centriole	8	1	0.46	0.3772
+77	GO:0005634	nucleus	992	67	56.94	0.3894
+78	GO:0000785	chromatin	63	5	3.62	0.4025
+79	GO:0016604	nuclear body	12	2	0.69	0.4115
+80	GO:0046540	U4/U6 x U5 tri-snRNP complex	9	1	0.52	0.4130
+81	GO:0005686	U2 snRNP	9	1	0.52	0.4130
+82	GO:0008180	COP9 signalosome	9	1	0.52	0.4130
+83	GO:0030688	preribosome, small subunit precursor	10	1	0.57	0.4468
+84	GO:0000776	kinetochore	10	1	0.57	0.4468
+85	GO:0005942	phosphatidylinositol 3-kinase complex	10	1	0.57	0.4468
+86	GO:0005783	endoplasmic reticulum	214	11	12.28	0.4468
+87	GO:0043231	intracellular membrane-bounded organelle	1802	105	103.43	0.4575
+88	GO:0005813	centrosome	27	2	1.55	0.4648
+89	GO:0055037	recycling endosome	12	1	0.69	0.5087
+90	GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	12	1	0.69	0.5087
+91	GO:0005886	plasma membrane	218	13	12.51	0.5297
+92	GO:0005769	early endosome	13	1	0.75	0.5370
+93	GO:0005829	cytosol	215	14	12.34	0.5499
+94	GO:0005794	Golgi apparatus	123	8	7.06	0.5507
+95	GO:0033176	proton-transporting V-type ATPase complex	14	1	0.8	0.5637
+96	GO:0036064	ciliary basal body	14	1	0.8	0.5637
+97	GO:0030424	axon	14	1	0.8	0.5637
+98	GO:0005856	cytoskeleton	138	5	7.92	0.5707
+99	GO:0005840	ribosome	79	7	4.53	0.5837
+100	GO:0030687	preribosome, large subunit precursor	15	1	0.86	0.5889

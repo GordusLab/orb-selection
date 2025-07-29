@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0045177	apical part of cell	0.0073
+GO:0030175	filopodium	0.0075
+GO:0030688	preribosome, small subunit precursor	0.0075
+GO:0005736	RNA polymerase I complex	0.0213
+GO:0005921	gap junction	0.0401
+GO:0005912	adherens junction	0.0401
+GO:0016324	apical plasma membrane	0.0631
+GO:0055038	recycling endosome membrane	0.0871
+GO:0016513	core-binding factor complex	0.0871
+GO:0031213	RSF complex	0.0871
+GO:0071339	MLL1 complex	0.0871
+GO:0030427	site of polarized growth	0.0871
+GO:0016012	sarcoglycan complex	0.0871
+GO:0035550	urease complex	0.0871
+GO:0034663	endoplasmic reticulum chaperone complex	0.0871
+GO:0000159	protein phosphatase type 2A complex	0.0871
+GO:0045211	postsynaptic membrane	0.0871
+GO:0000176	nuclear exosome (RNase complex)	0.0871
+GO:0000177	cytoplasmic exosome (RNase complex)	0.0871
+GO:0032154	cleavage furrow	0.0871
+GO:0030496	midbody	0.0871
+GO:0005785	signal recognition particle receptor complex	0.0871
+GO:0070776	MOZ/MORF histone acetyltransferase complex	0.0871
+GO:0016607	nuclear speck	0.0871
+GO:0030027	lamellipodium	0.0871
+GO:0005868	cytoplasmic dynein complex	0.0871
+GO:0000785	chromatin	0.0892
+GO:0005930	axoneme	0.0894
+GO:0000118	histone deacetylase complex	0.0894
+GO:0005856	cytoskeleton	0.0894
+GO:0072487	MSL complex	0.1666
+GO:0030425	dendrite	0.1666
+GO:0044545	NSL complex	0.1666
+GO:0032040	small-subunit processome	0.1666
+GO:0031932	TORC2 complex	0.1666
+GO:0014069	postsynaptic density	0.1666
+GO:0005788	endoplasmic reticulum lumen	0.1666
+GO:0035861	site of double-strand break	0.1666
+GO:0090537	CERF complex	0.1666
+GO:0030686	90S preribosome	0.1666
+GO:0062129	chitin-based extracellular matrix	0.1810
+GO:0005739	mitochondrion	0.1864
+GO:0036064	ciliary basal body	0.2140
+GO:0005730	nucleolus	0.2182
+GO:0010008	endosome membrane	0.2375
+GO:0043240	Fanconi anaemia nuclear complex	0.2393
+GO:0005811	lipid droplet	0.2393
+GO:0030139	endocytic vesicle	0.2393
+GO:0005774	vacuolar membrane	0.3041
+GO:0036464	cytoplasmic ribonucleoprotein granule	0.3051
+GO:0005884	actin filament	0.3057
+GO:0030864	cortical actin cytoskeleton	0.3057
+GO:0031011	Ino80 complex	0.3057
+GO:0062023	collagen-containing extracellular matrix	0.3057
+GO:0031201	SNARE complex	0.3057
+GO:0030125	clathrin vesicle coat	0.3057
+GO:0005765	lysosomal membrane	0.3057
+GO:0005768	endosome	0.3391
+GO:0005886	plasma membrane	0.3544
+GO:0005938	cell cortex	0.3645
+GO:0008021	synaptic vesicle	0.3663
+GO:0000779	condensed chromosome, centromeric region	0.3663
+GO:0030992	intraciliary transport particle B	0.3663
+GO:0005769	early endosome	0.3663
+GO:0080008	Cul4-RING E3 ubiquitin ligase complex	0.4217
+GO:0009986	cell surface	0.4217
+GO:0005778	peroxisomal membrane	0.4217
+GO:0005829	cytosol	0.4693
+GO:0000151	ubiquitin ligase complex	0.4700
+GO:0031519	PcG protein complex	0.4723
+GO:0005576	extracellular region	0.5593
+GO:0019005	SCF ubiquitin ligase complex	0.5607
+GO:0000932	P-body	0.5607
+GO:0000139	Golgi membrane	0.5607
+GO:0005634	nucleus	0.5866
+GO:0045202	synapse	0.5952
+GO:0005759	mitochondrial matrix	0.5992
+GO:0016020	membrane	0.6078
+GO:0031012	extracellular matrix	0.6277
+GO:0005743	mitochondrial inner membrane	0.6344
+GO:0005654	nucleoplasm	0.6636
+GO:0005929	cilium	0.7869
+GO:0015630	microtubule cytoskeleton	0.7882
+GO:0005813	centrosome	0.7896
+GO:0005667	transcription regulator complex	0.8248
+GO:0005789	endoplasmic reticulum membrane	0.8838
+GO:0005794	Golgi apparatus	0.9475
+GO:0005737	cytoplasm	0.9668
+GO:0005615	extracellular space	0.9884
+GO:0048475	coated membrane	1.0000
+GO:0099512	supramolecular fiber	1.0000
+GO:0099513	polymeric cytoskeletal fiber	1.0000
+GO:0031461	cullin-RING ubiquitin ligase complex	1.0000
+GO:0032838	plasma membrane bounded cell projection cytoplasm	1.0000
+GO:0055037	recycling endosome	1.0000
+GO:0043226	organelle	1.0000
+GO:0032279	asymmetric synapse	1.0000
+GO:0043227	membrane-bounded organelle	1.0000
+GO:0031981	nuclear lumen	1.0000
+GO:0043228	non-membrane-bounded organelle	1.0000

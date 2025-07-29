@@ -1,0 +1,7 @@
+Description	Count	p	Ontology
+proteasome-mediated ubiquitin-dependent protein catabolic process	9	0.0047	bp
+proteolysis involved in protein catabolic process	19	0.0176	bp
+actin cytoskeleton organization	8	0.0186	bp
+protein deubiquitination	6	0.0328	bp
+protein folding	8	0.0417	bp
+ATP hydrolysis activity	11	0.011	mf

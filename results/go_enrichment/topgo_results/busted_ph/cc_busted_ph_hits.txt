@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0031616	spindle pole centrosome	2	2	0.04	0.00038
+2	GO:0051233	spindle midzone	4	2	0.08	0.00222
+3	GO:0005876	spindle microtubule	4	2	0.08	0.00222
+4	GO:0032133	chromosome passenger complex	4	2	0.08	0.00222
+5	GO:0005669	transcription factor TFIID complex	7	2	0.14	0.00747
+6	GO:0042406	extrinsic component of endoplasmic reticulum membrane	1	1	0.02	0.01964
+7	GO:0033557	Slx1-Slx4 complex	1	1	0.02	0.01964
+8	GO:0009368	endopeptidase Clp complex	1	1	0.02	0.01964
+9	GO:1990316	Atg1/ULK1 kinase complex	2	1	0.04	0.03890
+10	GO:0031510	SUMO activating enzyme complex	2	1	0.04	0.03890
+11	GO:0042383	sarcolemma	2	1	0.04	0.03890
+12	GO:0001405	PAM complex, Tim23 associated import motor	2	1	0.04	0.03890
+13	GO:0031429	box H/ACA snoRNP complex	2	1	0.04	0.03890
+14	GO:0071011	precatalytic spliceosome	21	2	0.41	0.06271
+15	GO:0005739	mitochondrion	323	9	6.34	0.07115
+16	GO:0016272	prefoldin complex	4	1	0.08	0.07632
+17	GO:0005758	mitochondrial intermembrane space	4	1	0.08	0.07632
+18	GO:0005925	focal adhesion	5	1	0.1	0.09449
+19	GO:0000974	Prp19 complex	6	1	0.12	0.11230
+20	GO:0005615	extracellular space	62	3	1.22	0.12075
+21	GO:0000176	nuclear exosome (RNase complex)	7	1	0.14	0.12978
+22	GO:0000177	cytoplasmic exosome (RNase complex)	7	1	0.14	0.12978
+23	GO:0000407	phagophore assembly site	17	1	0.33	0.28693
+24	GO:0005643	nuclear pore	18	1	0.35	0.30102
+25	GO:0019005	SCF ubiquitin ligase complex	18	1	0.35	0.30102
+26	GO:0016020	membrane	778	14	15.28	0.31571
+27	GO:0000139	Golgi membrane	24	1	0.47	0.37998
+28	GO:0019898	extrinsic component of membrane	33	2	0.65	0.41117
+29	GO:0005802	trans-Golgi network	28	1	0.55	0.42768
+30	GO:0005774	vacuolar membrane	29	1	0.57	0.43904
+31	GO:0031012	extracellular matrix	29	1	0.57	0.43904
+32	GO:0071013	catalytic step 2 spliceosome	30	1	0.59	0.45016
+33	GO:0005764	lysosome	31	1	0.61	0.46108
+34	GO:0005576	extracellular region	104	4	2.04	0.55613
+35	GO:0005929	cilium	41	1	0.81	0.55914
+36	GO:0005829	cytosol	209	4	4.11	0.59669
+37	GO:0005794	Golgi apparatus	117	3	2.3	0.72230
+38	GO:0005654	nucleoplasm	109	3	2.14	0.79948
+39	GO:0005634	nucleus	953	17	18.72	0.87924
+40	GO:0031982	vesicle	135	1	2.65	0.93559
+41	GO:0005737	cytoplasm	1517	27	29.8	0.97448
+42	GO:0005886	plasma membrane	204	2	4.01	0.98315
+43	GO:0005783	endoplasmic reticulum	205	1	4.03	1.00000
+44	GO:0000922	spindle pole	8	2	0.16	1.00000
+45	GO:0030312	external encapsulating structure	29	1	0.57	1.00000
+46	GO:0005789	endoplasmic reticulum membrane	110	1	2.16	1.00000
+47	GO:0072588	box H/ACA RNP complex	2	1	0.04	1.00000
+48	GO:1990904	ribonucleoprotein complex	211	3	4.14	1.00000
+49	GO:0070013	intracellular organelle lumen	304	8	5.97	1.00000
+50	GO:0090575	RNA polymerase II transcription regulator complex	34	2	0.67	1.00000
+51	GO:0031966	mitochondrial membrane	69	1	1.36	1.00000
+52	GO:0030880	RNA polymerase complex	42	2	0.82	1.00000
+53	GO:0031967	organelle envelope	104	3	2.04	1.00000
+54	GO:0000151	ubiquitin ligase complex	58	1	1.14	1.00000
+55	GO:0005773	vacuole	55	2	1.08	1.00000
+56	GO:0043231	intracellular membrane-bounded organelle	1735	32	34.08	1.00000
+57	GO:0043232	intracellular non-membrane-bounded organelle	451	4	8.86	1.00000
+58	GO:0043233	organelle lumen	304	8	5.97	1.00000
+59	GO:0005856	cytoskeleton	130	2	2.55	1.00000
+60	GO:0005622	intracellular anatomical structure	2357	43	46.3	1.00000
+61	GO:0005694	chromosome	109	1	2.14	1.00000
+62	GO:0120025	plasma membrane bounded cell projection	74	1	1.45	1.00000
+63	GO:0140535	intracellular protein-containing complex	238	3	4.67	1.00000
+64	GO:0055029	nuclear DNA-directed RNA polymerase complex	42	2	0.82	1.00000
+65	GO:0061695	transferase complex, transferring phosphorus-containing groups	70	3	1.37	1.00000
+66	GO:0031461	cullin-RING ubiquitin ligase complex	38	1	0.75	1.00000
+67	GO:0000428	DNA-directed RNA polymerase complex	42	2	0.82	1.00000
+68	GO:0031981	nuclear lumen	231	6	4.54	1.00000
+69	GO:0031984	organelle subcompartment	143	2	2.81	1.00000
+70	GO:0098791	Golgi apparatus subcompartment	32	1	0.63	1.00000
+71	GO:0012505	endomembrane system	422	5	8.29	1.00000
+72	GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	110	1	2.16	1.00000
+73	GO:1905354	exoribonuclease complex	9	1	0.18	1.00000
+74	GO:0098796	membrane protein complex	156	1	3.06	1.00000
+75	GO:0098798	mitochondrial protein-containing complex	64	1	1.26	1.00000
+76	GO:0005874	microtubule	23	2	0.45	1.00000
+77	GO:0005875	microtubule associated complex	18	2	0.35	1.00000
+78	GO:0031970	organelle envelope lumen	4	1	0.08	1.00000
+79	GO:0000178	exosome (RNase complex)	8	1	0.16	1.00000
+80	GO:1990234	transferase complex	200	4	3.93	1.00000
+81	GO:0031974	membrane-enclosed lumen	304	8	5.97	1.00000
+82	GO:1902911	protein kinase complex	14	1	0.27	1.00000
+83	GO:0032991	protein-containing complex	956	16	18.78	1.00000
+84	GO:0019866	organelle inner membrane	47	1	0.92	1.00000
+85	GO:0098800	inner mitochondrial membrane protein complex	16	1	0.31	1.00000
+86	GO:0005740	mitochondrial envelope	74	2	1.45	1.00000
+87	GO:0030054	cell junction	59	1	1.16	1.00000
+88	GO:0030055	cell-substrate junction	5	1	0.1	1.00000
+89	GO:0005743	mitochondrial inner membrane	43	1	0.84	1.00000
+90	GO:0005744	TIM23 mitochondrial import inner membrane translocase complex	7	1	0.14	1.00000
+91	GO:0031090	organelle membrane	292	4	5.74	1.00000
+92	GO:0099080	supramolecular complex	77	2	1.51	1.00000
+93	GO:1902494	catalytic complex	367	9	7.21	1.00000
+94	GO:0099081	supramolecular polymer	36	2	0.71	1.00000
+95	GO:0005635	nuclear envelope	30	1	0.59	1.00000
+96	GO:0005667	transcription regulator complex	68	2	1.34	1.00000
+97	GO:0005730	nucleolus	101	1	1.98	1.00000
+98	GO:0005732	sno(s)RNA-containing ribonucleoprotein complex	9	1	0.18	1.00000
+99	GO:0015630	microtubule cytoskeleton	88	2	1.73	1.00000
+100	GO:0031312	extrinsic component of organelle membrane	6	1	0.12	1.00000

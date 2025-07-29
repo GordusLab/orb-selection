@@ -91,7 +91,7 @@ def get_udiv_dmel_genes(hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_
                         pass
 
                 df.at[hog, "dmel_orthologs"] = dmel_orthologs
-        except KeyError:
+        except (KeyError, AttributeError):
             pass
 
     return df

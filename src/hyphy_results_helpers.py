@@ -2,7 +2,7 @@
 
 """
 Helper functions for HyPhy analysis results, particularly
-for filtering and extracting LOC IDs.
+for filtering by omega values and extracting LOC IDs.
 """
 
 import os

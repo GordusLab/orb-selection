@@ -7,7 +7,7 @@ from matplotlib import (
 
 logbins = np.geomspace(0.001, 10000, 100)
 
-def plot_omega_distributions(x, result, top_title, bottom_title, filename=None):
+def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, transparent=True):
 
     """
     Plot the distributions of ω1, ω2, and ω3 for both TEST and REFERENCE groups.
@@ -16,8 +16,8 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None):
     - result: String indicating the type of result (e.g., 'all', 'intensified', 'relaxed').
     - top_title: Title for the top plot.
     - bottom_title: Title for the bottom plot.
-    - savefig: Boolean indicating whether to save the figure.
-    - colors: List of colors for the distributions.
+    - filename: Path to save the figure (optional).
+    - transparent: Boolean indicating whether to save with transparent background.
     Returns:
     - fig: The figure object.
     - axs: The axes object.
@@ -401,7 +401,7 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None):
         fig.suptitle(r"$\bf{ii.}$" + " all " + r"$\it{" +f'{result}' + r"}$" + " genes", y=0.93, fontsize=14)
 
     if filename is not None:
-        plt.savefig(filename, dpi=600, transparent=True, bbox_inches='tight')
+        plt.savefig(filename, dpi=600, transparent=transparent, bbox_inches='tight')
 
     return fig, axs
 
@@ -414,6 +414,7 @@ def plot_omega_single_gene(
         offset_zero=False, 
         k=False,
         filename=None,
+        transparent=True
         ):
 
     """
@@ -423,10 +424,10 @@ def plot_omega_single_gene(
     - gene: The gene to plot.
     - plot_title: Title for the plot.
     - i: Index or identifier for the gene (optional).
-    - savefig: Boolean indicating whether to save the figure.
-
     - offset_zero: Boolean indicating whether to offset the zero line.
     - k: Boolean indicating whether to include the k value in the plot.
+    - filename: Path to save the figure (optional).
+    - transparent: Boolean indicating whether to save with transparent background.
     Returns:
     - fig: The figure object.
     - ax: The axes object.
@@ -504,6 +505,6 @@ def plot_omega_single_gene(
                  bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if filename is not None:
-        plt.savefig(filename, dpi=300, transparent=True)
+        plt.savefig(filename, dpi=300, transparent=transparent)
 
     return fig, ax

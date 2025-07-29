@@ -1,0 +1,27 @@
+Description	Count	p	Ontology
+dephosphorylation	20	0.012	bp
+neuron projection development	9	0.012	bp
+methylation	22	0.036	bp
+cellular response to oxidative stress	5	0.037	bp
+response to heat	4	0.037	bp
+glucose metabolic process	4	0.037	bp
+rRNA processing	30	0.041	bp
+regulation of transcription by RNA polymerase II	81	0.043	bp
+nucleosome assembly	4	0.045	bp
+preribosome, small subunit precursor	7	0.0052	cc
+lysosomal membrane	8	0.0063	cc
+nucleoplasm	35	0.0091	cc
+mitochondrial small ribosomal subunit	10	0.0109	cc
+ciliary basal body	9	0.0135	cc
+small-subunit processome	13	0.0276	cc
+RNA polymerase II cis-regulatory region sequence-specific DNA binding	43	0.0080	mf
+DNA-binding transcription factor activity, RNA polymerase II-specific	51	0.0081	mf
+zinc ion binding	54	0.0151	mf
+signaling receptor activity	18	0.0154	mf
+triacylglycerol lipase activity	5	0.0154	mf
+phosphatase activity	29	0.0162	mf
+tRNA binding	10	0.0216	mf
+serine-type endopeptidase inhibitor activity	6	0.0364	mf
+structural constituent of ribosome	29	0.0376	mf
+ATPase activator activity	4	0.0404	mf
+ubiquitin-protein transferase activity	27	0.0474	mf

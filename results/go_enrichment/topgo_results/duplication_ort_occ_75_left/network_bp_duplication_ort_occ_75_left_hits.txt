@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0036261	7-methylguanosine cap hypermethylation	0.0029
+GO:0071542	dopaminergic neuron differentiation	0.0029
+GO:0009452	7-methylguanosine RNA capping	0.0083
+GO:0031124	mRNA 3'-end processing	0.0141
+GO:0045739	positive regulation of DNA repair	0.0162
+GO:0006904	vesicle docking involved in exocytosis	0.0162
+GO:0002224	toll-like receptor signaling pathway	0.0261
+GO:0031175	neuron projection development	0.0261
+GO:0042594	response to starvation	0.0536
+GO:0001678	intracellular glucose homeostasis	0.0538
+GO:0043419	urea catabolic process	0.0541
+GO:0046579	positive regulation of Ras protein signal transduction	0.0541
+GO:2001240	negative regulation of extrinsic apoptotic signaling pathway in absence of ligand	0.0541
+GO:0036444	calcium import into the mitochondrion	0.0541
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	0.0541
+GO:0006207	'de novo' pyrimidine nucleobase biosynthetic process	0.0541
+GO:0070901	mitochondrial tRNA methylation	0.0541
+GO:0043113	receptor clustering	0.0541
+GO:0034462	small-subunit processome assembly	0.0541
+GO:0099578	regulation of translation at postsynapse, modulating synaptic transmission	0.0541
+GO:0071333	cellular response to glucose stimulus	0.0541
+GO:0051560	mitochondrial calcium ion homeostasis	0.0541
+GO:0072334	UDP-galactose transmembrane transport	0.0541
+GO:0018364	peptidyl-glutamine methylation	0.0541
+GO:0106300	protein-DNA covalent cross-linking repair	0.0541
+GO:0046327	glycerol biosynthetic process from pyruvate	0.0541
+GO:0070365	hepatocyte differentiation	0.0541
+GO:0060287	epithelial cilium movement involved in determination of left/right asymmetry	0.0541
+GO:0044205	'de novo' UMP biosynthetic process	0.0541
+GO:0097500	receptor localization to non-motile cilium	0.0541
+GO:0045879	negative regulation of smoothened signaling pathway	0.0541
+GO:0019543	propionate catabolic process	0.0541
+GO:0051793	medium-chain fatty acid catabolic process	0.0541
+GO:0006116	NADH oxidation	0.0541
+GO:0071549	cellular response to dexamethasone stimulus	0.0541
+GO:0006538	glutamate catabolic process	0.0541
+GO:0001113	transcription open complex formation at RNA polymerase II promoter	0.0541
+GO:0046168	glycerol-3-phosphate catabolic process	0.0541
+GO:0006887	exocytosis	0.0648
+GO:0009306	protein secretion	0.0657
+GO:0016192	vesicle-mediated transport	0.0929
+GO:0017157	regulation of exocytosis	0.0984
+GO:0036265	RNA (guanine-N7)-methylation	0.1047
+GO:1905244	regulation of modification of synaptic structure	0.1053
+GO:0002939	tRNA N1-guanine methylation	0.1053
+GO:0042989	sequestering of actin monomers	0.1053
+GO:0035151	regulation of tube size, open tracheal system	0.1053
+GO:0060998	regulation of dendritic spine development	0.1053
+GO:0007340	acrosome reaction	0.1053
+GO:0009435	NAD biosynthetic process	0.1053
+GO:0043653	mitochondrial fragmentation involved in apoptotic process	0.1053
+GO:0006850	mitochondrial pyruvate transmembrane transport	0.1053
+GO:0019991	septate junction assembly	0.1053
+GO:0030155	regulation of cell adhesion	0.1053
+GO:0070476	rRNA (guanine-N7)-methylation	0.1053
+GO:0000480	endonucleolytic cleavage in 5'-ETS of tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.1053
+GO:0000472	endonucleolytic cleavage to generate mature 5'-end of SSU-rRNA from (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.1053
+GO:0009791	post-embryonic development	0.1053
+GO:0006120	mitochondrial electron transport, NADH to ubiquinone	0.1161
+GO:0007275	multicellular organism development	0.1260
+GO:0022008	neurogenesis	0.1328
+GO:0045893	positive regulation of DNA-templated transcription	0.1357
+GO:0008380	RNA splicing	0.1523
+GO:0030837	negative regulation of actin filament polymerization	0.1529
+GO:0016042	lipid catabolic process	0.1532
+GO:0000012	single strand break repair	0.1537
+GO:0038061	non-canonical NF-kappaB signal transduction	0.1537
+GO:0008210	estrogen metabolic process	0.1537
+GO:0070536	protein K63-linked deubiquitination	0.1537
+GO:0008209	androgen metabolic process	0.1537
+GO:0008089	anterograde axonal transport	0.1537
+GO:0006954	inflammatory response	0.1537
+GO:0019509	L-methionine salvage from methylthioadenosine	0.1537
+GO:0048015	phosphatidylinositol-mediated signaling	0.1537
+GO:0000492	box C/D snoRNP assembly	0.1537
+GO:0043491	phosphatidylinositol 3-kinase/protein kinase B signal transduction	0.1537
+GO:0048814	regulation of dendrite morphogenesis	0.1537
+GO:0036092	phosphatidylinositol-3-phosphate biosynthetic process	0.1537
+GO:0000387	spliceosomal snRNP assembly	0.1732
+GO:0006508	proteolysis	0.1866
+GO:0070475	rRNA base methylation	0.1985
+GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.1996
+GO:0000972	transcription-dependent tethering of RNA polymerase II gene DNA at nuclear periphery	0.1996
+GO:0034063	stress granule assembly	0.1996
+GO:0006370	7-methylguanosine mRNA capping	0.1996
+GO:0006729	tetrahydrobiopterin biosynthetic process	0.1996
+GO:0050482	arachidonate secretion	0.1996
+GO:0006094	gluconeogenesis	0.1996
+GO:0032968	positive regulation of transcription elongation by RNA polymerase II	0.1996
+GO:0007095	mitotic G2 DNA damage checkpoint signaling	0.1996
+GO:0006465	signal peptide processing	0.1996
+GO:0007064	mitotic sister chromatid cohesion	0.1996
+GO:0001881	receptor recycling	0.1996
+GO:0016075	rRNA catabolic process	0.1996
+GO:0061709	reticulophagy	0.1996
+GO:0000338	protein deneddylation	0.1996
+GO:0008592	regulation of Toll signaling pathway	0.1996
+GO:0009226	nucleotide-sugar biosynthetic process	0.1996
+GO:0016559	peroxisome fission	0.1996
+GO:0043065	positive regulation of apoptotic process	0.1996

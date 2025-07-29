@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0019185	snRNA-activating protein complex	0.00032
+GO:0031380	nuclear RNA-directed RNA polymerase complex	0.00189
+GO:0005615	extracellular space	0.01034
+GO:0046695	SLIK (SAGA-like) complex	0.04365
+GO:0005901	caveola	0.04365
+GO:0001726	ruffle	0.04365
+GO:0005736	RNA polymerase I complex	0.05572
+GO:0035267	NuA4 histone acetyltransferase complex	0.05572
+GO:0005921	gap junction	0.05572
+GO:0030134	COPII-coated ER to Golgi transport vesicle	0.06099
+GO:0031466	Cul5-RING ubiquitin ligase complex	0.08541
+GO:0005801	cis-Golgi network	0.08541
+GO:1990726	Lsm1-7-Pat1 complex	0.08541
+GO:0071541	eukaryotic translation initiation factor 3 complex, eIF3m	0.08541
+GO:0055120	striated muscle dense body	0.12535
+GO:0000445	THO complex part of transcription export complex	0.12535
+GO:0005658	alpha DNA polymerase:primase complex	0.12535
+GO:0005688	U6 snRNP	0.12535
+GO:0036038	MKS complex	0.16356
+GO:0034657	GID complex	0.16356
+GO:0034518	RNA cap binding complex	0.16356
+GO:0005665	RNA polymerase II, core complex	0.16356
+GO:0031901	early endosome membrane	0.16356
+GO:0043231	intracellular membrane-bounded organelle	0.18550
+GO:0009897	external side of plasma membrane	0.20012
+GO:0000124	SAGA complex	0.20012
+GO:0031012	extracellular matrix	0.23137
+GO:0005839	proteasome core complex	0.23419
+GO:0072546	EMC complex	0.23508
+GO:0005885	Arp2/3 protein complex	0.23508
+GO:0017101	aminoacyl-tRNA synthetase multienzyme complex	0.23508
+GO:0043296	apical junction complex	0.23508
+GO:0030016	myofibril	0.26852
+GO:0005881	cytoplasmic microtubule	0.26852
+GO:0005930	axoneme	0.26852
+GO:0071004	U2-type prespliceosome	0.26852
+GO:0019773	proteasome core complex, alpha-subunit complex	0.26852
+GO:0005829	cytosol	0.28817
+GO:0005852	eukaryotic translation initiation factor 3 complex	0.29909
+GO:0072686	mitotic spindle	0.30051
+GO:0030425	dendrite	0.30051
+GO:0005669	transcription factor TFIID complex	0.30051
+GO:0031965	nuclear membrane	0.30051
+GO:0030008	TRAPP complex	0.33111
+GO:0005666	RNA polymerase III complex	0.33111
+GO:0032040	small-subunit processome	0.33121
+GO:0005657	replication fork	0.35922
+GO:0005942	phosphatidylinositol 3-kinase complex	0.36038
+GO:0062023	collagen-containing extracellular matrix	0.36038
+GO:0005689	U12-type spliceosomal complex	0.36038
+GO:0005912	adherens junction	0.36038
+GO:0016324	apical plasma membrane	0.38837
+GO:0030864	cortical actin cytoskeleton	0.38837
+GO:0032045	guanyl-nucleotide exchange factor complex	0.38837
+GO:0005634	nucleus	0.39641
+GO:0005884	actin filament	0.41515
+GO:0030014	CCR4-NOT complex	0.41515
+GO:0005811	lipid droplet	0.44076
+GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	0.44076
+GO:0005802	trans-Golgi network	0.44118
+GO:0005654	nucleoplasm	0.45813
+GO:0005576	extracellular region	0.46676
+GO:0005667	transcription regulator complex	0.47812
+GO:0000139	Golgi membrane	0.48528
+GO:0097526	spliceosomal tri-snRNP complex	0.51110
+GO:0005929	cilium	0.52295
+GO:0031519	PcG protein complex	0.53253
+GO:0016020	membrane	0.55855
+GO:0005938	cell cortex	0.57165
+GO:0030424	axon	0.57263
+GO:0016592	mediator complex	0.57263
+GO:0005643	nuclear pore	0.59138
+GO:0005741	mitochondrial outer membrane	0.59138
+GO:0070382	exocytic vesicle	0.59138
+GO:0043235	receptor complex	0.60932
+GO:0062129	chitin-based extracellular matrix	0.60932
+GO:0005856	cytoskeleton	0.63065
+GO:0005886	plasma membrane	0.63762
+GO:0000228	nuclear chromosome	0.70015
+GO:0005773	vacuole	0.70332
+GO:0005874	microtubule	0.72574
+GO:0005681	spliceosomal complex	0.75335
+GO:0043005	neuron projection	0.75968
+GO:0012505	endomembrane system	0.75998
+GO:0071013	catalytic step 2 spliceosome	0.80101
+GO:0005789	endoplasmic reticulum membrane	0.81148
+GO:0005764	lysosome	0.83385
+GO:0005743	mitochondrial inner membrane	0.87888
+GO:0005768	endosome	0.89558
+GO:0030054	cell junction	0.91769
+GO:0005739	mitochondrion	0.92306
+GO:0005730	nucleolus	0.94877
+GO:0005783	endoplasmic reticulum	0.95407
+GO:0005737	cytoplasm	0.99802
+GO:0045177	apical part of cell	1.00000
+GO:0031379	RNA-directed RNA polymerase complex	1.00000
+GO:0030532	small nuclear ribonucleoprotein complex	1.00000
+GO:0099512	supramolecular fiber	1.00000
+GO:0099513	polymeric cytoskeletal fiber	1.00000
+GO:0031461	cullin-RING ubiquitin ligase complex	1.00000

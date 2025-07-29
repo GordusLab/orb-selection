@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0030490	maturation of SSU-rRNA	0.00033
+GO:0051092	positive regulation of NF-kappaB transcription factor activity	0.00251
+GO:0016567	protein ubiquitination	0.00659
+GO:0036089	cleavage furrow formation	0.01852
+GO:0006362	transcription elongation by RNA polymerase I	0.01852
+GO:0051639	actin filament network formation	0.01852
+GO:0019556	L-histidine catabolic process to glutamate and formamide	0.01852
+GO:0035494	SNARE complex disassembly	0.01852
+GO:2000643	positive regulation of early endosome to late endosome transport	0.01852
+GO:0014013	regulation of gliogenesis	0.01852
+GO:1902966	positive regulation of protein localization to early endosome	0.01852
+GO:0040038	polar body extrusion after meiotic divisions	0.01852
+GO:0006264	mitochondrial DNA replication	0.01852
+GO:0008360	regulation of cell shape	0.01852
+GO:0017148	negative regulation of translation	0.02029
+GO:0042254	ribosome biogenesis	0.04762
+GO:0044255	cellular lipid metabolic process	0.04913
+GO:0030041	actin filament polymerization	0.04994
+GO:1902115	regulation of organelle assembly	0.05030
+GO:0051295	establishment of meiotic spindle localization	0.05056
+GO:0001188	RNA polymerase I preinitiation complex assembly	0.05056
+GO:0000398	mRNA splicing, via spliceosome	0.05507
+GO:0042273	ribosomal large subunit biogenesis	0.05758
+GO:0009953	dorsal/ventral pattern formation	0.09209
+GO:0002181	cytoplasmic translation	0.11247
+GO:0042761	very long-chain fatty acid biosynthetic process	0.11247
+GO:0043605	amide catabolic process	0.13504
+GO:0060341	regulation of cellular localization	0.13585
+GO:0030307	positive regulation of cell growth	0.13589
+GO:0071902	positive regulation of protein serine/threonine kinase activity	0.13589
+GO:0034472	snRNA 3'-end processing	0.13596
+GO:0038202	TORC1 signaling	0.13596
+GO:0070646	protein modification by small protein removal	0.13614
+GO:0055074	calcium ion homeostasis	0.13614
+GO:0034498	early endosome to Golgi transport	0.13632
+GO:0010142	farnesyl diphosphate biosynthetic process, mevalonate pathway	0.13632
+GO:0045773	positive regulation of axon extension	0.13632
+GO:2001235	positive regulation of apoptotic signaling pathway	0.13632
+GO:0006391	transcription initiation at mitochondrial promoter	0.13632
+GO:0034454	microtubule anchoring at centrosome	0.13632
+GO:0036158	outer dynein arm assembly	0.13632
+GO:0036159	inner dynein arm assembly	0.13632
+GO:0061003	positive regulation of dendritic spine morphogenesis	0.13632
+GO:0045737	positive regulation of cyclin-dependent protein serine/threonine kinase activity	0.13632
+GO:1900011	negative regulation of corticotropin-releasing hormone receptor activity	0.13632
+GO:0051014	actin filament severing	0.13632
+GO:0038203	TORC2 signaling	0.13632
+GO:0000055	ribosomal large subunit export from nucleus	0.13632
+GO:0006880	intracellular sequestering of iron ion	0.13632
+GO:0048741	skeletal muscle fiber development	0.13632
+GO:0031179	peptide modification	0.13632
+GO:0097712	vesicle targeting, trans-Golgi to periciliary membrane compartment	0.13632
+GO:0110155	NAD-cap decapping	0.13632
+GO:0032469	endoplasmic reticulum calcium ion homeostasis	0.13632
+GO:0006481	C-terminal protein methylation	0.13632
+GO:0006904	vesicle docking involved in exocytosis	0.13632
+GO:0051289	protein homotetramerization	0.13632
+GO:0035335	peptidyl-tyrosine dephosphorylation	0.13632
+GO:0051279	regulation of release of sequestered calcium ion into cytosol	0.13632
+GO:0006564	L-serine biosynthetic process	0.13632
+GO:0035965	cardiolipin acyl-chain remodeling	0.13632
+GO:2000134	negative regulation of G1/S transition of mitotic cell cycle	0.13632
+GO:1901052	sarcosine metabolic process	0.13632
+GO:0033353	S-adenosylmethionine cycle	0.13632
+GO:0006043	glucosamine catabolic process	0.13632
+GO:0006046	N-acetylglucosamine catabolic process	0.13632
+GO:0035435	phosphate ion transmembrane transport	0.13632
+GO:0045162	clustering of voltage-gated sodium channels	0.13632
+GO:0061355	Wnt protein secretion	0.13632
+GO:0060158	phospholipase C-activating dopamine receptor signaling pathway	0.13632
+GO:0009409	response to cold	0.13632
+GO:0043419	urea catabolic process	0.13632
+GO:0006102	isocitrate metabolic process	0.13632
+GO:0070262	peptidyl-serine dephosphorylation	0.13632
+GO:0071596	ubiquitin-dependent protein catabolic process via the N-end rule pathway	0.13632
+GO:0046498	S-adenosylhomocysteine metabolic process	0.13632
+GO:1990845	adaptive thermogenesis	0.13632
+GO:1903775	regulation of DNA double-strand break processing	0.13632
+GO:0051865	protein autoubiquitination	0.13632
+GO:0006283	transcription-coupled nucleotide-excision repair	0.13632
+GO:0032210	regulation of telomere maintenance via telomerase	0.13632
+GO:0000350	generation of catalytic spliceosome for second transesterification step	0.13632
+GO:0042791	5S class rRNA transcription by RNA polymerase III	0.13632
+GO:0009107	lipoate biosynthetic process	0.13632
+GO:1904263	positive regulation of TORC1 signaling	0.13632
+GO:0071051	poly(A)-dependent snoRNA 3'-end processing	0.13632
+GO:0098958	retrograde axonal transport of mitochondrion	0.13632
+GO:0098974	postsynaptic actin cytoskeleton organization	0.13632
+GO:0051460	negative regulation of corticotropin secretion	0.13632
+GO:1990544	mitochondrial ATP transmembrane transport	0.13632
+GO:0140021	mitochondrial ADP transmembrane transport	0.13632
+GO:0000493	box H/ACA snoRNP assembly	0.13632
+GO:0007007	inner mitochondrial membrane organization	0.13632
+GO:0010032	meiotic chromosome condensation	0.13632
+GO:0044772	mitotic cell cycle phase transition	0.13663
+GO:0022008	neurogenesis	0.13959
+GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.13996
+GO:0051764	actin crosslink formation	0.13996
+GO:0045010	actin nucleation	0.13996
+GO:0007018	microtubule-based movement	0.19008

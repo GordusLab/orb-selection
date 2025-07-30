@@ -1,0 +1,14 @@
+Description	Count	p	Ontology
+7-methylguanosine RNA capping	3	0.0075	bp
+regulation of RNA splicing	4	0.0088	bp
+mRNA 3'-end processing	3	0.0161	bp
+vesicle-mediated transport	13	0.0161	bp
+proteolysis	16	0.0273	bp
+neuron projection development	4	0.0340	bp
+toll-like receptor signaling pathway	2	0.0342	bp
+mitochondrial membrane	7	0.018	cc
+ribonucleoprotein complex	19	0.022	cc
+cytosolic small ribosomal subunit	3	0.023	cc
+metallopeptidase activity	5	0.0124	mf
+serine-type endopeptidase activity	5	0.0395	mf
+carbohydrate binding	4	0.0459	mf

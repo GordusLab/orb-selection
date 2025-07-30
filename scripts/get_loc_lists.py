@@ -9,7 +9,7 @@ from hyphy_results_parser import HyphyResult
 import pandas as pd
 
 scripts = os.path.dirname(__file__)
-data = os.path.join(scripts, "..", "data")
+assets = os.path.join(scripts, "..", "assets")
 
 def load_pickle_file(fname):
     """
@@ -28,7 +28,7 @@ def get_universe_bootstrap(bs_results) -> pd.Series:
     min_occupancy = bs_results.occupancy_threshold
     max_occupancy = bs_results.maximum
     genecount_df = bs_results.true_odds.genecount_df
-    genes_tsv = f"{data}/N5.tsv"
+    genes_tsv = f"{assets}/N5.tsv"
 
     print("Generating universe LOCs...")
 
@@ -48,7 +48,7 @@ def get_universe_bootstrap(bs_results) -> pd.Series:
 
     return universe_locs
 
-def main_bs(bs_results, tail=None):
+def main_bootstrap(bs_results, tail=None):
     """
     Main function to load the bootstrap results and extract LOCs.
     """
@@ -76,7 +76,7 @@ def main_hyphy(hyphy_results, omega=10000, relax_result=None):
     hyphy_df = hyphy_results.results_df
     test = hyphy_results.analysis_type
 
-    genes_tsv = f"{data}/N5.tsv"
+    genes_tsv = f"{assets}/N5.tsv"
     print("Extracting LOCs...")
     merged_df = id_converter.main(hyphy_df, genes_tsv)
 
@@ -139,7 +139,7 @@ Examples:
     if isinstance(results, odds_ratio_test.BootstrapTestResults):
         if universe_file:
             universe_locs = get_universe_bootstrap(results)
-        hit_locs = main_bs(results, tail=tail)
+        hit_locs = main_bootstrap(results, tail=tail)
     elif isinstance(results, HyphyResult):
         hit_locs, universe_locs = main_hyphy(results, omega=omega, relax_result=relax_result)
     else:

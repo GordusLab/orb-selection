@@ -7,7 +7,7 @@ repo_root=$(git rev-parse --show-toplevel)
 # two criteria to pass:
 # 1. At least 5 terms in the universe ($4)
 # 2. P value < 0.05 OR if it contains the character '<' (because R outputs stuff like '< 1e-30') ($7)
-for test in "$repo_root"/results/go_enrichment/topgo_results/*/; do
+for test in "$repo_root"/results/go_enrichment/*/; do
   # Remove trailing slash and get just the directory name
   test_name=$(basename "$test")
   echo "Processing directory: $test_name"

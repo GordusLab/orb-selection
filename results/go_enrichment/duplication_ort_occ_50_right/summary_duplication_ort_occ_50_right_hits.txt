@@ -1,0 +1,20 @@
+Description	Count	p	Ontology
+xenobiotic metabolic process	4	0.00069	bp
+organic acid metabolic process	8	0.00072	bp
+snRNA transcription by RNA polymerase II	3	0.00086	bp
+monoatomic anion transport	4	0.02444	bp
+regulation of transcription by RNA polymerase II	21	0.02762	bp
+peptidyl-serine phosphorylation	3	0.03314	bp
+cell-matrix adhesion	2	0.03690	bp
+signaling	22	0.04585	bp
+poly(A)+ mRNA export from nucleus	2	0.04775	bp
+peptidyl-threonine phosphorylation	2	0.04775	bp
+extracellular space	10	0.01034	cc
+oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced flavin or flavoprotein as one donor, and incorporation of one atom of oxygen	4	0.00099	mf
+iron ion binding	7	0.01110	mf
+serine-type endopeptidase inhibitor activity	3	0.01497	mf
+heme binding	6	0.02287	mf
+protein serine/threonine/tyrosine kinase activity	2	0.03249	mf
+sequence-specific DNA binding	19	0.03482	mf
+hydrolase activity	29	0.04531	mf
+translation initiation factor activity	4	0.04806	mf

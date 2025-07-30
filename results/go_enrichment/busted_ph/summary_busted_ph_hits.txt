@@ -1,0 +1,9 @@
+Description	Count	p	Ontology
+peptide metabolic process	2	0.01509	bp
+protein phosphorylation	7	0.01551	bp
+mitotic spindle organization	2	0.03559	bp
+transcription factor TFIID complex	2	0.00747	cc
+protein kinase activity	5	0.00257	mf
+poly(A) RNA polymerase activity	2	0.01664	mf
+ATP binding	10	0.02417	mf
+unfolded protein binding	3	0.02968	mf

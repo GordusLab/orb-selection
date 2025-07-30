@@ -1,0 +1,9 @@
+Description	Count	p	Ontology
+protein phosphorylation	10	0.0080	bp
+lipid homeostasis	2	0.0426	bp
+chromatin organization	3	0.0428	bp
+cytosolic small ribosomal subunit	2	0.025	cc
+nucleotide binding	24	0.0098	mf
+nucleoside triphosphate diphosphatase activity	2	0.0254	mf
+ATP binding	16	0.0261	mf
+misfolded protein binding	2	0.0447	mf

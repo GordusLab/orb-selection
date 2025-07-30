@@ -1,0 +1,6 @@
+Description	Count	p	Ontology
+protein ubiquitination	6	0.0244	bp
+neurogenesis	5	0.0398	bp
+transmembrane transport	13	0.0485	bp
+apical part of cell	4	0.0073	cc
+ubiquitin protein ligase activity	5	0.0143	mf

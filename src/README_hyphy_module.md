@@ -5,10 +5,10 @@ This module provides classes to store and manage results from HyPhy selection an
 ## Files
 
 - `src/hyphy_results_parser.py` - Main module with result classes
-- `src/hyphy_results_helpers.py` - Helper functions (updated to use id_converter)
-- `phylogenetic_example.py` - Example using real data paths
-- `tests/test_phylogenetic_module.py` - Test script with sample data
-- `src/README_phylogenetic_module.md` - This documentation
+- `src/hyphy_results_helpers.py` - Helper functions
+- `tests/test_hyphy_module.py` - Test script with sample data
+- `tests/hyphy_parser_example.py` - Example using real data paths
+- `src/README_hyphy_module.md` - This documentation
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ manager.save_all_results('results/hyphy_cache/')
 ## Integration Features
 
 ### 1. HOG to LOC Conversion
-Uses `src/id_converter.py` instead of the older `HOG_id_converter.py`:
+Uses `src/id_converter.py`
 
 ```python
 from src.hyphy_results_helpers import convert_hyphy_results_to_locs
@@ -44,10 +44,10 @@ results_with_locs = convert_hyphy_results_to_locs(hyphy_results)
 ```
 
 ### 2. Data Access
-Automatically accesses data files from `orb-selection/data/`:
-- `data/N5.tsv` - Default hierarchical orthogroup file
-- `data/id_converter.tsv` - Gene ID conversion data
-- `data/Uloborus_diversus__v__Drosophila_melanogaster.tsv` - Ortholog mapping
+Automatically accesses data files from `orb-selection/assets/`:
+- `assets/N5.tsv` - Default hierarchical orthogroup file
+- `assets/id_converter.tsv` - Gene ID conversion data
+- `assets/Uloborus_diversus__v__Drosophila_melanogaster.tsv` - Ortholog mapping
 
 ### 3. Results Storage
 Results are saved in the `orb-selection/results/` directory:

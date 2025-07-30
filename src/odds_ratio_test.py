@@ -886,6 +886,12 @@ class BootstrapTestResults:
         with open(fname, 'wb') as file:
             pickle.dump(self, file)
 
+    @classmethod
+    def load_from_pickle(cls, filepath: str) -> 'BootstrapTestResults':
+        """Load results object from a pickle file."""
+        with open(filepath, 'rb') as f:
+            return pickle.load(f)
+
     def save_results_files(self, results_dir, fg_name, bg_name="background"):
         """
         Takes in bootstrap test results instance and saves all

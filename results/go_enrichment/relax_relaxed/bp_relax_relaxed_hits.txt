@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0006357	regulation of transcription by RNA polymerase II	204	38	23.71	0.00027
+2	GO:0060395	SMAD protein signal transduction	5	3	0.58	0.01300
+3	GO:0050708	regulation of protein secretion	2	2	0.23	0.01347
+4	GO:0045943	positive regulation of transcription by RNA polymerase I	2	2	0.23	0.01347
+5	GO:0006421	asparaginyl-tRNA aminoacylation	2	2	0.23	0.01347
+6	GO:0008286	insulin receptor signaling pathway	2	2	0.23	0.01347
+7	GO:0071542	dopaminergic neuron differentiation	2	2	0.23	0.01347
+8	GO:0006508	proteolysis	183	25	21.27	0.01915
+9	GO:0007155	cell adhesion	29	9	3.37	0.02063
+10	GO:0046854	phosphatidylinositol phosphate biosynthetic process	13	5	1.51	0.02111
+11	GO:0022008	neurogenesis	38	9	4.42	0.02332
+12	GO:0010468	regulation of gene expression	397	62	46.13	0.02588
+13	GO:0042761	very long-chain fatty acid biosynthetic process	11	4	1.28	0.03040
+14	GO:0030148	sphingolipid biosynthetic process	21	5	2.44	0.03045
+15	GO:0030497	fatty acid elongation	10	4	1.16	0.03703
+16	GO:0019433	triglyceride catabolic process	3	2	0.35	0.03729
+17	GO:0043171	peptide catabolic process	3	2	0.35	0.03729
+18	GO:0043001	Golgi to plasma membrane protein transport	3	2	0.35	0.03729
+19	GO:0035269	protein O-linked mannosylation	3	2	0.35	0.03729
+20	GO:0007179	transforming growth factor beta receptor signaling pathway	3	2	0.35	0.03729
+21	GO:0006882	intracellular zinc ion homeostasis	4	2	0.46	0.06889
+22	GO:0006465	signal peptide processing	4	2	0.46	0.06889
+23	GO:0045197	establishment or maintenance of epithelial cell apical/basal polarity	4	2	0.46	0.06889
+24	GO:0034244	negative regulation of transcription elongation by RNA polymerase II	4	2	0.46	0.06889
+25	GO:0030198	extracellular matrix organization	4	2	0.46	0.06889
+26	GO:0031175	neuron projection development	22	4	2.56	0.06892
+27	GO:0007346	regulation of mitotic cell cycle	29	4	3.37	0.06924
+28	GO:0055088	lipid homeostasis	9	3	1.05	0.07667
+29	GO:0045893	positive regulation of DNA-templated transcription	61	13	7.09	0.09932
+30	GO:0008654	phospholipid biosynthetic process	42	9	4.88	0.10459
+31	GO:0002224	toll-like receptor signaling pathway	5	2	0.58	0.10615
+32	GO:0050821	protein stabilization	5	2	0.58	0.10615
+33	GO:0006665	sphingolipid metabolic process	28	8	3.25	0.11482
+34	GO:0035592	establishment of protein localization to extracellular region	8	4	0.93	0.11543
+35	GO:0006829	zinc ion transport	10	4	1.16	0.11551
+36	GO:0006670	sphingosine metabolic process	3	2	0.35	0.11593
+37	GO:0048699	generation of neurons	29	5	3.37	0.11594
+38	GO:0072384	organelle transport along microtubule	6	2	0.7	0.11606
+39	GO:0000902	cell morphogenesis	18	3	2.09	0.11620
+40	GO:0002011	morphogenesis of an epithelial sheet	1	1	0.12	0.11620
+41	GO:0023041	neuronal signal transduction	1	1	0.12	0.11620
+42	GO:0010142	farnesyl diphosphate biosynthetic process, mevalonate pathway	1	1	0.12	0.11620
+43	GO:1990116	ribosome-associated ubiquitin-dependent protein catabolic process	1	1	0.12	0.11620
+44	GO:0018149	peptide cross-linking	1	1	0.12	0.11620
+45	GO:0090162	establishment of epithelial cell polarity	1	1	0.12	0.11620
+46	GO:1900011	negative regulation of corticotropin-releasing hormone receptor activity	1	1	0.12	0.11620
+47	GO:0106217	tRNA C3-cytosine methylation	1	1	0.12	0.11620
+48	GO:0031509	subtelomeric heterochromatin formation	1	1	0.12	0.11620
+49	GO:0031048	regulatory ncRNA-mediated heterochromatin formation	1	1	0.12	0.11620
+50	GO:0032873	negative regulation of stress-activated MAPK cascade	1	1	0.12	0.11620
+51	GO:0006878	intracellular copper ion homeostasis	1	1	0.12	0.11620
+52	GO:0032878	regulation of establishment or maintenance of cell polarity	1	1	0.12	0.11620
+53	GO:0031179	peptide modification	1	1	0.12	0.11620
+54	GO:1901911	adenosine 5'-(hexahydrogen pentaphosphate) catabolic process	1	1	0.12	0.11620
+55	GO:2000010	positive regulation of protein localization to cell surface	1	1	0.12	0.11620
+56	GO:0006597	spermine biosynthetic process	1	1	0.12	0.11620
+57	GO:1901907	diadenosine pentaphosphate catabolic process	1	1	0.12	0.11620
+58	GO:1901909	diadenosine hexaphosphate catabolic process	1	1	0.12	0.11620
+59	GO:0048332	mesoderm morphogenesis	1	1	0.12	0.11620
+60	GO:0006564	L-serine biosynthetic process	1	1	0.12	0.11620
+61	GO:1904491	protein localization to ciliary transition zone	1	1	0.12	0.11620
+62	GO:0045905	positive regulation of translational termination	1	1	0.12	0.11620
+63	GO:2000009	negative regulation of protein localization to cell surface	1	1	0.12	0.11620
+64	GO:2000134	negative regulation of G1/S transition of mitotic cell cycle	1	1	0.12	0.11620
+65	GO:1901098	positive regulation of autophagosome maturation	1	1	0.12	0.11620
+66	GO:0050919	negative chemotaxis	1	1	0.12	0.11620
+67	GO:0006542	glutamine biosynthetic process	1	1	0.12	0.11620
+68	GO:0006532	aspartate biosynthetic process	1	1	0.12	0.11620
+69	GO:0042038	peptidyl-histidine methylation, to form tele-methylhistidine	1	1	0.12	0.11620
+70	GO:0009450	gamma-aminobutyric acid catabolic process	1	1	0.12	0.11620
+71	GO:0032012	regulation of ARF protein signal transduction	1	1	0.12	0.11620
+72	GO:0007340	acrosome reaction	1	1	0.12	0.11620
+73	GO:0009443	pyridoxal 5'-phosphate salvage	1	1	0.12	0.11620
+74	GO:0015811	L-cystine transport	1	1	0.12	0.11620
+75	GO:0017186	peptidyl-pyroglutamic acid biosynthetic process, using glutaminyl-peptide cyclotransferase	1	1	0.12	0.11620
+76	GO:0055129	L-proline biosynthetic process	1	1	0.12	0.11620
+77	GO:0007420	brain development	1	1	0.12	0.11620
+78	GO:0071543	diphosphoinositol polyphosphate metabolic process	1	1	0.12	0.11620
+79	GO:0097036	regulation of plasma membrane sterol distribution	1	1	0.12	0.11620
+80	GO:1904262	negative regulation of TORC1 signaling	1	1	0.12	0.11620
+81	GO:0051490	negative regulation of filopodium assembly	1	1	0.12	0.11620
+82	GO:0031954	positive regulation of protein autophosphorylation	1	1	0.12	0.11620
+83	GO:0051497	negative regulation of stress fiber assembly	1	1	0.12	0.11620
+84	GO:0072383	plus-end-directed vesicle transport along microtubule	1	1	0.12	0.11620
+85	GO:0051460	negative regulation of corticotropin secretion	1	1	0.12	0.11620
+86	GO:0008340	determination of adult lifespan	1	1	0.12	0.11620
+87	GO:0018401	peptidyl-proline hydroxylation to 4-hydroxy-L-proline	1	1	0.12	0.11620
+88	GO:0000301	retrograde transport, vesicle recycling within Golgi	1	1	0.12	0.11620
+89	GO:0016332	establishment or maintenance of polarity of embryonic epithelium	1	1	0.12	0.11620
+90	GO:2000377	regulation of reactive oxygen species metabolic process	1	1	0.12	0.11620
+91	GO:0000494	box C/D sno(s)RNA 3'-end processing	1	1	0.12	0.11620
+92	GO:0040008	regulation of growth	11	2	1.28	0.11626
+93	GO:0016070	RNA metabolic process	667	78	77.51	0.11639
+94	GO:0007165	signal transduction	330	51	38.35	0.12439
+95	GO:0051726	regulation of cell cycle	59	7	6.86	0.12811
+96	GO:0016925	protein sumoylation	6	2	0.7	0.14734
+97	GO:0051123	RNA polymerase II preinitiation complex assembly	6	2	0.7	0.14734
+98	GO:0071230	cellular response to amino acid stimulus	6	2	0.7	0.14734
+99	GO:0035329	hippo signaling	6	2	0.7	0.14734
+100	GO:0007160	cell-matrix adhesion	6	2	0.7	0.14734

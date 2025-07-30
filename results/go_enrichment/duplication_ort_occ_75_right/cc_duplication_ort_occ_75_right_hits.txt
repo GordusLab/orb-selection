@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0019185	snRNA-activating protein complex	4	3	0.15	0.00022
+2	GO:1990316	Atg1/ULK1 kinase complex	2	2	0.08	0.00147
+3	GO:0005829	cytosol	215	15	8.27	0.03529
+4	GO:0005736	RNA polymerase I complex	8	2	0.31	0.03533
+5	GO:0035267	NuA4 histone acetyltransferase complex	9	2	0.35	0.04429
+6	GO:0055120	striated muscle dense body	2	1	0.08	0.07551
+7	GO:0097361	cytosolic [4Fe-4S] assembly targeting complex	2	1	0.08	0.07551
+8	GO:0005801	cis-Golgi network	2	1	0.08	0.07551
+9	GO:0089701	U2AF complex	2	1	0.08	0.07551
+10	GO:1990726	Lsm1-7-Pat1 complex	2	1	0.08	0.07551
+11	GO:0031466	Cul5-RING ubiquitin ligase complex	2	1	0.08	0.07551
+12	GO:0031616	spindle pole centrosome	2	1	0.08	0.07551
+13	GO:0071541	eukaryotic translation initiation factor 3 complex, eIF3m	2	1	0.08	0.07551
+14	GO:0005615	extracellular space	65	5	2.5	0.10285
+15	GO:0000445	THO complex part of transcription export complex	3	1	0.12	0.11111
+16	GO:0005688	U6 snRNP	3	1	0.12	0.11111
+17	GO:0000407	phagophore assembly site	17	2	0.65	0.13731
+18	GO:0030425	dendrite	4	1	0.15	0.14535
+19	GO:0032133	chromosome passenger complex	4	1	0.15	0.14535
+20	GO:0034518	RNA cap binding complex	4	1	0.15	0.14535
+21	GO:0034657	GID complex	4	1	0.15	0.14535
+22	GO:0005665	RNA polymerase II, core complex	4	1	0.15	0.14535
+23	GO:0005876	spindle microtubule	4	1	0.15	0.14535
+24	GO:0071004	U2-type prespliceosome	4	1	0.15	0.14535
+25	GO:0051233	spindle midzone	5	1	0.19	0.17829
+26	GO:0030134	COPII-coated ER to Golgi transport vesicle	20	2	0.77	0.17836
+27	GO:0005839	proteasome core complex	13	2	0.5	0.20877
+28	GO:0017101	aminoacyl-tRNA synthetase multienzyme complex	6	1	0.23	0.20997
+29	GO:0072546	EMC complex	6	1	0.23	0.20997
+30	GO:0005885	Arp2/3 protein complex	6	1	0.23	0.20997
+31	GO:0030016	myofibril	6	1	0.23	0.20997
+32	GO:0005739	mitochondrion	334	13	12.85	0.22913
+33	GO:0019898	extrinsic component of membrane	34	3	1.31	0.23358
+34	GO:0019773	proteasome core complex, alpha-subunit complex	7	1	0.27	0.24044
+35	GO:0005881	cytoplasmic microtubule	7	1	0.27	0.24044
+36	GO:0032040	small-subunit processome	26	2	1	0.26438
+37	GO:0005852	eukaryotic translation initiation factor 3 complex	10	2	0.38	0.26787
+38	GO:0005689	U12-type spliceosomal complex	8	1	0.31	0.26974
+39	GO:0031965	nuclear membrane	8	1	0.31	0.26974
+40	GO:0022625	cytosolic large ribosomal subunit	8	1	0.31	0.26974
+41	GO:0000139	Golgi membrane	27	2	1.04	0.27888
+42	GO:0030008	TRAPP complex	9	1	0.35	0.29792
+43	GO:0005666	RNA polymerase III complex	9	1	0.35	0.29792
+44	GO:0005884	actin filament	9	1	0.35	0.29792
+45	GO:0005942	phosphatidylinositol 3-kinase complex	10	1	0.38	0.32502
+46	GO:0031519	PcG protein complex	11	1	0.42	0.35108
+47	GO:0030014	CCR4-NOT complex	11	1	0.42	0.35108
+48	GO:0097526	spliceosomal tri-snRNP complex	12	1	0.46	0.37615
+49	GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	12	1	0.46	0.37615
+50	GO:0030424	axon	14	1	0.54	0.42344
+51	GO:0043235	receptor complex	14	1	0.54	0.42344
+52	GO:0043005	neuron projection	33	3	1.27	0.46317
+53	GO:0005763	mitochondrial small ribosomal subunit	16	1	0.62	0.46717
+54	GO:0005929	cilium	41	2	1.58	0.47285
+55	GO:0005576	extracellular region	107	7	4.12	0.47379
+56	GO:0005634	nucleus	992	35	38.18	0.48350
+57	GO:0016592	mediator complex	17	1	0.65	0.48779
+58	GO:0005741	mitochondrial outer membrane	18	1	0.69	0.50761
+59	GO:0005654	nucleoplasm	112	4	4.31	0.63595
+60	GO:0005681	spliceosomal complex	70	2	2.69	0.64341
+61	GO:0005802	trans-Golgi network	28	1	1.08	0.66845
+62	GO:0005783	endoplasmic reticulum	214	7	8.24	0.70068
+63	GO:0071013	catalytic step 2 spliceosome	31	1	1.19	0.70562
+64	GO:0000228	nuclear chromosome	31	1	1.19	0.70562
+65	GO:0005667	transcription regulator complex	70	5	2.69	0.71733
+66	GO:0005886	plasma membrane	218	7	8.39	0.74692
+67	GO:0005789	endoplasmic reticulum membrane	115	4	4.43	0.79635
+68	GO:0005743	mitochondrial inner membrane	43	1	1.65	0.81727
+69	GO:0016020	membrane	804	24	30.94	0.86202
+70	GO:0005773	vacuole	56	1	2.16	0.89123
+71	GO:0043231	intracellular membrane-bounded organelle	1802	58	69.35	0.91309
+72	GO:0030054	cell junction	62	1	2.39	0.91446
+73	GO:0005730	nucleolus	107	3	4.12	0.97961
+74	GO:0012505	endomembrane system	437	10	16.82	0.98724
+75	GO:0005737	cytoplasm	1578	53	60.73	0.99385
+76	GO:0005815	microtubule organizing center	44	1	1.69	1.00000
+77	GO:0098796	membrane protein complex	164	2	6.31	1.00000
+78	GO:0030135	coated vesicle	35	2	1.35	1.00000
+79	GO:0000346	transcription export complex	4	1	0.15	1.00000
+80	GO:0098798	mitochondrial protein-containing complex	65	1	2.5	1.00000
+81	GO:0000347	THO complex	4	1	0.15	1.00000
+82	GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	115	4	4.43	1.00000
+83	GO:1990229	iron-sulfur cluster assembly complex	2	1	0.08	1.00000
+84	GO:0005819	spindle	22	1	0.85	1.00000
+85	GO:0005759	mitochondrial matrix	67	1	2.58	1.00000
+86	GO:0032991	protein-containing complex	990	35	38.1	1.00000
+87	GO:0005622	intracellular anatomical structure	2453	87	94.41	1.00000
+88	GO:0005840	ribosome	79	2	3.04	1.00000
+89	GO:0110165	cellular anatomical entity	2931	109	112.81	1.00000
+90	GO:0031410	cytoplasmic vesicle	137	2	5.27	1.00000
+91	GO:0044391	ribosomal subunit	62	2	2.39	1.00000
+92	GO:0140513	nuclear protein-containing complex	339	7	13.05	1.00000
+93	GO:0031981	nuclear lumen	242	7	9.31	1.00000
+94	GO:0031982	vesicle	140	2	5.39	1.00000
+95	GO:0031984	organelle subcompartment	149	5	5.73	1.00000
+96	GO:0042995	cell projection	77	5	2.96	1.00000
+97	GO:0043226	organelle	2011	67	77.4	1.00000
+98	GO:0043227	membrane-bounded organelle	1836	60	70.66	1.00000
+99	GO:0043228	non-membrane-bounded organelle	478	13	18.4	1.00000
+100	GO:0043229	intracellular organelle	1993	66	76.7	1.00000

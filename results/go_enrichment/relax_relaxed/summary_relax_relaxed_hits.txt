@@ -1,0 +1,23 @@
+Description	Count	p	Ontology
+regulation of transcription by RNA polymerase II	38	0.00027	bp
+SMAD protein signal transduction	3	0.01300	bp
+proteolysis	25	0.01915	bp
+cell adhesion	9	0.02063	bp
+phosphatidylinositol phosphate biosynthetic process	5	0.02111	bp
+neurogenesis	9	0.02332	bp
+regulation of gene expression	62	0.02588	bp
+very long-chain fatty acid biosynthetic process	4	0.03040	bp
+sphingolipid biosynthetic process	5	0.03045	bp
+fatty acid elongation	4	0.03703	bp
+membrane	96	0.0021	cc
+phosphatidylinositol 3-kinase complex	4	0.0154	cc
+lysosomal membrane	4	0.0222	cc
+RNA polymerase II cis-regulatory region sequence-specific DNA binding	22	0.00079	mf
+transcription coregulator activity	16	0.00315	mf
+DNA-binding transcription factor activity, RNA polymerase II-specific	24	0.00327	mf
+GTPase activator activity	7	0.00809	mf
+1-phosphatidylinositol-3-kinase regulator activity	3	0.01182	mf
+transcription coactivator activity	7	0.02576	mf
+growth factor activity	4	0.02717	mf
+transmembrane transporter activity	21	0.03198	mf
+molecular adaptor activity	22	0.03479	mf

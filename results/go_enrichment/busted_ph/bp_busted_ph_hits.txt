@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0032957	inositol trisphosphate metabolic process	2	2	0.04	0.00046
+2	GO:0006627	protein processing involved in protein targeting to mitochondrion	3	2	0.07	0.00137
+3	GO:0032465	regulation of cytokinesis	4	2	0.09	0.00270
+4	GO:0006518	peptide metabolic process	9	2	0.2	0.01509
+5	GO:0006468	protein phosphorylation	112	7	2.43	0.01551
+6	GO:0006772	thiamine metabolic process	1	1	0.02	0.02168
+7	GO:2000632	negative regulation of pre-miRNA processing	1	1	0.02	0.02168
+8	GO:0010586	miRNA metabolic process	1	1	0.02	0.02168
+9	GO:0031120	snRNA pseudouridine synthesis	1	1	0.02	0.02168
+10	GO:1902047	polyamine transmembrane transport	1	1	0.02	0.02168
+11	GO:0051457	maintenance of protein location in nucleus	1	1	0.02	0.02168
+12	GO:0006427	histidyl-tRNA aminoacylation	1	1	0.02	0.02168
+13	GO:0009229	thiamine diphosphate biosynthetic process	1	1	0.02	0.02168
+14	GO:0042531	positive regulation of tyrosine phosphorylation of STAT protein	1	1	0.02	0.02168
+15	GO:0044027	negative regulation of gene expression via chromosomal CpG island methylation	1	1	0.02	0.02168
+16	GO:0006431	methionyl-tRNA aminoacylation	1	1	0.02	0.02168
+17	GO:0007052	mitotic spindle organization	14	2	0.3	0.03559
+18	GO:0034473	U1 snRNA 3'-end processing	2	1	0.04	0.04289
+19	GO:0034476	U5 snRNA 3'-end processing	2	1	0.04	0.04289
+20	GO:0031118	rRNA pseudouridine synthesis	2	1	0.04	0.04289
+21	GO:0070072	vacuolar proton-transporting V-type ATPase complex assembly	2	1	0.04	0.04289
+22	GO:0071042	nuclear polyadenylation-dependent mRNA catabolic process	2	1	0.04	0.04289
+23	GO:0035567	non-canonical Wnt signaling pathway	2	1	0.04	0.04289
+24	GO:0101030	tRNA-guanine transglycosylation	3	1	0.07	0.06366
+25	GO:0016266	O-glycan processing	3	1	0.07	0.06366
+26	GO:0006285	base-excision repair, AP site formation	3	1	0.07	0.06366
+27	GO:0007283	spermatogenesis	4	1	0.09	0.08398
+28	GO:0006729	tetrahydrobiopterin biosynthetic process	4	1	0.09	0.08398
+29	GO:0035023	regulation of Rho protein signal transduction	4	1	0.09	0.08398
+30	GO:0018022	peptidyl-lysine methylation	4	1	0.09	0.08398
+31	GO:0043001	Golgi to plasma membrane protein transport	4	1	0.09	0.08398
+32	GO:0000467	exonucleolytic trimming to generate mature 3'-end of 5.8S rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	4	1	0.09	0.08398
+33	GO:0000423	mitophagy	4	1	0.09	0.08398
+34	GO:0034727	piecemeal microautophagy of the nucleus	4	1	0.09	0.08398
+35	GO:0071035	nuclear polyadenylation-dependent rRNA catabolic process	4	1	0.09	0.08398
+36	GO:0071038	TRAMP-dependent tRNA surveillance pathway	4	1	0.09	0.08398
+37	GO:0090090	negative regulation of canonical Wnt signaling pathway	5	1	0.11	0.10386
+38	GO:0006515	protein quality control for misfolded or incompletely synthesized proteins	5	1	0.11	0.10386
+39	GO:0016925	protein sumoylation	5	1	0.11	0.10386
+40	GO:0006882	intracellular zinc ion homeostasis	5	1	0.11	0.10386
+41	GO:0071028	nuclear mRNA surveillance	5	1	0.11	0.10386
+42	GO:0051123	RNA polymerase II preinitiation complex assembly	6	1	0.13	0.12332
+43	GO:0031398	positive regulation of protein ubiquitination	6	1	0.13	0.12332
+44	GO:0016226	iron-sulfur cluster assembly	6	1	0.13	0.12332
+45	GO:0030431	sleep	7	1	0.15	0.14237
+46	GO:0034497	protein localization to phagophore assembly site	7	1	0.15	0.14237
+47	GO:1903818	positive regulation of voltage-gated potassium channel activity	7	1	0.15	0.14237
+48	GO:0034475	U4 snRNA 3'-end processing	7	1	0.15	0.14237
+49	GO:0016973	poly(A)+ mRNA export from nucleus	7	1	0.15	0.14237
+50	GO:0032222	regulation of synaptic transmission, cholinergic	7	1	0.15	0.14237
+51	GO:0006874	intracellular calcium ion homeostasis	7	1	0.15	0.14237
+52	GO:0006470	protein dephosphorylation	31	2	0.67	0.14422
+53	GO:0032981	mitochondrial respiratory chain complex I assembly	8	1	0.17	0.16101
+54	GO:0006289	nucleotide-excision repair	8	1	0.17	0.16101
+55	GO:0030150	protein import into mitochondrial matrix	9	1	0.2	0.17924
+56	GO:0071577	zinc ion transmembrane transport	10	1	0.22	0.19709
+57	GO:0051603	proteolysis involved in protein catabolic process	130	3	2.82	0.19891
+58	GO:0018105	peptidyl-serine phosphorylation	11	1	0.24	0.21456
+59	GO:0072665	protein localization to vacuole	12	1	0.26	0.23165
+60	GO:0006635	fatty acid beta-oxidation	13	1	0.28	0.24838
+61	GO:0030833	regulation of actin filament polymerization	13	1	0.28	0.24838
+62	GO:0030488	tRNA methylation	13	1	0.28	0.24838
+63	GO:0009058	biosynthetic process	1119	24	24.26	0.27080
+64	GO:0031146	SCF-dependent proteasomal ubiquitin-dependent protein catabolic process	15	1	0.33	0.28077
+65	GO:0006457	protein folding	56	2	1.21	0.34395
+66	GO:0006366	transcription by RNA polymerase II	240	4	5.2	0.36472
+67	GO:0006606	protein import into nucleus	22	1	0.48	0.38367
+68	GO:0007030	Golgi organization	22	1	0.48	0.38367
+69	GO:0000724	double-strand break repair via homologous recombination	22	1	0.48	0.38367
+70	GO:0032543	mitochondrial translation	24	1	0.52	0.41031
+71	GO:0016579	protein deubiquitination	24	1	0.52	0.41031
+72	GO:0007186	G protein-coupled receptor signaling pathway	25	1	0.54	0.42320
+73	GO:0007059	chromosome segregation	31	1	0.67	0.49492
+74	GO:0035556	intracellular signal transduction	173	3	3.75	0.55174
+75	GO:0006355	regulation of DNA-templated transcription	308	4	6.68	0.55729
+76	GO:0007005	mitochondrion organization	57	2	1.24	0.56407
+77	GO:0044782	cilium organization	38	1	0.82	0.56757
+78	GO:0045944	positive regulation of transcription by RNA polymerase II	39	1	0.85	0.57707
+79	GO:0016567	protein ubiquitination	64	2	1.39	0.71186
+80	GO:0055085	transmembrane transport	164	5	3.56	0.78208
+81	GO:0007166	cell surface receptor signaling pathway	95	3	2.06	0.80685
+82	GO:0030154	cell differentiation	93	1	2.02	0.87408
+83	GO:0006397	mRNA processing	100	1	2.17	0.89257
+84	GO:0016192	vesicle-mediated transport	190	2	4.12	0.93645
+85	GO:0006357	regulation of transcription by RNA polymerase II	205	2	4.44	0.97626
+86	GO:0008152	metabolic process	1874	46	40.63	1.00000
+87	GO:0006631	fatty acid metabolic process	42	1	0.91	1.00000
+88	GO:0006396	RNA processing	261	6	5.66	1.00000
+89	GO:0008154	actin polymerization or depolymerization	15	1	0.33	1.00000
+90	GO:0099536	synaptic signaling	29	1	0.63	1.00000
+91	GO:0022414	reproductive process	31	1	0.67	1.00000
+92	GO:0099537	trans-synaptic signaling	28	1	0.61	1.00000
+93	GO:0030036	actin cytoskeleton organization	42	1	0.91	1.00000
+94	GO:0006399	tRNA metabolic process	75	5	1.63	1.00000
+95	GO:0050801	monoatomic ion homeostasis	27	2	0.59	1.00000
+96	GO:0043170	macromolecule metabolic process	1459	38	31.63	1.00000
+97	GO:0050804	modulation of chemical synaptic transmission	17	1	0.37	1.00000
+98	GO:0055080	monoatomic cation homeostasis	27	2	0.59	1.00000
+99	GO:0034982	mitochondrial protein processing	5	2	0.11	1.00000
+100	GO:0055082	intracellular chemical homeostasis	26	2	0.56	1.00000

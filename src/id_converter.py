@@ -45,14 +45,17 @@ def make_id_converter():
 
     return id_df
 
+
 def id_converter_with_hogs(hog_node_genes_tsv):
     """Adds HOGs to the ID converter DataFrame."""
     hog_node_df = pd.read_csv(hog_node_genes_tsv, sep="\t", dtype=str)
     id_converter_df = make_id_converter()
 
-    hog_node_df["udiv_genes"] = hog_node_df["Uloborus_diversus"].apply(lambda x: x.split(", ") if pd.notnull(x) else [])
+    hog_node_df["udiv_genes"] = hog_node_df["Uloborus_diversus"].apply(
+        lambda x: x.split(", ") if pd.notnull(x) else []
+    )
 
-    hogs_to_udiv_genes = hog_node_df[['HOG', "udiv_genes"]]
+    hogs_to_udiv_genes = hog_node_df[["HOG", "udiv_genes"]]
 
     hogs_to_udiv_genes = hogs_to_udiv_genes.explode("udiv_genes")
     hogs_to_udiv_genes["udiv_genes"] = hogs_to_udiv_genes["udiv_genes"].apply(
@@ -61,16 +64,15 @@ def id_converter_with_hogs(hog_node_genes_tsv):
 
     # Merge the HOGs into the ID converter DataFrame
     id_converter_with_hogs = pd.merge(
-        hogs_to_udiv_genes,
-        id_converter_df,
-        on="udiv_genes",
-        how="left"
+        hogs_to_udiv_genes, id_converter_df, on="udiv_genes", how="left"
     )
 
     return id_converter_with_hogs
 
 
-def get_udiv_dmel_genes(hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_random_gene=False):
+def get_udiv_dmel_genes(
+    hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_random_gene=False
+):
     """Retrieves Uloborus diversus genes and their Drosophila melanogaster orthologs
     for a given list (csv or df) of hogs. The orthogroup file for the hierarchical orthogroup node
     of interest must be provided."""
@@ -132,7 +134,7 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv):
     res_with_udiv_df = get_udiv_dmel_genes(
         hog_node_genes_tsv,
         hogs_of_interest,
-        f"{assets}/Uloborus_diversus__v__Drosophila_melanogaster.tsv"
+        f"{assets}/Uloborus_diversus__v__Drosophila_melanogaster.tsv",
     )
 
     res_with_udiv_df = res_with_udiv_df.explode("udiv_genes")
@@ -145,6 +147,7 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv):
 
     return merged_df
 
+
 def convert_locs_to_hogs(locs, hog_node_genes_tsv):
     """Converts a list of LOCs to HOGs using the HOG node genes TSV file."""
 
@@ -156,21 +159,19 @@ def convert_locs_to_hogs(locs, hog_node_genes_tsv):
 
     return hogs_df
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "hog_node_genes_tsv", 
-        help="Path to the hierarchical orthogroup file")
+        "hog_node_genes_tsv", help="Path to the hierarchical orthogroup file"
+    )
     parser.add_argument(
-        "--hogs_of_interest", 
+        "--hogs_of_interest",
         help="Path to the results CSV file containing hogs of interest, \
-            OR a DataFrame with HOGs as index"
+            OR a DataFrame with HOGs as index",
     )
-    parser.add_argument(
-        "--locs_of_interest",
-        help="list of LOCs to convert to HOGs"
-    )
-    
+    parser.add_argument("--locs_of_interest", help="list of LOCs to convert to HOGs")
+
     args = parser.parse_args()
 
     if args.locs_of_interest:

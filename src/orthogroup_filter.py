@@ -1,6 +1,7 @@
 """
 Functions to filter orthogroups based on occupancy,
-presence of Uloborus diversus, and single copy representation."""
+presence of Uloborus diversus, and single copy representation.
+"""
 
 import argparse
 import pandas as pd

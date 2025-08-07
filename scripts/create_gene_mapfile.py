@@ -6,6 +6,10 @@ Create a mapfile from N5.tsv where:
 
 Example output:
 Poecilopachys_australasia_ICKB01022636_1_p1	Poecilopachys_australasia
+
+Current mapfile was created with:
+python scripts/create_gene_mapfile.py
+(filters to HOGs with ≥75 species having genes, resulting in 623,617 entries from 5,233 HOGs)
 """
 
 import pandas as pd

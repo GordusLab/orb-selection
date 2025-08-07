@@ -3,7 +3,7 @@
 #SBATCH --job-name=250807_astral
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
-#SBATCH --time=3-00:00:00
+#SBATCH --time=5:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --ntasks=1 
@@ -18,7 +18,6 @@ conda activate /home/crunnel2/anaconda3/envs/astral
 
 astral-pro3 \
   -t ${SLURM_CPUS_PER_TASK} \
-  -o astral_speciestree.nw \
-  -a /home/crunnel2/orb-selection/assets/gene_species_mapfile.tsv \
-  -g pruned_speciestree.nw \
-  multitree.nw 2>astral_speciestree.log
+  -o astral_speciestree4.nw \
+  -a mapfile.tsv \
+  -i multitree.nw 2>astral_speciestree4.log

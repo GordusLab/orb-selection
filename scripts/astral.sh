@@ -19,5 +19,6 @@ conda activate /home/crunnel2/anaconda3/envs/astral
 astral-pro3 \
   -t ${SLURM_CPUS_PER_TASK} \
   -o astral_speciestree.nw \
+  -a /home/crunnel2/orb-selection/assets/gene_species_mapfile.tsv \
   -g pruned_speciestree.nw \
   multitree.nw 2>astral_speciestree.log

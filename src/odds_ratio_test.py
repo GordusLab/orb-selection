@@ -665,6 +665,7 @@ class BootstrapTestResults:
             fontsize=14,
         )
 
+        # Histogram of the true log odds ratios, filtered for occupancy
         sns.histplot(
             data=self.true_fltrd_log_odds_ratios,
             kde=False,
@@ -681,6 +682,7 @@ class BootstrapTestResults:
             100,
         )
 
+        # Gaussian fit to the true log odds ratios
         ax.plot(
             x,
             norm.pdf(
@@ -693,6 +695,7 @@ class BootstrapTestResults:
             label="Gaussian fit to true\ndistribution",
         )
 
+        # Normal distribution using the average bootstrapped stats
         ax.plot(
             x,
             norm.pdf(x, self.mean_av, self.stddev_av),
@@ -701,6 +704,7 @@ class BootstrapTestResults:
             label="Average bootstrapped\ndistribution",
         )
 
+        # Bootstrap-derived confidence intervals
         ax.axvline(
             x=self.ci_av[0],
             label=f"Mean bootstrapped\nthresholds for alpha={self.a},\nalpha={1-self.a}",

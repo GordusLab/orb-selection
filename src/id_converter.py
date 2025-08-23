@@ -148,14 +148,28 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv):
     return merged_df
 
 
-def convert_locs_to_hogs(locs, hog_node_genes_tsv):
+def convert_locs_to_hogs(locs, hog_node_genes_tsv, no_desc=False):
     """Converts a list of LOCs to HOGs using the HOG node genes TSV file."""
 
     id_converter_df = id_converter_with_hogs(hog_node_genes_tsv)
 
     # Filter the id_converter_df for the given LOCs
-    hogs_df = id_converter_df[id_converter_df["LOC"].isin(locs)]
-    hogs_df = hogs_df[["LOC", "HOG"]].dropna().drop_duplicates()
+    try:
+        hogs_df = id_converter_df[id_converter_df["LOC"].isin(locs)]
+        hogs_df = hogs_df.dropna().drop_duplicates()
+        
+    except TypeError:
+        try:
+            with open(locs, "r") as f:
+                locs = f.read().splitlines()
+                hogs_df = id_converter_df[id_converter_df["LOC"].isin(locs)]
+                hogs_df = hogs_df.dropna().drop_duplicates()
+        except Exception as e:
+            print(f"Error reading LOCs list: {e}")
+            print("Provide LOCs as a list or a file.")
+
+    if no_desc:
+        hogs_df = hogs_df[["LOC", "HOG"]].dropna().drop_duplicates()
 
     return hogs_df
 
@@ -172,13 +186,30 @@ if __name__ == "__main__":
     )
     parser.add_argument("--locs_of_interest", help="list of LOCs to convert to HOGs")
 
+    parser.add_argument(
+        "--one_random_gene",
+        action="store_true",
+        help="If set, only one random Uloborus diversus gene will be selected per HOG",
+    )
+
+    parser.add_argument("--no-desc", 
+        action="store_true",
+        help="Exclude all fields in the TSV (GO terms, descriptions, etc.) except LOC and HOG"
+    )
+
+    parser.add_argument("--tsv_filename", help="Path to the output TSV file")
+
     args = parser.parse_args()
 
     if args.locs_of_interest:
-        convert_locs_to_hogs(args.locs_of_interest, args.hog_node_genes_tsv)
+        df = convert_locs_to_hogs(args.locs_of_interest, args.hog_node_genes_tsv, args.no_desc)
+        if args.tsv_filename:
+            df.to_csv(f"{args.tsv_filename}", sep="\t", index=False)
 
     elif args.hogs_of_interest:
-        convert_hogs_to_locs(args.hogs_of_interest, args.hog_node_genes_tsv)
+        df = convert_hogs_to_locs(args.hogs_of_interest, args.hog_node_genes_tsv)
+        if args.tsv_filename:
+            df.to_csv(f"{args.tsv_filename}", sep="\t", index=False)
 
     else:
         print("Please provide either --hogs_of_interest or --locs_of_interest.")

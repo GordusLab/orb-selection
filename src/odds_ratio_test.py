@@ -20,6 +20,8 @@ import orthogroup_gene_count
 # Set the random seed for reproducibility
 random.seed(42)
 
+plt.rcParams['font.family'] = 'Verdana'
+
 def drop_empty_cols(df, print_txt=True):
     """
     Drops columns where all entries (ignoring headers) are 0,
@@ -648,7 +650,9 @@ class BootstrapTestResults:
         bg_name="background",
         gaussfit_color="blue",
         avbootstrap_color="red",
-        histcolor="lightblue",
+        hist_color="red",
+        thresholds_color="darkred",
+        title=True
     ):
         """Function to plot the results of the bootstrapping test"""
         
@@ -656,25 +660,27 @@ class BootstrapTestResults:
         fg_name = fg_name.replace(" ", "\ ")
         bg_name = bg_name.replace(" ", "\ ")
 
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(6, 5))
 
-        fig.suptitle(
-            rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
-            f"Maximum occupancy = {self.maximum}, "
-            f"minimum occupancy = {self.occupancy_threshold}",
-            fontsize=14,
-        )
+        if title:
+            fig.suptitle(
+                rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+                f"Maximum occupancy = {self.maximum}, "
+                f"minimum occupancy = {self.occupancy_threshold}",
+                fontsize=14,
+            )
 
         # Histogram of the true log odds ratios, filtered for occupancy
-        sns.histplot(
-            data=self.true_fltrd_log_odds_ratios,
-            kde=False,
+        ax.hist(
+            self.true_fltrd_log_odds_ratios,
             bins=50,
-            stat="density",
-            ax=ax,
-            legend=False,
-            color=histcolor,
+            density=True,
+            color=hist_color,
+            alpha=0.3,
+            edgecolor=hist_color
         )
+
+        print(hist_color)
 
         x = np.linspace(
             self.true_fltrd_log_odds_ratios.min(),
@@ -692,7 +698,7 @@ class BootstrapTestResults:
             ),
             color=gaussfit_color,
             linestyle="--",
-            label="Gaussian fit to true\ndistribution",
+            label="Gaussian fit to\ntrue distribution",
         )
 
         # Normal distribution using the average bootstrapped stats
@@ -701,29 +707,31 @@ class BootstrapTestResults:
             norm.pdf(x, self.mean_av, self.stddev_av),
             color=avbootstrap_color,
             linestyle="--",
-            label="Average bootstrapped\ndistribution",
+            label="Average BS'd\ndistribution",
         )
 
         # Bootstrap-derived confidence intervals
         ax.axvline(
             x=self.ci_av[0],
-            label=f"Mean bootstrapped\nthresholds for alpha={self.a},\nalpha={1-self.a}",
+            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
             linestyle="dotted",
+            color=thresholds_color
         )
 
         ax.axvline(
             x=self.ci_av[1],
-            linestyle="dotted"
+            linestyle="dotted",
+            color=thresholds_color
         )
 
         ax.text(
             0.03,
             0.95,
-            f"Bootstrapped mean = {self.mean_av:.2f}\n"
+            f"BS'd mean = {self.mean_av:.2f}\n"
             f"True mean = {self.true_mean:.2f}\n\n"
-            f"Bootstrapped standard deviation = {self.stddev_av:.2f}\n"
-            f"True standard deviation = {self.true_skew:.2f}\n\n"
-            f"Bootstrapped skew = {self.skew_av:.2f}\n"
+            f"BS'd std. dev. = {self.stddev_av:.2f}\n"
+            f"True std. dev. = {self.true_stddev:.2f}\n\n"
+            f"BS'd skew = {self.skew_av:.2f}\n"
             f"True skew = {self.true_skew:.2f}\n",
             transform=ax.transAxes,
             fontsize=10,
@@ -731,9 +739,12 @@ class BootstrapTestResults:
             va="top",
         )
 
-        ax.set(xlabel="Log odds ratio", ylabel="Density")
+        plt.xlabel("Log odds ratio", fontsize=12, fontweight="bold")
+        plt.ylabel("Density", fontsize=12, fontweight="bold")
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
 
-        plt.legend(fontsize=10)
+        plt.legend(fontsize=10, loc="upper right")
         plt.tight_layout()
 
         return fig, ax

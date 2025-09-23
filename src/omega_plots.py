@@ -7,7 +7,16 @@ from matplotlib import (
 
 logbins = np.geomspace(0.001, 10000, 100)
 
-def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, transparent=True):
+def plot_omega_distributions(
+        x, 
+        result, 
+        top_title, 
+        bottom_title,
+        numeral="",
+        suptitle=None,
+        filename=None, 
+        transparent=True
+        ):
 
     """
     Plot the distributions of ω1, ω2, and ω3 for both TEST and REFERENCE groups.
@@ -60,7 +69,8 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
         ymaxs_2.append(ymax2+pad)
         ymaxs.append(ymax)
 
-    if any(y > 50 for y in ymaxs):
+    if result != 'busted':
+    # if any(y > 50 for y in ymaxs):
     # if ymaxs[0]>50 | ymaxs[1]>50:
         # Calculate the height ratios for the subplots
         a = ymaxs_1[0]-ymins_1[0]
@@ -258,6 +268,7 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
 
     else:
         # If the maximum counts are less than or equal to 50, use a simpler layout
+        # This is what we are using for the BUSTED results
 
         fig, axs = plt.subplots(2,1, sharex=True, figsize=(6,5))
 
@@ -274,38 +285,38 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
         # axs[0].set_facecolor('lightgray')
 
         
-        # Plot distributions for ω1, ω2, and ω3 for the REF group
-        axs[0].hist(x['ω1_ref'], bins=logbins, histtype='stepfilled', 
-                    color='salmon', alpha=0.17, label='ω1 distribution',
-                    path_effects=[pe.Stroke(linewidth=1, foreground='darkred')])
-        axs[0].hist(x['ω2_ref'], bins=logbins, histtype='stepfilled', 
-                    color='steelblue', alpha =0.17, label='ω2 distribution',
-                    path_effects=[pe.Stroke(linewidth=1, foreground='darkblue')])
-        axs[0].hist(x['ω3_ref'], bins=logbins, histtype='stepfilled', 
-                    color='goldenrod', alpha =0.17, label='ω3 distribution',
-                    path_effects=[pe.Stroke(linewidth=1, foreground='brown')])
+
 
         # axs[0].legend(fontsize='small')
 
         # Plot distributions for ω1, ω2, and ω3 for the TEST group
-        axs[1].hist(x['ω1_test'], bins=logbins, histtype='stepfilled', color='salmon', 
+        axs[0].hist(x['ω1_test'], bins=logbins, histtype='stepfilled', color='salmon', 
                     alpha=0.17, path_effects=[pe.Stroke(linewidth=1, foreground='darkred')])
-        axs[1].hist(x['ω2_test'], bins=logbins, histtype='stepfilled', color='steelblue', 
+        axs[0].hist(x['ω2_test'], bins=logbins, histtype='stepfilled', color='steelblue', 
                     alpha=0.17, path_effects=[pe.Stroke(linewidth=1, foreground='darkblue')])
-        axs[1].hist(x['ω3_test'], bins=logbins, histtype='stepfilled', color='goldenrod', 
+        axs[0].hist(x['ω3_test'], bins=logbins, histtype='stepfilled', color='goldenrod', 
                     alpha=0.17, path_effects=[pe.Stroke(linewidth=1, foreground='brown')])                                 
         
-        # plt.fill_between([0,1],[1,1], facecolor="none", hatch="X", edgecolor="lightgray", linewidth=0.0)
+        # Plot distributions for ω1, ω2, and ω3 for the REF group
+        axs[1].hist(x['ω1_ref'], bins=logbins, histtype='stepfilled', 
+                    color='salmon', alpha=0.17, label='ω1 distribution',
+                    path_effects=[pe.Stroke(linewidth=1, foreground='darkred')])
+        axs[1].hist(x['ω2_ref'], bins=logbins, histtype='stepfilled', 
+                    color='steelblue', alpha =0.17, label='ω2 distribution',
+                    path_effects=[pe.Stroke(linewidth=1, foreground='darkblue')])
+        axs[1].hist(x['ω3_ref'], bins=logbins, histtype='stepfilled', 
+                    color='goldenrod', alpha =0.17, label='ω3 distribution',
+                    path_effects=[pe.Stroke(linewidth=1, foreground='brown')])
 
 
         ax_avgs = axs[0].twinx()
         ax_avgs.set_facecolor('none')
         # ax_avgs.set_axis_off()
 
-        means = [x['ω1_ref'].mean(), x['ω2_ref'].mean(), x['ω3_ref'].mean()]
-        weights = [x['ω1_ref_P'].mean(), x['ω2_ref_P'].mean(), x['ω3_ref_P'].mean()]
+        means = [x['ω1_test'].mean(), x['ω2_test'].mean(), x['ω3_test'].mean()]
+        weights = [x['ω1_test_P'].mean(), x['ω2_test_P'].mean(), x['ω3_test_P'].mean()]
 
-        # Plot vertical lines for the means of ω1, ω2, and ω3 for the REF group
+        # Plot vertical lines for the means of ω1, ω2, and ω3 for the TEST group
         ax_avgs.axvline(means[0], linewidth=6, color='salmon', ymax=weights[0], 
                         path_effects=[pe.withStroke(linewidth=7.5, foreground='white'), pe.Normal()])
         ax_avgs.axvline(means[1], linewidth=6, color='steelblue', ymax=weights[1], 
@@ -319,10 +330,11 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
         # ax_avgs2.set_axis_off()
 
         ax_avgs2.invert_yaxis()
-        means = [x['ω1_test'].mean(), x['ω2_test'].mean(), x['ω3_test'].mean()]
-        weights = [x['ω1_test_P'].mean(), x['ω2_test_P'].mean(), x['ω3_test_P'].mean()]
+        
+        means = [x['ω1_ref'].mean(), x['ω2_ref'].mean(), x['ω3_ref'].mean()]
+        weights = [x['ω1_ref_P'].mean(), x['ω2_ref_P'].mean(), x['ω3_ref_P'].mean()]
 
-        # Plot vertical lines for the means of ω1, ω2, and ω3 for the TEST group
+        # Plot vertical lines for the means of ω1, ω2, and ω3 for the REF group
         ax_avgs2.axvline(means[0],  linewidth=6, color='salmon', 
                         ymin=(1-weights[0]), label='mean inferred ω1',
                         path_effects=[pe.withStroke(linewidth=7, foreground='white'), pe.Normal()])
@@ -338,8 +350,8 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
         ax_avgs2.axvline(1, linewidth=0.5, linestyle='dashed', color='k', alpha=0.5)
 
         # labels for top vs bottom axes
-        ax_avgs.set_title(top_title, x=0.2, y=0.7, fontsize=10, color='silver', weight='bold', backgroundcolor= 'white')
-        ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=10, color='white', weight='bold', backgroundcolor='lightgray')
+        ax_avgs.set_title(top_title, x=0.2, y=0.7, fontsize=10, color='white', weight='bold', backgroundcolor='lightgray')
+        ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=10, color='silver', weight='bold', backgroundcolor= 'white')
 
         # ax_avgs2.legend(loc='lower right', fontsize='small')
 
@@ -387,18 +399,8 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
                  fontsize=12, ha='left', va='center', transform=ax.transAxes, 
                  bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
-
-    if result == 'all':
-        fig.suptitle(r"$\bf{i.}$"  + "all genes", y=0.93, fontsize=14) 
-
-    elif result == 'intensified': 
-        fig.suptitle(r"$\bf{ii.}$" + " all " + r"$\it{intensified}$" + " genes", y=0.93, fontsize=14)
-
-    elif result == 'relaxed':
-        fig.suptitle(r"$\bf{iv.}$" + " all " + r"$\it{relaxed}$" + " genes", y=0.93, fontsize=14)
-    
-    else:
-        fig.suptitle(r"$\bf{ii.}$" + " all " + r"$\it{" +f'{result}' + r"}$" + " genes", y=0.93, fontsize=14)
+    if suptitle is not None:
+        fig.suptitle(r"$\bf{"+f"{numeral}" + r"}$" + suptitle, y=0.93, fontsize=12)
 
     if filename is not None:
         plt.savefig(filename, dpi=600, transparent=transparent, bbox_inches='tight')
@@ -409,7 +411,8 @@ def plot_omega_distributions(x, result, top_title, bottom_title, filename=None, 
 def plot_omega_single_gene(
         df, 
         gene, 
-        plot_title, 
+        suptitle=None,
+        subtitle=None,
         i="", 
         offset_zero=False, 
         k=False,
@@ -490,7 +493,10 @@ def plot_omega_single_gene(
     for ax in fig.axes:
         ax.tick_params(direction='in')
 
-    fig.suptitle(r"$\bf{"+f"{i}" + r"}$" + plot_title, y=0.93, fontsize=14)
+    if suptitle is not None:
+        fig.suptitle(r"$\bf{"+f"{i}" + r"}$" + suptitle, y=0.96, fontsize=12)
+    if subtitle is not None:
+        plt.title(subtitle, fontsize=10)
 
 
     if k:

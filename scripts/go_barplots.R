@@ -39,7 +39,18 @@ truncate.labels <- function(x, len) {
 }
 
 # Function to create bar plots for GO enrichment results
-go.barplot <- function(sumfile, colors, figsize, title, rev, output_filename, wrap_desc = FALSE, truncate_desc = FALSE, max_chars = 50, transparent = FALSE) {
+go.barplot <- function(
+  sumfile, 
+  colors, 
+  figsize, 
+  title, 
+  rev, 
+  output_filename, 
+  title_size = 22, 
+  wrap_desc = NULL, 
+  truncate_desc = NULL, 
+  transparent = FALSE
+  ) {
   # Load the data
   df <- read.table(
     file = sumfile,
@@ -51,10 +62,10 @@ go.barplot <- function(sumfile, colors, figsize, title, rev, output_filename, wr
     "Enrichment score" = -log10(p)
   )
 
-  if (wrap_desc) {
-    df["Description"] <- lapply(df["Description"], wrap.labels, len = 38)
-  } else if (truncate_desc) {
-    df["Description"] <- lapply(df["Description"], truncate.labels, len = max_chars)
+  if (is.numeric(wrap_desc)) {
+    df["Description"] <- lapply(df["Description"], wrap.labels, len = wrap_desc)
+  } else if (is.numeric(truncate_desc)) {
+    df["Description"] <- lapply(df["Description"], truncate.labels, len = truncate_desc)
   }
 
   df$Description <- as.character(df$Description)
@@ -79,7 +90,7 @@ go.barplot <- function(sumfile, colors, figsize, title, rev, output_filename, wr
     panel.border = element_rect(color = "black", fill = NA, size = 1),
     strip.background = element_rect(color = "black", size = 1, fill = colors[1]),
     strip.text = element_text(size = 18, face = "bold"),
-    plot.title = element_text(size = 22, face = "bold", hjust = hj)
+    plot.title = element_text(size = title_size, hjust = hj)
   )
 
   if (transparent) {
@@ -127,8 +138,10 @@ go.barplot <- function(sumfile, colors, figsize, title, rev, output_filename, wr
 go.barplot(
   sumfile = here("results/go_enrichment/relax_relaxed/summary_relax_relaxed_hits.txt"),
   colors = c("#FEE9E7", "#FA8072"),
-  figsize = c(35, 23),
-  title = "Genes under relaxed selection in non-orbweavers",
+  figsize = c(25, 24),
+  title = "GO terms enriched in genes under relaxed selection",
+  title_size = 20,
+  wrap_desc = 45,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
@@ -137,7 +150,8 @@ go.barplot(
   sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
   colors = c("#E0F2DB", "#639B51"),
   figsize = c(25, 21),
-  title = "Genes under intensified selection in non-orbweavers",
+  title = "GO terms enriched in genes under intensified selection",
+  title_size = 20,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
 )
@@ -145,19 +159,22 @@ go.barplot(
 go.barplot(
   sumfile = here("results/go_enrichment/busted_ph/summary_busted_ph_hits.txt"),
   colors = c("#E0EAF2", "#4682B4"),
-  figsize = c(21, 9),
-  title = "Genes under positive selection ~ orbweaving",
-  rev = TRUE,
-  output_filename = here("figures/figure_3/busted_ph_go_barplot.png")
+  figsize = c(26, 20),
+  title = "GO terms enriched in genes under\npositive selection ~ orbweaving",
+  rev = FALSE,
+  title_size = 18,
+  output_filename = here("figures/figure_4/busted_ph_go_barplot.png")
 )
 
 go.barplot(
   sumfile = here("results/go_enrichment/busted_ph_rev/summary_busted_ph_rev_hits.txt"),
   colors = c("#F9F0D9", "#DAA520"),
-  figsize = c(26, 11),
-  title = "Genes under positive selection ~ non-orbweaving",
-  rev = TRUE,
-  output_filename = here("figures/figure_3/busted_ph_rev_go_barplot.png")
+  figsize = c(26, 20),
+  title = "GO terms enriched in genes under\npositive selection ~ non-orbweaving",
+  wrap_desc = 30,
+  title_size = 18,
+  rev = FALSE,
+  output_filename = here("figures/figure_4/busted_ph_rev_go_barplot.png")
 )
 
 # Log odds ratio analysis
@@ -167,8 +184,8 @@ go.barplot(
   figsize = c(25, 20),
   title = "Genes more likely to be duplicated in non-orbweavers",
   rev = FALSE,
-  output_filename = here("figures/figure_4/duplication_ort_occ_50_left_go_barplot.png"),
-  truncate_desc = TRUE
+  output_filename = here("figures/figure_5/duplication_ort_occ_50_left_go_barplot.png"),
+  truncate_desc = 50
 )
 
 go.barplot(
@@ -177,8 +194,8 @@ go.barplot(
   figsize = c(30, 25),
   title = "Genes more likely to be duplicated in orbweavers",
   rev = FALSE,
-  output_filename = here("figures/figure_4/duplication_ort_occ_50_right_go_barplot.png"),
-  truncate_desc = TRUE
+  output_filename = here("figures/figure_5/duplication_ort_occ_50_right_go_barplot.png"),
+  truncate_desc = 50
 )
 
 go.barplot(
@@ -187,8 +204,8 @@ go.barplot(
   figsize = c(25, 15),
   title = "Genes more likely to be missing in non-orbweavers",
   rev = FALSE,
-  output_filename = here("figures/figure_4/loss_ort_occ_50_left_go_barplot.png"),
-  truncate_desc = TRUE
+  output_filename = here("figures/figure_5/loss_ort_occ_50_left_go_barplot.png"),
+  truncate_desc = 50
 )
 
 go.barplot(
@@ -197,6 +214,6 @@ go.barplot(
   figsize = c(25, 20),
   title = "Genes more likely to be missing in orbweavers",
   rev = FALSE,
-  output_filename = here("figures/figure_4/loss_ort_occ_50_right_go_barplot1.png"),
-  truncate_desc = TRUE
+  output_filename = here("figures/figure_5/loss_ort_occ_50_right_go_barplot1.png"),
+  truncate_desc = 50
 )

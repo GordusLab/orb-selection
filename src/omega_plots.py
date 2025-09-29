@@ -200,13 +200,13 @@ def plot_omega_distributions(
 
             if result == 'intensified':
                 plt.text(0.8, 0.7, 
-                    '$\it{p}$<0.05\n$\it{k}$>1', 
+                    '$\it{p}$≤0.05\n$\it{k}$>1', 
                     fontsize=12, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
                 
             else:
                 plt.text(0.8, 0.35, 
-                    '$\it{p}$<0.05\n$\it{k}$<1', 
+                    '$\it{p}$≤0.05\n$\it{k}$<1', 
                     fontsize=12, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
@@ -230,7 +230,7 @@ def plot_omega_distributions(
                 # tick.set_alpha(0.7)
 
 
-        fig.supylabel('proportion of sites', x=0.03, weight='bold', fontsize=14)
+        fig.supylabel('mean proportion of sites', x=0.03, weight='bold', fontsize=14)
 
         dummy_ax=fig.add_subplot(1,1,1)
         dummy_ax.set_xticks([])
@@ -376,7 +376,7 @@ def plot_omega_distributions(
             
 
         # label the two different y axes
-        fig.supylabel('proportion of sites', x=0.03, weight='bold', fontsize=14)
+        fig.supylabel('mean proportion of sites', x=0.03, weight='bold', fontsize=14)
 
         dummy_ax=fig.add_subplot(1,1,1)
         dummy_ax.set_xticks([])
@@ -395,7 +395,7 @@ def plot_omega_distributions(
             ax.tick_params(axis='x', which='major', pad=10)
 
         plt.text(0.8, 0.125, 
-                 '$\it{p_1}$<0.05\n$\it{p_2}$>0.05\n$\it{p_3}$<0.05', 
+                 '$\it{p_1}$≤0.05\n$\it{p_2}$>0.05\n$\it{p_3}$≤0.05', 
                  fontsize=12, ha='left', va='center', transform=ax.transAxes, 
                  bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 

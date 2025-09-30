@@ -652,6 +652,7 @@ class BootstrapTestResults:
         avbootstrap_color="red",
         hist_color="red",
         thresholds_color="darkred",
+        bins=100,
         title=True
     ):
         """Function to plot the results of the bootstrapping test"""
@@ -673,7 +674,7 @@ class BootstrapTestResults:
         # Histogram of the true log odds ratios, filtered for occupancy
         ax.hist(
             self.true_fltrd_log_odds_ratios,
-            bins=50,
+            bins=bins,
             density=True,
             color=hist_color,
             alpha=0.3,

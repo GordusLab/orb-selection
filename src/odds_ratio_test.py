@@ -591,8 +591,8 @@ class BootstrapTestResults:
             alt = "left-tailed"
 
         # Making the text bold deletes spaces
-        fg_name = fg_name.replace(" ", "\ ")
-        bg_name = bg_name.replace(" ", "\ ")
+        fg_name = fg_name.replace(" ", r"\ ")
+        bg_name = bg_name.replace(" ", r"\ ")
 
         fig.suptitle(
             rf"$\bf{{Bootstrapped\ distribution\ stats\ for\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
@@ -658,8 +658,8 @@ class BootstrapTestResults:
         """Function to plot the results of the bootstrapping test"""
         
         # Making the text bold deletes spaces
-        fg_name = fg_name.replace(" ", "\ ")
-        bg_name = bg_name.replace(" ", "\ ")
+        fg_name = fg_name.replace(" ", r"\ ")
+        bg_name = bg_name.replace(" ", r"\ ")
 
         fig, ax = plt.subplots(figsize=(6, 5))
 
@@ -749,6 +749,291 @@ class BootstrapTestResults:
         plt.tight_layout()
 
         return fig, ax
+
+    def plot_bootstrap_results_layered(
+        self,
+        fg_name,
+        bg_name="background",
+        gaussfit_color="blue",
+        avbootstrap_color="red",
+        hist_color="red",
+        thresholds_color="darkred",
+        bins=100,
+        title=True
+    ):
+        """Function to create 4 sequential plots with elements layered on top of each other.
+        
+        Returns 4 figures showing progressive buildup:
+        1. Average bootstrapped distribution
+        2. + Bootstrap-derived thresholds (with BS'd stats)
+        3. + Histogram of true log odds ratios (with BS'd stats)
+        4. + Gaussian fit to the histogram (with True and BS'd stats)
+        """
+        
+        # Making the text bold deletes spaces
+        fg_name = fg_name.replace(" ", r"\ ")
+        bg_name = bg_name.replace(" ", r"\ ")
+
+        # Define x-axis range
+        x = np.linspace(
+            self.true_fltrd_log_odds_ratios.min(),
+            self.true_fltrd_log_odds_ratios.max(),
+            100,
+        )
+
+        title_str = (
+            rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+            f"Maximum occupancy = {self.maximum}, "
+            f"minimum occupancy = {self.occupancy_threshold}"
+        )
+
+        figs = []
+        axes = []
+
+        # ========== PLOT 1: Average bootstrapped distribution ==========
+        fig1, ax1 = plt.subplots(figsize=(8, 6))
+        
+        if title:
+            fig1.suptitle(title_str, fontsize=14)
+
+        ax1.plot(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            color=avbootstrap_color,
+            linewidth=2.5,
+            label="Average BS'd\ndistribution",
+        )
+        ax1.fill_between(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            alpha=0.2,
+            color=avbootstrap_color,
+        )
+        
+        ax1.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
+        ax1.set_ylabel("Density", fontsize=14, fontweight="bold")
+        ax1.set_ylim(bottom=0)
+        ax1.set_xlim(x.min(), x.max())
+        plt.setp(ax1.get_xticklabels(), fontsize=13)
+        plt.setp(ax1.get_yticklabels(), fontsize=13)
+        ax1.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        plt.tight_layout()
+        figs.append(fig1)
+        axes.append(ax1)
+
+        # ========== PLOT 2: + Bootstrap-derived thresholds ==========
+        fig2, ax2 = plt.subplots(figsize=(8, 6))
+        
+        if title:
+            fig2.suptitle(title_str, fontsize=14)
+
+        ax2.plot(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            color=avbootstrap_color,
+            linewidth=2.5,
+            label="Average BS'd\ndistribution",
+        )
+        ax2.fill_between(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            alpha=0.2,
+            color=avbootstrap_color,
+            zorder=0,
+        )
+
+        ax2.axvline(
+            x=self.ci_av[0],
+            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            linestyle="dotted",
+            color=thresholds_color,
+            linewidth=2,
+        )
+        ax2.axvline(
+            x=self.ci_av[1],
+            linestyle="dotted",
+            color=thresholds_color,
+            linewidth=2,
+        )
+
+        ax2.text(
+            0.03,
+            0.95,
+            f"BS'd mean = {self.mean_av:.2f}\n"
+            f"BS'd std. dev. = {self.stddev_av:.2f}\n"
+            f"BS'd skew = {self.skew_av:.2f}\n",
+            transform=ax2.transAxes,
+            fontsize=12,
+            ha="left",
+            va="top",
+        )
+
+        ax2.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
+        ax2.set_ylabel("Density", fontsize=14, fontweight="bold")
+        ax2.set_ylim(bottom=0)
+        ax2.set_xlim(x.min(), x.max())
+        plt.setp(ax2.get_xticklabels(), fontsize=13)
+        plt.setp(ax2.get_yticklabels(), fontsize=13)
+        ax2.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        plt.tight_layout()
+        figs.append(fig2)
+        axes.append(ax2)
+
+        # ========== PLOT 3: + Histogram ==========
+        fig3, ax3 = plt.subplots(figsize=(8, 6))
+        
+        if title:
+            fig3.suptitle(title_str, fontsize=14)
+
+        ax3.plot(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            color=avbootstrap_color,
+            linewidth=2.5,
+            label="Average BS'd\ndistribution",
+        )
+        ax3.fill_between(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            alpha=0.2,
+            color=avbootstrap_color,
+            zorder=0,
+        )
+
+        ax3.axvline(
+            x=self.ci_av[0],
+            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            linestyle="dotted",
+            color=thresholds_color,
+            linewidth=2,
+        )
+        ax3.axvline(
+            x=self.ci_av[1],
+            linestyle="dotted",
+            color=thresholds_color,
+            linewidth=2,
+        )
+
+        ax3.hist(
+            self.true_fltrd_log_odds_ratios,
+            bins=bins,
+            density=True,
+            color=hist_color,
+            alpha=0.3,
+            edgecolor=hist_color,
+            label="True distribution",
+            zorder=3,
+        )
+
+        ax3.text(
+            0.03,
+            0.95,
+            f"BS'd mean = {self.mean_av:.2f}\n"
+            f"BS'd std. dev. = {self.stddev_av:.2f}\n"
+            f"BS'd skew = {self.skew_av:.2f}\n",
+            transform=ax3.transAxes,
+            fontsize=12,
+            ha="left",
+            va="top",
+        )
+
+        ax3.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
+        ax3.set_ylabel("Density", fontsize=14, fontweight="bold")
+        ax3.set_xlim(x.min(), x.max())
+        ax3.set_ylim(bottom=0)
+        plt.setp(ax3.get_xticklabels(), fontsize=13)
+        plt.setp(ax3.get_yticklabels(), fontsize=13)
+        ax3.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        plt.tight_layout()
+        figs.append(fig3)
+        axes.append(ax3)
+
+        # ========== PLOT 4: + Gaussian fit ==========
+        fig4, ax4 = plt.subplots(figsize=(8, 6))
+        
+        if title:
+            fig4.suptitle(title_str, fontsize=14)
+
+        ax4.plot(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            color=avbootstrap_color,
+            linewidth=2.5,
+            label="Average BS'd\ndistribution",
+        )
+        ax4.fill_between(
+            x,
+            norm.pdf(x, self.mean_av, self.stddev_av),
+            alpha=0.2,
+            color=avbootstrap_color,
+            zorder=0,
+        )
+
+        ax4.axvline(
+            x=self.ci_av[0],
+            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            linestyle="dotted",
+            color=thresholds_color,
+            linewidth=2,
+        )
+        ax4.axvline(
+            x=self.ci_av[1],
+            linestyle="dotted",
+            color=thresholds_color,
+            linewidth=2,
+        )
+
+        ax4.hist(
+            self.true_fltrd_log_odds_ratios,
+            bins=bins,
+            density=True,
+            color=hist_color,
+            alpha=0.3,
+            edgecolor=hist_color,
+            label="True distribution",
+            zorder=3,
+        )
+
+        ax4.plot(
+            x,
+            norm.pdf(
+                x,
+                np.mean(self.true_fltrd_log_odds_ratios),
+                np.std(self.true_fltrd_log_odds_ratios),
+            ),
+            color=gaussfit_color,
+            linestyle="--",
+            linewidth=2,
+            label="Gaussian fit to\ntrue distribution",
+        )
+
+        ax4.text(
+            0.03,
+            0.95,
+            f"BS'd mean = {self.mean_av:.2f}\n"
+            f"BS'd std. dev. = {self.stddev_av:.2f}\n"
+            f"BS'd skew = {self.skew_av:.2f}\n\n"
+            f"True mean = {self.true_mean:.2f}\n"
+            f"True std. dev. = {self.true_stddev:.2f}\n"
+            f"True skew = {self.true_skew:.2f}\n",
+            transform=ax4.transAxes,
+            fontsize=12,
+            ha="left",
+            va="top",
+        )
+
+        ax4.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
+        ax4.set_ylabel("Density", fontsize=14, fontweight="bold")
+        ax4.set_xlim(x.min(), x.max())
+        ax4.set_ylim(bottom=0)
+        plt.setp(ax4.get_xticklabels(), fontsize=13)
+        plt.setp(ax4.get_yticklabels(), fontsize=13)
+        ax4.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        plt.tight_layout()
+        figs.append(fig4)
+        axes.append(ax4)
+
+        return figs, axes
 
     def _get_hits_df(self):
         """Filter the dataframe for HOGs that have LORs exceeding the

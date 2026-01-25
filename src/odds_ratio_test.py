@@ -781,6 +781,22 @@ class BootstrapTestResults:
             100,
         )
 
+        # ----------- Compute a common y-limit so all panels share the same scale -----------
+        avg_pdf = norm.pdf(x, self.mean_av, self.stddev_av)
+        true_pdf = norm.pdf(
+            x,
+            np.mean(self.true_fltrd_log_odds_ratios),
+            np.std(self.true_fltrd_log_odds_ratios),
+        )
+        hist_vals, _ = np.histogram(
+            self.true_fltrd_log_odds_ratios, bins=bins, density=True
+        )
+        hist_max = hist_vals.max() if hist_vals.size else 0.0
+        y_max = max(avg_pdf.max(), true_pdf.max(), hist_max) * 1.05
+        if y_max == 0:
+            y_max = 1  # fallback to avoid zero-height axis
+        # -------------------------------------------------------------------------------
+
         title_str = (
             rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
             f"Maximum occupancy = {self.maximum}, "
@@ -812,7 +828,7 @@ class BootstrapTestResults:
         
         ax1.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
         ax1.set_ylabel("Density", fontsize=14, fontweight="bold")
-        ax1.set_ylim(bottom=0)
+        ax1.set_ylim(bottom=0, top=y_max)
         ax1.set_xlim(x.min(), x.max())
         plt.setp(ax1.get_xticklabels(), fontsize=13)
         plt.setp(ax1.get_yticklabels(), fontsize=13)
@@ -870,7 +886,7 @@ class BootstrapTestResults:
 
         ax2.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
         ax2.set_ylabel("Density", fontsize=14, fontweight="bold")
-        ax2.set_ylim(bottom=0)
+        ax2.set_ylim(bottom=0, top=y_max)
         ax2.set_xlim(x.min(), x.max())
         plt.setp(ax2.get_xticklabels(), fontsize=13)
         plt.setp(ax2.get_yticklabels(), fontsize=13)
@@ -940,7 +956,7 @@ class BootstrapTestResults:
         ax3.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
         ax3.set_ylabel("Density", fontsize=14, fontweight="bold")
         ax3.set_xlim(x.min(), x.max())
-        ax3.set_ylim(bottom=0)
+        ax3.set_ylim(bottom=0, top=y_max)
         plt.setp(ax3.get_xticklabels(), fontsize=13)
         plt.setp(ax3.get_yticklabels(), fontsize=13)
         ax3.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
@@ -1025,7 +1041,7 @@ class BootstrapTestResults:
         ax4.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
         ax4.set_ylabel("Density", fontsize=14, fontweight="bold")
         ax4.set_xlim(x.min(), x.max())
-        ax4.set_ylim(bottom=0)
+        ax4.set_ylim(bottom=0, top=y_max)
         plt.setp(ax4.get_xticklabels(), fontsize=13)
         plt.setp(ax4.get_yticklabels(), fontsize=13)
         ax4.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)

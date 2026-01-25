@@ -468,24 +468,23 @@ def plot_omega_single_gene(
     ax.axvline(x['ω3_ref'], linewidth=10, color='goldenrod', ymax=x['ω3_ref_P'], alpha=0.17, 
                     path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
         
-    if build_in==False:
-        # Plot vertical lines for ω1, ω2, and ω3 for the TEST group
-        ax.axvline(x['ω1_test'], linewidth=10, color='salmon', ymax=x['ω1_test_P'], 
-                        path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
-        ax.axvline(x['ω2_test'], linewidth=10, color='steelblue', ymax=x['ω2_test_P'], 
-                        path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
-        ax.axvline(x['ω3_test'], linewidth=10, color='goldenrod', ymax=x['ω3_test_P'], 
-                        path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
+    # Plot vertical lines for ω1, ω2, and ω3 for the TEST group (invisible if build_in=True)
+    test_alpha = 0 if build_in else 1
+    test_effects = [] if build_in else [pe.withStroke(linewidth=12, foreground='white'), pe.Normal()]
+    
+    ax.axvline(x['ω1_test'], linewidth=10, color='salmon', ymax=x['ω1_test_P'], alpha=test_alpha,
+                    path_effects=test_effects)
+    ax.axvline(x['ω2_test'], linewidth=10, color='steelblue', ymax=x['ω2_test_P'], alpha=test_alpha,
+                    path_effects=test_effects)
+    ax.axvline(x['ω3_test'], linewidth=10, color='goldenrod', ymax=x['ω3_test_P'], alpha=test_alpha,
+                    path_effects=test_effects)
     
     # mark omega = 1
-
     ax.axvline(1, linewidth=1, linestyle='dashed', color='k', alpha=0.5)
-
 
     for tick in ax.get_yticklabels():
         tick.set_fontweight('bold')
         tick.set_fontsize(12)
-        # tick.set_alpha(0.8)
 
     for tick in ax.get_xticklabels():
         tick.set_fontsize(12)
@@ -501,7 +500,6 @@ def plot_omega_single_gene(
     if build_in==False:
         if subtitle is not None:
             plt.title(subtitle, fontsize=10)
-
 
         if k:
             plt.text(0.7, 0.9, 

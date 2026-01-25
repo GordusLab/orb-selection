@@ -417,7 +417,8 @@ def plot_omega_single_gene(
         offset_zero=False, 
         k=False,
         filename=None,
-        transparent=True
+        transparent=True,
+        build_in=False
         ):
 
     """
@@ -466,14 +467,15 @@ def plot_omega_single_gene(
                     path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
     ax.axvline(x['ω3_ref'], linewidth=10, color='goldenrod', ymax=x['ω3_ref_P'], alpha=0.17, 
                     path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
-    
-    # Plot vertical lines for ω1, ω2, and ω3 for the TEST group
-    ax.axvline(x['ω1_test'], linewidth=10, color='salmon', ymax=x['ω1_test_P'], 
-                    path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
-    ax.axvline(x['ω2_test'], linewidth=10, color='steelblue', ymax=x['ω2_test_P'], 
-                    path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
-    ax.axvline(x['ω3_test'], linewidth=10, color='goldenrod', ymax=x['ω3_test_P'], 
-                    path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
+        
+    if build_in==False:
+        # Plot vertical lines for ω1, ω2, and ω3 for the TEST group
+        ax.axvline(x['ω1_test'], linewidth=10, color='salmon', ymax=x['ω1_test_P'], 
+                        path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
+        ax.axvline(x['ω2_test'], linewidth=10, color='steelblue', ymax=x['ω2_test_P'], 
+                        path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
+        ax.axvline(x['ω3_test'], linewidth=10, color='goldenrod', ymax=x['ω3_test_P'], 
+                        path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
     
     # mark omega = 1
 
@@ -495,20 +497,22 @@ def plot_omega_single_gene(
 
     if suptitle is not None:
         fig.suptitle(r"$\bf{"+f"{i}" + r"}$" + suptitle, y=0.96, fontsize=12)
-    if subtitle is not None:
-        plt.title(subtitle, fontsize=10)
+    
+    if build_in==False:
+        if subtitle is not None:
+            plt.title(subtitle, fontsize=10)
 
 
-    if k:
-        plt.text(0.7, 0.9, 
-                 '$\it{k}$='+f'{round(x["k"], 2)}\n'+'$\it{p}$='+f'{'{:.2e}'.format(x["p_value"])}', 
-                 fontsize=12, ha='left', va='center', transform=ax.transAxes, 
-                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
-    else:
-        plt.text(0.7, 0.9, 
-                 '$\it{p_1}$='+f'{'{:.2e}'.format(x["test_pval"])}\n'+'$\it{p_3}$='+f'{'{:.2e}'.format(x["shared_pval"])}', 
-                 fontsize=12, ha='left', va='center', transform=ax.transAxes, 
-                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+        if k:
+            plt.text(0.7, 0.9, 
+                    '$\it{k}$='+f'{round(x["k"], 2)}\n'+'$\it{p}$='+f'{'{:.2e}'.format(x["p_value"])}', 
+                    fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+        else:
+            plt.text(0.7, 0.9, 
+                    '$\it{p_1}$='+f'{'{:.2e}'.format(x["test_pval"])}\n'+'$\it{p_3}$='+f'{'{:.2e}'.format(x["shared_pval"])}', 
+                    fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if filename is not None:
         plt.savefig(filename, dpi=300, transparent=transparent)

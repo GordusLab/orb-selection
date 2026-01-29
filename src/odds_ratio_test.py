@@ -16,11 +16,24 @@ from scipy.stats import norm, skew
 from tqdm.auto import tqdm
 import seaborn as sns
 import orthogroup_gene_count
+import os
 
 # Set the random seed for reproducibility
 random.seed(42)
 
 plt.rcParams['font.family'] = 'Verdana'
+
+def _unique_results_dir(base_dir: str) -> str:
+    """Return a unique directory path by appending _1, _2, ... if needed."""
+    if not os.path.exists(base_dir):
+        return base_dir
+
+    counter = 1
+    while True:
+        candidate = f"{base_dir}_{counter}"
+        if not os.path.exists(candidate):
+            return candidate
+        counter += 1
 
 def drop_empty_cols(df, print_txt=True):
     """
@@ -92,6 +105,7 @@ def calculate_odds(
     test_bool_mat,
     foreground_count,
     background_count,
+    busco_arr
 ):
     """Function to calculate the odds ratio and log odds ratio"""
 
@@ -99,14 +113,28 @@ def calculate_odds(
     foreground_bool_arr = foreground_bool_arr.reshape(foreground_bool_arr.size, 1)
     background_bool_arr = background_bool_arr.reshape(background_bool_arr.size, 1)
 
+    # If a busco array is provided, weight the foreground and background arrays
+    if busco_arr is not None:
+        foreground_bool_arr = foreground_bool_arr.flatten() * busco_arr
+        background_bool_arr = background_bool_arr.flatten() * busco_arr
+
+        foreground_bool_arr = foreground_bool_arr.reshape(foreground_bool_arr.size, 1)
+        background_bool_arr = background_bool_arr.reshape(background_bool_arr.size, 1)
+
     # Calculate the number of foreground and background that are
-    # [present, missing, duplicated, single copy]
+    # [missing, duplicated]
 
     ## foreground yes
     foreground_yes_arr = np.matmul(test_bool_mat, foreground_bool_arr)
 
     ## background yes
     background_yes_arr = np.matmul(test_bool_mat, background_bool_arr)
+
+    # Alternatives considered:
+    # Multiply the inverse of the test matrix by the weighted or unweighted 
+    # foreground/background arrays. But i think weighting both numerator and denominator
+    # would cancel out the weights. But just using unweighted arrays for the "no" counts
+    # with an inverted matrix means the yesses and nos don't add up to the total counts.
 
     ## foreground no
     foreground_no_arr = foreground_count - foreground_yes_arr
@@ -147,6 +175,7 @@ class OddsRatioResults:
         time,
         foreground_list_filename,
         background_list_filename=None,
+        buscos_filename=None
     ):
         """Initialize the inputs for the odds ratio calculations"""
         self.genecount_csv = genecount_csv
@@ -167,6 +196,10 @@ class OddsRatioResults:
         else:
             self.background_list_arr = None
 
+        if buscos_filename is not None:
+            self.buscos = pd.read_csv(buscos_filename, header=None)
+            self.buscos.columns = ['Species', 'Single_copy_buscos', 'Duplicated_buscos','Total_buscos', 'Fraction_sc', 'Fraction_total']
+
         # Get the genecount arrays and matrices
         self._get_genecount_arrays()
 
@@ -181,6 +214,7 @@ class OddsRatioResults:
                 self.test_bool_mat,
                 self.foreground_count,
                 self.background_count,
+                busco_arr=getattr(self, 'busco_arr', None)
             )
         )
 
@@ -208,6 +242,10 @@ class OddsRatioResults:
             columns=["OG", "Gene Tree Parent Clade"], errors="ignore"
         )
 
+        # If there is a 'Total' column, drop it
+        if 'Total' in genecount_df.columns:
+            genecount_df = genecount_df.drop(columns=['Total'])
+
         # Remove any species not in this node
         genecount_df = drop_empty_cols(genecount_df, print_txt=False)
 
@@ -216,6 +254,11 @@ class OddsRatioResults:
 
         # List of all species
         all_species_arr = genecount_df.columns.to_numpy()
+
+        # Get busco scores for each species
+        if hasattr(self, 'buscos'):
+            sc_busco_arr = self.buscos.set_index('Species').loc[all_species_arr]['Fraction_sc'].values
+            total_busco_arr = self.buscos.set_index('Species').loc[all_species_arr]['Fraction_total'].values
 
         # Convert counts df to numpy
         genecount_mat = genecount_df.to_numpy()
@@ -241,8 +284,19 @@ class OddsRatioResults:
 
         if self.test == "loss":
             self.test_bool_mat = loss_bool_mat
+
+            # If testing for loss, the total fraction of complete buscos, whether single-copy or 
+            # duplicated, should be a good proxy for how reliable loss calls will be
+            if hasattr(self, 'buscos'):
+                self.busco_arr = total_busco_arr
+
         elif self.test == "duplication":
             self.test_bool_mat = dup_bool_mat
+
+            # If testing for duplication, the fraction of recovered buscos that are single-copy
+            # should be a good proxy for how reliable duplication calls will be
+            if hasattr(self, 'buscos'):
+                self.busco_arr = sc_busco_arr
 
     def _define_foreground(self):
         """Function to make a numpy vector corresponding to whether
@@ -467,6 +521,7 @@ class BootstrapTestResults:
             self.true_odds.test_bool_mat,
             self.true_odds.foreground_count,
             self.true_odds.background_count,
+            busco_arr=getattr(self, 'busco_arr', None)
         )[
             2
         ]  # only return the log odds ratio array
@@ -1282,6 +1337,7 @@ def odds_ratio_test(
     results_dir=None,
     fg_name=None,
     bg_name=None,
+    buscos_filename=None
 ):
     """Run the full odds ratio test"""
 
@@ -1295,6 +1351,7 @@ def odds_ratio_test(
 
     time = datetime.now()
     time_fmtd = time.strftime("%Y-%m-%d at %H:%M:%S")
+    date_short = time.strftime("%b%d")  # e.g., "Jan29"
 
     # Generate the genecount file if not provided
     if genecount_csv is None:
@@ -1308,6 +1365,7 @@ def odds_ratio_test(
         time=time_fmtd,
         foreground_list_filename=foreground_list_filename,
         background_list_filename=background_list_filename, 
+        buscos_filename=buscos_filename
     )
 
     # Run bootstrapping test
@@ -1324,8 +1382,11 @@ def odds_ratio_test(
     bootstrap_test_results.print_bootstrap_results()
 
     if results_dir is not None:
+        base_results_dir = f"{results_dir}/Results_{date_short}"
+        unique_results_dir = _unique_results_dir(base_results_dir)
+        os.makedirs(unique_results_dir, exist_ok=True)
         bootstrap_test_results.save_results_files(
-            results_dir=results_dir,
+            results_dir=unique_results_dir,
             fg_name=fg_name,
             bg_name=bg_name
         )

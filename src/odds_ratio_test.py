@@ -246,8 +246,16 @@ class OddsRatioResults:
         if 'Total' in genecount_df.columns:
             genecount_df = genecount_df.drop(columns=['Total'])
 
-        # Remove any species not in this node
+        # Remove any empty columns (species with no genes in any HOGs)
         genecount_df = drop_empty_cols(genecount_df, print_txt=False)
+
+        # Remove any species not in the foreground or background lists
+        species_to_keep = self.foreground_list_arr
+        if self.background_list_arr is not None:
+            species_to_keep = np.concatenate(
+                (species_to_keep, self.background_list_arr), axis=0
+            )
+        genecount_df = genecount_df[species_to_keep]
 
         # List of HOG IDs
         hog_list = genecount_df.index.values
@@ -781,7 +789,7 @@ class BootstrapTestResults:
         )
 
         ax.text(
-            0.03,
+            0.35,
             0.95,
             f"BS'd mean = {self.mean_av:.2f}\n"
             f"True mean = {self.true_mean:.2f}\n\n"

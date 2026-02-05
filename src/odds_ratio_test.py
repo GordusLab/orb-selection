@@ -130,17 +130,15 @@ def calculate_odds(
     ## background yes
     background_yes_arr = np.matmul(test_bool_mat, background_bool_arr)
 
-    # Alternatives considered:
-    # Multiply the inverse of the test matrix by the weighted or unweighted 
-    # foreground/background arrays. But i think weighting both numerator and denominator
-    # would cancel out the weights. But just using unweighted arrays for the "no" counts
-    # with an inverted matrix means the yesses and nos don't add up to the total counts.
+    # Calculate the number of foreground and background that are
+    # [not missing, not duplicated]
+    test_inv_bool_mat = 1 - test_bool_mat
 
     ## foreground no
-    foreground_no_arr = foreground_count - foreground_yes_arr
+    foreground_no_arr = np.matmul(test_inv_bool_mat, foreground_bool_arr)
 
     ## background no
-    background_no_arr = background_count - background_yes_arr
+    background_no_arr = np.matmul(test_inv_bool_mat, background_bool_arr)
 
     # Use the Haldane-Anscombe correction to account for any 0 entries
     # when calculating the odds ratios

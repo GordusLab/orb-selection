@@ -15,17 +15,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def manhattan_plot(pvals_df, coords_df, LOCs_col, pvals_col, alpha=0.05,
+def manhattan_plot(data_df, chrom_col, pos_col, pvals_col, alpha=0.05,
                    other_var=None, title=None, drop_dups=True, logscale=False,
-                   x=None, y=None, dot_label=None, hline_val=None, colors='pastel', ax=None, fig=None,
+                   x=None, y=None, dot_label=None, hline_val=None, colors='bright', ax=None, fig=None,
                    overlay_params=None, label_col_name=None, counter=0):
     """
     Create a Manhattan plot for genomic data visualization.
     
     Args:
-        pvals_df: DataFrame containing p-values or statistics
-        coords_df: DataFrame containing genomic coordinates
-        LOCs_col: Column name for gene/locus identifiers
+        data_df: DataFrame containing chromosome, position, and p-values
+        chrom_col: Column name for chromosome
+        pos_col: Column name for genomic start position
         pvals_col: Column name for p-values or statistics
         alpha: Significance threshold (default: 0.05)
         other_var: Alternative variable to plot on y-axis
@@ -47,29 +47,23 @@ def manhattan_plot(pvals_df, coords_df, LOCs_col, pvals_col, alpha=0.05,
         tuple: (figure, axes, merged_dataframe)
     """
 
-    pvals_df = pvals_df.rename(columns={pvals_col: 'P', LOCs_col: 'LOC'})
+    merged_df = data_df.rename(columns={
+        chrom_col: 'Chromosome',
+        pos_col: 'Position',
+        pvals_col: 'P'
+    }).copy()
 
     if drop_dups:
-        pvals_df = pvals_df.sort_values(by=['P'], ascending=True)
-        pvals_df = pvals_df.drop_duplicates(subset=['LOC'], keep='first').dropna()
-
+        merged_df = merged_df.sort_values(by=['P'], ascending=True)
+        merged_df = merged_df.drop_duplicates(subset=['Chromosome', 'Position'], keep='first').dropna()
     else:
-        pvals_df = pvals_df.dropna()
+        merged_df = merged_df.dropna()
 
-    if other_var is not None:    
-        pvals_df = pvals_df.astype({'LOC': str, 'P': float, other_var: float})
-
+    if other_var is not None:
+        merged_df = merged_df.astype({'Chromosome': str, 'Position': int, 'P': float, other_var: float})
     else:
-        pvals_df = pvals_df.astype({'LOC': str, 'P': float})
+        merged_df = merged_df.astype({'Chromosome': str, 'Position': int, 'P': float})
 
-
-    coords_df=coords_df.rename(columns={'NCBI GeneID': 'LOC',
-                                   'Annotation Genomic Range Start': 'Position',
-                                   'Chromosomes': 'Chromosome'})
-
-    coords_df=coords_df.astype({'LOC': str, 'Position': int, 'Chromosome': str})
-
-    merged_df = coords_df.merge(pvals_df, how='right', on='LOC')
     merged_df = merged_df[merged_df['Chromosome'] != 'Un']
     merged_df = merged_df.astype({'Chromosome': int})
 
@@ -112,6 +106,9 @@ def manhattan_plot(pvals_df, coords_df, LOCs_col, pvals_col, alpha=0.05,
     else:
         size=15
     
+    if overlay_params is not None:
+        colors='pastel'
+
     sns.scatterplot(
         data=merged_df, 
         x='Position', 
@@ -142,10 +139,10 @@ def manhattan_plot(pvals_df, coords_df, LOCs_col, pvals_col, alpha=0.05,
     
     if overlay_params is not None:
         # overlay_params['pvals_df']
-        manhattan_plot(overlay_params['pvals_df'], 
-                       overlay_params['coords_df'],
-                       LOCs_col=overlay_params['LOCs_col'], 
-                       pvals_col=overlay_params['pvals_col'],
+        manhattan_plot(overlay_params['data_df'],
+                   chrom_col=overlay_params['chrom_col'],
+                   pos_col=overlay_params['pos_col'],
+                   pvals_col=overlay_params['pvals_col'],
                        alpha=overlay_params.get('alpha', 0.05), 
                        other_var=overlay_params.get('other_var'),
                        title=overlay_params.get('title', ''),
@@ -177,15 +174,15 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python manhattan_plot.py pvals.csv coords.csv LOC p_value --title "GWAS Results"
-  python manhattan_plot.py data.csv coords.csv gene_id pval --alpha 0.01 --output plot.png
+    python manhattan_plot.py data.csv Chromosome Position p_value --title "GWAS Results"
+    python manhattan_plot.py data.csv chrom start pval --other-var-col logFC --alpha 0.01 --output plot.png
         """
     )
     
     # Required arguments
-    parser.add_argument('pvals_file', help='CSV file containing p-values or statistics')
-    parser.add_argument('coords_file', help='CSV file containing genomic coordinates')
-    parser.add_argument('locs_col', help='Column name for gene/locus identifiers')
+    parser.add_argument('data_file', help='CSV file containing chromosome, position, and p-values')
+    parser.add_argument('chrom_col', help='Column name for chromosome')
+    parser.add_argument('pos_col', help='Column name for genomic start position')
     parser.add_argument('pvals_col', help='Column name for p-values or statistics')
     
     # Optional arguments
@@ -202,6 +199,10 @@ Examples:
                        help='Use log scale for y-axis')
     parser.add_argument('--no-drop-dups', action='store_true',
                        help='Do not drop duplicate entries')
+    parser.add_argument('--other-var-col', type=str, default=None,
+                       help='Optional column name for alternative y-axis variable')
+    parser.add_argument('--label-col', type=str, default=None,
+                       help='Optional column name for point labels')
     parser.add_argument('--figsize', nargs=2, type=float, default=[12, 6],
                        help='Figure size as width height (default: 12 6)')
     parser.add_argument('--dpi', type=int, default=300,
@@ -211,34 +212,32 @@ Examples:
     
     try:
         # Load data files
-        print(f"Loading p-values from: {args.pvals_file}")
-        pvals_df = pd.read_csv(args.pvals_file)
-        
-        print(f"Loading coordinates from: {args.coords_file}")
-        coords_df = pd.read_csv(args.coords_file)
-        
+        print(f"Loading data from: {args.data_file}")
+        data_df = pd.read_csv(args.data_file)
+
         # Validate required columns
-        if args.locs_col not in pvals_df.columns:
-            raise ValueError(f"Column '{args.locs_col}' not found in p-values file")
-        if args.pvals_col not in pvals_df.columns:
-            raise ValueError(f"Column '{args.pvals_col}' not found in p-values file")
-            
-        # Check for expected coordinate columns (with flexibility)
-        coord_cols = coords_df.columns.tolist()
-        print(f"Available coordinate columns: {coord_cols}")
+        for col in [args.chrom_col, args.pos_col, args.pvals_col]:
+            if col not in data_df.columns:
+                raise ValueError(f"Column '{col}' not found in data file")
+        if args.other_var_col is not None and args.other_var_col not in data_df.columns:
+            raise ValueError(f"Column '{args.other_var_col}' not found in data file")
+        if args.label_col is not None and args.label_col not in data_df.columns:
+            raise ValueError(f"Column '{args.label_col}' not found in data file")
         
         # Create the plot
         print("Creating Manhattan plot...")
         fig, ax, merged_df = manhattan_plot(
-            pvals_df=pvals_df,
-            coords_df=coords_df,
-            LOCs_col=args.locs_col,
+            data_df=data_df,
+            chrom_col=args.chrom_col,
+            pos_col=args.pos_col,
             pvals_col=args.pvals_col,
             alpha=args.alpha,
+            other_var=args.other_var_col,
             title=args.title,
             drop_dups=not args.no_drop_dups,
             logscale=args.logscale,
-            colors=args.colors
+            colors=args.colors,
+            label_col_name=args.label_col
         )
         
         # Set figure size

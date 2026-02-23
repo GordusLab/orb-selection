@@ -6,6 +6,7 @@ group in a phylogeny
 """
 
 import sys
+import os
 import random
 import pickle
 from datetime import datetime
@@ -16,7 +17,6 @@ from scipy.stats import norm, skew
 from tqdm.auto import tqdm
 import seaborn as sns
 import orthogroup_gene_count
-import os
 
 # Set the random seed for reproducibility
 random.seed(42)
@@ -103,8 +103,6 @@ def calculate_odds(
     foreground_bool_arr,
     background_bool_arr,
     test_bool_mat,
-    foreground_count,
-    background_count,
     busco_arr
 ):
     """Function to calculate the odds ratio and log odds ratio"""
@@ -210,8 +208,6 @@ class OddsRatioResults:
                 self.foreground_bool_arr,
                 self.background_bool_arr,
                 self.test_bool_mat,
-                self.foreground_count,
-                self.background_count,
                 busco_arr=getattr(self, 'busco_arr', None)
             )
         )
@@ -525,8 +521,6 @@ class BootstrapTestResults:
             new_foregrounds,
             new_backgrounds,
             self.true_odds.test_bool_mat,
-            self.true_odds.foreground_count,
-            self.true_odds.background_count,
             busco_arr=getattr(self, 'busco_arr', None)
         )[
             2

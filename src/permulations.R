@@ -51,10 +51,7 @@ run_categorical_permulations <- function(
 }
 
 
-# Optional direct execution path for interactive use in R.
-if (sys.nframe() == 0) {
-    testCatPerms <- run_categorical_permulations(
+testCatPerms <- run_categorical_permulations(
         foreground_list_filename = "~/orb-selection/assets/orbweavers-list.txt",
         ntrees = 10000
-    )
-}
+)

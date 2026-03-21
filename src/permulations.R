@@ -52,6 +52,6 @@ run_categorical_permulations <- function(
 
 testCatPerms <- run_categorical_permulations(
         foreground_list_filename = "~/orb-selection/assets/orbweavers-list.txt",
-        ntrees = 1000,
-        save_rdata_path = "~/orb-selection/assets/perms.RData"
+        ntrees = 10000,
+        save_rdata_path = "~/orb-selection/assets/perms10000.RData"
 )

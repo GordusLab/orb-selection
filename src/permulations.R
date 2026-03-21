@@ -55,3 +55,36 @@ testCatPerms <- run_categorical_permulations(
         ntrees = 10000,
         save_rdata_path = "~/orb-selection/assets/perms10000.RData"
 )
+
+# Canonical species order from the first permulation
+tip_order <- names(testCatPerms$trees[[1]]$tips)
+
+# Optional safety checks
+stopifnot(length(testCatPerms$trees) == 10000)
+stopifnot(all(vapply(
+  testCatPerms$trees,
+  function(tr) setequal(names(tr$tips), tip_order),
+  logical(1)
+)))
+
+# Build matrix: 10,000 rows (permulations) x N species columns
+tip_mat <- do.call(
+  rbind,
+  lapply(testCatPerms$trees, function(tr) {
+    # reorder each named tip vector to match canonical order
+    tr$tips[tip_order]
+  })
+)
+
+# Convert to data frame
+tip_df <- as.data.frame(tip_mat, check.names = FALSE)
+tip_df$perm_id <- seq_len(nrow(tip_df))  # optional row id
+tip_df <- tip_df[, c("perm_id", tip_order)]  # put perm_id first
+
+# tip_df now has species as columns and 10,000 rows of 1/2 values
+dim(tip_df)
+head(tip_df[, 1:6])
+
+tip_df[tip_order] <- tip_df[tip_order] - 1
+
+write.csv(tip_df, "~/orb-selection/assets/perms_tip_values.csv", row.names = FALSE)

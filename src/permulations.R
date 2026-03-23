@@ -1,11 +1,12 @@
 library(RERconverge)
+library(here)
 
 rerpath <- find.package("RERconverge")
 
 run_categorical_permulations <- function(
     foreground_list_filename,
     ntrees = 10000,
-    treefile = "~/orb-selection/assets/SpeciesTree_full_brlen.nwk",
+    treefile = here("assets/SpeciesTree_full_brlen.nwk"),  
     excluded_tips = c(
         "Drosophila_melanogaster",
         "Antrodiaetus_roretzi",
@@ -19,11 +20,11 @@ run_categorical_permulations <- function(
     save_object_name = "testCatPerms"
 ) {
     # Read species tree and wrap in a list as required by categoricalPermulations.
-    speciesTree <- read.tree(path.expand(treefile))
+    speciesTree <- read.tree(treefile)
     testTrees <- list(masterTree = speciesTree)
 
     # Build phenotype vector: foreground tips as 2, background as 1.
-    foreground <- readLines(path.expand(foreground_list_filename))
+    foreground <- readLines(foreground_list_filename)
     allspecs <- testTrees$masterTree$tip.label
     included_tips <- allspecs[!allspecs %in% excluded_tips]
     phenvec <- ifelse(included_tips %in% foreground, 2, 1)
@@ -39,7 +40,6 @@ run_categorical_permulations <- function(
 
     # Optionally save permulations object to an RData file for downstream inspection.
     if (!is.null(save_rdata_path)) {
-        save_rdata_path <- path.expand(save_rdata_path)
         dir.create(dirname(save_rdata_path), recursive = TRUE, showWarnings = FALSE)
         assign(save_object_name, testCatPerms)
         save(list = save_object_name, file = save_rdata_path)
@@ -51,9 +51,9 @@ run_categorical_permulations <- function(
 
 
 testCatPerms <- run_categorical_permulations(
-        foreground_list_filename = "~/orb-selection/assets/orbweavers-list.txt",
+        foreground_list_filename = here("assets/orbweavers-list.txt"),
         ntrees = 10000,
-        save_rdata_path = "~/orb-selection/assets/perms10000.RData"
+        save_rdata_path = here("assets/perms10000.RData")
 )
 
 # Canonical species order from the first permulation
@@ -87,4 +87,4 @@ head(tip_df[, 1:6])
 
 tip_df[tip_order] <- tip_df[tip_order] - 1
 
-write.csv(tip_df, "~/orb-selection/assets/perms_tip_values.csv", row.names = FALSE)
+write.csv(tip_df, here("assets/perms_tip_values.csv"), row.names = FALSE)

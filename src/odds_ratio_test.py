@@ -17,7 +17,7 @@ from typing import Dict, List, Optional
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm, skew
+from scipy.stats import norm
 from scipy.optimize import minimize
 from tqdm.auto import tqdm
 import seaborn as sns
@@ -58,7 +58,8 @@ def _unique_results_dir(
     test: str,
     alternative: str,
     occupancy_threshold: int,
-    max_occ: Optional[int]
+    max_occ: Optional[int],
+    permutation_reps: int
 ) -> str:
     """
     Create a dated parent folder, then return a unique run subdirectory inside it
@@ -88,7 +89,7 @@ def _unique_results_dir(
         occ_range = f"{occupancy_threshold}-{max_occ}"
     
     # Build base directory name
-    base_name = f"{test_name}_{alt_short}_{occ_range}"
+    base_name = f"{test_name}_{alt_short}_{occ_range}_{permutation_reps}x"
     
     # Find the highest run number across all existing directories
     existing_run_nums = []
@@ -454,11 +455,6 @@ class OddsRatioResults:
         self.background_count = background_count
         self.foreground_bool_arr = foreground_bool_arr
         self.background_bool_arr = background_bool_arr
-    
-    def _calculate_stats(self):
-        self.true_skew = skew(self.true_fltrd_log_odds_ratios)[0]
-        self.true_mean = np.mean(self.true_fltrd_log_odds_ratios)
-        self.true_stddev = np.std(self.true_fltrd_log_odds_ratios)
 
     def results_to_df(self, occupancy_threshold=0, maximum=None):
         """Function to convert the results of the odds ratio calculations
@@ -640,16 +636,15 @@ class PermutationTestResults:
             self.true_odds.total_occ_arr,
         )
 
-        # Calculate the skew, mean, and standard deviation of the true log odds ratios
-        self.true_skew = skew(self.true_fltrd_log_odds_ratios)[0]
+        # Calculate the mean and standard deviation of the true log odds ratios
         self.true_mean = np.mean(self.true_fltrd_log_odds_ratios)
         self.true_stddev = np.std(self.true_fltrd_log_odds_ratios)
 
         # Optimize the parameters for a triple gaussian fit to the true LOR distribution
         initial_params = [0.33, self.true_mean - self.true_stddev, self.true_stddev, 0.33, self.true_mean, self.true_stddev, self.true_mean + self.true_stddev, self.true_stddev]
-        self.tgauss_params = optimize_tgauss(initial_params, self.true_fltrd_log_odds_ratios)
+        self.true_tgauss_params = optimize_tgauss(initial_params, self.true_fltrd_log_odds_ratios)
         print(f"Mean: {self._fmt_stat(self.true_mean)}, Stddev: {self._fmt_stat(self.true_stddev)}, Count: {len(self.true_fltrd_log_odds_ratios)}")
-        print(f"Optimized triple Gaussian parameters: {self.tgauss_params}")
+        print(f"Optimized triple Gaussian parameters: {self.true_tgauss_params}")
            
         # Run the permutation test
         self._run_permutation()
@@ -741,40 +736,53 @@ class PermutationTestResults:
         )
 
         # Calculate the statistics for the new permuted distribution
-        new_skew = skew(new_log_odds_ratio_fltrd)[0]
         new_mean = np.mean(new_log_odds_ratio_fltrd)
         new_stddev = np.std(new_log_odds_ratio_fltrd)
 
         # Optimize the parameters for a triple gaussian fit to the permulated distribution
-        initial_params = [0.33, self.true_mean - self.true_stddev, self.true_stddev, 0.33, self.true_mean, self.true_stddev, self.true_mean + self.true_stddev, self.true_stddev]
+        initial_params = [0.33, new_mean - new_stddev, new_stddev, 0.33, new_mean, new_stddev, new_mean + new_stddev, new_stddev]
         new_tgauss_params = optimize_tgauss(initial_params, new_log_odds_ratio_fltrd)
-        print(f"Permulated mean: {self._fmt_stat(new_mean)}, Permulated stddev: {self._fmt_stat(new_stddev)}, Count: {len(new_log_odds_ratio_fltrd)}")
-        print(f"Optimized triple Gaussian parameters: {new_tgauss_params}")
-        exit()
+        # print(f"Permulated mean: {self._fmt_stat(new_mean)}, Permulated stddev: {self._fmt_stat(new_stddev)}, Count: {len(new_log_odds_ratio_fltrd)}")
+        # print(f"Optimized triple Gaussian parameters: {new_tgauss_params}")
+        # exit()
 
+        # Permutation test using single Gaussian parameters
         if self.alternative == "RT":
-            if new_skew > self.true_skew:
-                counters["sk"] += 1
             if new_mean > self.true_mean:
                 counters["mn"] += 1
-            if new_stddev > self.true_stddev:
-                counters["sd"] += 1
+            # if new_stddev > self.true_stddev:
+            #     counters["sd"] += 1
 
         else:
-            if new_skew < self.true_skew:
-                counters["sk"] += 1
             if new_mean < self.true_mean:
                 counters["mn"] += 1
-            if new_stddev < self.true_stddev:
-                counters["sd"] += 1
+            # if new_stddev < self.true_stddev:
+            #     counters["sd"] += 1
 
         self.means[i] = new_mean
         self.stddevs[i] = new_stddev
-        self.skews[i] = new_skew
         self.cis[i] = [
             new_mean + self.z_crit * new_stddev,  # the z-crit value is negative
             new_mean - self.z_crit * new_stddev,
         ]
+
+        #Permutation test using triple Gaussian parameters
+        if self.alternative == "RT":
+            if new_tgauss_params[1] > self.true_tgauss_params[1]:  # comparing the mean of the first Gaussian component
+                counters["mn_1"] += 1
+            if new_tgauss_params[4] > self.true_tgauss_params[4]:  # comparing the mean of the second Gaussian component
+                counters["mn_2"] += 1
+            if new_tgauss_params[6] > self.true_tgauss_params[6]:  # comparing the mean of the third Gaussian component
+                counters["mn_3"] += 1
+        else: 
+            if new_tgauss_params[1] < self.true_tgauss_params[1]:  # comparing the mean of the first Gaussian component
+                counters["mn_1"] += 1
+            if new_tgauss_params[4] < self.true_tgauss_params[4]:  # comparing the mean of the second Gaussian component
+                counters["mn_2"] += 1
+            if new_tgauss_params[6] < self.true_tgauss_params[6]:  # comparing the mean of the third Gaussian component
+                counters["mn_3"] += 1
+
+        self.perm_tgauss_params[i] = new_tgauss_params
 
         return counters
 
@@ -782,8 +790,6 @@ class PermutationTestResults:
         """Creating 10,000 test log odds ratio distributions with the set
         of species defined as "foreground" chosen via permulations (but still the
         same number of foreground  as the true number)"""
-
-
 
         print("\nLAUNCHING PERMUTATION TEST\n")
 
@@ -824,11 +830,16 @@ class PermutationTestResults:
         self.cis = np.zeros((self.permutation_reps, 2))
         self.means = np.zeros(self.permutation_reps)
         self.stddevs = np.zeros(self.permutation_reps)
-        self.skews = np.zeros(self.permutation_reps)
+        self.perm_tgauss_params = np.zeros((self.permutation_reps, 8))  # store triple-Gaussian params for each permuted distribution
 
         # Initialize counters for how often the permuted
         # distributions exceed the true values
-        counters = {"mn": 0, "sd": 0, "sk": 0}
+        counters = {"mn": 0, 
+                    # "sd": 0,
+                    "mn_1": 0,
+                    "mn_2": 0,
+                    "mn_3": 0
+                    }
 
         # Get a list of the indices of the species being compared,
         # in case not all species are included in the analysis
@@ -846,28 +857,33 @@ class PermutationTestResults:
 
         p_vals = {
             "mn": counters["mn"] / self.permutation_reps,
-            "sd": counters["sd"] / self.permutation_reps,
-            "sk": counters["sk"] / self.permutation_reps,
+            # "sd": counters["sd"] / self.permutation_reps,
+            "mn_1": counters["mn_1"] / self.permutation_reps,
+            "mn_2": counters["mn_2"] / self.permutation_reps,
+            "mn_3": counters["mn_3"] / self.permutation_reps,
         }
 
-        print(f"\nPermutation counter for MEAN: {str(counters['mn'])}")
-        print(f"Permutation counter for STD DEV: {str(counters['sd'])}")
-        print(f"Permutation counter for SKEW: {str(counters['sk'])}\n")
+        print(f"\nPermutation counter for MEAN (single Gaussian): {str(counters['mn'])}")
+        # print(f"Permutation counter for STD DEV: {str(counters['sd'])}")
+        print(f"\nPermutation counter for MEAN 1 (triple Gaussian): {str(counters['mn_1'])}")
+        print(f"\nPermutation counter for MEAN 2 (triple Gaussian): {str(counters['mn_2'])}")
+        print(f"\nPermutation counter for MEAN 3 (triple Gaussian): {str(counters['mn_3'])}")
+
+        print()
 
         self.p_values = p_vals
 
         # Getting average stats from across the 10000 permuted distributions
         self.mean_av = np.mean(self.means)
         self.stddev_av = np.mean(self.stddevs)
-        self.skew_av = np.mean(self.skews)
         self.ci_av = np.mean(self.cis, axis=0)
 
     def plot_permutation_stats(self, fg_name, bg_name="background"):
-        """Plotting the permutation means, standard deviations
+        """Plotting the permutation means and standard deviations
         and alpha thresholds to ensure the results are relatively
         tightly distributed"""
 
-        fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
 
         if self.alternative == "RT":
             alt = "right-tailed"
@@ -887,17 +903,16 @@ class PermutationTestResults:
         )
 
         sns.histplot(
-            data=self.skews,
+            data=self.means,
             kde=True,
             bins=50,
             stat="density",
             ax=axs[0],
             legend=False,
         )
-
-        axs[0].set_title("Skews")
-        axs[0].set(xlabel="skew", ylabel="Density")
-        axs[0].axvline(x=self.skew_av, linestyle="dotted")
+        axs[0].set_title("Means")
+        axs[0].set(xlabel="mean", ylabel="Density")
+        axs[0].axvline(x=self.mean_av, linestyle="dotted")
 
         sns.histplot(
             data=self.means,
@@ -907,23 +922,56 @@ class PermutationTestResults:
             ax=axs[1],
             legend=False,
         )
-        axs[1].set_title("Means")
-        axs[1].set(xlabel="mean", ylabel="Density")
-        axs[1].axvline(x=self.mean_av, linestyle="dotted")
 
-        sns.histplot(
-            data=self.stddevs,
-            kde=True,
-            bins=50,
-            stat="density",
-            ax=axs[2],
-            legend=False,
+        axs[1].set_title("Standard deviations")
+        axs[1].set(xlabel="stddev", ylabel="Density")
+        axs[1].axvline(x=self.stddev_av, linestyle="dotted")
+
+        plt.tight_layout()
+
+        return fig, axs
+    
+    def plot_permutation_stats_tgauss(self, fg_name, bg_name="background"):
+        """Plotting the permutation triple gaussian means to ensure the 
+        results are relatively tightly distributed"""
+
+        fig, axs = plt.subplots(3, 3, figsize=(12, 12))
+
+        if self.alternative == "RT":
+            alt = "right-tailed"
+        else:
+            alt = "left-tailed"
+
+        # Making the text bold deletes spaces
+        fg_name = fg_name.replace(" ", r"\ ")
+        bg_name = bg_name.replace(" ", r"\ ")
+
+        fig.suptitle(
+            rf"$\bf{{Permuted\ distribution\ triple\ Gaussian\ stats\ for\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+            f"Maximum occupancy = {self.maximum}, "
+            f"minimum occupancy = {self.occupancy_threshold}, "
+            f"{alt}",
+            fontsize=16,
         )
 
-        axs[2].set_title("Standard deviations")
-        axs[2].set(xlabel="stddev", ylabel="Density")
-        axs[2].axvline(x=self.stddev_av, linestyle="dotted")
+        param_names = ["weight_1", "mean_1", "stddev_1", "weight_2", "mean_2", "stddev_2", "mean_3", "stddev_3"]
 
+        for param in range(8):
+            sns.histplot(
+                data=self.perm_tgauss_params[:, param],
+                kde=True,
+                bins=50,
+                stat="density",
+                ax=axs[param//3, param%3],
+                legend=False,
+            )
+            # axs[param//3, param%3].set_title(f"{param_names[param]}")
+            axs[param//3, param%3].set(xlabel=f"{param_names[param]}", ylabel="Density")
+            axs[param//3, param%3].axvline(x=np.mean(self.perm_tgauss_params[:, param]), linestyle="dotted")
+        
+        for ax in axs.flat[8:]:
+            ax.axis("off") 
+        
         plt.tight_layout()
 
         return fig, axs
@@ -1013,9 +1061,7 @@ class PermutationTestResults:
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n\n"
             f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n"
-            f"True skew = {self._fmt_stat(self.true_skew)}\n",
+            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n",
             transform=ax.transAxes,
             fontsize=10,
             ha="left",
@@ -1158,8 +1204,7 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n",
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n",
             transform=ax2.transAxes,
             fontsize=12,
             ha="left",
@@ -1227,8 +1272,7 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n",
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n",
             transform=ax3.transAxes,
             fontsize=12,
             ha="left",
@@ -1309,11 +1353,9 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n\n"
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n"
-            f"True skew = {self._fmt_stat(self.true_skew)}\n",
+            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n",
             transform=ax4.transAxes,
             fontsize=12,
             ha="left",
@@ -1406,20 +1448,21 @@ class PermutationTestResults:
             f"Background count: {self.true_odds.background_count}\n"
             f"True mean: {self.true_mean}\n"
             f"True standard deviation: {self.true_stddev}\n"
-            f"True skew: {self.true_skew}\n"
         , file=fname)
 
         print(
             "** PERMUTATION P-VALUES ** \n\n"
-            f"Probability that the null is true for MEAN: {self.p_values['mn']}\n"
-            f"Probability that the null is true for STANDARD DEVIATION: {self.p_values['sd']}\n"
-            f"Probability that the null is true for SKEW: {self.p_values['sk']}\n"
+            f"Probability that the null is true for MEAN (single Gaussian): {self.p_values['mn']}\n"
+            f"Probability that the null is true for MEAN 1 (triple Gaussian): {self.p_values['mn_1']}\n"
+            f"Probability that the null is true for MEAN 2 (triple Gaussian): {self.p_values['mn_2']}\n"
+            f"Probability that the null is true for MEAN 3 (triple Gaussian): {self.p_values['mn_3']}\n"
+
+            # f"Probability that the null is true for STANDARD DEVIATION: {self.p_values['sd']}\n"
         , file=fname)
 
         print(
             f"permuted average mean: {self.mean_av}\n"
             f"permuted average standard deviation: {self.stddev_av}\n"
-            f"permuted average skew: {self.skew_av}\n"
             f"User-defined significance threshold: {self.a}\n"
             f"Permutation-derived alpha threshold: {self.ci_av}\n\n"
             "Total HOGs with significantly different LORs between\n"
@@ -1514,11 +1557,22 @@ class PermutationTestResults:
             (
                 filename + 
                 f"{alt}" +
-                "_permutation_stats_dists.png"
+                "_permutation_stats_dists_single_gauss.png"
                 ),
             dpi=300
         )
 
+        fig, _ = self.plot_permutation_stats_tgauss(fg_name, bg_name)
+
+        fig.savefig(
+            (
+                filename + 
+                f"{alt}" +
+                "_permutation_stats_dists_triple_gauss.png"
+                ),
+            dpi=300
+        )
+        
         # True distribution overlaid with average permuted distribution
         fig, _ = self.plot_permutation_results(fg_name, bg_name)
 
@@ -1618,12 +1672,22 @@ def odds_ratio_test(
             permulations_tip_values_csv
         )
 
-    # If permulation assignments are provided, use exactly that many reps.
-    effective_permutation_reps = (
-        len(permulation_tip_values)
-        if permulation_tip_values is not None
-        else permutation_reps
-    )
+    # If permulation assignments are provided, cap to the requested number of reps.
+    # This keeps behavior intuitive when CSV rows exceed permutation_reps.
+    if permulation_tip_values is not None:
+        if permutation_reps is not None:
+            if permutation_reps <= 0:
+                raise ValueError("permutation_reps must be a positive integer.")
+            available_reps = len(permulation_tip_values)
+            if permutation_reps < available_reps:
+                print(
+                    f"Using first {permutation_reps} permulation rows "
+                    f"(out of {available_reps} available)."
+                )
+                permulation_tip_values = permulation_tip_values[:permutation_reps]
+        effective_permutation_reps = len(permulation_tip_values)
+    else:
+        effective_permutation_reps = permutation_reps
 
     if permulation_tip_values is not None and len(permulation_tip_values) > 0:
         print("First permulated tip values (species -> value):")
@@ -1649,7 +1713,8 @@ def odds_ratio_test(
             test,
             alternative,
             occupancy_threshold,
-            max_occ
+            max_occ,
+            permutation_reps
         )
         os.makedirs(unique_results_dir, exist_ok=True)
         permutation_test_results.save_results_files(

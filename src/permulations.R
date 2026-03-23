@@ -52,15 +52,14 @@ run_categorical_permulations <- function(
 
 testCatPerms <- run_categorical_permulations(
         foreground_list_filename = "~/orb-selection/assets/orbweavers-list.txt",
-        ntrees = 10000,
-        save_rdata_path = "~/orb-selection/assets/perms10000.RData"
+        ntrees = 100000,
+        save_rdata_path = "~/orb-selection/assets/perms100000.RData"
 )
 
 # Canonical species order from the first permulation
 tip_order <- names(testCatPerms$trees[[1]]$tips)
 
 # Optional safety checks
-stopifnot(length(testCatPerms$trees) == 10000)
 stopifnot(all(vapply(
   testCatPerms$trees,
   function(tr) setequal(names(tr$tips), tip_order),
@@ -81,10 +80,10 @@ tip_df <- as.data.frame(tip_mat, check.names = FALSE)
 tip_df$perm_id <- seq_len(nrow(tip_df))  # optional row id
 tip_df <- tip_df[, c("perm_id", tip_order)]  # put perm_id first
 
-# tip_df now has species as columns and 10,000 rows of 1/2 values
+# tip_df now has species as columns and ntrees rows of 1/2 values
 dim(tip_df)
 head(tip_df[, 1:6])
 
 tip_df[tip_order] <- tip_df[tip_order] - 1
 
-write.csv(tip_df, "~/orb-selection/assets/perms_tip_values.csv", row.names = FALSE)
+write.csv(tip_df, "~/orb-selection/assets/perms_tip_values_100000.csv", row.names = FALSE)

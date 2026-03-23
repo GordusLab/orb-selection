@@ -17,7 +17,8 @@ from typing import Dict, List, Optional
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm, skew
+from scipy.stats import norm
+from scipy.optimize import minimize
 from tqdm.auto import tqdm
 import seaborn as sns
 import orthogroup_gene_count
@@ -57,7 +58,8 @@ def _unique_results_dir(
     test: str,
     alternative: str,
     occupancy_threshold: int,
-    max_occ: Optional[int]
+    max_occ: Optional[int],
+    permutation_reps: int
 ) -> str:
     """
     Create a dated parent folder, then return a unique run subdirectory inside it
@@ -87,7 +89,7 @@ def _unique_results_dir(
         occ_range = f"{occupancy_threshold}-{max_occ}"
     
     # Build base directory name
-    base_name = f"{test_name}_{alt_short}_{occ_range}"
+    base_name = f"{test_name}_{alt_short}_{occ_range}_{permutation_reps}x"
     
     # Find the highest run number across all existing directories
     existing_run_nums = []
@@ -172,6 +174,36 @@ def filter_for_sp_of_interest(df, genecount_df, species_name):
 
     return df_fltrd_sp_of_int, sp_of_interest_hogs_count
 
+def tgauss_fun(params,x):
+    """Triple Gaussian function."""
+    
+    w1 = params[0]
+    mu1 = params[1]
+    sigma1 = params[2]
+    w2 = params[3]
+    mu2 = params[4]
+    sigma2 = params[5]
+    mu3 = params[6]
+    sigma3 = params[7]
+
+    gauss1 = norm.pdf(x,mu1,sigma1)
+    gauss2 = norm.pdf(x,mu2,sigma2)
+    gauss3 = norm.pdf(x,mu3,sigma3)
+    
+    p = w1*gauss1 + w2*gauss2 + (1-w1-w2)*gauss3
+    
+    return p
+
+def tgausslogl(params, x):
+        p = tgauss_fun(params, x)
+        return -np.nansum(np.log(p), axis=0)
+
+def optimize_tgauss(params, data):
+    """Optimize the parameters of the triple Gaussian function."""
+
+    result = minimize(tgausslogl, params, args=data, method='Nelder-Mead')
+    
+    return result.x
 
 def calculate_odds(
     foreground_bool_arr,
@@ -514,224 +546,40 @@ def define_foreground_random(species_incl_idx, total_species_count, foreground_c
     return new_foregrounds, new_backgrounds
 
 
-def load_permulation_tip_values_from_rdata(
-    rdata_path: str,
-    object_name: str = "testCatPerm10000"
-) -> List[Dict[str, float]]:
-    """Load a list of named tip-value vectors from an RData object.
+def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]]:
+    """Load permulated tip values from a CSV file.
 
-    Expected structure: a list where each element is a named numeric vector
-    mapping species tip names to binary values (foreground/background).
+    Expected format:
+    - One row per permulation.
+    - Species names as columns.
+    - Optional first column named `perm_id`.
+    - Cell values are numeric (typically 0/1) tip assignments.
     """
 
-    try:
-        import rpy2.robjects as ro
-    except ImportError as exc:
-        raise ImportError(
-            "rpy2 is required to load permulation outputs from RData files."
-        ) from exc
+    csv_path = _resolve_repo_path(csv_path)
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"Permulation tip-values CSV not found: {csv_path}")
 
-    rdata_path = _resolve_repo_path(rdata_path)
-    if not os.path.exists(rdata_path):
-        raise FileNotFoundError(f"RData file not found: {rdata_path}")
+    tip_df = pd.read_csv(csv_path)
+    if tip_df.empty:
+        raise ValueError(f"Permulation tip-values CSV is empty: {csv_path}")
 
-    r_env = ro.Environment()
-    loaded_objs = [str(x) for x in ro.r["load"](rdata_path, r_env)]
-
-    if object_name not in loaded_objs:
+    species_cols = [c for c in tip_df.columns if c != "perm_id"]
+    if not species_cols:
         raise ValueError(
-            f"Object '{object_name}' not found in {rdata_path}. "
-            f"Loaded objects: {loaded_objs}"
+            f"Permulation tip-values CSV has no species columns: {csv_path}"
         )
 
-    perm_obj = r_env[object_name]
-    permulation_tip_values = _convert_r_permulation_object_to_tip_values(
-        perm_obj,
-        source_label=object_name,
-    )
-
-    return permulation_tip_values
-
-
-def _convert_r_permulation_object_to_tip_values(
-    perm_obj,
-    source_label: str = "permulation object",
-) -> List[Dict[str, float]]:
-    """Convert an R permulation object to a Python list of tip-value dictionaries."""
-
-    try:
-        import rpy2.robjects as ro
-    except ImportError as exc:
-        raise ImportError(
-            "rpy2 is required to convert R permulation objects."
-        ) from exc
-
-    def _safe_names(x):
-        names = getattr(x, "names", None)
-        if names is None:
-            return []
-        try:
-            return [str(n) for n in list(names)]
-        except TypeError:
-            return []
-
-    def _extract_from_tips_matrix(tips_matrix, label: str) -> List[Dict[str, float]]:
-        dims = ro.r["dim"](tips_matrix)
-        if dims is ro.NULL or len(dims) != 2:
-            raise ValueError(
-                f"Expected a 2D tips matrix in '{label}', got an incompatible object."
-            )
-
-        n_rows, n_cols = int(dims[0]), int(dims[1])
-        dimnames = ro.r["dimnames"](tips_matrix)
-        if dimnames is ro.NULL or len(dimnames) != 2 or dimnames[1] is ro.NULL:
-            raise ValueError(
-                f"Tips matrix in '{label}' is missing species column names."
-            )
-
-        species_names = [str(name) for name in list(dimnames[1])]
-        if len(species_names) != n_cols:
-            raise ValueError(
-                f"Tips matrix in '{label}' has mismatched dimensions and species names."
-            )
-
-        converted = []
-        for row_idx in range(1, n_rows + 1):
-            row_values = [float(v) for v in list(ro.r["["](tips_matrix, row_idx, True))]
-            tips = dict(zip(species_names, row_values))
-            if not tips:
-                raise ValueError(f"Permulation row {row_idx} in '{label}' is empty.")
-            converted.append(tips)
-
-        return converted
-
-    # Format used by categoricalPermulations: list(tips=<matrix>, nodes=<matrix>)
-    # where each row in tips is one permulation and columns are species.
-    top_level_names = _safe_names(perm_obj)
-    if "tips" in top_level_names:
-        return _extract_from_tips_matrix(perm_obj.rx2("tips"), source_label)
-
-    permulation_tip_values = []
-
-    for i, perm in enumerate(perm_obj):
-        entry_label = f"{source_label}[{i}]"
-        entry_names = _safe_names(perm)
-
-        if "tips" in entry_names:
-            permulation_tip_values.extend(
-                _extract_from_tips_matrix(perm.rx2("tips"), entry_label)
-            )
-            continue
-
-        if not entry_names:
-            raise ValueError(
-                f"Permulation entry {i} in '{source_label}' is missing tip names."
-            )
-
-        tips = {
-            str(name): float(value)
-            for name, value in zip(entry_names, list(perm))
-        }
-
-        if not tips:
-            raise ValueError(
-                f"Permulation entry {i} in '{source_label}' is empty."
-            )
-
-        permulation_tip_values.append(tips)
-
-    return permulation_tip_values
-
-
-def run_permulations_from_r_script(
-    foreground_list_filename: str,
-    n_permulations: int,
-    r_script_path: str = "src/permulations.R",
-    r_function_name: str = "run_categorical_permulations",
-    permulations_treefile: str = "assets/SpeciesTree_full_brlen.nwk",
-    permulations_excluded_tips: Optional[List[str]] = None,
-    permulations_rm: str = "ER",
-    permulations_rp: str = "auto",
-    permulations_save_rdata: Optional[str] = None,
-    permulations_save_object_name: str = "testCatPerms",
-) -> List[Dict[str, float]]:
-    """Call permulations.R as a function and return tip-value dicts for permutation.
-
-    The R function is expected to return an object like `testCatPerms` from
-    RERconverge::categoricalPermulations. Optionally also saves that object
-    to an RData file for independent inspection.
-    """
-
-    try:
-        import rpy2.robjects as ro
-    except ImportError as exc:
-        raise ImportError(
-            "rpy2 is required to run permulations from R script."
-        ) from exc
-
-    script_path = _resolve_repo_path(r_script_path)
-    if not os.path.exists(script_path):
-        raise FileNotFoundError(f"Permulations R script not found: {script_path}")
-
-    foreground_list_filename = _resolve_repo_path(foreground_list_filename)
-    permulations_treefile = _resolve_repo_path(permulations_treefile)
-    permulations_save_rdata = _resolve_repo_path(permulations_save_rdata)
-
-    from rpy2.robjects.packages import importr
-    utils = importr('utils')
-    utils.install_packages(ro.StrVector(['RERconverge', 'phangorn']), repos="http://cran.us.r-project.org")
-    ro.r["source"](script_path)
-
-    if r_function_name not in ro.globalenv:
+    tip_numeric = tip_df[species_cols].apply(pd.to_numeric, errors="raise")
+    if tip_numeric.isnull().any().any():
         raise ValueError(
-            f"Function '{r_function_name}' was not found after sourcing {script_path}."
+            f"Permulation tip-values CSV contains NaN values: {csv_path}"
         )
 
-    perm_fn = ro.globalenv[r_function_name]
-
-    if permulations_excluded_tips is None:
-        permulations_excluded_tips = [
-            "Drosophila_melanogaster",
-            "Antrodiaetus_roretzi",
-            "Orchestina_okitsui",
-            "Falcileptoneta_japonica",
-            "Masirana_silvicola",
-        ]
-
-    if permulations_save_rdata is None:
-        perm_obj = perm_fn(
-            foreground_list_filename,
-            int(n_permulations),
-            permulations_treefile,
-            ro.StrVector(permulations_excluded_tips),
-            permulations_rm,
-            permulations_rp,
-        )
-    else:
-        perm_obj = perm_fn(
-            foreground_list_filename,
-            int(n_permulations),
-            permulations_treefile,
-            ro.StrVector(permulations_excluded_tips),
-            permulations_rm,
-            permulations_rp,
-            save_rdata_path=permulations_save_rdata,
-            save_object_name=permulations_save_object_name,
-        )
-        print(f"Saved permulations RData to: {permulations_save_rdata}")
-
-    permulation_tip_values = _convert_r_permulation_object_to_tip_values(
-        perm_obj,
-        source_label=r_function_name,
-    )
-
-    if len(permulation_tip_values) != int(n_permulations):
-        print(
-            "Warning: number of returned permulations differs from requested count: "
-            f"requested={n_permulations}, returned={len(permulation_tip_values)}"
-        )
-
-    return permulation_tip_values
+    return [
+        {species: float(value) for species, value in row.items()}
+        for row in tip_numeric.to_dict(orient="records")
+    ]
 
 
 class PermutationTestResults:
@@ -788,11 +636,16 @@ class PermutationTestResults:
             self.true_odds.total_occ_arr,
         )
 
-        # Calculate the skew, mean, and standard deviation of the true log odds ratios
-        self.true_skew = skew(self.true_fltrd_log_odds_ratios)[0]
+        # Calculate the mean and standard deviation of the true log odds ratios
         self.true_mean = np.mean(self.true_fltrd_log_odds_ratios)
         self.true_stddev = np.std(self.true_fltrd_log_odds_ratios)
 
+        # Optimize the parameters for a triple gaussian fit to the true LOR distribution
+        initial_params = [0.33, self.true_mean - self.true_stddev, self.true_stddev, 0.33, self.true_mean, self.true_stddev, self.true_mean + self.true_stddev, self.true_stddev]
+        self.true_tgauss_params = optimize_tgauss(initial_params, self.true_fltrd_log_odds_ratios)
+        print(f"Mean: {self._fmt_stat(self.true_mean)}, Stddev: {self._fmt_stat(self.true_stddev)}, Count: {len(self.true_fltrd_log_odds_ratios)}")
+        print(f"Optimized triple Gaussian parameters: {self.true_tgauss_params}")
+           
         # Run the permutation test
         self._run_permutation()
 
@@ -835,7 +688,7 @@ class PermutationTestResults:
         for idx in species_incl_idx:
             species = self.true_odds.all_species_arr[idx]
             if species in perm_tips:
-                new_foregrounds[idx] = 1 if float(perm_tips[species]) == 2 else 0
+                new_foregrounds[idx] = 1 if float(perm_tips[species]) == 1.0 else 0
                 mapped += 1
 
         if mapped == 0:
@@ -883,33 +736,53 @@ class PermutationTestResults:
         )
 
         # Calculate the statistics for the new permuted distribution
-        new_skew = skew(new_log_odds_ratio_fltrd)[0]
         new_mean = np.mean(new_log_odds_ratio_fltrd)
         new_stddev = np.std(new_log_odds_ratio_fltrd)
 
+        # Optimize the parameters for a triple gaussian fit to the permulated distribution
+        initial_params = [0.33, new_mean - new_stddev, new_stddev, 0.33, new_mean, new_stddev, new_mean + new_stddev, new_stddev]
+        new_tgauss_params = optimize_tgauss(initial_params, new_log_odds_ratio_fltrd)
+        # print(f"Permulated mean: {self._fmt_stat(new_mean)}, Permulated stddev: {self._fmt_stat(new_stddev)}, Count: {len(new_log_odds_ratio_fltrd)}")
+        # print(f"Optimized triple Gaussian parameters: {new_tgauss_params}")
+        # exit()
+
+        # Permutation test using single Gaussian parameters
         if self.alternative == "RT":
-            if new_skew > self.true_skew:
-                counters["sk"] += 1
             if new_mean > self.true_mean:
                 counters["mn"] += 1
-            if new_stddev > self.true_stddev:
-                counters["sd"] += 1
+            # if new_stddev > self.true_stddev:
+            #     counters["sd"] += 1
 
         else:
-            if new_skew < self.true_skew:
-                counters["sk"] += 1
             if new_mean < self.true_mean:
                 counters["mn"] += 1
-            if new_stddev < self.true_stddev:
-                counters["sd"] += 1
+            # if new_stddev < self.true_stddev:
+            #     counters["sd"] += 1
 
         self.means[i] = new_mean
         self.stddevs[i] = new_stddev
-        self.skews[i] = new_skew
         self.cis[i] = [
             new_mean + self.z_crit * new_stddev,  # the z-crit value is negative
             new_mean - self.z_crit * new_stddev,
         ]
+
+        #Permutation test using triple Gaussian parameters
+        if self.alternative == "RT":
+            if new_tgauss_params[1] > self.true_tgauss_params[1]:  # comparing the mean of the first Gaussian component
+                counters["mn_1"] += 1
+            if new_tgauss_params[4] > self.true_tgauss_params[4]:  # comparing the mean of the second Gaussian component
+                counters["mn_2"] += 1
+            if new_tgauss_params[6] > self.true_tgauss_params[6]:  # comparing the mean of the third Gaussian component
+                counters["mn_3"] += 1
+        else: 
+            if new_tgauss_params[1] < self.true_tgauss_params[1]:  # comparing the mean of the first Gaussian component
+                counters["mn_1"] += 1
+            if new_tgauss_params[4] < self.true_tgauss_params[4]:  # comparing the mean of the second Gaussian component
+                counters["mn_2"] += 1
+            if new_tgauss_params[6] < self.true_tgauss_params[6]:  # comparing the mean of the third Gaussian component
+                counters["mn_3"] += 1
+
+        self.perm_tgauss_params[i] = new_tgauss_params
 
         return counters
 
@@ -917,8 +790,6 @@ class PermutationTestResults:
         """Creating 10,000 test log odds ratio distributions with the set
         of species defined as "foreground" chosen via permulations (but still the
         same number of foreground  as the true number)"""
-
-
 
         print("\nLAUNCHING PERMUTATION TEST\n")
 
@@ -959,11 +830,16 @@ class PermutationTestResults:
         self.cis = np.zeros((self.permutation_reps, 2))
         self.means = np.zeros(self.permutation_reps)
         self.stddevs = np.zeros(self.permutation_reps)
-        self.skews = np.zeros(self.permutation_reps)
+        self.perm_tgauss_params = np.zeros((self.permutation_reps, 8))  # store triple-Gaussian params for each permuted distribution
 
         # Initialize counters for how often the permuted
         # distributions exceed the true values
-        counters = {"mn": 0, "sd": 0, "sk": 0}
+        counters = {"mn": 0, 
+                    # "sd": 0,
+                    "mn_1": 0,
+                    "mn_2": 0,
+                    "mn_3": 0
+                    }
 
         # Get a list of the indices of the species being compared,
         # in case not all species are included in the analysis
@@ -981,28 +857,33 @@ class PermutationTestResults:
 
         p_vals = {
             "mn": counters["mn"] / self.permutation_reps,
-            "sd": counters["sd"] / self.permutation_reps,
-            "sk": counters["sk"] / self.permutation_reps,
+            # "sd": counters["sd"] / self.permutation_reps,
+            "mn_1": counters["mn_1"] / self.permutation_reps,
+            "mn_2": counters["mn_2"] / self.permutation_reps,
+            "mn_3": counters["mn_3"] / self.permutation_reps,
         }
 
-        print(f"\nPermutation counter for MEAN: {str(counters['mn'])}")
-        print(f"Permutation counter for STD DEV: {str(counters['sd'])}")
-        print(f"Permutation counter for SKEW: {str(counters['sk'])}\n")
+        print(f"\nPermutation counter for MEAN (single Gaussian): {str(counters['mn'])}")
+        # print(f"Permutation counter for STD DEV: {str(counters['sd'])}")
+        print(f"\nPermutation counter for MEAN 1 (triple Gaussian): {str(counters['mn_1'])}")
+        print(f"\nPermutation counter for MEAN 2 (triple Gaussian): {str(counters['mn_2'])}")
+        print(f"\nPermutation counter for MEAN 3 (triple Gaussian): {str(counters['mn_3'])}")
+
+        print()
 
         self.p_values = p_vals
 
         # Getting average stats from across the 10000 permuted distributions
         self.mean_av = np.mean(self.means)
         self.stddev_av = np.mean(self.stddevs)
-        self.skew_av = np.mean(self.skews)
         self.ci_av = np.mean(self.cis, axis=0)
 
     def plot_permutation_stats(self, fg_name, bg_name="background"):
-        """Plotting the permutation means, standard deviations
+        """Plotting the permutation means and standard deviations
         and alpha thresholds to ensure the results are relatively
         tightly distributed"""
 
-        fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
 
         if self.alternative == "RT":
             alt = "right-tailed"
@@ -1022,17 +903,16 @@ class PermutationTestResults:
         )
 
         sns.histplot(
-            data=self.skews,
+            data=self.means,
             kde=True,
             bins=50,
             stat="density",
             ax=axs[0],
             legend=False,
         )
-
-        axs[0].set_title("Skews")
-        axs[0].set(xlabel="skew", ylabel="Density")
-        axs[0].axvline(x=self.skew_av, linestyle="dotted")
+        axs[0].set_title("Means")
+        axs[0].set(xlabel="mean", ylabel="Density")
+        axs[0].axvline(x=self.mean_av, linestyle="dotted")
 
         sns.histplot(
             data=self.means,
@@ -1042,23 +922,56 @@ class PermutationTestResults:
             ax=axs[1],
             legend=False,
         )
-        axs[1].set_title("Means")
-        axs[1].set(xlabel="mean", ylabel="Density")
-        axs[1].axvline(x=self.mean_av, linestyle="dotted")
 
-        sns.histplot(
-            data=self.stddevs,
-            kde=True,
-            bins=50,
-            stat="density",
-            ax=axs[2],
-            legend=False,
+        axs[1].set_title("Standard deviations")
+        axs[1].set(xlabel="stddev", ylabel="Density")
+        axs[1].axvline(x=self.stddev_av, linestyle="dotted")
+
+        plt.tight_layout()
+
+        return fig, axs
+    
+    def plot_permutation_stats_tgauss(self, fg_name, bg_name="background"):
+        """Plotting the permutation triple gaussian means to ensure the 
+        results are relatively tightly distributed"""
+
+        fig, axs = plt.subplots(3, 3, figsize=(12, 12))
+
+        if self.alternative == "RT":
+            alt = "right-tailed"
+        else:
+            alt = "left-tailed"
+
+        # Making the text bold deletes spaces
+        fg_name = fg_name.replace(" ", r"\ ")
+        bg_name = bg_name.replace(" ", r"\ ")
+
+        fig.suptitle(
+            rf"$\bf{{Permuted\ distribution\ triple\ Gaussian\ stats\ for\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+            f"Maximum occupancy = {self.maximum}, "
+            f"minimum occupancy = {self.occupancy_threshold}, "
+            f"{alt}",
+            fontsize=16,
         )
 
-        axs[2].set_title("Standard deviations")
-        axs[2].set(xlabel="stddev", ylabel="Density")
-        axs[2].axvline(x=self.stddev_av, linestyle="dotted")
+        param_names = ["weight_1", "mean_1", "stddev_1", "weight_2", "mean_2", "stddev_2", "mean_3", "stddev_3"]
 
+        for param in range(8):
+            sns.histplot(
+                data=self.perm_tgauss_params[:, param],
+                kde=True,
+                bins=50,
+                stat="density",
+                ax=axs[param//3, param%3],
+                legend=False,
+            )
+            # axs[param//3, param%3].set_title(f"{param_names[param]}")
+            axs[param//3, param%3].set(xlabel=f"{param_names[param]}", ylabel="Density")
+            axs[param//3, param%3].axvline(x=np.mean(self.perm_tgauss_params[:, param]), linestyle="dotted")
+        
+        for ax in axs.flat[8:]:
+            ax.axis("off") 
+        
         plt.tight_layout()
 
         return fig, axs
@@ -1099,8 +1012,6 @@ class PermutationTestResults:
             alpha=0.3,
             edgecolor=hist_color
         )
-
-        print(hist_color)
 
         x = np.linspace(
             self.true_fltrd_log_odds_ratios.min(),
@@ -1150,9 +1061,7 @@ class PermutationTestResults:
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n\n"
             f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n"
-            f"True skew = {self._fmt_stat(self.true_skew)}\n",
+            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n",
             transform=ax.transAxes,
             fontsize=10,
             ha="left",
@@ -1295,8 +1204,7 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n",
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n",
             transform=ax2.transAxes,
             fontsize=12,
             ha="left",
@@ -1364,8 +1272,7 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n",
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n",
             transform=ax3.transAxes,
             fontsize=12,
             ha="left",
@@ -1446,11 +1353,9 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"BS'd skew = {self._fmt_stat(self.skew_av)}\n\n"
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n"
-            f"True skew = {self._fmt_stat(self.true_skew)}\n",
+            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n",
             transform=ax4.transAxes,
             fontsize=12,
             ha="left",
@@ -1543,20 +1448,21 @@ class PermutationTestResults:
             f"Background count: {self.true_odds.background_count}\n"
             f"True mean: {self.true_mean}\n"
             f"True standard deviation: {self.true_stddev}\n"
-            f"True skew: {self.true_skew}\n"
         , file=fname)
 
         print(
             "** PERMUTATION P-VALUES ** \n\n"
-            f"Probability that the null is true for MEAN: {self.p_values['mn']}\n"
-            f"Probability that the null is true for STANDARD DEVIATION: {self.p_values['sd']}\n"
-            f"Probability that the null is true for SKEW: {self.p_values['sk']}\n"
+            f"Probability that the null is true for MEAN (single Gaussian): {self.p_values['mn']}\n"
+            f"Probability that the null is true for MEAN 1 (triple Gaussian): {self.p_values['mn_1']}\n"
+            f"Probability that the null is true for MEAN 2 (triple Gaussian): {self.p_values['mn_2']}\n"
+            f"Probability that the null is true for MEAN 3 (triple Gaussian): {self.p_values['mn_3']}\n"
+
+            # f"Probability that the null is true for STANDARD DEVIATION: {self.p_values['sd']}\n"
         , file=fname)
 
         print(
             f"permuted average mean: {self.mean_av}\n"
             f"permuted average standard deviation: {self.stddev_av}\n"
-            f"permuted average skew: {self.skew_av}\n"
             f"User-defined significance threshold: {self.a}\n"
             f"Permutation-derived alpha threshold: {self.ci_av}\n\n"
             "Total HOGs with significantly different LORs between\n"
@@ -1651,11 +1557,22 @@ class PermutationTestResults:
             (
                 filename + 
                 f"{alt}" +
-                "_permutation_stats_dists.png"
+                "_permutation_stats_dists_single_gauss.png"
                 ),
             dpi=300
         )
 
+        fig, _ = self.plot_permutation_stats_tgauss(fg_name, bg_name)
+
+        fig.savefig(
+            (
+                filename + 
+                f"{alt}" +
+                "_permutation_stats_dists_triple_gauss.png"
+                ),
+            dpi=300
+        )
+        
         # True distribution overlaid with average permuted distribution
         fig, _ = self.plot_permutation_results(fg_name, bg_name)
 
@@ -1697,16 +1614,7 @@ def odds_ratio_test(
     alpha=0.05,
     permutation_reps=10000,
     permulation_tip_values=None,
-    run_permulations=True,
-    permulations_script_path="src/permulations.R",
-    permulations_treefile="assets/SpeciesTree_full_brlen.nwk",
-    permulations_excluded_tips=None,
-    permulations_rm="ER",
-    permulations_rp="auto",
-    permulations_rdata=None,
-    permulations_object_name="testCatPerms",
-    permulations_save_rdata=None,
-    permulations_save_object_name="testCatPerms",
+    permulations_tip_values_csv="assets/perms_tip_values.csv",
     background_list_filename=None,
     species_of_interest=None,
     results_dir=None,
@@ -1717,9 +1625,9 @@ def odds_ratio_test(
 ):
     """Run the full odds ratio test.
 
-    By default, permutation assignments are generated via permulations.
-    Set run_permulations=False (and do not provide permulation inputs)
-    to use the original random foreground/background permutation.
+    Permulation assignments can be provided directly (`permulation_tip_values`)
+    or loaded from a CSV (`permulations_tip_values_csv`). If neither is
+    provided, the original random foreground/background permutation is used.
     """
 
     if results_dir is not None: 
@@ -1739,10 +1647,7 @@ def odds_ratio_test(
     hog_node_genes_tsv = _resolve_repo_path(hog_node_genes_tsv)
     genecount_csv = _resolve_repo_path(genecount_csv)
     buscos_filename = _resolve_repo_path(buscos_filename) if correct_for_buscos else None
-    permulations_script_path = _resolve_repo_path(permulations_script_path)
-    permulations_treefile = _resolve_repo_path(permulations_treefile)
-    permulations_rdata = _resolve_repo_path(permulations_rdata)
-    permulations_save_rdata = _resolve_repo_path(permulations_save_rdata)
+    permulations_tip_values_csv = _resolve_repo_path(permulations_tip_values_csv)
     results_dir = _resolve_repo_path(results_dir)
 
     # Generate the genecount file if not provided
@@ -1761,38 +1666,28 @@ def odds_ratio_test(
     )
 
     # Determine permutation assignments source.
-    # Priority: explicit in-memory values > provided RData > generate via permulations.
-    if permulation_tip_values is None and permulations_rdata is not None:
-        permulation_tip_values = load_permulation_tip_values_from_rdata(
-            rdata_path=permulations_rdata,
-            object_name=permulations_object_name,
+    # Priority: explicit in-memory values > provided CSV > random permutation.
+    if permulation_tip_values is None and permulations_tip_values_csv is not None:
+        permulation_tip_values = load_permulation_tip_values_from_csv(
+            permulations_tip_values_csv
         )
 
-    if permulation_tip_values is None and run_permulations:
-        if permulations_save_rdata is None:
-            timestamp = time.strftime("%Y%m%d_%H%M%S")
-            permulations_save_rdata = _resolve_repo_path(
-                f"results/permulations/testCatPerms_{timestamp}.RData"
-            )
-
-        permulation_tip_values = run_permulations_from_r_script(
-            foreground_list_filename=foreground_list_filename,
-            n_permulations=permutation_reps,
-            r_script_path=permulations_script_path,
-            permulations_treefile=permulations_treefile,
-            permulations_excluded_tips=permulations_excluded_tips,
-            permulations_rm=permulations_rm,
-            permulations_rp=permulations_rp,
-            permulations_save_rdata=permulations_save_rdata,
-            permulations_save_object_name=permulations_save_object_name,
-        )
-
-    # If permulation assignments are provided, use exactly that many reps.
-    effective_permutation_reps = (
-        len(permulation_tip_values)
-        if permulation_tip_values is not None
-        else permutation_reps
-    )
+    # If permulation assignments are provided, cap to the requested number of reps.
+    # This keeps behavior intuitive when CSV rows exceed permutation_reps.
+    if permulation_tip_values is not None:
+        if permutation_reps is not None:
+            if permutation_reps <= 0:
+                raise ValueError("permutation_reps must be a positive integer.")
+            available_reps = len(permulation_tip_values)
+            if permutation_reps < available_reps:
+                print(
+                    f"Using first {permutation_reps} permulation rows "
+                    f"(out of {available_reps} available)."
+                )
+                permulation_tip_values = permulation_tip_values[:permutation_reps]
+        effective_permutation_reps = len(permulation_tip_values)
+    else:
+        effective_permutation_reps = permutation_reps
 
     if permulation_tip_values is not None and len(permulation_tip_values) > 0:
         print("First permulated tip values (species -> value):")
@@ -1818,7 +1713,8 @@ def odds_ratio_test(
             test,
             alternative,
             occupancy_threshold,
-            max_occ
+            max_occ,
+            permutation_reps
         )
         os.makedirs(unique_results_dir, exist_ok=True)
         permutation_test_results.save_results_files(

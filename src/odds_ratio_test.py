@@ -5,7 +5,7 @@ differs significantly between a test group and a reference
 group in a phylogeny
 
 Follow the instructions at https://github.com/nclark-lab/RERconverge/wiki/Install
-to set up RERconverge before proceeding.
+to set up RERconverge and run the src/permulations.R script before proceeding.
 """
 
 import sys
@@ -201,8 +201,20 @@ def tgausslogl(params, x):
 def optimize_tgauss(params, data):
     """Optimize the parameters of the triple Gaussian function."""
 
-    result = minimize(tgausslogl, params, args=data, method='Nelder-Mead')
-    
+    constraints = (
+        {"type": "ineq", "fun": lambda p: p[0]},          # w1 >= 0
+        {"type": "ineq", "fun": lambda p: p[3]},          # w2 >= 0
+        {"type": "ineq", "fun": lambda p: 1 - p[0] - p[3]}  # w1 + w2 <= 1
+    )
+
+    result = minimize(
+        tgausslogl,
+        params,
+        args=(data,),
+        method='COBYLA',
+        constraints=constraints,
+    )
+
     return result.x
 
 def calculate_odds(

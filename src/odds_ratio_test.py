@@ -22,6 +22,7 @@ from scipy.optimize import minimize
 from tqdm.auto import tqdm
 import seaborn as sns
 import orthogroup_gene_count
+import id_converter
 
 # Set the random seed for reproducibility
 random.seed(42)
@@ -195,8 +196,8 @@ def tgauss_fun(params,x):
     return p
 
 def tgausslogl(params, x):
-        p = tgauss_fun(params, x)
-        return -np.nansum(np.log(p), axis=0)
+    p = tgauss_fun(params, x)
+    return -np.nansum(np.log(p), axis=0)
 
 def optimize_tgauss(params, data):
     """Optimize the parameters of the triple Gaussian function."""
@@ -907,7 +908,7 @@ class PermutationTestResults:
         bg_name = bg_name.replace(" ", r"\ ")
 
         fig.suptitle(
-            rf"$\bf{{Permuted\ distribution\ stats\ for\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+            rf"$\bf{{Permuted\ single\ Gaussian\ distribution\ stats\ for\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
             f"Maximum occupancy = {self.maximum}, "
             f"minimum occupancy = {self.occupancy_threshold}, "
             f"{alt}",
@@ -1419,6 +1420,12 @@ class PermutationTestResults:
 
         self.hits_hogs_list = self.results_fltrd_df.index.tolist()
 
+    def _get_hits_descriptions(self):
+        """Get descriptions for the HOGs which are significant according to
+        the permutation test"""
+
+        
+
     def print_permutation_results(self, fname=sys.stdout):
         """Function to print the results of the permutation test"""
 
@@ -1502,7 +1509,7 @@ class PermutationTestResults:
         with open(filepath, 'rb') as f:
             return pickle.load(f)
 
-    def save_results_files(self, results_dir, fg_name, bg_name="background"):
+    def save_results_files(self, results_dir, save_pickle, fg_name, bg_name="background"):
         """
         Takes in permutation test results instance and saves all
         relevant plots and tables.
@@ -1546,6 +1553,20 @@ class PermutationTestResults:
                 index=True
             )
 
+        # Convert HOG hit list to LOCs + descriptions and save as a companion file.
+        hits_with_locs_df = id_converter.convert_hogs_to_locs(
+            self.results_fltrd_df,
+            self.true_odds.hog_node_genes_tsv,
+        )
+        hits_with_locs_df.to_csv(
+            (
+                filename +
+                f"{alt}" +
+                "_fltrd_permutation_hits_locs_desc.csv"
+            ),
+            index=False,
+        )
+
         # Save a text file summarizing results from the analysis
         self.print_permutation_results(
             fname = filename +
@@ -1554,11 +1575,19 @@ class PermutationTestResults:
             )
         
         # Save the permutation results object as a pickle file
-        self.save_pickle_file(
-            fname = filename +
-            f"{alt}" +
-            ".pkl"
+        if save_pickle:
+            self.save_pickle_file(
+                fname = filename +
+                f"{alt}" +
+                ".pkl"
         )
+        else:
+            print(
+                "save_pickle is set to False, so the full results object will not be saved as a pickle file.\n"
+                "To save the results object for future use, set save_pickle to True. If you stored the test \n" 
+                "results object in a variable, you can also save it as a pickle file using the `save_pickle_file` method, e.g. \n"
+                "my_results.save_pickle_file('path/to/save/my_results.pkl')\n"
+            )
 
         #### Save figures ####
 
@@ -1611,7 +1640,10 @@ class PermutationTestResults:
             "\t 5. [test]_[species]_fltrd_permutation_hits.csv: Results table \n"
             "\t\tfiltered for occupancy, species of interest (if specified),\n"
             "\t\tand surpassing permutation-derived significance thresholds\n"
-            "\t 6. All odds and log odds ratios (not filtered for occupancy,\n"
+            "\t 6. [test]_[species]_fltrd_permutation_hits_locs_desc.csv: Hits with\n"
+            "\t\tLOC IDs and descriptions from id_converter. There may be multiple\n"
+            "\t\trows per HOG if there are multiple genes from the U.div. in the HOG.\n"
+            "\t 7. All odds and log odds ratios (not filtered for occupancy,\n"
             "\t\tspecies, or significance)"
             )
 
@@ -1633,7 +1665,8 @@ def odds_ratio_test(
     fg_name=None,
     bg_name=None,
     buscos_filename="assets/buscos.csv",
-    correct_for_buscos=True
+    correct_for_buscos=True,
+    save_pickle=True
 ):
     """Run the full odds ratio test.
 
@@ -1701,9 +1734,9 @@ def odds_ratio_test(
     else:
         effective_permutation_reps = permutation_reps
 
-    if permulation_tip_values is not None and len(permulation_tip_values) > 0:
-        print("First permulated tip values (species -> value):")
-        print(permulation_tip_values[0])
+    # if permulation_tip_values is not None and len(permulation_tip_values) > 0:
+    #     print("First permulated tip values (species -> value):")
+    #     print(permulation_tip_values[0])
 
     permutation_test_results = PermutationTestResults(
         true_odds=true_odds,
@@ -1715,8 +1748,6 @@ def odds_ratio_test(
         permulation_tip_values=permulation_tip_values,
         species_of_interest=species_of_interest,
     )
-
-    permutation_test_results.print_permutation_results()
 
     if results_dir is not None:
         unique_results_dir = _unique_results_dir(
@@ -1731,8 +1762,20 @@ def odds_ratio_test(
         os.makedirs(unique_results_dir, exist_ok=True)
         permutation_test_results.save_results_files(
             results_dir=unique_results_dir,
+            save_pickle=save_pickle,
             fg_name=fg_name,
             bg_name=bg_name
         )
+            
+    else:
+        print(
+            "No results directory provided, so plots and tables will not be saved to files.\n"
+            "To save results files, provide a path to a results directory using the results_dir argument."
+        )
+        if save_pickle:
+            print(
+                "save_pickle is set to True, but no results directory provided, so the full results object will not be saved as a pickle file.\n"
+                "To save the results object for future use, set save_pickle to True and provide a path to a results directory using the results_dir argument."
+            )
 
     return permutation_test_results

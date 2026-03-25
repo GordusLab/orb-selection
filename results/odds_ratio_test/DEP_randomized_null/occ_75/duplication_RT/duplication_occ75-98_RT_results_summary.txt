@@ -1,0 +1,36 @@
+*********************** RESULTS ***********************
+
+Bootstrapping test with 10000 repetitions for duplication (right-tailed)
+with minimum occupancy *75* and maximum occupancy *no* 
+Analysis run on 2025-07-29 at 17:07:10
+Foreground list: /Users/calvin/orb-selection/scripts/../data/orbweavers-list.txt
+Gene count file: /Users/calvin/orb-selection/scripts/../data/N5.GeneCount.tsv
+Hierarchical orthogroup file: /Users/calvin/orb-selection/scripts/../data/N5.tsv
+
+Total number of HOGs in node: 107986
+Total number of HOGs within occupancy threshold: 5233
+Total species: 98
+Foreground count: 44
+Background count: 54
+True mean: -0.04746996232571979
+True standard deviation: 0.8929220790292889
+True skew: 0.059449503392817564
+
+** BOOTSTRAPPING P-VALUES ** 
+
+Probability that the null is true for MEAN: 0.822
+Probability that the null is true for STANDARD DEVIATION: 0.0
+Probability that the null is true for SKEW: 0.1186
+
+Bootstrapped average mean: 0.0013503901638540097
+Bootstrapped average standard deviation: 0.6251578254966911
+Bootstrapped average skew: -0.07433540210520646
+User-defined significance threshold: 0.01
+Bootstrap-derived alpha threshold: [-1.45298419  1.45568497]
+
+Total HOGs with significantly different LORs between
+foreground and background (two-tailed): 521
+
+Total HOGs with significantly different LORs between
+foreground and background (two-tailed, Uloborus_diversus present): 452
+

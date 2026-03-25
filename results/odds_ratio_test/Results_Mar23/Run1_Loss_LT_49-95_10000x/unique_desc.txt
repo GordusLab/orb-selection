@@ -1,0 +1,582 @@
+
+17-beta-hydroxysteroid dehydrogenase 13-like
+17-beta-hydroxysteroid dehydrogenase type 6-like
+2-oxoglutarate and iron-dependent oxygenase domain-containing protein 3-like
+2',3'-cyclic-nucleotide 3'-phosphodiesterase-like
+3'(2'),5'-bisphosphate nucleotidase 1-like
+5' nucleotidase C
+5'-AMP-activated protein kinase subunit beta-1-like
+5'-deoxynucleotidase HDDC2-like
+60S acidic ribosomal protein P1-like
+60S ribosomal protein L13a-like
+60S ribosomal protein L44
+60S ribosomal protein L44-like
+ABC transporter F family member 4-like
+acetyl-coenzyme A synthetase, cytoplasmic-like
+acid phosphatase type 7-like
+Actin binding protein 1
+actin-interacting protein 1 flr
+Actin-related protein 10
+activator of 90 kDa heat shock protein ATPase homolog 1-like
+acyl-CoA desaturase-like
+adaptor protein complex 1, mu subunit
+adenomatous polyposis coli protein-like
+Adenosine deaminase acting on RNA
+adenosine deaminase-like
+Adenylate kinase 1
+ADP-dependent glucokinase-like
+ADP-ribosylation factor-like 6 interacting protein 1
+aldehyde dehydrogenase 1A1-like
+aldo-keto reductase family 1 member A1-like
+aldo-keto reductase family 1 member B1-like
+alpha-ketoglutarate-dependent dioxygenase alkB homolog 4-like
+alpha-mannosidase 2-like
+alpha-soluble NSF attachment protein-like
+anaphase-promoting complex subunit 7
+ankyrin repeat and SOCS box protein 10-like
+ankyrin repeat domain-containing protein 13D-like
+ankyrin repeat domain-containing protein 16-like
+ankyrin repeat domain-containing protein 39-like
+ankyrin repeat domain-containing protein 40-like
+ankyrin repeat domain-containing protein 54-like
+AP-5 complex subunit beta-1-like
+apoptotic chromatin condensation inducer acinus
+aprataxin and PNK-like factor
+aquaporin AQPAe.a-like
+arc
+Arginine and glutamate rich 1
+argininosuccinate lyase-like
+atos homolog protein A-like
+ATP-binding cassette sub-family F member 3-like
+autophagy-related protein 13-like
+autophagy-related protein 2 homolog B-like
+b(0,+)-type amino acid transporter 1-like
+beclin-1-like
+beta-1,3-galactosyltransferase 5-like
+beta-1,4-galactosyltransferase 7-like
+beta-alanine transporter-like
+BLOC-1 related complex subunit 5
+bromodomain-containing protein 140
+BTB/POZ domain-containing protein 3-like
+BTB/POZ domain-containing protein 6-like
+BUB3-interacting and GLEBS motif-containing protein ZNF207-like
+bZIP transcription factor crc
+C-factor-like
+C-terminal binding protein
+calcium-binding protein E63-1-like
+calreticulin-like
+calsequestrin-1-like
+cAMP-dependent protein kinase catalytic subunit 3-like
+Cap methyltransferase 1
+carboxy-terminal kinesin 2-like
+carnosine N-methyltransferase-like
+casein kinase I gish
+caseinolytic peptidase B protein homolog
+Caseinolytic protease chaperone subunit
+cationic amino acid transporter 2-like
+caveolin-3-like
+CD63 antigen-like
+Cdk5 activator-like protein
+CDK5 and ABL1 enzyme substrate 1-like
+cell division cycle 7-related protein kinase-like
+cell division cycle protein 45
+centromere protein F-like
+centrosomal protein of 95 kDa-like
+chitin deacetylase 8-like
+chitinase domain-containing protein 1-like
+cholinephosphotransferase 1-like
+chromodomain-helicase-DNA-binding protein Mi-2 homolog
+chromosome transmission fidelity protein 8 homolog
+cilia- and flagella-associated protein 91-like
+citron Rho-interacting kinase-like
+Cleavage and polyadenylation specificity factor subunit 4
+collagen alpha-1(I) chain-like
+collagen alpha-1(XXVI) chain-like
+complement factor H-like
+conserved oligomeric Golgi complex subunit 1
+conserved oligomeric Golgi complex subunit 6
+coronin-2B-like
+CTTNBP2 N-terminal-like protein
+cullin-3-like
+cuticlin-1-like
+cyclin-dependent kinase 10-like
+cyclin-dependent kinase 14-like
+cyclin-H-like
+cysteine and histidine-rich domain-containing protein 1-like
+cysteine protease ATG4B-like
+cytochrome P450 18a1-like
+cytochrome P450 2C44-like
+cytoplasmic dynein 2 light intermediate chain 1-like
+Cytosolic non-specific dipeptidase 2
+D-beta-hydroxybutyrate dehydrogenase, mitochondrial-like
+D-ribitol-5-phosphate cytidylyltransferase-like
+DCN1-like protein SCCRO4
+DEAH-box helicase 15
+dentin sialophosphoprotein-like
+Description
+Dihydrouridine synthase 4
+DNA excision repair protein ERCC-6-like
+DNA polymerase subunit gamma-2, mitochondrial-like
+DNA primase large subunit-like
+DNA repair protein XRCC2-like
+DNA-binding protein D-ETS-4-like
+docking protein 3-like
+DTW domain containing 2
+dual specificity mitogen-activated protein kinase kinase 1-like
+dual specificity protein phosphatase 3-like
+dual specificity tyrosine-phosphorylation-regulated kinase 1B-like
+dynactin subunit 6
+E3 SUMO-protein ligase RanBP2-like
+E3 ubiquitin ligase Rnf121-like
+E3 ubiquitin-protein ligase AMFR-like
+E3 ubiquitin-protein ligase RLIM-like
+E3 ubiquitin-protein ligase RNF103-like
+E3 ubiquitin-protein ligase RNF115-like
+E3 ubiquitin-protein ligase RNF123-like
+E3 ubiquitin-protein ligase Sce
+egl nine homolog 1-like
+ELAV-like protein 1-B
+elongation factor Tu, mitochondrial-like
+elongation of very long chain fatty acids protein 1-like
+endoplasmic reticulum chaperone BiP-like
+Enhancer of Polycomb
+enolase-phosphatase E1-like
+enoyl-CoA delta isomerase 2-like
+epsin-2-like
+erlin-2-B-like
+estradiol 17-beta-dehydrogenase 2-like
+eukaryotic translation initiation factor 3 subunit i
+Eukaryotic translation initiation factor mextil
+Evr1_Alr domain-containing protein Alr
+exonuclease 3'-5' domain-containing protein 2-like
+exosome complex component MTR3-like
+FAD-dependent oxidoreductase domain-containing protein 1-like
+fatty-acid amide hydrolase 2-like
+feline leukemia virus subgroup C receptor-related protein 2-like
+FERM domain containing expanded
+FK506-binding protein 5-like
+formin-binding protein 4-like
+furin-like protease 2
+galectin-4-like
+GAS2-like protein pickled eggs
+gastrula zinc finger protein xLCGF3.1-like
+GATA zinc finger domain-containing protein 14-like
+GATOR complex protein mio
+gelsolin, cytoplasmic-like
+geminin DNA replication inhibitor
+general transcription factor 3C polypeptide 1-like
+glucosamine-6-phosphate isomerase Oscillin
+glucose transporter type 1-like
+glucose-induced degradation protein 8 homolog
+glutathione synthetase-like
+glycerol-3-phosphate acyltransferase 1, mitochondrial-like
+glycerol-3-phosphate phosphatase-like
+glycine N-methyltransferase-like
+glycogen debranching enzyme-like
+glycogen phosphorylase-like
+glypican-6-like
+Golgi pH regulator-like
+Golgin, RAB6 interacting
+growth/differentiation factor 8-like
+GTP-binding protein 4-like
+guanidinobutyrase-like
+guanine nucleotide-binding protein G(q) subunit alpha
+H/ACA ribonucleoprotein complex non-core subunit NAF1-like
+heme-binding protein 2-like
+hemocyanin C chain-like
+hepatoma-derived growth factor-related protein 3-like
+heterogeneous nuclear ribonucleoprotein 27C-like
+homeobox protein 2-like
+homeobox protein Meis2-like
+homocysteine-responsive endoplasmic reticulum-resident ubiquitin-like domain member 2 protein
+inactive histone-lysine N-methyltransferase 2E-like
+inactive tyrosine-protein kinase 7-like
+indolethylamine N-methyltransferase-like
+inhibitor of Bruton tyrosine kinase-like
+inositol monophosphatase 3-like
+inositol polyphosphate 1-phosphatase
+inositol polyphosphate 5-phosphatase K-like
+isoleucine--tRNA ligase, cytoplasmic-like
+josephin-1-like
+KH domain-containing protein akap-1-like
+KH domain-containing, RNA-binding, signal transduction-associated protein 1-like
+kielin/chordin-like protein
+kinesin-like protein 10A
+kinesin-like protein KIFC1
+L27 and PDZ_signaling domain-containing protein veli
+lariat debranching enzyme
+LEM domain-containing inner nuclear membrane protein MAN1
+lethal (3) 87Df
+leukocyte elastase inhibitor-like
+LHFPL tetraspan subfamily member 2 protein-like
+LIM domain kinase 1-like
+lipoma-preferred partner homolog
+lipoyl synthase, mitochondrial
+LON peptidase N-terminal domain and RING finger protein 3-like
+lon protease homolog 2, peroxisomal-like
+LSMD1 domain-containing protein Sbat
+lysine-specific demethylase 3A-like
+lysophosphatidylcholine acyltransferase 1-like
+maestro heat-like repeat-containing protein family member 1
+male-specific lethal 1
+male-specific lethal 3
+mediator of RNA polymerase II transcription subunit 24-like
+metalloendopeptidase OMA1, mitochondrial-like
+methyltransferase like 14
+microphthalmia-associated transcription factor-like
+mitochondrial ribosomal protein S30
+mitochondrial transcription factor B2
+mitochondrial transcription termination factor 5
+mitochondrial-processing peptidase subunit alpha-like
+mitogen-activated protein kinase-binding protein 1-like
+MOG interacting and ectopic P-granules protein 1-like
+monocarboxylate transporter 12-B-like
+monocarboxylate transporter 9-like
+motile sperm domain-containing protein 3-like
+mRNA export factor GLE1-like
+mucin-3A-like
+mucin-7-like
+multiple PDZ domain protein-like
+myelin expression factor 2-like
+myosin heavy chain, skeletal muscle-like
+myotubularin-related protein 14-like
+myotubularin-related protein 3-like
+N-fatty-acyl-amino acid synthase/hydrolase PM20D1-like
+N-terminal glutamine amidase tungus
+NAD-dependent protein deacylase Sirt4-like
+natural resistance-associated macrophage protein 2-like
+NDT-like domain-containg protein raw
+nephrocystin-3-like
+neuralized-like protein 2
+neurogenic protein big brain-like
+NF-kappa-B inhibitor cactus-like
+NFE2 like bZIP transcription factor cap-n-collar
+NHL repeat-containing protein 2-like
+NHP2-like protein 1 hoip
+nidogen-2-like
+nidogen-like
+NKAP family protein CG6066-like
+nuclear cap-binding protein subunit 3-like
+nuclear FMR1 interacting protein 1
+nuclear inhibitor of protein phosphatase 1
+nuclear pore complex protein Nup214
+nucleolin-like
+nucleoside diphosphate kinase A2-like
+nucleoside diphosphate kinase-like
+nucleosome assembly protein 1-like 1
+nucleotide sugar transporter SLC35B4-like
+oligosaccharyltransferase complex subunit ostc-A-like
+omega-amidase NIT2-like
+organic cation transporter protein-like
+Organic solute carrier partner 1
+pachytene checkpoint 2 protein
+palmitoyltransferase ZDHHC1-like
+pantetheinase-like
+peptide methionine sulfoxide reductase-like
+peptidyl-prolyl cis-trans isomerase FKBP4-like
+peptidyl-prolyl cis-trans isomerase G-like
+period circadian protein-like
+peroxisomal ATPase PEX1-like
+phosphatidylinositol transfer protein
+phospholipase A-2-activating protein-like
+phosphoribosyl pyrophosphate synthase-associated protein 2-like
+PI4KA lipid kinase complex subunit hyccin
+PIH1 domain-containing protein 1-like
+platelet-activating factor acetylhydrolase 2, cytoplasmic-like
+poly(A) polymerase hiiragi
+poly(A)-specific ribonuclease PARN-like
+polyubiquitin-C
+pre-mRNA-splicing regulator WTAP-like
+probable arginine--tRNA ligase, mitochondrial
+probable ATP-dependent RNA helicase DDX28
+probable ATP-dependent RNA helicase DDX47
+probable D-lactate dehydrogenase, mitochondrial
+probable E3 SUMO-protein ligase RNF212
+probable glutamine--tRNA ligase
+procathepsin L-like
+proclotting enzyme-like
+progranulin-like
+prolow-density lipoprotein receptor-related protein 1-like
+propionyl-CoA carboxylase alpha chain, mitochondrial-like
+prostatic acid phosphatase-like
+protein ABHD11-like
+protein adenylyltransferase SelO, mitochondrial-like
+protein BTG2-like
+protein CASC3-like
+protein ecdysoneless homolog
+protein ELYS-like
+protein FAM98A-like
+protein germ cell-less-like
+protein kinase C iota type
+protein masquerade-like
+protein Mpv17-like
+protein NDRG3-like
+Protein O-mannosyl-transferase 2
+protein OS-9-like
+protein phosphatase 1 regulatory subunit 16A-like
+protein phosphatase D3
+protein scabrous-like
+protein SDA1 homolog
+protein SET-like
+protein slit-like
+protein spaetzle 5-like
+protein spinster homolog 1-like
+protein transport protein Sec24C-like
+protein-L-isoaspartate O-methyltransferase domain-containing protein 2-like
+proteoglycan 4-like
+pseudouridine-5'-phosphatase-like
+Purine-rich binding protein-alpha
+putative Dol-P-Glc:Glc(2)Man(9)GlcNAc(2)-PP-Dol alpha-1,2-glucosyltransferase
+putative homeodomain transcription factor
+putative sodium-dependent multivitamin transporter
+putative uncharacterized protein DDB_G0284213
+pyroglutamyl-peptidase 1-like
+pyruvate dehydrogenase [acetyl-transferring]-phosphatase 1-like protein, mitochondrial
+rabankyrin-5-like
+rac GTPase-activating protein 1-like
+ralA-binding protein 1-like
+rap1 GTPase-activating protein 1-like
+ras and EF-hand domain-containing protein-like
+Ras converting CAAX endopeptidase Sras
+ras GTPase-activating protein-binding protein 2
+RAS oncogene family member Rab11
+ras suppressor protein 1-like
+ras-like GTP-binding protein Rho1
+ras-like protein 2
+ras-related and estrogen-regulated growth inhibitor-like protein
+ras-related protein Rab-31-like
+ras-related protein Rab-32-like
+RCC1-like G exchanging factor-like protein
+receptor expression-enhancing protein 5-like
+Reduction in Cnn dots 1
+regulator of chromosome condensation-like
+regulator of G-protein signaling 1-like
+regulator of G-protein signaling 18-like
+regulatory associated protein of MTOR complex 1
+regulatory particle non-ATPase 1
+Regulatory particle non-ATPase 2
+regulatory particle non-ATPase 6
+regulatory particle non-ATPase 7
+regulatory particle non-ATPase 8
+renalase-like
+repetitive organellar protein-like
+replication factor C subunit RfC38
+reticulocalbin-2-like
+reticulon-4-interacting protein 1 homolog, mitochondrial-like
+retinitis pigmentosa 9 protein homolog
+retinol dehydrogenase 16-like
+ribitol-5-phosphate xylosyltransferase 1-like
+ribonuclease ZC3H12A-like
+ribose-phosphate pyrophosphokinase 2-like
+ribosomal protein L7A
+ribosomal protein S15
+ribosomal protein S3
+ribosomal protein S6 kinase 2 beta-like
+ribosomal protein S8
+ribosome-binding protein 1-like
+ric8 guanine nucleotide exchange factor A
+RIO kinase 2
+RNA-binding protein 12-like
+RNA-binding protein 26-like
+RNA-binding protein 33-like
+RNA-binding protein 39-like
+RNA-binding protein 4.1-like
+S-adenosylhomocysteine hydrolase-like protein 1
+S-adenosylmethionine synthase-like
+Salt-inducible kinase 3
+sec1 family domain-containing protein 2-like
+semaphorin-2A-like
+sequestosome-1-like
+serine incorporator TMS1
+serine/threonine-protein kinase 11-interacting protein-like
+serine/threonine-protein kinase RIO3-like
+serine/threonine-protein kinase WNK1-like
+serine/threonine-protein phosphatase 2A 55 kDa regulatory subunit B
+serine/threonine-protein phosphatase 6 regulatory ankyrin repeat subunit C-like
+serine/threonine-protein phosphatase 6 regulatory subunit 3-like
+serum amyloid A-5 protein-like
+serum response factor-binding protein 1-like
+SH3 domain containing GRB2 like, endophilin-B
+short spindle 3
+short-chain dehydrogenase/reductase family 16C member 6-like
+Smad anchor for receptor activation
+sodium- and chloride-dependent GABA transporter 2-like
+sodium-dependent glucose transporter 1-like
+sodium-dependent glucose transporter 1A-like
+solute carrier family 35 member G1-like
+soma ferritin-like
+sorbin and SH3 domain-containing protein 2-like
+sorting nexin 1
+sorting nexin-17-like
+SPARC-like
+splicing factor, proline- and glutamine-rich-like
+STAM-binding protein-like
+sterile alpha motif domain containing protein 4 smaug
+sterol O-acyltransferase 1-like
+steryl-sulfatase-like
+Stress-induced phosphoprotein 1
+stromal interaction molecule 1-like
+stromal interaction molecule homolog
+structural maintenance of chromosomes 2
+sulfate transporter-like
+sulfotransferase 1C4-like
+sulfotransferase ssu-1-like
+SUMO-conjugating enzyme UBC9-B
+synaptosomal-associated protein 25-like
+tafazzin, phospholipid-lysophospholipid transacylase
+TATA box-binding protein-associated factor RNA polymerase I subunit B
+TATA-box binding protein associated factor 12
+TBC1 domain family member 2B-like
+testicular acid phosphatase homolog
+TGF-beta-activated kinase 1 and MAP3K7-binding protein 1-like
+thioredoxin-2-like
+thioredoxin, mitochondrial-like
+TOM1-like protein 2
+TOX high mobility group box family member 3-like
+transaldolase-like
+transcription elongation factor B polypeptide 3-like
+transcription elongation regulator 1-like
+transcription factor IIIA-like
+transcription factor sem-2-like
+transcription factor SOX-9-like
+transcriptional repressor protein YY1-like
+transformer-2 protein homolog beta-like
+transmembrane 9 superfamily member 3-like
+transmembrane 9 superfamily protein member 3
+transmembrane anterior posterior transformation protein 1 homolog
+transmembrane protein 132C dtn
+transmembrane protein 163-like
+transmembrane protein 165-like
+transmembrane protein 184B-like
+transmembrane protein 209-like
+trifunctional nucleotide phosphoesterase protein YfkN-like
+tRNA (cytosine(34)-C(5))-methyltransferase Nsun2
+tuberous sclerosis 1 protein hamartin
+tyrosine-protein phosphatase non-receptor type 4-like
+tyrosine-protein phosphatase non-receptor type 9-like
+tyrosyl-DNA phosphodiesterase 2-like
+ubiquitin carboxyl-terminal hydrolase 10-like
+ubiquitin specific peptidase 36
+ubiquitin specific protease 16/45
+UDP-N-acetylglucosamine transporter-like
+uncharacterized LOC129216188
+uncharacterized LOC129216226
+uncharacterized LOC129216437
+uncharacterized LOC129216522
+uncharacterized LOC129216849
+uncharacterized LOC129216933
+uncharacterized LOC129217229
+uncharacterized LOC129217265
+uncharacterized LOC129217400
+uncharacterized LOC129217450
+uncharacterized LOC129217543
+uncharacterized LOC129217639
+uncharacterized LOC129217676
+uncharacterized LOC129218242
+uncharacterized LOC129218284
+uncharacterized LOC129218312
+uncharacterized LOC129218438
+uncharacterized LOC129218670
+uncharacterized LOC129218802
+uncharacterized LOC129218972
+uncharacterized LOC129219014
+uncharacterized LOC129219240
+uncharacterized LOC129219243
+uncharacterized LOC129219693
+uncharacterized LOC129219948
+uncharacterized LOC129220239
+uncharacterized LOC129220397
+uncharacterized LOC129220498
+uncharacterized LOC129220666
+uncharacterized LOC129220814
+uncharacterized LOC129221964
+uncharacterized LOC129222067
+uncharacterized LOC129222539
+uncharacterized LOC129222882
+uncharacterized LOC129223095
+uncharacterized LOC129223096
+uncharacterized LOC129223136
+uncharacterized LOC129224170
+uncharacterized LOC129224385
+uncharacterized LOC129224586
+uncharacterized LOC129224594
+uncharacterized LOC129224616
+uncharacterized LOC129224996
+uncharacterized LOC129224997
+uncharacterized LOC129225114
+uncharacterized LOC129225146
+uncharacterized LOC129225213
+uncharacterized LOC129225923
+uncharacterized LOC129225994
+uncharacterized LOC129226069
+uncharacterized LOC129226414
+uncharacterized LOC129226572
+uncharacterized LOC129226844
+uncharacterized LOC129227779
+uncharacterized LOC129228084
+uncharacterized LOC129228263
+uncharacterized LOC129228518
+uncharacterized LOC129229319
+uncharacterized LOC129229422
+uncharacterized LOC129229511
+uncharacterized LOC129229896
+uncharacterized LOC129230192
+uncharacterized LOC129230441
+uncharacterized LOC129231065
+uncharacterized LOC129231138
+uncharacterized LOC129231152
+uncharacterized LOC129231221
+uncharacterized LOC129231229
+uncharacterized LOC129231305
+uncharacterized LOC129231388
+uncharacterized LOC129231482
+uncharacterized LOC129231815
+uncharacterized LOC129232232
+uncharacterized LOC129232346
+uncharacterized LOC129232455
+uncharacterized LOC129232724
+uncharacterized LOC129233368
+uncharacterized LOC129233744
+uncharacterized LOC129234017
+uncharacterized LOC129234110
+uncharacterized LOC129234147
+uncharacterized LOC129234511
+uncharacterized LOC129234603
+uncharacterized LOC129235181
+uncharacterized PE-PGRS family protein PE_PGRS54-like
+uncharacterized protein C19orf47-like
+uncharacterized protein CG3556-like
+unconventional myosin-Ic-like
+unconventional myosin-Ie-like
+uridine diphosphate glucose pyrophosphatase NUDT14-like
+uronyl 2-sulfotransferase-like
+V-type proton ATPase catalytic subunit A-like
+Vacuolar H[+] ATPase 68 kDa subunit 2
+Vacuolar protein sorting 35
+vacuolar protein sorting 39
+Vacuolar protein sorting-associated protein YL-1
+venom phosphodiesterase-like
+von Willebrand factor A domain-containing protein c12.2
+VPS35 endosomal protein-sorting factor-like
+WAP four-disulfide core domain protein 1-like
+WD repeat-containing and planar cell polarity effector protein fritz
+WD repeat-containing protein 5-like
+WD repeat-containing protein 6-like
+WD repeat-containing protein 70-like
+WD repeat-containing protein 76-like
+xaa-Pro aminopeptidase 3-like
+xylosyl- and glucuronyltransferase LARGE1-like
+xylulose kinase-like
+zinc finger and SCAN domain-containing protein 29-like
+zinc finger protein 189-like
+zinc finger protein 236-like
+zinc finger protein 26-like
+zinc finger protein 271-like
+zinc finger protein 436-like
+zinc finger protein 521-like
+zinc finger protein 569-like
+zinc finger protein 596-like
+zinc finger protein 608-like
+zinc transporter foi-like
+Zinc-finger protein 72D
+ZZ-type zinc finger-containing protein 3-like

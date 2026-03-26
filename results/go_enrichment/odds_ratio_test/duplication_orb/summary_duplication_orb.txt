@@ -1,0 +1,21 @@
+Description	Count	p	Ontology
+xenobiotic metabolic process	4	0.00013	bp
+organic acid metabolic process	7	0.00013	bp
+snRNA transcription by RNA polymerase II	3	0.00024	bp
+monoatomic anion transport	4	0.00555	bp
+poly(A)+ mRNA export from nucleus	2	0.02135	bp
+animal organ morphogenesis	2	0.02693	bp
+cilium organization	3	0.02707	bp
+signaling	16	0.02930	bp
+protein deubiquitination	3	0.04751	bp
+RNA polymerase I complex	2	0.026	cc
+gap junction	2	0.026	cc
+oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced flavin or flavoprotein as one donor, and incorporation of one atom of oxygen	4	0.00012	mf
+iron ion binding	6	0.00279	mf
+sequence-specific DNA binding	13	0.00530	mf
+gap junction channel activity	2	0.02578	mf
+cysteine-type deubiquitinase activity	3	0.02686	mf
+transcription coactivator activity	3	0.03348	mf
+electron transfer activity	2	0.03794	mf
+serine-type endopeptidase inhibitor activity	2	0.03794	mf
+heme binding	4	0.03890	mf

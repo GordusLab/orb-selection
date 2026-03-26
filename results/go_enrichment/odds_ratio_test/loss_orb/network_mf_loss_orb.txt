@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0003729	mRNA binding	0.0014
+GO:0003735	structural constituent of ribosome	0.0038
+GO:0003723	RNA binding	0.0045
+GO:0003690	double-stranded DNA binding	0.0232
+GO:0098505	G-rich strand telomeric DNA binding	0.0291
+GO:0017174	glycine N-methyltransferase activity	0.0291
+GO:0047184	1-acylglycerophosphocholine O-acyltransferase activity	0.0291
+GO:0005518	collagen binding	0.0291
+GO:0016971	flavin-dependent sulfhydryl oxidase activity	0.0291
+GO:0008199	ferric iron binding	0.0291
+GO:0015616	DNA translocase activity	0.0291
+GO:0016594	glycine binding	0.0291
+GO:1904047	S-adenosyl-L-methionine binding	0.0291
+GO:0004065	arylsulfatase activity	0.0291
+GO:0010521	telomerase inhibitor activity	0.0291
+GO:0032454	histone H3K9 demethylase activity	0.0575
+GO:0005459	UDP-galactose transmembrane transporter activity	0.0575
+GO:0004719	protein-L-isoaspartate (D-aspartate) O-methyltransferase activity	0.0575
+GO:0008113	peptide-methionine (S)-S-oxide reductase activity	0.0575
+GO:0000062	fatty-acyl-CoA binding	0.0575
+GO:0005080	protein kinase C binding	0.0575
+GO:0019001	guanyl nucleotide binding	0.0582
+GO:0030246	carbohydrate binding	0.0689
+GO:0015250	water channel activity	0.0850
+GO:0005483	soluble NSF attachment protein activity	0.0850
+GO:0031683	G-protein beta/gamma-subunit complex binding	0.0850
+GO:0004865	protein serine/threonine phosphatase inhibitor activity	0.0850
+GO:0008093	cytoskeletal anchor activity	0.0850
+GO:0050840	extracellular matrix binding	0.1117
+GO:0004559	alpha-mannosidase activity	0.1117
+GO:0140658	ATP-dependent chromatin remodeler activity	0.1117
+GO:0008198	ferrous iron binding	0.1117
+GO:0051015	actin filament binding	0.1233
+GO:0031490	chromatin DNA binding	0.1376
+GO:0042802	identical protein binding	0.1376
+GO:0043021	ribonucleoprotein complex binding	0.1628
+GO:0008374	O-acyltransferase activity	0.1848
+GO:0019905	syntaxin binding	0.1873
+GO:0030295	protein kinase activator activity	0.1873
+GO:0001228	DNA-binding transcription activator activity, RNA polymerase II-specific	0.2110
+GO:0030276	clathrin binding	0.2341
+GO:0031625	ubiquitin protein ligase binding	0.2341
+GO:0003712	transcription coregulator activity	0.2607
+GO:0004521	RNA endonuclease activity	0.2783
+GO:0008146	sulfotransferase activity	0.3399
+GO:0005543	phospholipid binding	0.3588
+GO:0042393	histone binding	0.3592
+GO:0046872	metal ion binding	0.3634
+GO:0001664	G protein-coupled receptor binding	0.3963
+GO:0050660	flavin adenine dinucleotide binding	0.4140
+GO:0016616	oxidoreductase activity, acting on the CH-OH group of donors, NAD or NADP as acceptor	0.4312
+GO:0003682	chromatin binding	0.4437
+GO:0008010	structural constituent of chitin-based larval cuticle	0.4642
+GO:0004222	metalloendopeptidase activity	0.4642
+GO:0003677	DNA binding	0.5140
+GO:0004674	protein serine/threonine kinase activity	0.5189
+GO:0003924	GTPase activity	0.5548
+GO:0003676	nucleic acid binding	0.5567
+GO:0035091	phosphatidylinositol binding	0.6027
+GO:0008017	microtubule binding	0.6258
+GO:0005509	calcium ion binding	0.6437
+GO:0016758	hexosyltransferase activity	0.6580
+GO:0016887	ATP hydrolysis activity	0.7058
+GO:0022857	transmembrane transporter activity	0.7855
+GO:0005524	ATP binding	0.7944
+GO:0005515	protein binding	0.8283
+GO:0005525	GTP binding	0.8577
+GO:0016491	oxidoreductase activity	0.9395
+GO:0008270	zinc ion binding	0.9433
+GO:0000977	RNA polymerase II transcription regulatory region sequence-specific DNA binding	0.9847
+GO:0032561	guanyl ribonucleotide binding	1.0000
+GO:0016670	oxidoreductase activity, acting on a sulfur group of donors, oxygen as acceptor	1.0000
+GO:0016671	oxidoreductase activity, acting on a sulfur group of donors, disulfide as acceptor	1.0000
+GO:0140096	catalytic activity, acting on a protein	1.0000
+GO:0140097	catalytic activity, acting on DNA	1.0000
+GO:0140098	catalytic activity, acting on RNA	1.0000
+GO:0003697	single-stranded DNA binding	1.0000
+GO:0004672	protein kinase activity	1.0000
+GO:0016817	hydrolase activity, acting on acid anhydrides	1.0000
+GO:0016818	hydrolase activity, acting on acid anhydrides, in phosphorus-containing anhydrides	1.0000
+GO:0016757	glycosyltransferase activity	1.0000
+GO:0008168	methyltransferase activity	1.0000
+GO:0019899	enzyme binding	1.0000
+GO:0015035	protein-disulfide reductase activity	1.0000
+GO:0005506	iron ion binding	1.0000
+GO:0015036	disulfide oxidoreductase activity	1.0000
+GO:0032553	ribonucleotide binding	1.0000
+GO:0004175	endopeptidase activity	1.0000
+GO:0032555	purine ribonucleotide binding	1.0000
+GO:0035639	purine ribonucleoside triphosphate binding	1.0000
+GO:0032451	demethylase activity	1.0000
+GO:0032559	adenyl ribonucleotide binding	1.0000
+GO:0016782	transferase activity, transferring sulphur-containing groups	1.0000
+GO:0120227	acyl-CoA binding	1.0000
+GO:0032452	histone demethylase activity	1.0000
+GO:0046914	transition metal ion binding	1.0000
+GO:0043167	ion binding	1.0000
+GO:0016787	hydrolase activity	1.0000
+GO:0019207	kinase regulator activity	1.0000
+GO:0043168	anion binding	1.0000

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0071542	dopaminergic neuron differentiation	2	2	0.05	0.00071
+2	GO:0006904	vesicle docking involved in exocytosis	4	2	0.11	0.00409
+3	GO:0031175	neuron projection development	35	3	0.93	0.00983
+4	GO:0043484	regulation of RNA splicing	23	3	0.61	0.02221
+5	GO:0042594	response to starvation	17	3	0.45	0.02627
+6	GO:0001678	intracellular glucose homeostasis	2	2	0.05	0.02644
+7	GO:0098958	retrograde axonal transport of mitochondrion	1	1	0.03	0.02670
+8	GO:0000493	box H/ACA snoRNP assembly	1	1	0.03	0.02670
+9	GO:0019543	propionate catabolic process	1	1	0.03	0.02670
+10	GO:0035965	cardiolipin acyl-chain remodeling	1	1	0.03	0.02670
+11	GO:0043419	urea catabolic process	1	1	0.03	0.02670
+12	GO:0051560	mitochondrial calcium ion homeostasis	1	1	0.03	0.02670
+13	GO:0042791	5S class rRNA transcription by RNA polymerase III	1	1	0.03	0.02670
+14	GO:0070365	hepatocyte differentiation	1	1	0.03	0.02670
+15	GO:0018364	peptidyl-glutamine methylation	1	1	0.03	0.02670
+16	GO:0071333	cellular response to glucose stimulus	1	1	0.03	0.02670
+17	GO:0046327	glycerol biosynthetic process from pyruvate	1	1	0.03	0.02670
+18	GO:0034462	small-subunit processome assembly	1	1	0.03	0.02670
+19	GO:0035235	ionotropic glutamate receptor signaling pathway	1	1	0.03	0.02670
+20	GO:0006207	'de novo' pyrimidine nucleobase biosynthetic process	1	1	0.03	0.02670
+21	GO:0099578	regulation of translation at postsynapse, modulating synaptic transmission	1	1	0.03	0.02670
+22	GO:0046579	positive regulation of Ras protein signal transduction	1	1	0.03	0.02670
+23	GO:0071549	cellular response to dexamethasone stimulus	1	1	0.03	0.02670
+24	GO:0036444	calcium import into the mitochondrion	1	1	0.03	0.02670
+25	GO:0044205	'de novo' UMP biosynthetic process	1	1	0.03	0.02670
+26	GO:0016036	cellular response to phosphate starvation	1	1	0.03	0.02670
+27	GO:0006120	mitochondrial electron transport, NADH to ubiquinone	11	2	0.29	0.03318
+28	GO:0009306	protein secretion	11	2	0.29	0.03318
+29	GO:0006325	chromatin organization	50	3	1.33	0.04544
+30	GO:0017157	regulation of exocytosis	13	2	0.35	0.04545
+31	GO:0007417	central nervous system development	13	2	0.35	0.04545
+32	GO:0000480	endonucleolytic cleavage in 5'-ETS of tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	2	1	0.05	0.05269
+33	GO:0000472	endonucleolytic cleavage to generate mature 5'-end of SSU-rRNA from (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	2	1	0.05	0.05269
+34	GO:1905244	regulation of modification of synaptic structure	2	1	0.05	0.05269
+35	GO:0043653	mitochondrial fragmentation involved in apoptotic process	2	1	0.05	0.05269
+36	GO:0045737	positive regulation of cyclin-dependent protein serine/threonine kinase activity	2	1	0.05	0.05269
+37	GO:0006817	phosphate ion transport	2	1	0.05	0.05269
+38	GO:0006013	mannose metabolic process	2	1	0.05	0.05269
+39	GO:0060998	regulation of dendritic spine development	2	1	0.05	0.05269
+40	GO:0070476	rRNA (guanine-N7)-methylation	2	1	0.05	0.05269
+41	GO:0019509	L-methionine salvage from methylthioadenosine	3	1	0.08	0.07800
+42	GO:0008210	estrogen metabolic process	3	1	0.08	0.07800
+43	GO:0008209	androgen metabolic process	3	1	0.08	0.07800
+44	GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	3	1	0.08	0.07800
+45	GO:0043113	receptor clustering	3	1	0.08	0.07800
+46	GO:0030838	positive regulation of actin filament polymerization	3	1	0.08	0.07800
+47	GO:0009791	post-embryonic development	3	1	0.08	0.07800
+48	GO:0072659	protein localization to plasma membrane	19	2	0.51	0.08993
+49	GO:0016192	vesicle-mediated transport	237	8	6.33	0.09022
+50	GO:0070475	rRNA base methylation	6	2	0.16	0.10169
+51	GO:0006729	tetrahydrobiopterin biosynthetic process	4	1	0.11	0.10263
+52	GO:0000492	box C/D snoRNP assembly	4	1	0.11	0.10263
+53	GO:0008089	anterograde axonal transport	4	1	0.11	0.10263
+54	GO:0016559	peroxisome fission	4	1	0.11	0.10263
+55	GO:0048814	regulation of dendrite morphogenesis	4	1	0.11	0.10263
+56	GO:0007064	mitotic sister chromatid cohesion	4	1	0.11	0.10263
+57	GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	4	1	0.11	0.10263
+58	GO:0050482	arachidonate secretion	4	1	0.11	0.10263
+59	GO:0006094	gluconeogenesis	4	1	0.11	0.10263
+60	GO:0000972	transcription-dependent tethering of RNA polymerase II gene DNA at nuclear periphery	4	1	0.11	0.10263
+61	GO:0006384	transcription initiation at RNA polymerase III promoter	4	1	0.11	0.10263
+62	GO:0032147	activation of protein kinase activity	4	1	0.11	0.10263
+63	GO:0006491	N-glycan processing	4	1	0.11	0.10263
+64	GO:0006517	protein deglycosylation	4	1	0.11	0.10263
+65	GO:0006470	protein dephosphorylation	45	3	1.2	0.11735
+66	GO:0042254	ribosome biogenesis	127	5	3.39	0.12386
+67	GO:0006606	protein import into nucleus	23	2	0.61	0.12435
+68	GO:0006620	post-translational protein targeting to endoplasmic reticulum membrane	5	1	0.13	0.12662
+69	GO:0046890	regulation of lipid biosynthetic process	5	1	0.13	0.12662
+70	GO:0071051	poly(A)-dependent snoRNA 3'-end processing	5	1	0.13	0.12662
+71	GO:0071028	nuclear mRNA surveillance	5	1	0.13	0.12662
+72	GO:0051764	actin crosslink formation	5	1	0.13	0.12662
+73	GO:0045022	early endosome to late endosome transport	5	1	0.13	0.12662
+74	GO:0016075	rRNA catabolic process	5	1	0.13	0.12662
+75	GO:0006811	monoatomic ion transport	130	3	3.47	0.12830
+76	GO:0006511	ubiquitin-dependent protein catabolic process	126	6	3.36	0.13251
+77	GO:0009952	anterior/posterior pattern specification	6	1	0.16	0.14997
+78	GO:0006096	glycolytic process	6	1	0.16	0.14997
+79	GO:0032869	cellular response to insulin stimulus	6	1	0.16	0.14997
+80	GO:0018279	protein N-linked glycosylation via asparagine	7	1	0.19	0.17270
+81	GO:0034475	U4 snRNA 3'-end processing	7	1	0.19	0.17270
+82	GO:0018230	peptidyl-L-cysteine S-palmitoylation	7	1	0.19	0.17270
+83	GO:0051156	glucose 6-phosphate metabolic process	7	1	0.19	0.17270
+84	GO:0051017	actin filament bundle assembly	8	1	0.21	0.19483
+85	GO:0016973	poly(A)+ mRNA export from nucleus	8	1	0.21	0.19483
+86	GO:0071230	cellular response to amino acid stimulus	8	1	0.21	0.19483
+87	GO:0006508	proteolysis	237	10	6.33	0.21135
+88	GO:0030198	extracellular matrix organization	9	1	0.24	0.21637
+89	GO:0030150	protein import into mitochondrial matrix	9	1	0.24	0.21637
+90	GO:2000779	regulation of double-strand break repair	9	1	0.24	0.21637
+91	GO:0006270	DNA replication initiation	9	1	0.24	0.21637
+92	GO:0007131	reciprocal meiotic recombination	10	1	0.27	0.23735
+93	GO:0098656	monoatomic anion transmembrane transport	10	1	0.27	0.23735
+94	GO:0000245	spliceosomal complex assembly	10	1	0.27	0.23735
+95	GO:0006631	fatty acid metabolic process	49	3	1.31	0.25551
+96	GO:0001522	pseudouridine synthesis	11	1	0.29	0.25776
+97	GO:0007007	inner mitochondrial membrane organization	11	1	0.29	0.25776
+98	GO:0031122	cytoplasmic microtubule organization	11	1	0.29	0.25776
+99	GO:0000381	regulation of alternative mRNA splicing, via spliceosome	11	1	0.29	0.25776
+100	GO:0019367	fatty acid elongation, saturated fatty acid	11	1	0.29	0.25776

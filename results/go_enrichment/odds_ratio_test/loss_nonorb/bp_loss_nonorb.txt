@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0006805	xenobiotic metabolic process	4	4	0.35	5.8e-05
+2	GO:0006082	organic acid metabolic process	68	8	5.99	6.1e-05
+3	GO:0034727	piecemeal microautophagy of the nucleus	2	2	0.18	0.0077
+4	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	2	2	0.18	0.0077
+5	GO:0032237	activation of store-operated calcium channel activity	2	2	0.18	0.0077
+6	GO:0006183	GTP biosynthetic process	2	2	0.18	0.0077
+7	GO:0000423	mitophagy	2	2	0.18	0.0077
+8	GO:0010992	ubiquitin recycling	2	2	0.18	0.0077
+9	GO:0006228	UTP biosynthetic process	2	2	0.18	0.0077
+10	GO:0006241	CTP biosynthetic process	2	2	0.18	0.0077
+11	GO:0043161	proteasome-mediated ubiquitin-dependent protein catabolic process	35	7	3.08	0.0097
+12	GO:0030488	tRNA methylation	6	3	0.53	0.0110
+13	GO:0002115	store-operated calcium entry	3	2	0.26	0.0218
+14	GO:0043153	entrainment of circadian clock by photoperiod	3	2	0.26	0.0218
+15	GO:0035269	protein O-linked glycosylation via mannose	9	3	0.79	0.0380
+16	GO:0006646	phosphatidylethanolamine biosynthetic process	4	2	0.35	0.0411
+17	GO:0032922	circadian regulation of gene expression	4	2	0.35	0.0411
+18	GO:0000045	autophagosome assembly	8	3	0.7	0.0641
+19	GO:0006334	nucleosome assembly	5	2	0.44	0.0646
+20	GO:0000122	negative regulation of transcription by RNA polymerase II	18	4	1.59	0.0670
+21	GO:0019693	ribose phosphate metabolic process	17	7	1.5	0.0858
+22	GO:0045199	maintenance of epithelial cell apical/basal polarity	1	1	0.09	0.0881
+23	GO:0051452	intracellular pH reduction	1	1	0.09	0.0881
+24	GO:0006625	protein targeting to peroxisome	1	1	0.09	0.0881
+25	GO:0006627	protein processing involved in protein targeting to mitochondrion	1	1	0.09	0.0881
+26	GO:2000001	regulation of DNA damage checkpoint	1	1	0.09	0.0881
+27	GO:0070936	protein K48-linked ubiquitination	1	1	0.09	0.0881
+28	GO:0048026	positive regulation of mRNA splicing, via spliceosome	1	1	0.09	0.0881
+29	GO:0009880	embryonic pattern specification	1	1	0.09	0.0881
+30	GO:1903457	lactate catabolic process	1	1	0.09	0.0881
+31	GO:1903744	positive regulation of anterograde synaptic vesicle transport	1	1	0.09	0.0881
+32	GO:0032933	SREBP signaling pathway	1	1	0.09	0.0881
+33	GO:0006488	dolichol-linked oligosaccharide biosynthetic process	1	1	0.09	0.0881
+34	GO:0006420	arginyl-tRNA aminoacylation	1	1	0.09	0.0881
+35	GO:0006425	glutaminyl-tRNA aminoacylation	1	1	0.09	0.0881
+36	GO:0006428	isoleucyl-tRNA aminoacylation	1	1	0.09	0.0881
+37	GO:0043103	hypoxanthine salvage	1	1	0.09	0.0881
+38	GO:0001654	eye development	1	1	0.09	0.0881
+39	GO:0070836	caveola assembly	1	1	0.09	0.0881
+40	GO:0097037	heme export	1	1	0.09	0.0881
+41	GO:0070125	mitochondrial translational elongation	1	1	0.09	0.0881
+42	GO:1901190	regulation of formation of translation initiation ternary complex	1	1	0.09	0.0881
+43	GO:0006556	S-adenosylmethionine biosynthetic process	1	1	0.09	0.0881
+44	GO:0009052	pentose-phosphate shunt, non-oxidative branch	1	1	0.09	0.0881
+45	GO:0006269	DNA replication, synthesis of primer	1	1	0.09	0.0881
+46	GO:0015749	monosaccharide transmembrane transport	1	1	0.09	0.0881
+47	GO:0030836	positive regulation of actin filament depolymerization	1	1	0.09	0.0881
+48	GO:0006391	transcription initiation at mitochondrial promoter	1	1	0.09	0.0881
+49	GO:0035099	hemocyte migration	1	1	0.09	0.0881
+50	GO:0071586	CAAX-box protein processing	1	1	0.09	0.0881
+51	GO:1903361	protein localization to basolateral plasma membrane	1	1	0.09	0.0881
+52	GO:0006995	cellular response to nitrogen starvation	1	1	0.09	0.0881
+53	GO:0060169	negative regulation of adenosine receptor signaling pathway	1	1	0.09	0.0881
+54	GO:0033389	putrescine biosynthetic process from arginine, via agmatine	1	1	0.09	0.0881
+55	GO:0006164	purine nucleotide biosynthetic process	11	4	0.97	0.0900
+56	GO:0016311	dephosphorylation	39	6	3.44	0.0904
+57	GO:0046034	ATP metabolic process	7	2	0.62	0.1208
+58	GO:0006368	transcription elongation by RNA polymerase II	8	2	0.7	0.1520
+59	GO:0030163	protein catabolic process	69	13	6.08	0.1628
+60	GO:0006139	nucleobase-containing compound metabolic process	559	53	49.26	0.1649
+61	GO:0007269	neurotransmitter secretion	7	2	0.62	0.1680
+62	GO:0040011	locomotion	9	2	0.79	0.1682
+63	GO:0045184	establishment of protein localization	80	8	7.05	0.1684
+64	GO:0090263	positive regulation of canonical Wnt signaling pathway	2	1	0.18	0.1685
+65	GO:0070989	oxidative demethylation	2	1	0.18	0.1685
+66	GO:0034605	cellular response to heat	2	1	0.18	0.1685
+67	GO:0010042	response to manganese ion	2	1	0.18	0.1685
+68	GO:0046103	inosine biosynthetic process	2	1	0.18	0.1685
+69	GO:0051443	positive regulation of ubiquitin-protein transferase activity	2	1	0.18	0.1685
+70	GO:0071786	endoplasmic reticulum tubular network organization	2	1	0.18	0.1685
+71	GO:0032781	positive regulation of ATP-dependent activity	2	1	0.18	0.1685
+72	GO:0071456	cellular response to hypoxia	2	1	0.18	0.1685
+73	GO:0051123	RNA polymerase II preinitiation complex assembly	2	1	0.18	0.1685
+74	GO:0055071	manganese ion homeostasis	2	1	0.18	0.1685
+75	GO:0045214	sarcomere organization	2	1	0.18	0.1685
+76	GO:0032418	lysosome localization	2	1	0.18	0.1685
+77	GO:0016082	synaptic vesicle priming	2	1	0.18	0.1685
+78	GO:0045324	late endosome to vacuole transport	2	1	0.18	0.1685
+79	GO:0006154	adenosine catabolic process	2	1	0.18	0.1685
+80	GO:0090110	COPII-coated vesicle cargo loading	2	1	0.18	0.1685
+81	GO:0006275	regulation of DNA replication	2	1	0.18	0.1685
+82	GO:0035973	aggrephagy	2	1	0.18	0.1685
+83	GO:0070536	protein K63-linked deubiquitination	2	1	0.18	0.1685
+84	GO:0006370	7-methylguanosine mRNA capping	2	1	0.18	0.1685
+85	GO:0002183	cytoplasmic translational initiation	2	1	0.18	0.1685
+86	GO:0007032	endosome organization	2	1	0.18	0.1685
+87	GO:0006511	ubiquitin-dependent protein catabolic process	52	10	4.58	0.1753
+88	GO:0030036	actin cytoskeleton organization	42	5	3.7	0.1845
+89	GO:0046854	phosphatidylinositol phosphate biosynthetic process	9	2	0.79	0.1846
+90	GO:0006412	translation	56	9	4.93	0.2008
+91	GO:0016485	protein processing	14	4	1.23	0.2150
+92	GO:0072657	protein localization to membrane	22	4	1.94	0.2163
+93	GO:0016579	protein deubiquitination	12	3	1.06	0.2166
+94	GO:0006457	protein folding	19	3	1.67	0.2312
+95	GO:0034497	protein localization to phagophore assembly site	3	1	0.26	0.2419
+96	GO:0001188	RNA polymerase I preinitiation complex assembly	3	1	0.26	0.2419
+97	GO:0045116	protein neddylation	3	1	0.26	0.2419
+98	GO:0006636	unsaturated fatty acid biosynthetic process	3	1	0.26	0.2419
+99	GO:0009156	ribonucleoside monophosphate biosynthetic process	3	1	0.26	0.2419
+100	GO:0030050	vesicle transport along actin filament	3	1	0.26	0.2419

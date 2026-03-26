@@ -1,7 +1,13 @@
 # Pipeline adapted from https://github.com/lyijin/topGO_pipeline/
+
+# To install topgo, run the following command in R:
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+
+# BiocManager::install("topGO")
+
 library(here)
 library(topGO)
-
 
 folders <- dir(here("results/significant_gene_id_lists/odds_ratio_test"), full.names = TRUE)
 annot_filename <- here("assets/udiv_go_annots.all.tsv")

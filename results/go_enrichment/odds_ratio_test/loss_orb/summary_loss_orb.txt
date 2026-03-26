@@ -1,0 +1,16 @@
+Description	Count	p	Ontology
+ribosome biogenesis	7	0.0022	bp
+maturation of SSU-rRNA	3	0.0049	bp
+negative regulation of translation	2	0.0082	bp
+regulation of RNA splicing	3	0.0118	bp
+cell-matrix adhesion	2	0.0166	bp
+mRNA processing	4	0.0325	bp
+establishment or maintenance of cell polarity	2	0.0473	bp
+cytosolic large ribosomal subunit	3	0.0050	cc
+ribonucleoprotein complex	11	0.0097	cc
+mitochondrial membrane	3	0.0209	cc
+actin filament	2	0.0212	cc
+mRNA binding	6	0.0014	mf
+structural constituent of ribosome	4	0.0038	mf
+RNA binding	14	0.0045	mf
+double-stranded DNA binding	3	0.0232	mf

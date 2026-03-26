@@ -1236,11 +1236,12 @@ class PermutationTestResults:
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n\n"
             f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n",
+            f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
             transform=ax.transAxes,
             fontsize=10,
             ha="left",
             va="top",
+            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
         )
 
         plt.xlabel("Log odds ratio", fontsize=12, fontweight="bold")
@@ -1379,11 +1380,12 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n",
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}",
             transform=ax2.transAxes,
             fontsize=12,
             ha="left",
             va="top",
+            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
         )
 
         ax2.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
@@ -1447,11 +1449,12 @@ class PermutationTestResults:
             0.03,
             0.95,
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n",
+            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}",
             transform=ax3.transAxes,
             fontsize=12,
             ha="left",
             va="top",
+            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
         )
 
         ax3.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
@@ -1530,11 +1533,12 @@ class PermutationTestResults:
             f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
             f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}\n",
+            f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
             transform=ax4.transAxes,
             fontsize=12,
             ha="left",
             va="top",
+            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
         )
 
         ax4.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")

@@ -1,0 +1,12 @@
+Description	Count	p	Ontology
+neuron projection development	3	0.00983	bp
+regulation of RNA splicing	3	0.02221	bp
+response to starvation	3	0.02627	bp
+mitochondrial electron transport, NADH to ubiquinone	2	0.03318	bp
+protein secretion	2	0.03318	bp
+chromatin organization	3	0.04544	bp
+regulation of exocytosis	2	0.04545	bp
+central nervous system development	2	0.04545	bp
+mitochondrial membrane	6	0.0354	cc
+ATP hydrolysis activity	6	0.01434	mf
+GTP binding	8	0.01972	mf

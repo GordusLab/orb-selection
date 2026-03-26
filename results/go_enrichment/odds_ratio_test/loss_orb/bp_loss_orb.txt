@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0042254	ribosome biogenesis	29	7	0.86	0.0022
+2	GO:0030490	maturation of SSU-rRNA	9	3	0.27	0.0049
+3	GO:0017148	negative regulation of translation	5	2	0.15	0.0082
+4	GO:0043484	regulation of RNA splicing	17	3	0.5	0.0118
+5	GO:0007160	cell-matrix adhesion	7	2	0.21	0.0166
+6	GO:0035965	cardiolipin acyl-chain remodeling	1	1	0.03	0.0297
+7	GO:1903775	regulation of DNA double-strand break processing	1	1	0.03	0.0297
+8	GO:0046498	S-adenosylhomocysteine metabolic process	1	1	0.03	0.0297
+9	GO:0045773	positive regulation of axon extension	1	1	0.03	0.0297
+10	GO:0000055	ribosomal large subunit export from nucleus	1	1	0.03	0.0297
+11	GO:0006879	intracellular iron ion homeostasis	1	1	0.03	0.0297
+12	GO:0060158	phospholipase C-activating dopamine receptor signaling pathway	1	1	0.03	0.0297
+13	GO:1901052	sarcosine metabolic process	1	1	0.03	0.0297
+14	GO:0051289	protein homotetramerization	1	1	0.03	0.0297
+15	GO:0032210	regulation of telomere maintenance via telomerase	1	1	0.03	0.0297
+16	GO:0098974	postsynaptic actin cytoskeleton organization	1	1	0.03	0.0297
+17	GO:1904263	positive regulation of TORC1 signaling	1	1	0.03	0.0297
+18	GO:0033353	S-adenosylmethionine cycle	1	1	0.03	0.0297
+19	GO:0007007	inner mitochondrial membrane organization	1	1	0.03	0.0297
+20	GO:0000493	box H/ACA snoRNP assembly	1	1	0.03	0.0297
+21	GO:0061003	positive regulation of dendritic spine morphogenesis	1	1	0.03	0.0297
+22	GO:0006397	mRNA processing	44	4	1.31	0.0325
+23	GO:0007163	establishment or maintenance of cell polarity	12	2	0.36	0.0473
+24	GO:0010468	regulation of gene expression	335	12	9.95	0.0539
+25	GO:0046500	S-adenosylmethionine metabolic process	3	2	0.09	0.0576
+26	GO:0016558	protein import into peroxisome matrix	2	1	0.06	0.0585
+27	GO:0006013	mannose metabolic process	2	1	0.06	0.0585
+28	GO:0035494	SNARE complex disassembly	2	1	0.06	0.0585
+29	GO:0000028	ribosomal small subunit assembly	2	1	0.06	0.0585
+30	GO:0016233	telomere capping	2	1	0.06	0.0585
+31	GO:0006111	regulation of gluconeogenesis	2	1	0.06	0.0585
+32	GO:0006491	N-glycan processing	2	1	0.06	0.0585
+33	GO:0090481	pyrimidine nucleotide-sugar transmembrane transport	2	1	0.06	0.0585
+34	GO:0034198	cellular response to amino acid starvation	2	1	0.06	0.0585
+35	GO:0006730	one-carbon metabolic process	2	1	0.06	0.0585
+36	GO:0006393	termination of mitochondrial transcription	2	1	0.06	0.0585
+37	GO:1904825	protein localization to microtubule plus-end	2	1	0.06	0.0585
+38	GO:0006517	protein deglycosylation	2	1	0.06	0.0585
+39	GO:0035332	positive regulation of hippo signaling	2	1	0.06	0.0585
+40	GO:0001522	pseudouridine synthesis	3	1	0.09	0.0865
+41	GO:0034982	mitochondrial protein processing	3	1	0.09	0.0865
+42	GO:0006891	intra-Golgi vesicle-mediated transport	3	1	0.09	0.0865
+43	GO:0016477	cell migration	19	2	0.56	0.1074
+44	GO:0001578	microtubule bundle formation	4	1	0.12	0.1137
+45	GO:0006826	iron ion transport	4	1	0.12	0.1137
+46	GO:1905475	regulation of protein localization to membrane	4	1	0.12	0.1137
+47	GO:0006414	translational elongation	4	1	0.12	0.1137
+48	GO:0006515	protein quality control for misfolded or incompletely synthesized proteins	4	1	0.12	0.1137
+49	GO:2000779	regulation of double-strand break repair	5	1	0.15	0.1401
+50	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	5	1	0.15	0.1401
+51	GO:0051764	actin crosslink formation	5	1	0.15	0.1401
+52	GO:0060341	regulation of cellular localization	10	2	0.3	0.1634
+53	GO:0031110	regulation of microtubule polymerization or depolymerization	6	1	0.18	0.1657
+54	GO:0051923	sulfation	6	1	0.18	0.1657
+55	GO:0042273	ribosomal large subunit biogenesis	7	1	0.21	0.1905
+56	GO:0008285	negative regulation of cell population proliferation	7	1	0.21	0.1905
+57	GO:0030833	regulation of actin filament polymerization	7	1	0.21	0.1905
+58	GO:0000381	regulation of alternative mRNA splicing, via spliceosome	9	1	0.27	0.2381
+59	GO:0002181	cytoplasmic translation	9	1	0.27	0.2381
+60	GO:0007098	centrosome cycle	10	1	0.3	0.2608
+61	GO:0007188	adenylate cyclase-modulating G protein-coupled receptor signaling pathway	11	1	0.33	0.2829
+62	GO:0045930	negative regulation of mitotic cell cycle	13	1	0.39	0.3251
+63	GO:0006886	intracellular protein transport	49	3	1.46	0.3923
+64	GO:0016197	endosomal transport	17	1	0.5	0.4023
+65	GO:0006486	protein glycosylation	18	1	0.53	0.4202
+66	GO:0000398	mRNA splicing, via spliceosome	33	2	0.98	0.4828
+67	GO:0048856	anatomical structure development	136	2	4.04	0.5013
+68	GO:0006897	endocytosis	27	1	0.8	0.5593
+69	GO:0006325	chromatin organization	29	1	0.86	0.5855
+70	GO:0007264	small GTPase-mediated signal transduction	30	1	0.89	0.5980
+71	GO:0000226	microtubule cytoskeleton organization	55	3	1.63	0.6247
+72	GO:0006412	translation	56	4	1.66	0.6502
+73	GO:0061024	membrane organization	37	2	1.1	0.6594
+74	GO:0009966	regulation of signal transduction	81	3	2.41	0.6713
+75	GO:0016567	protein ubiquitination	39	1	1.16	0.6950
+76	GO:0006511	ubiquitin-dependent protein catabolic process	52	1	1.54	0.7957
+77	GO:0006468	protein phosphorylation	103	2	3.06	0.8216
+78	GO:0006357	regulation of transcription by RNA polymerase II	195	4	5.79	0.8470
+79	GO:0036211	protein modification process	249	6	7.4	0.8704
+80	GO:0055085	transmembrane transport	177	5	5.26	0.8813
+81	GO:0006355	regulation of DNA-templated transcription	268	5	7.96	0.9019
+82	GO:0071897	DNA biosynthetic process	2	1	0.06	1.0000
+83	GO:0051726	regulation of cell cycle	46	1	1.37	1.0000
+84	GO:0072521	purine-containing compound metabolic process	34	1	1.01	1.0000
+85	GO:0042255	ribosome assembly	4	1	0.12	1.0000
+86	GO:0043412	macromolecule modification	273	7	8.11	1.0000
+87	GO:0043413	macromolecule glycosylation	18	1	0.53	1.0000
+88	GO:0048869	cellular developmental process	101	1	3	1.0000
+89	GO:0007275	multicellular organism development	91	1	2.7	1.0000
+90	GO:0010906	regulation of glucose metabolic process	2	1	0.06	1.0000
+91	GO:0031589	cell-substrate adhesion	9	2	0.27	1.0000
+92	GO:0055080	monoatomic cation homeostasis	27	1	0.8	1.0000
+93	GO:0055082	intracellular chemical homeostasis	23	1	0.68	1.0000
+94	GO:1901264	carbohydrate derivative transport	5	1	0.15	1.0000
+95	GO:0007409	axonogenesis	21	1	0.62	1.0000
+96	GO:0051716	cellular response to stimulus	392	7	11.64	1.0000
+97	GO:0055086	nucleobase-containing small molecule metabolic process	49	1	1.46	1.0000
+98	GO:0000278	mitotic cell cycle	57	1	1.69	1.0000
+99	GO:0046128	purine ribonucleoside metabolic process	5	1	0.15	1.0000
+100	GO:1901700	response to oxygen-containing compound	17	1	0.5	1.0000

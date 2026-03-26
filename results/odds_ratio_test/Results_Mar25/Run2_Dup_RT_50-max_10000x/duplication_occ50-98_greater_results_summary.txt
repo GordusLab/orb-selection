@@ -1,0 +1,36 @@
+*********************** RESULTS ***********************
+
+Permutation test with 10000 repetitions for duplication (alternative = greater) with minimum occupancy *50* and maximum occupancy *no* 
+Analysis run on 2026-03-25 at 18:46:33
+Foreground list: /Users/calvin/orb-selection/assets/orbweavers-list.txt
+Gene count file: /Users/calvin/orb-selection/assets/N5.GeneCount.tsv
+Hierarchical orthogroup file: /Users/calvin/orb-selection/assets/N5.tsv
+
+Total number of HOGs in node: 107986
+Total number of HOGs within occupancy threshold: 7875
+Total species: 98
+Foreground count: 44
+Background count: 54
+True mean: 0.032
+True standard deviation: 0.957
+
+
+** PERMUTATION P-VALUES ** 
+
+Probability that the null is true for MEAN (single Gaussian): 0.3254
+
+Probability that the null is true for MEAN 1 (triple Gaussian): 0.1169
+Probability that the null is true for MEAN 2 (triple Gaussian): 0.3424
+Probability that the null is true for MEAN 3 (triple Gaussian): 0.6119
+
+
+Permuted average mean: -0.0033427537190103534
+Permuted average standard deviation: 0.92617453949758
+User-defined significance threshold: 0.05
+Permutation-derived alpha threshold: [-1.81861149  1.81192599]
+
+Total HOGs with significantly different odds of duplication in foreground and background (alternative = two-tailed): 546
+
+Total HOGs with significantly different odds of duplication in foreground and background (alternative = two-tailed, Uloborus_diversus present): 352
+
+

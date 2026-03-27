@@ -16,6 +16,18 @@ src_path = os.path.dirname(__file__)
 assets = os.path.join(src_path, "..", "assets")
 
 
+def read_csv_or_tsv(file_path, index_col=None):
+    """Read a delimited file by auto-detecting whether it is CSV or TSV."""
+
+    return pd.read_csv(
+        file_path,
+        sep=None,
+        engine="python",
+        index_col=index_col,
+        dtype=str,
+    )
+
+
 def make_id_converter():
     """Creates a DataFrame that maps Uloborus diversus transcript IDs to
     LOCs and nucleotide accession IDs."""
@@ -48,7 +60,7 @@ def make_id_converter():
 
 def id_converter_with_hogs(hog_node_genes_tsv):
     """Adds HOGs to the ID converter DataFrame."""
-    hog_node_df = pd.read_csv(hog_node_genes_tsv, sep="\t", dtype=str)
+    hog_node_df = read_csv_or_tsv(hog_node_genes_tsv)
     id_converter_df = make_id_converter()
 
     hog_node_df["udiv_genes"] = hog_node_df["Uloborus_diversus"].apply(
@@ -77,7 +89,7 @@ def get_udiv_dmel_genes(
     for a given list (csv or df) of hogs. The orthogroup file for the hierarchical orthogroup node
     of interest must be provided."""
 
-    hog_node_df = pd.read_csv(hog_node_genes_tsv, sep="\t", index_col="HOG", dtype=str)
+    hog_node_df = read_csv_or_tsv(hog_node_genes_tsv, index_col="HOG")
 
     ortholog_df = pd.read_csv(ortholog_tsv, sep="\t", dtype=str)
     ortholog_df["Uloborus_diversus"] = ortholog_df["Uloborus_diversus"].str.split(", ")
@@ -86,7 +98,7 @@ def get_udiv_dmel_genes(
     # Attempt to read the hog DataFrame, if it fails, assume it's already a DataFrame
     # and assign empty columns for udiv_genes and dmel_orthologs
     try:
-        df = pd.read_csv(hogs_of_interest, index_col="HOG", dtype=str)
+        df = read_csv_or_tsv(hogs_of_interest, index_col="HOG")
         df = df.assign(udiv_genes="", dmel_orthologs="")
     except TypeError:
         df = hogs_of_interest

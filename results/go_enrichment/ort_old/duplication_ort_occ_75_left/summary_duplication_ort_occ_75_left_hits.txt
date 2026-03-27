@@ -1,7 +1,0 @@
-Description	Count	p	Ontology
-7-methylguanosine RNA capping	3	0.0083	bp
-mRNA 3'-end processing	3	0.0141	bp
-toll-like receptor signaling pathway	2	0.0261	bp
-neuron projection development	3	0.0261	bp
-DNA-binding transcription factor activity	6	0.0226	mf
-manganese ion binding	2	0.0351	mf

@@ -1135,7 +1135,7 @@ class PermutationTestResults:
                 x=np.mean(self.perm_tgauss_params[:, param]),
                 linestyle="dotted",
                 color="black",
-                label="Permuted mean",
+                label="Mean permuted value",
             )
             axs[row, col].axvline(
                 x=self.true_tgauss_params[param],
@@ -1213,13 +1213,13 @@ class PermutationTestResults:
             norm.pdf(x, self.mean_av, self.stddev_av),
             color=avpermutation_color,
             linestyle="--",
-            label="Average BS'd\ndistribution",
+            label="Average permuted\ndistribution",
         )
 
         # Permutation-derived confidence intervals
         ax.axvline(
             x=self.ci_av[0],
-            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
             linestyle="dotted",
             color=thresholds_color
         )
@@ -1233,9 +1233,9 @@ class PermutationTestResults:
         ax.text(
             0.03,
             0.95,
-            f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
+            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n"
+            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}\n"
             f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
             transform=ax.transAxes,
             fontsize=10,
@@ -1269,9 +1269,9 @@ class PermutationTestResults:
         
         Returns 4 figures showing progressive buildup:
         1. Average permuted distribution
-        2. + Permutation-derived thresholds (with BS'd stats)
-        3. + Histogram of true log odds ratios (with BS'd stats)
-        4. + Gaussian fit to the histogram (with True and BS'd stats)
+        2. + Permutation-derived thresholds (with permuted stats)
+        3. + Histogram of true log odds ratios (with permuted stats)
+        4. + Gaussian fit to the histogram (with true and permuted stats)
         """
         
         # Making the text bold deletes spaces
@@ -1321,7 +1321,7 @@ class PermutationTestResults:
             norm.pdf(x, self.mean_av, self.stddev_av),
             color=avpermutation_color,
             linewidth=2.5,
-            label="Average BS'd\ndistribution",
+            label="Average permuted\ndistribution",
         )
         ax1.fill_between(
             x,
@@ -1352,7 +1352,7 @@ class PermutationTestResults:
             norm.pdf(x, self.mean_av, self.stddev_av),
             color=avpermutation_color,
             linewidth=2.5,
-            label="Average BS'd\ndistribution",
+            label="Average permuted\ndistribution",
         )
         ax2.fill_between(
             x,
@@ -1364,7 +1364,7 @@ class PermutationTestResults:
 
         ax2.axvline(
             x=self.ci_av[0],
-            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
@@ -1379,8 +1379,8 @@ class PermutationTestResults:
         ax2.text(
             0.03,
             0.95,
-            f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}",
+            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
+            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}",
             transform=ax2.transAxes,
             fontsize=12,
             ha="left",
@@ -1410,7 +1410,7 @@ class PermutationTestResults:
             norm.pdf(x, self.mean_av, self.stddev_av),
             color=avpermutation_color,
             linewidth=2.5,
-            label="Average BS'd\ndistribution",
+            label="Average permuted\ndistribution",
         )
         ax3.fill_between(
             x,
@@ -1422,7 +1422,7 @@ class PermutationTestResults:
 
         ax3.axvline(
             x=self.ci_av[0],
-            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
@@ -1448,8 +1448,8 @@ class PermutationTestResults:
         ax3.text(
             0.03,
             0.95,
-            f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}",
+            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
+            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}",
             transform=ax3.transAxes,
             fontsize=12,
             ha="left",
@@ -1479,7 +1479,7 @@ class PermutationTestResults:
             norm.pdf(x, self.mean_av, self.stddev_av),
             color=avpermutation_color,
             linewidth=2.5,
-            label="Average BS'd\ndistribution",
+            label="Average permuted\ndistribution",
         )
         ax4.fill_between(
             x,
@@ -1491,7 +1491,7 @@ class PermutationTestResults:
 
         ax4.axvline(
             x=self.ci_av[0],
-            label=f"Mean BS'd\nthresholds for\nalpha={self.a}",
+            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
@@ -1530,8 +1530,8 @@ class PermutationTestResults:
         ax4.text(
             0.03,
             0.95,
-            f"BS'd mean = {self._fmt_stat(self.mean_av)}\n"
-            f"BS'd std. dev. = {self._fmt_stat(self.stddev_av)}\n\n"
+            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
+            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}\n\n"
             f"True mean = {self._fmt_stat(self.true_mean)}\n"
             f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
             transform=ax4.transAxes,

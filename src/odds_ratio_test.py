@@ -1160,7 +1160,10 @@ class PermutationTestResults:
         hist_color="red",
         thresholds_color="darkred",
         bins=100,
-        title=True
+        title=True,
+        legend_fontsize=10,
+        textbox_fontsize=10,
+        axis_label_fontsize=12,
     ):
         """Function to plot the results of the permutation test"""
         
@@ -1238,18 +1241,18 @@ class PermutationTestResults:
             f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}\n"
             f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
             transform=ax.transAxes,
-            fontsize=10,
+            fontsize=textbox_fontsize,
             ha="left",
             va="top",
             bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
         )
 
-        plt.xlabel("Log odds ratio", fontsize=12, fontweight="bold")
-        plt.ylabel("Density", fontsize=12, fontweight="bold")
+        plt.xlabel("Log odds ratio", fontsize=axis_label_fontsize, fontweight="bold")
+        plt.ylabel("Density", fontsize=axis_label_fontsize, fontweight="bold")
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
 
-        plt.legend(fontsize=10, loc="upper right")
+        plt.legend(fontsize=legend_fontsize, loc="upper right")
         plt.tight_layout()
 
         return fig, ax

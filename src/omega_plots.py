@@ -190,24 +190,24 @@ def plot_omega_distributions(
         if result == 'all':
             
             # labels for top vs bottom axes
-            ax_avgs.set_title(top_title, x=0.2, y=0.7, fontsize=10, color='white', weight='bold', backgroundcolor='lightgray')
-            ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=10, color='white', weight='bold', backgroundcolor='lightgray')
+            ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+            ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
 
         else: 
             # labels for top vs bottom axes
-            ax_avgs.set_title(top_title, x=0.2, y=0.7, fontsize=10, color='white', weight='bold', backgroundcolor='lightgray')
-            ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=10, color='silver', weight='bold', backgroundcolor='white')
+            ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+            ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=13, color='silver', weight='bold', backgroundcolor='white')
 
             if result == 'intensified':
                 plt.text(0.8, 0.7, 
                     '$\it{p}$≤0.05\n$\it{k}$>1', 
-                    fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                    fontsize=15, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
                 
             else:
                 plt.text(0.8, 0.35, 
                     '$\it{p}$≤0.05\n$\it{k}$<1', 
-                    fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                    fontsize=15, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
         # ax_avgs2.legend(loc='lower right', fontsize='small')
@@ -219,18 +219,18 @@ def plot_omega_distributions(
             ax.yaxis.tick_left()
             for tick in ax.get_yticklabels():
                 tick.set_fontweight('bold')
-                tick.set_fontsize(12)
+                tick.set_fontsize(14)
                 # tick.set_alpha(0.8)
 
         for i in [0,2,3,5]:
             axs[i].yaxis.set_label_position('right')
             axs[i].yaxis.tick_right()
             for tick in axs[i].get_yticklabels():
-                tick.set_fontsize(12)
+                tick.set_fontsize(14)
                 # tick.set_alpha(0.7)
 
 
-        fig.supylabel('mean proportion of sites', x=0.03, weight='bold', fontsize=14)
+        fig.supylabel('mean proportion of sites', x=0.01, weight='bold', fontsize=16)
 
         dummy_ax=fig.add_subplot(1,1,1)
         dummy_ax.set_xticks([])
@@ -240,8 +240,8 @@ def plot_omega_distributions(
         dummy_ax.yaxis.set_label_position('right')
         # dummy_ax.yaxis.label.set(rotation=270)
         dummy_ax.set_ylabel('number of orthogroups', 
-                            labelpad=40, rotation=270, 
-                            color='whitesmoke', alpha=0.6, fontsize=14,
+                            labelpad=48, rotation=270, 
+                            color='whitesmoke', alpha=0.6, fontsize=16,
                             path_effects=[pe.withStroke(linewidth=1, foreground="black")])
 
         axs[0].tick_params(bottom=False, which='both')
@@ -264,7 +264,7 @@ def plot_omega_distributions(
             ax.tick_params(axis='x', which='major', pad=10)
 
         for tick in axs[5].get_xticklabels():
-            tick.set_fontsize(12)
+            tick.set_fontsize(14)
 
     else:
         # If the maximum counts are less than or equal to 50, use a simpler layout
@@ -350,8 +350,8 @@ def plot_omega_distributions(
         ax_avgs2.axvline(1, linewidth=0.5, linestyle='dashed', color='k', alpha=0.5)
 
         # labels for top vs bottom axes
-        ax_avgs.set_title(top_title, x=0.2, y=0.7, fontsize=10, color='white', weight='bold', backgroundcolor='lightgray')
-        ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=10, color='silver', weight='bold', backgroundcolor= 'white')
+        ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+        ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=13, color='silver', weight='bold', backgroundcolor= 'white')
 
         # ax_avgs2.legend(loc='lower right', fontsize='small')
 
@@ -361,22 +361,22 @@ def plot_omega_distributions(
             ax.yaxis.tick_left()
             for tick in ax.get_yticklabels():
                 tick.set_fontweight('bold')
-                tick.set_fontsize(12)
+                tick.set_fontsize(14)
                 # tick.set_alpha(0.8)
 
         for i in [0,1]:
             axs[i].yaxis.set_label_position('right')
             axs[i].yaxis.tick_right()
             for tick in axs[i].get_yticklabels():
-                tick.set_fontsize(12)
+                tick.set_fontsize(14)
                 # tick.set_alpha(0.7)
 
         for tick in axs[1].get_xticklabels():
-            tick.set_fontsize(12)
+            tick.set_fontsize(14)
             
 
         # label the two different y axes
-        fig.supylabel('mean proportion of sites', x=0.03, weight='bold', fontsize=14)
+        fig.supylabel('mean proportion of sites', x=0.01, weight='bold', fontsize=16)
 
         dummy_ax=fig.add_subplot(1,1,1)
         dummy_ax.set_xticks([])
@@ -386,21 +386,21 @@ def plot_omega_distributions(
         dummy_ax.yaxis.set_label_position('right')
         # dummy_ax.yaxis.label.set(rotation=270)
         dummy_ax.set_ylabel('number of orthogroups', 
-                            labelpad=40, rotation=270, 
-                            color='whitesmoke', alpha=0.6, fontsize=14,
+                            labelpad=48, rotation=270, 
+                            color='whitesmoke', alpha=0.6, fontsize=16,
                             path_effects=[pe.withStroke(linewidth=1, foreground="black")])
 
         for ax in fig.axes:
             ax.tick_params(direction='in')
             ax.tick_params(axis='x', which='major', pad=10)
 
-        plt.text(0.8, 0.125, 
+        plt.text(0.775, 0.125, 
                  '$\it{p_1}$≤0.05\n$\it{p_2}$>0.05\n$\it{p_3}$≤0.05', 
-                 fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                 fontsize=15, ha='left', va='center', transform=ax.transAxes, 
                  bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if suptitle is not None:
-        fig.suptitle(r"$\bf{"+f"{numeral}" + r"}$" + suptitle, y=0.93, fontsize=12)
+        fig.suptitle(f"{numeral}{suptitle}", y=0.97, fontsize=14, fontweight='bold')
 
     if filename is not None:
         plt.savefig(filename, dpi=600, transparent=transparent, bbox_inches='tight')
@@ -461,22 +461,22 @@ def plot_omega_single_gene(
         }
 
     # Plot vertical lines for ω1, ω2, and ω3 for the REFERENCE group
-    ax.axvline(x['ω1_ref'], linewidth=10, color='salmon', ymax=x['ω1_ref_P'], alpha=0.17,
+    ax.axvline(x['ω1_ref'], linewidth=20, color='salmon', ymax=x['ω1_ref_P'], alpha=0.17,
                     path_effects=[pe.withStroke(**kwargs), pe.Normal()])
-    ax.axvline(x['ω2_ref'], linewidth=10, color='steelblue', ymax=x['ω2_ref_P'], alpha=0.17, 
-                    path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
-    ax.axvline(x['ω3_ref'], linewidth=10, color='goldenrod', ymax=x['ω3_ref_P'], alpha=0.17, 
-                    path_effects=[pe.withStroke(linewidth=12, foreground='white'), pe.Normal()])
+    ax.axvline(x['ω2_ref'], linewidth=20, color='steelblue', ymax=x['ω2_ref_P'], alpha=0.17, 
+                    path_effects=[pe.withStroke(linewidth=22, foreground='white'), pe.Normal()])
+    ax.axvline(x['ω3_ref'], linewidth=20, color='goldenrod', ymax=x['ω3_ref_P'], alpha=0.17, 
+                    path_effects=[pe.withStroke(linewidth=22, foreground='white'), pe.Normal()])
         
     # Plot vertical lines for ω1, ω2, and ω3 for the TEST group (invisible if build_in=True)
     test_alpha = 0 if build_in else 1
-    test_effects = [] if build_in else [pe.withStroke(linewidth=12, foreground='white'), pe.Normal()]
+    test_effects = [] if build_in else [pe.withStroke(linewidth=22, foreground='white'), pe.Normal()]
     
-    ax.axvline(x['ω1_test'], linewidth=10, color='salmon', ymax=x['ω1_test_P'], alpha=test_alpha,
+    ax.axvline(x['ω1_test'], linewidth=20, color='salmon', ymax=x['ω1_test_P'], alpha=test_alpha,
                     path_effects=test_effects)
-    ax.axvline(x['ω2_test'], linewidth=10, color='steelblue', ymax=x['ω2_test_P'], alpha=test_alpha,
+    ax.axvline(x['ω2_test'], linewidth=20, color='steelblue', ymax=x['ω2_test_P'], alpha=test_alpha,
                     path_effects=test_effects)
-    ax.axvline(x['ω3_test'], linewidth=10, color='goldenrod', ymax=x['ω3_test_P'], alpha=test_alpha,
+    ax.axvline(x['ω3_test'], linewidth=20, color='goldenrod', ymax=x['ω3_test_P'], alpha=test_alpha,
                     path_effects=test_effects)
     
     # mark omega = 1
@@ -484,32 +484,35 @@ def plot_omega_single_gene(
 
     for tick in ax.get_yticklabels():
         tick.set_fontweight('bold')
-        tick.set_fontsize(12)
+        tick.set_fontsize(14)
 
     for tick in ax.get_xticklabels():
-        tick.set_fontsize(12)
+        tick.set_fontsize(14)
 
-    fig.supylabel('proportion of sites', x=0.01, weight='bold', fontsize=14)
+    fig.supylabel('proportion of sites', x=0.01, weight='bold', fontsize=16)
    
     for ax in fig.axes:
         ax.tick_params(direction='in')
 
     if suptitle is not None:
-        fig.suptitle(r"$\bf{"+f"{i}" + r"}$" + suptitle, y=0.96, fontsize=12)
+        if subtitle is not None:
+            fig.suptitle(f"{i}{suptitle}", y=0.96, fontsize=14, fontweight='bold')
+        else:
+            fig.suptitle(f"{i}{suptitle}", y=0.92, fontsize=14, fontweight='bold')
     
     if build_in==False:
         if subtitle is not None:
-            plt.title(subtitle, fontsize=10)
+            plt.title(subtitle, fontsize=12, fontweight='bold')
 
         if k:
             plt.text(0.7, 0.9, 
                     '$\it{k}$='+f'{round(x["k"], 2)}\n'+'$\it{p}$='+f'{'{:.2e}'.format(x["p_value"])}', 
-                    fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                    fontsize=15, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         else:
-            plt.text(0.7, 0.9, 
+            plt.text(0.65, 0.9, 
                     '$\it{p_1}$='+f'{'{:.2e}'.format(x["test_pval"])}\n'+'$\it{p_3}$='+f'{'{:.2e}'.format(x["shared_pval"])}', 
-                    fontsize=12, ha='left', va='center', transform=ax.transAxes, 
+                    fontsize=15, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if filename is not None:

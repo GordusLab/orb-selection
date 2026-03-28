@@ -43,9 +43,9 @@ go.barplot <- function(
   sumfile, 
   colors, 
   figsize, 
-  title, 
   rev, 
   output_filename, 
+  title = NULL,
   title_size = 22, 
   wrap_desc = NULL, 
   truncate_desc = NULL, 
@@ -119,7 +119,9 @@ go.barplot <- function(
     p <- p + scale_y_reverse() + scale_x_discrete(position = "bottom")
   }
 
-  p <- p + ggtitle(title)
+  if (!is.null(title)) {
+    p <- p + ggtitle(title)
+  }
 
   bg_setting <- if (transparent) "transparent" else "white"
 
@@ -135,85 +137,77 @@ go.barplot <- function(
 
 
 # Hyphy analysis
-# go.barplot(
-#   sumfile = here("results/go_enrichment/relax_relaxed/summary_relax_relaxed_hits.txt"),
-#   colors = c("#FEE9E7", "#FA8072"),
-#   figsize = c(25, 24),
-#   title = "GO terms enriched in genes under relaxed selection",
-#   title_size = 20,
-#   wrap_desc = 45,
-#   rev = FALSE,
-#   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
-# )
-
-# go.barplot(
-#   sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
-#   colors = c("#E0F2DB", "#639B51"),
-#   figsize = c(25, 21),
-#   title = "GO terms enriched in genes under intensified selection",
-#   title_size = 20,
-#   rev = FALSE,
-#   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
-# )
-
-# go.barplot(
-#   sumfile = here("results/go_enrichment/busted_ph/summary_busted_ph_hits.txt"),
-#   colors = c("#E0EAF2", "#4682B4"),
-#   figsize = c(26, 20),
-#   title = "GO terms enriched in genes under\npositive selection ~ orbweaving",
-#   rev = FALSE,
-#   title_size = 18,
-#   output_filename = here("figures/figure_4/busted_ph_go_barplot.png")
-# )
-
-# go.barplot(
-#   sumfile = here("results/go_enrichment/busted_ph_rev/summary_busted_ph_rev_hits.txt"),
-#   colors = c("#F9F0D9", "#DAA520"),
-#   figsize = c(26, 20),
-#   title = "GO terms enriched in genes under\npositive selection ~ non-orbweaving",
-#   wrap_desc = 30,
-#   title_size = 18,
-#   rev = FALSE,
-#   output_filename = here("figures/figure_4/busted_ph_rev_go_barplot.png")
-# )
-
-# Log odds ratio analysis
 go.barplot(
-  sumfile = here("results/go_enrichment/odds_ratio_test/duplication_nonorb/summary_duplication_nonorb.txt"),
+  sumfile = here("results/go_enrichment/relax_relaxed/summary_relax_relaxed_hits.txt"),
   colors = c("#FEE9E7", "#FA8072"),
-  figsize = c(25, 20),
-  title = "Genes more likely to be duplicated in non-orbweavers",
+  figsize = c(25, 24),
+  wrap_desc = 45,
   rev = FALSE,
-  output_filename = here("figures/figure_5/duplication_nonorb_go_barplot.png"),
-  truncate_desc = 50
+  output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/odds_ratio_test/duplication_orb/summary_duplication_orb.txt"),
+  sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
   colors = c("#E0F2DB", "#639B51"),
-  figsize = c(30, 25),
-  title = "Genes more likely to be duplicated in orbweavers",
+  figsize = c(25, 21),
   rev = FALSE,
-  output_filename = here("figures/figure_5/duplication_orb_go_barplot.png"),
-  truncate_desc = 50
+  output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/odds_ratio_test/loss_nonorb/summary_loss_nonorb.txt"),
-  colors = c("#DFE9F2", "#4682B4"),
-  figsize = c(25, 15),
-  title = "Genes more likely to be missing in non-orbweavers",
+  sumfile = here("results/go_enrichment/busted_ph/summary_busted_ph_hits.txt"),
+  colors = c("#E0EAF2", "#4682B4"),
+  figsize = c(26, 20),
   rev = FALSE,
-  output_filename = here("figures/figure_5/loss_nonorb_go_barplot.png"),
-  truncate_desc = 50
+  output_filename = here("figures/figure_4/busted_ph_go_barplot.png")
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/odds_ratio_test/loss_orb/summary_loss_orb.txt"),
+  sumfile = here("results/go_enrichment/busted_ph_rev/summary_busted_ph_rev_hits.txt"),
   colors = c("#F9F0D9", "#DAA520"),
-  figsize = c(25, 20),
-  title = "Genes more likely to be missing in orbweavers",
+  figsize = c(26, 20),
+  wrap_desc = 30,
   rev = FALSE,
-  output_filename = here("figures/figure_5/loss_orb_go_barplot.png"),
-  truncate_desc = 50
+  output_filename = here("figures/figure_4/busted_ph_rev_go_barplot.png")
 )
+
+# # Log odds ratio analysis
+# go.barplot(
+#   sumfile = here("results/go_enrichment/odds_ratio_test/duplication_nonorb/summary_duplication_nonorb.txt"),
+#   colors = c("#FEE9E7", "#FA8072"),
+#   figsize = c(25, 20),
+#   title = "Genes more likely to be duplicated in non-orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/figure_5/duplication_nonorb_go_barplot.png"),
+#   truncate_desc = 50
+# )
+
+# go.barplot(
+#   sumfile = here("results/go_enrichment/odds_ratio_test/duplication_orb/summary_duplication_orb.txt"),
+#   colors = c("#E0F2DB", "#639B51"),
+#   figsize = c(30, 25),
+#   title = "Genes more likely to be duplicated in orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/figure_5/duplication_orb_go_barplot.png"),
+#   truncate_desc = 50
+# )
+
+# go.barplot(
+#   sumfile = here("results/go_enrichment/odds_ratio_test/loss_nonorb/summary_loss_nonorb.txt"),
+#   colors = c("#DFE9F2", "#4682B4"),
+#   figsize = c(25, 15),
+#   title = "Genes more likely to be missing in non-orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/figure_5/loss_nonorb_go_barplot.png"),
+#   truncate_desc = 50
+# )
+
+# go.barplot(
+#   sumfile = here("results/go_enrichment/odds_ratio_test/loss_orb/summary_loss_orb.txt"),
+#   colors = c("#F9F0D9", "#DAA520"),
+#   figsize = c(25, 20),
+#   title = "Genes more likely to be missing in orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/figure_5/loss_orb_go_barplot.png"),
+#   truncate_desc = 50
+# )

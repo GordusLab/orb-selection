@@ -85,14 +85,14 @@ go.barplot <- function(
 
   theme_elements <- list(
     text = element_text(family = "Verdana"),
-    axis.text.x = element_text(color = "black", size = 18),
-    axis.text.y = element_text(color = "black", size = 18),
+    axis.text.x = element_text(color = "black", size = axis_text_size),
+    axis.text.y = element_text(color = "black", size = axis_text_size),
     legend.position = "none",
-    axis.title.x = element_text(size = 20, face = "bold"),
+    axis.title.x = element_blank(),
     axis.title.y = element_blank(),
     panel.border = element_rect(color = "black", fill = NA, size = 1),
     strip.background = element_rect(color = "black", size = 1, fill = colors[1]),
-    strip.text = element_text(size = 20, face = "bold"),
+    strip.text = element_text(size = strip_text_size, face = "bold"),
     plot.title = element_text(size = title_size, hjust = hj)
   )
 
@@ -118,8 +118,16 @@ go.barplot <- function(
     do.call(theme, theme_elements) +
     scale_x_discrete(position = "top")
 
+  max_count <- suppressWarnings(max(as.numeric(df$Count), na.rm = TRUE))
+
   if (rev) {
-    p <- p + scale_y_reverse() + scale_x_discrete(position = "bottom")
+    if (is.finite(max_count) && max_count <= 10) {
+      p <- p + scale_y_reverse(breaks = c(10, 5, 0), limits = c(10, 0)) + scale_x_discrete(position = "bottom")
+    } else {
+      p <- p + scale_y_reverse() + scale_x_discrete(position = "bottom")
+    }
+  } else if (is.finite(max_count) && max_count <= 10) {
+    p <- p + scale_y_continuous(breaks = c(0, 5, 10), limits = c(0, 10))
   }
 
   if (!is.null(title)) {
@@ -162,7 +170,10 @@ go.barplot(
   colors = c("#E0EAF2", "#4682B4"),
   figsize = c(26, 20),
   rev = FALSE,
-  output_filename = here("figures/figure_4/busted_ph_go_barplot.png")
+  output_filename = here("figures/figure_4/busted_ph_go_barplot.png"),
+  axis_text_size = 26,
+  axis_title_size = 30,
+  strip_text_size = 26
 )
 
 go.barplot(
@@ -171,7 +182,10 @@ go.barplot(
   figsize = c(26, 20),
   wrap_desc = 30,
   rev = FALSE,
-  output_filename = here("figures/figure_4/busted_ph_rev_go_barplot.png")
+  output_filename = here("figures/figure_4/busted_ph_rev_go_barplot.png"),
+  axis_text_size = 26,
+  axis_title_size = 30,
+  strip_text_size = 26
 )
 
 # # Log odds ratio analysis

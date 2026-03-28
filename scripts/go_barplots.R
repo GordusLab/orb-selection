@@ -120,7 +120,7 @@ go.barplot <- function(
   }
 
   if (!is.null(title)) {
-    p <- p + ggtitle(title)
+    p <- p + theme(plot.title = element_blank())
   }
 
   bg_setting <- if (transparent) "transparent" else "white"

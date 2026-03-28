@@ -52,8 +52,8 @@ run_categorical_permulations <- function(
 
 testCatPerms <- run_categorical_permulations(
         foreground_list_filename = here("assets/orbweavers-list.txt"),
-        ntrees = 100000,
-        save_rdata_path = here("assets/perms100000.RData")
+        ntrees = 10000,
+        save_rdata_path = here("data/perms10000.RData")
 )
 
 # Canonical species order from the first permulation
@@ -86,4 +86,4 @@ head(tip_df[, 1:6])
 
 tip_df[tip_order] <- tip_df[tip_order] - 1
 
-write.csv(tip_df, here("assets/perms_tip_values_100000.csv"), row.names = FALSE)
+write.csv(tip_df, here("data/perms_tip_values.csv"), row.names = FALSE)

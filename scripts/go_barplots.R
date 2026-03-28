@@ -150,24 +150,24 @@ go.barplot <- function(
 # Hyphy analysis
 go.barplot(
   sumfile = here("results/go_enrichment/relax_relaxed/summary_relax_relaxed_hits.txt"),
-  colors = c("#FEE9E7", "#FA8072"),
+  colors = c("#E8DCF0", "#A579C6"),
   figsize = c(25, 24),
   wrap_desc = 45,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
-  colors = c("#E0F2DB", "#639B51"),
-  figsize = c(25, 21),
-  rev = FALSE,
-  output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
+#   colors = c("#E0F2DB", "#639B51"),
+#   figsize = c(25, 21),
+#   rev = FALSE,
+#   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
+# )
 
 go.barplot(
   sumfile = here("results/go_enrichment/busted_ph/summary_busted_ph_hits.txt"),
-  colors = c("#E0EAF2", "#4682B4"),
+  colors = c("#E8DCF0", "#A579C6"),
   figsize = c(26, 20),
   rev = FALSE,
   output_filename = here("figures/figure_4/busted_ph_go_barplot.png"),
@@ -178,7 +178,7 @@ go.barplot(
 
 go.barplot(
   sumfile = here("results/go_enrichment/busted_ph_rev/summary_busted_ph_rev_hits.txt"),
-  colors = c("#F9F0D9", "#DAA520"),
+  colors = c("#E0F2DB", "#639B51"),
   figsize = c(26, 20),
   wrap_desc = 30,
   rev = FALSE,

@@ -46,7 +46,10 @@ go.barplot <- function(
   rev, 
   output_filename, 
   title = NULL,
-  title_size = 22, 
+  title_size = 24, 
+  axis_text_size = 18,
+  axis_title_size = 20,
+  strip_text_size = 20,
   wrap_desc = NULL, 
   truncate_desc = NULL, 
   transparent = FALSE
@@ -82,14 +85,14 @@ go.barplot <- function(
 
   theme_elements <- list(
     text = element_text(family = "Verdana"),
-    axis.text.x = element_text(color = "black", size = 16),
-    axis.text.y = element_text(color = "black", size = 16),
+    axis.text.x = element_text(color = "black", size = 18),
+    axis.text.y = element_text(color = "black", size = 18),
     legend.position = "none",
-    axis.title.x = element_text(size = 18, face = "bold"),
+    axis.title.x = element_text(size = 20, face = "bold"),
     axis.title.y = element_blank(),
     panel.border = element_rect(color = "black", fill = NA, size = 1),
     strip.background = element_rect(color = "black", size = 1, fill = colors[1]),
-    strip.text = element_text(size = 18, face = "bold"),
+    strip.text = element_text(size = 20, face = "bold"),
     plot.title = element_text(size = title_size, hjust = hj)
   )
 

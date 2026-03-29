@@ -157,13 +157,13 @@ go.barplot(
   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
 
-# go.barplot(
-#   sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
-#   colors = c("#E0F2DB", "#639B51"),
-#   figsize = c(25, 21),
-#   rev = FALSE,
-#   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
+  colors = c("#E8DCF0", "#A579C6"),
+  figsize = c(25, 21),
+  rev = FALSE,
+  output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
+)
 
 go.barplot(
   sumfile = here("results/go_enrichment/busted_ph/summary_busted_ph_hits.txt"),
@@ -178,7 +178,7 @@ go.barplot(
 
 go.barplot(
   sumfile = here("results/go_enrichment/busted_ph_rev/summary_busted_ph_rev_hits.txt"),
-  colors = c("#E0F2DB", "#639B51"),
+  colors = c("#E8DCF0", "#A579C6"),
   figsize = c(26, 20),
   wrap_desc = 30,
   rev = FALSE,

@@ -1159,6 +1159,8 @@ class PermutationTestResults:
         avpermutation_color="red",
         hist_color="red",
         thresholds_color="darkred",
+        hist_alpha=0.3,
+        edgecolor=None,
         bins=100,
         title=True,
         legend_fontsize=10,
@@ -1187,8 +1189,8 @@ class PermutationTestResults:
             bins=bins,
             density=True,
             color=hist_color,
-            alpha=0.3,
-            edgecolor=hist_color
+            alpha=hist_alpha,
+            edgecolor=edgecolor
         )
 
         x = np.linspace(

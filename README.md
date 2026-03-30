@@ -1,48 +1,215 @@
 # orb-selection
-Testing for patterns selection corresponding to competing hypotheses on the evolutionary history of orb-weaving.
 
-## Methods
+Analysis repository for "Comparative transcriptomic analysis reveals signatures of selection
+for orb-weaving behavior in spiders," Runnels et al. 2026
 
-### Transcriptome data collection and processing
+TODO:
 
-We acquired 573 publicly available spider transcriptomes via the Nucleotide, SRA, BioProject and BioSample databases from the National Center for Biotechnology Information (Sayers et al. 2024), with a sizable number coming from the 1,000 Silkomes Project (Arakawa et al. 2022) (Supplementary Table S1). We chose transcriptomes in place of genomes because of the relative dearth of annotated spider genomes at the commencement of this study, though that number has since increased meaningfully. We clustered raw transcript sequences to remove redundancy with CD-HIT (Li and Godzik 2006), then identified open reading frames at least 100 amino acids long using TransDecoder.LongOrfs (Haas 2022). We submitted these ORFs as a BLAST-P (Camacho et al. 2009) query against the UniProt database (The UniProt Consortium 2025) to identify any strong homology to known proteins (e-value < 1E-5). We used TransDecoder.Predict to predict coding sequences from the long ORFs, with the option to retain any ORF with a BLAST-P match in the final output. We analyzed the resulting peptide sequences for redundancy and completeness by searching for the presence and uniqueness of the arachnid-lineage set of Benchmarking Universal Single Copy Ortholog (BUSCO) genes, version odb10 (Manni et al. 2021). We filtered the 573 transcriptomes we had initially curated for quality using a threshold of no less than 90% total complete BUSCOs and no more than 30% duplicated BUSCOs, with 3 exceptions: Antrodiaetus roretzi, which had 86% total complete BUSCOs but we included as it was the highest-quality representative of Mygalomorphae, an important ancestral family; and two species of the family Deinopidae, which had 88-89% complete BUSCOs but we determined to be essential to the analysis as cribellate “orb-weavers” who are sister to the model cribellate orb-weaver U. diversus. The deinopids’ status as orb-weavers is not universally affirmed; also known as net casters, they weave an orb-like web, which they suspend between their front legs to physically cast upon their prey (Coddington 1986). For the purpose of this study, we considered them to be cribellate orb-weavers (see Orb-weaving phenotype designation below for more details). This filtering left a total of 102 spider species. We downloaded protein sequences for Drosophila melanogaster, which we chose as a non-spider outgroup for the orthology search, from FlyBase (dmel-all-translation release 6.51) (Öztürk-Çolak et al. 2024). 
+- [ ] add N5 list to assets
+- [ ] edit slurm comments in rockfish scripts
+- [ ] clear out assets directory
+- [ ] edit stages 1 and 2
+- [ ] read through and edit all updated docstrings
 
-### Orthology search and pre-testing pipeline
+## What Is In This Repository
 
-We fed the 103 species’ protein sequences into OrthoFinder v2.5.5 (Emms and Kelly 2019) with default settings. After initially generating orthogroups, orthologs, and a resolved species tree, we analyzed and manually edited the species tree using Interactive Tree of Life (Letunic and Bork 2024) to better accord with the most recent, best resolved and supported spider tree of life at the time (Kulkarni et al. 2023) (Fig. 1a-b). We moved five leaves of the OrthoFinder-generated tree to achieve this. We then re-ran the final steps of the OrthoFinder pipeline using the “-ft” option with the edited species. For the tests of positive and relaxed selection, we filtered the list of phylogenetic hierarchical orthogroups (HOGs) from the fifth node (N5), which included all entelegyne spiders and excluded Drosophila and four non-entelegyne spiders, to those HOGs with an occupancy of at least 75 species and in which the spider U. diversus, the species whose annotations we used for ontology analysis, was represented by at least one gene. We then used the filtered list of 4,756 entelegyne HOGs to generate individual fasta files for each HOG containing the coding sequences of all genes in the HOG via a custom script. 
+- Stage scripts for preprocessing, HyPhy analyses, permulation testing, and GO enrichment.
+- Source/helper modules in `src/`.
+- Figure/table notebooks and plotting code.
+- Supplementary output tables under `results/`.
 
-To prepare the orthogroup fasta files for evolutionary hypothesis testing, we first subjected the N5.HOG files to pre-alignment quality filtering using PREQUAL v1.02 (Whelan et al. 2018) and then generated multiple sequence alignments for each gene using the alignSequences program of MACSE v2.07 with default settings (Ranwez et al. 2018). We inferred a gene tree for each orthogroup using IQ-TREE v2.3.6 (Minh et al. 2020). We performed an initial run of the HyPhy (v2.5.70) batch language-based BUSTED (v4.6) test for episodic diversifying selection on the alignments and corresponding tree files with the --multiple-hits Double+Triple and --error-sink Yes” settings, but with no foreground specified, to generate the error-filtered alignment BUSTED produces when using the --error-sink flag (Murrell et al. 2015; Kosakovsky Pond et al. 2020). We parsed these error-filtered alignments and corresponding edited trees using HyPhy error-filter and labeled any branches on the trees corresponding to genes from orb-weaving species as foreground using the HyPhy LabelTrees tool.
+## Important Data Availability Notes
 
-### Orb-weaving phenotype designation
+Some required inputs and outputs are not available in this repository.
 
-We classified all araneids as orb-weavers aside from the three-dimensional dome-web weaver Cyrtophora cicatrosa (Rao and Poyyamoli), the bolas spiders Ordgarius hobsoni and Ordgarius sexspinosus (Tanikawai 1997), and Cyrtarachne bufo, which belongs to a genus sister to the bolas spider that builds a reduced orb web with transitional bolas-like functionality (Cartan and Miyashita 2000). We classified all tetragnathids as orb-weavers. We included the cribellate orb-weaver U. diversus and two species of ogre-faced spiders of the sister clade Deinopidae, whose partial orb-like web which it wields as a net is thought to be synapomorphic to the uloborid cribellate orb (Coddington 1986; Garrison et al. 2016), as the final three orb-weaving species. We designated all remaining spider species as non-orb-weavers.
+- Raw transcriptome FASTA inputs for OrthoFinder and the HyPhy pipeline are external.
+- HyPhy per-gene JSON outputs are external.
+- Some `.pkl` cache/result files used by downstream scripts are external.
 
-### Testing for positive and relaxed selection 
+Placeholders for final archive links:
 
-To test for evidence of relaxation of selection in the 4,756 HOGs, we used RELAX (Wertheim et al. 2015). RELAX uses the basic unrestricted codon model as its null model and compares it to an alternative in which the rate classes are modified by an additional parameter k. If the LRT is significant, a value of k < 1 indicates the degree of relaxation of selection in the foreground branches relative to the background, whereas k > 1 indicates an intensification of selection. We ran RELAX v4.5 on all the alignments and corresponding trees with non-orb-weaving species as the foreground using the following options: --test Unlabeled branches --multiple-hits Double+Triple --models Minimal --srv Yes ENV="TOLERATE_NUMERICAL_ERRORS=1;".
+- Raw transcriptomes and other large stage-1/2 inputs: `TODO_ADD_RAW_DATA_ARCHIVE_LOCATION`
+- HyPhy JSON result archive: `TODO_ADD_HYPHY_JSON_ARCHIVE_LOCATION`
+- Large `.pkl` cache files archive: `TODO_ADD_PKL_ARCHIVE_LOCATION`
 
-We used BUSTED-PH (Kosakovsky Pond 2022), a stand-alone analysis built upon BUSTED (Murrell et al. 2015) to test for evidence of positive selection associated with a particular trait or phenotype, in this case orb-weaving. BUSTED-PH performs three likelihood ratio tests (LRT): (1) for positive selection in the foreground; (2) for positive selection in the background; and (3) for difference between the foreground and background distributions, thus providing insight about the relevance of the phenotype to patterns of selective pressure across the phylogeny. We performed BUSTED-PH v0.2 on the same set of genes and trees, first designating orb-weaver branches as the test group, then designating non-orb-weaver branches as the test group, with default settings and the same environment variable as described for RELAX. 
+Git tracking note for large files/directories:
 
-We parsed genes with significant results from the BUSTED-PH and RELAX JSON files, filtering out results with extreme ω values (mean ω > 10,000, calculated as ω1 • P1 + ω2 • P2 + ω3 • P3 where ω1 ≤ ω2 ≤ 1 ≤ ω3 and P<1,2,3> are the proportion of sites belonging to each rate class), as extremely large ω values represent unrealistic evolutionary processes and are most likely the result of alignment or sequencing errors (Selberg et al. 2025). We determined the LOC identifiers for the U. diversus gene(s) present in each significant orthogroup to use for functional analysis. For RELAX, significantly relaxed genes had p ≤ 0.05 and k < 1, and significantly intensified genes had p ≤ 0.05 and k > 1. For BUSTED-PH, significant genes had a foreground p-value ≤ 0.05, a background p-value > 0.05, and a shared p-value < 0.05. Plots of rate class distributions and means (Figs. 2–4) were visualized using matplotlib (Hunter 2007).
+- The following raw-result data directories are intentionally gitignored:
+	- `data/absrel_rerun/`
+	- `data/busted_ph/`
+	- `data/busted_ph_rev/`
+	- `data/relax/`
+- `.pkl` files are intentionally gitignored repository-wide.
 
-### Gene loss and duplication analysis 
+## Stage 01: Transcriptome Data Acquisition and Initial Input Set
 
-To analyze differences in the odds of gene loss between orb-weavers and non-orb-weavers, we used a larger subset of the N5 HOGs from the 98 species of entelegyne spiders (Supplementary Table S2) and filtered for minimum occupancy of 50. We chose a lower occupancy threshold here than in the HyPhy-based analyses to serve the goal of identifying genes that are missing in some species, which makes lower occupancy orthogroups particularly relevant. For the test of differential odds of loss only, we also set a maximum occupancy threshold of 95 to ensure that a meaningful difference in odds of loss was possible between the two test groups. For this test, we used the results from OrthoFinder, specifically the GeneCount file, which gives the number of genes per species in each orthogroup, and which can be generated using the OrthoFinder analysis tool orthogroup_gene_count.py from the OrthoFinder GitHub (Emms 2026). We first calculated the odds that a given orb-weaving (foreground) species lacks the gene and the odds that a non-orb-weaving (background) species lacks the gene. We scaled these odds according to the BUSCO scores (Supplementary Table S1) for each species to account for the impact of the variation in completeness and redundancy of the transcriptomes. We then determined the log odds ratio (LOR) between the two groups for each orthogroup, using the Haldane-Anscombe correction (Anscombe 1956; Haldane 1956) to account for any odds equaling zero, which would result in undefined LORs:
+This stage corresponds to the first methods section and prepares the raw sequence set used downstream.
 
-〖LOR〗_loss= log((# orb-weaving species lacking the gene / # orb-weavers with the gene)/(# non-orb-weaving species lacking the gene / # non-orb-weavers with the gene))
+Use methods-described software/workflow for your run (outside this repo where needed):
 
-This procedure was repeated to analyze the relative odds of duplication, defined as having the gene in more than one copy:
+- obtain transcriptome assemblies using accession metadata
+- perform any stated acquisition/QC steps from methods section 1
+- collect final FASTA inputs for comparative analyses
 
-〖LOR〗_duplication= log((# orb-weaving species with > 1 copy of the gene / # orb-weavers with 1 or 0 copies)/(# non-orb-weaving species > 1 copy of the gene / # non-orb-weavers 1 or 0 copies))
+Raw accessions:
 
-Because we set a maximum occupancy for the loss test but not the duplication test, HOGs in which two or fewer species were missing the gene were excluded from the loss test but included the duplication test. Thus, 7,875 HOGs were evaluated in the duplication test, and 5,269 HOGs were used in the loss test. The true distributions of LORs for loss and duplication across all genes are found in Figures 5a–b.
+- Transcriptome accessions used in this project are listed in `results/Supplementary_Table_1_SpiderAccessions_BUSCOs.xlsx`.
 
-We then generated 10,000 permuted and simulated phylogenies (“permulations”) and associated phenotype vectors using the categoricalPermulations function from the RERconverge package (Saputra et al. 2021). We provided as input the list of orb-weaving species and the resolved species tree with branch lengths generated by OrthoFinder from the original dataset. For each permulated phenotype designation, we re-calculated the LORs for duplication and loss across all genes. We counted how many times the mean of the permulated LOR distribution was smaller than (for the loss test) or exceeded (for the duplication test) the mean of the true distribution. From these counts, we determined the probability that the mean of the true distribution of log odds ratios between orb-weavers and non-orb-weavers was significantly greater (for loss) or less (for duplication) than what would be expected by random chance, given the phylogenetic structure of the data.
+Expected output of Stage 01:
 
-For each permulation, we modeled the (null) LOR as a single Gaussian distribution and recorded its mean, standard deviation, and 95% confidence interval thresholds (Supplementary Fig. S2). For each of the two tests (loss and duplication), we used the average permulated confidence interval to set benchmark thresholds upon which to judge the extremeness of the true LORs. The orthogroups for which the LORs of loss or duplication in orb-weavers versus non-orb-weavers was outside of the average permulated confidence interval were considered significant. We filtered those orthogroups for the presence of at least one gene from U. diversus, both to enable ontology enrichment analysis and to provide some additional assurance that the differences recorded were connected to the orb-weaving phenotype itself, and not just araneoid-specific genes, given that the vast majority of orb-weavers are araneids or tetragnathids. The distributions were visualized using matplotlib and seaborn (Hunter 2007; Waskom 2021).
+- A local/external directory of transcriptome FASTA files ready for orthology and phylogenetic stages.
 
-We noticed that the true LOR distributions appeared potentially multimodal and that the distributions of permulated means were consistently trimodal. We fit the distributions of LORs of loss and duplication to single, double, triple, and quadruple Gaussian models and found the parameters which maximized the likelihood of each model using scipy.optimize.minimize with the “COBYLA” method (Jones et al. 2001). Using the Bayes Information Criterion for each model, we determined that the triple Gaussian was the best fit to both distributions. On this basis, we repeated the permulation test, but this time we fit each null distribution to a triple Gaussian model and counted the null distributions for which each of the three means was smaller than (for loss) or exceeded (for duplication) the corresponding triple Gaussian mean in the true distribution (Supplementary Fig. S3). We still did not find any significant differences between the parameters of the true distributions and those of the null distributions when modeled as triple Gaussian (for loss, p1 = 0.0933, p2 = 0.2893, and p3 = 0.1383; for duplication, p1 = 0.1169, p2 = 0.3424, and p3 = 0.6199). Full details of this analysis can be found on GitHub: github.com/GordusLab/orb-selection.
+## Stage 02: Orthology and Comparative Input Preparation
 
-### Ontology enrichment analysis
+This stage corresponds to the second methods section and prepares orthogroup/species-tree inputs used by downstream scripts.
 
-We used topGO R package v2.58.0 (Alexa et al. 2024) to perform GO enrichment using Fisher’s Exact Test on the U. diversus gene IDs from the orthogroups with significant results from each of the above analyses (RELAX; BUSTED-PH, orb-weaver foreground; BUSTED-PH non-orb-weaver foreground; loss odds ratio test; duplication odds ratio test) against the full set of U. diversus genes tested in each analysis. We adapted the topGO pipeline from topGO_pipeline (Liew 2018) on GitHub. The GO barplots (Figs. 3c,f; 4c,f) and topGO_pipeline further used R packages forcats (Wickham 2025), ggpubr (Kassambara 2025), ggplot2 (Wickham 2016), and dplyr (Wickham et al. 2025). We generated the network plot (Fig. 5c) using the EnrichmentMap app v3.5.0 (Merico et al. 2010) in Cytoscape (Shannon et al. 2003). We made UpSet plots (Lex et al. 2014) using the python UpSetPlot package (Nothman 2024). We generated the list of U. diversus silk gland genes by finding the best tBLASTn hit in the U. diversus genome of each of the silk-gland-specific genes identified in Argiope argentata by (Chaw et al. 2021).
+Use methods-described software/workflow for your run (outside this repo where needed):
+
+- OrthoFinder (or equivalent orthology pipeline in your methods)
+- species tree preparation/editing steps described in methods
+- any BUSCO/ortholog mapping steps described in methods
+
+Expected output of Stage 02:
+
+- Orthogroup-derived input tables/files required by stage 03+
+- Species tree + tip/foreground labeling inputs
+- Working directories consumed by the stage scripts below
+
+## Stage 03: Phylogenetic Prep
+
+Purpose:
+
+- PREQUAL filtering
+- MACSE alignment
+- IQ-TREE trees
+- initial BUSTED + error-filtered outputs
+- foreground branch labeling
+- prerequisite alignment/tree files for HyPhy
+
+Scripts to run from `scripts/03_phylo_prep/`:
+
+- `prep_for_hyphy.sh`
+- `label_trees.sh`
+- `get_nuc_seqs.sh`
+
+External programs used in this stage:
+
+- PREQUAL
+- MACSE
+- IQ-TREE
+- seqkit/csvtk (if used in your methods pipeline)
+
+## Stage 04: Selection Tests and HyPhy Result Parsing
+
+Purpose:
+
+- run HyPhy analyses for selection tests
+- parse large HyPhy JSON outputs into usable result objects/tables
+
+Scripts/modules in `scripts/04_selection_tests/`:
+
+- `busted_ph.sh`
+- `busted_ph_switch_fg.sh`
+- `relax.sh`
+- `hyphy_results_parser.py`
+- `hyphy_results_helpers.py`
+- `parse_hyphy_results.py`
+- `README_hyphy_module.md`
+
+Data note:
+
+- Stage 04 uses thousands of JSON result files not tracked in GitHub due to size.
+- Add your archive/location to: `TODO_ADD_HYPHY_JSON_ARCHIVE_LOCATION`.
+
+## Stage 05: Permulation/Odds-Ratio Testing
+
+Purpose:
+
+- run the odds-ratio permulation testing workflow
+- generate/consume permulated phenotype assignments
+
+Scripts in `scripts/05_permulation_loss_dup/`:
+
+- `permulations.R`
+- `odds_ratio_test.py`
+- `README_odds_ratio_test.md`
+- `Odds Ratio Permulation Test.ipynb`
+- `Multimodal Test.ipynb`
+
+Notes:
+
+- `odds_ratio_test.py` moved to this stage and is documented in `README_odds_ratio_test.md`.
+- The notebook `Odds Ratio Permulation Test.ipynb` demonstrates how to run the module.
+- Some `.pkl` outputs/read inputs are external due to size limits.
+
+## Stage 06: Significant Gene ID Lists and GO Enrichment
+
+Purpose:
+
+- generate significant gene ID lists from odds-ratio/HyPhy cached results
+- run and summarize GO enrichment
+
+Scripts in `scripts/06_enrichment/`:
+
+- `get_gene_id_lists.py`
+- `generate_significant_gene_id_lists.sh`
+- `go_enrichment.R`
+- `summarise_topgo_output.sh`
+- `go_barplots.R`
+
+## Stage 07: Figures and Tables
+
+Purpose:
+
+- generate figure/table outputs and supplementary summaries
+
+Scripts/notebooks in `scripts/07_figures_tables/`:
+
+- `omega_plots.py`
+- `Hyphy Omega Plots.ipynb`
+- `Odds Ratio Test Plots.ipynb`
+- `Supplementary Data Tables.ipynb`
+- `UpSet Plots.ipynb`
+
+## src Modules
+
+`src/` contains general helper modules, including:
+
+- `id_converter.py`
+- `orthogroup_filter.py`
+- `orthogroup_gene_count.py`
+- `get_silk_genes.py`
+
+## Dependencies
+
+Python dependencies are managed in `environment.yml`.
+
+R dependencies are managed via `renv` (`renv.lock`).
+
+External software commonly used by the full workflow (depending on stage):
+
+- HyPhy
+- PREQUAL
+- MACSE
+- IQ-TREE
+- OrthoFinder
+- BLAST+
+- CD-HIT
+- BUSCO
+
+## Results and Supplementary Files
+
+Key outputs are under `results/`, including:
+
+- `results/significant_gene_id_lists/`
+- `results/go_enrichment/`
+- `results/hyphy_results_cache/`
+- supplementary tables
+
+## Terminology
+
+This repository uses **permulation / permulated** terminology for the RERconverge method.
+
+## Change Log
+
+See `CHANGELOG.md` for repository reorganization details.

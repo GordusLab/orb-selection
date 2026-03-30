@@ -1,43 +1,59 @@
 #!/usr/bin/env python3
 
-"""
-Example script demonstrating how to use the hyphy_results_parser module.
+"""Parse and summarize HyPhy JSON outputs for downstream analyses.
 
-This script shows how to:
-1. Load JSON results into result classes
-2. Filter and analyze results
-3. Convert HOGs to LOCs using the id_converter module
-4. Save results for future use
-5. Compare results across different analyses
+This script was used to:
+1. Load HyPhy JSON result directories into parser classes
+2. Filter and summarize result sets
+3. Convert HOG hits to LOCs for enrichment workflows
+4. Cache parsed outputs as pickle files for reproducibility
+5. Compare hit sets across analyses
 """
 
 import os
 import sys
+import importlib.util
 from pathlib import Path
 
-# Add the src directory to the path 
-src_dir = Path(__file__).parent.parent / "src"
-sys.path.insert(0, str(src_dir))
+# Add repo src plus this stage directory to the path.
+repo_root = Path(__file__).parent.parent.parent
+src_dir = repo_root / "src"
+stage_dir = Path(__file__).parent
+for path in (src_dir, stage_dir):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
-from hyphy_results_parser import (
-    HyphyResultsManager
+
+def _load_module(module_name: str, module_path: Path):
+    spec = importlib.util.spec_from_file_location(module_name, str(module_path))
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load module {module_name} from {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+hyphy_results_parser = _load_module(
+    "hyphy_results_parser", stage_dir / "hyphy_results_parser.py"
 )
-from hyphy_results_helpers import (
-    omega_filter_summary,
-    convert_hyphy_results_to_locs
+hyphy_results_helpers = _load_module(
+    "hyphy_results_helpers", stage_dir / "hyphy_results_helpers.py"
 )
+
+HyphyResultsManager = hyphy_results_parser.HyphyResultsManager
+omega_filter_summary = hyphy_results_helpers.omega_filter_summary
+convert_hyphy_results_to_locs = hyphy_results_helpers.convert_hyphy_results_to_locs
 
 def main():
-    """Main example function."""
+    """Main parser workflow used in this project."""
     
-    print("=== HyPhy Analysis Results Example (orb-selection) ===\n")
+    print("=== HyPhy Analysis Results Parsing (orb-selection) ===\n")
     
     # Initialize the results manager
     manager = HyphyResultsManager()
     
     # Data paths in the orb-selection repository
     # Point to the actual data directory in orb-selection
-    repo_root = Path(__file__).parent.parent  # Go up one level from scripts/
     data_dir = repo_root / "data"
     relax_path = str(data_dir / "relax")
     busted_ph_path = str(data_dir / "busted_ph") 
@@ -246,7 +262,7 @@ def main():
         print()
     
     # Show example of accessing data
-    print("=== Example Data Access ===")
+    print("=== Data Access ===")
     for result_name in results_loaded:
         result = manager.get_result(result_name)
         print(f"{result_name.upper()} Result:")
@@ -262,12 +278,12 @@ def main():
         print()
     
     
-    print("=== Example Complete ===")
-    print("\nTo use this module in your own scripts:")
-    print("1. Import the classes: from src.hyphy_results_parser import HyphyResultsManager")
+    print("=== Parsing Complete ===")
+    print("\nReusable parser workflow summary:")
+    print("1. Import classes: from hyphy_results_parser import HyphyResultsManager")
     print("2. Create a manager: manager = HyphyResultsManager()")
     print("3. Load your data: result = manager.load_relax_from_json('/path/to/json/files')")
-    print("4. Convert to LOCs: from src.hyphy_results_helpers import convert_hyphy_results_to_locs")
+    print("4. Convert to LOCs: from hyphy_results_helpers import convert_hyphy_results_to_locs")
     print("5. Analyze: significant = result.get_significant_results()")
     print("6. Save for reuse: result.save_to_pickle('my_results.pkl')")
 

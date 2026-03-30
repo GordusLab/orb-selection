@@ -8,14 +8,14 @@ import pandas as pd
 from id_converter import make_id_converter
 
 scripts = os.path.dirname(__file__)
-assets = os.path.join(scripts, "..", "assets")
+data_dir = os.path.join(scripts, "..", "..", "data")
 
 def get_all_silk_genes(top10=False) -> list:
     """Returns all silk gland genes from the id_converter."""
     
     id_converter = make_id_converter()
     silk_genes_udiv_blast_df = pd.read_csv(
-        f"{assets}/silk_gland_genes_udiv_tblastn.csv",
+        f"{data_dir}/silk_gland_genes_udiv_tblastn.csv",
         usecols=["query acc.ver", " subject acc.ver", " % identity", " evalue"],
     )
 

@@ -6,7 +6,7 @@ rerpath <- find.package("RERconverge")
 run_categorical_permulations <- function(
     foreground_list_filename,
     ntrees = 10000,
-    treefile = here("assets/SpeciesTree_full_brlen.nwk"),  
+    treefile = here("data/SpeciesTree_full_brlen.nwk"),  
     excluded_tips = c(
         "Drosophila_melanogaster",
         "Antrodiaetus_roretzi",
@@ -51,7 +51,7 @@ run_categorical_permulations <- function(
 
 
 testCatPerms <- run_categorical_permulations(
-        foreground_list_filename = here("assets/orbweavers-list.txt"),
+        foreground_list_filename = here("data/orbweavers-list.txt"),
         ntrees = 10000,
         save_rdata_path = here("data/perms10000.RData")
 )

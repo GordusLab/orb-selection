@@ -2,9 +2,9 @@
 set -euo pipefail
 
 # Regenerate significant_gene_id_lists outputs from current pickle files.
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-python}"
-SCRIPT="$REPO_ROOT/scripts/get_gene_id_lists.py"
+SCRIPT="$REPO_ROOT/scripts/06_enrichment/get_gene_id_lists.py"
 OUT_BASE="$REPO_ROOT/results/significant_gene_id_lists"
 
 LOSS_PKL="$REPO_ROOT/results/odds_ratio_test/Results_Mar25/Run1_Loss_LT_50-95_10000x/loss_occ50-95_less.pkl"
@@ -15,7 +15,7 @@ BUSTED_REV_PKL="$REPO_ROOT/results/hyphy_results_cache/busted_ph_rev_results.pkl
 
 mkdir -p "$OUT_BASE/loss" "$OUT_BASE/duplication" "$OUT_BASE/relax" "$OUT_BASE/busted_ph" "$OUT_BASE/busted_ph_rev"
 
-echo "Generating permutation-test ID lists..."
+echo "Generating odds-ratio/permulation ID lists..."
 "$PYTHON_BIN" "$SCRIPT" "$LOSS_PKL" --tail left  --hits-file "$OUT_BASE/loss/loss_nonorb.txt" --universe-file "$OUT_BASE/loss/loss_universe.txt"
 "$PYTHON_BIN" "$SCRIPT" "$LOSS_PKL" --tail right --hits-file "$OUT_BASE/loss/loss_orb.txt"
 

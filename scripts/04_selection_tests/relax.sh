@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Runs RELAX for one HOG per SLURM array task.
+
 #SBATCH --job-name=250310_relax_final
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
@@ -7,21 +9,27 @@
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH -n 48
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
+#SBATCH --output=reports/%x/%A_%a.out
 
 #make directory to store slurm reports
-mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+REPORT_DIR=${REPORT_DIR:-$REPO_ROOT/results/slurm_reports}
+mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
 
 module load anaconda
-conda activate /home/crunnel2/anaconda3/envs/selection
+CONDA_ENV_PATH=${CONDA_ENV_PATH:-selection}
+conda activate "$CONDA_ENV_PATH"
 
-WD=/data/agordus1/crunnel2/060125_N5_o75
-# HOG_LIST=${WD}/HOG_CDS/relax_final_5.txt
+WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
+HOG_LIST=${HOG_LIST:-${WD}/HOG_CDS/N5.udiv.o75_list.txt}
 FG_NAME=ow_fg_cons
 
-# CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
-
-CURRENT_HOG=N5.HOG0038418
+if [ -n "${SLURM_ARRAY_TASK_ID:-}" ]; then
+	CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" "$HOG_LIST")
+else
+	CURRENT_HOG=${CURRENT_HOG:-PATH_TO_HOG_ID}
+fi
 
 #check if RELAX has already completed for this HOG 
 RELAX_OUT=${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX.json

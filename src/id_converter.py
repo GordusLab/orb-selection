@@ -13,7 +13,7 @@ from tqdm.auto import tqdm
 
 
 src_path = os.path.dirname(__file__)
-assets = os.path.join(src_path, "..", "assets")
+data_dir = os.path.join(src_path, "..", "data")
 
 
 def read_csv_or_tsv(file_path, index_col=None):
@@ -33,7 +33,7 @@ def make_id_converter():
     LOCs and nucleotide accession IDs."""
 
     id_df = pd.read_csv(
-        f"{assets}/id_converter.tsv",
+        f"{data_dir}/id_converter.tsv",
         sep="\t",
         dtype=str,
         names=[
@@ -146,7 +146,7 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv):
     res_with_udiv_df = get_udiv_dmel_genes(
         hog_node_genes_tsv,
         hogs_of_interest,
-        f"{assets}/Uloborus_diversus__v__Drosophila_melanogaster.tsv",
+        f"{data_dir}/Uloborus_diversus__v__Drosophila_melanogaster.tsv",
     )
 
     res_with_udiv_df = res_with_udiv_df.explode("udiv_genes")

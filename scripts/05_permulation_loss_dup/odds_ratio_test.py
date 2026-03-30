@@ -1839,9 +1839,9 @@ class PermutationTestResults:
 
 def odds_ratio_test(
     test,
-    foreground_list_filename="assets/orbweavers-list.txt",
-    hog_node_genes_tsv="assets/N5.tsv",
-    genecount_csv="assets/N5.GeneCount.tsv",
+    foreground_list_filename="data/orbweavers-list.txt",
+    hog_node_genes_tsv="data/N5.tsv",
+    genecount_csv="data/N5.GeneCount.tsv",
     occupancy_threshold=0,
     max_occ=None,
     alternative="less",  # or "greater" (legacy: "LT"/"RT")
@@ -1849,13 +1849,13 @@ def odds_ratio_test(
     permutation_reps=10000,
     test_triple_gaussian_params=True,
     permulation_tip_values=None,
-    permulations_tip_values_csv="assets/perms_tip_values.csv",
+    permulations_tip_values_csv="data/perms_tip_values.csv",
     background_list_filename=None,
     species_of_interest=None,
     results_dir=None,
     fg_name=None,
     bg_name=None,
-    buscos_filename="assets/buscos.csv",
+    buscos_filename="data/buscos.csv",
     correct_for_buscos=True,
     save_pickle=True,
     save_two_tailed_hits=False

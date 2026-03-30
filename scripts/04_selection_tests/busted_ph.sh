@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Runs BUSTED-PH for one HOG per SLURM array task.
+
 #SBATCH --job-name=250218_busted_alphabet_errors
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
@@ -8,17 +10,22 @@
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-2
 #SBATCH -n 12
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
+#SBATCH --output=reports/%x/%A_%a.out
 
 #make directory to store slurm reports
-mkdir -p /data/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+REPORT_DIR=${REPORT_DIR:-$REPO_ROOT/results/slurm_reports}
+mkdir -p "$REPORT_DIR/${SBATCH_JOB_NAME}/"
 
 module load anaconda
-conda activate /home/crunnel2/anaconda3/envs/selection
+CONDA_ENV_PATH=${CONDA_ENV_PATH:-selection}
+conda activate "$CONDA_ENV_PATH"
 
-WD=/data/agordus1/crunnel2/060125_N5_o75
-HOG_LIST=${WD}/HOG_CDS/alphabetbois.txt
+WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
+HOG_LIST=${HOG_LIST:-${WD}/HOG_CDS/alphabetbois.txt}
 FG_NAME=ow_fg_cons	
+HYPHY_ANALYSES_DIR=${HYPHY_ANALYSES_DIR:-PATH_TO_HYPHY_ANALYSES_DIR}
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
@@ -29,7 +36,7 @@ if grep -q "p-value" ${BUSTEDPH_OUT}; then
 	echo "BUSTED-PH already complete."
 else
 	#run busted-ph
-	hyphy /home/crunnel2/bin/hyphy-analyses/BUSTED-PH/BUSTED-PH.bf \
+	hyphy "$HYPHY_ANALYSES_DIR/BUSTED-PH/BUSTED-PH.bf" \
 	 CPU=${SLURM_NTASKS} \
 	 --alignment ${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.fasta \
 	 --tree ${WD}/${CURRENT_HOG}/${CURRENT_HOG}.${FG_NAME}.tree \

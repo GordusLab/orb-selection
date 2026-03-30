@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Prepares HOG alignments/trees for HyPhy analyses (PREQUAL -> MACSE -> IQ-TREE -> BUSTED -> error-filter).
+
 #SBATCH --job-name=140125_prep_hyphy_max_resources
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
@@ -8,21 +10,27 @@
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-30
 #SBATCH -n 12
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
+#SBATCH --output=reports/%x/%A_%a.out
 
 module load anaconda
-conda activate /home/crunnel2/anaconda3/envs/selection
+CONDA_ENV_PATH=${CONDA_ENV_PATH:-selection}
+conda activate "$CONDA_ENV_PATH"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 #make directory to store slurm reports
-mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
+REPORT_DIR=${REPORT_DIR:-$REPO_ROOT/results/slurm_reports}
+mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
 
-WD=/data/agordus1/crunnel2/060125_N5_o75
+WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
 
 #directory containing fasta files of cds to be analyzed
 HOG_CDS_DIR=${WD}/HOG_CDS
 
 #list of HOG IDs from directory of fasta files
-HOG_LIST=${HOG_CDS_DIR}/redo_hogs_max_rsc.txt
+HOG_LIST=${HOG_LIST:-${HOG_CDS_DIR}/redo_hogs_max_rsc.txt}
+MACSE_JAR=${MACSE_JAR:-PATH_TO_MACSE_JAR}
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 mkdir -p ${WD}/${CURRENT_HOG}/
@@ -64,7 +72,7 @@ if [ -f ${MACSE_FILE} ]; then
 else
 	#run macse
 	mkdir ${WD}/${CURRENT_HOG}/macse/
-	java -jar -Xmx47G /home/crunnel2/bin/macse_v2.07.jar \
+	java -jar -Xmx47G "$MACSE_JAR" \
 	 -prog alignSequences \
 	 -seq ${PREQUAL_FILE} \
 	 -out_NT ${MACSE_FILE} \

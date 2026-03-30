@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Summarize topGO outputs into compact summary/network tables.
+
 # Get the root directory of the git repository
 repo_root=$(git rev-parse --show-toplevel)
 
@@ -7,7 +9,7 @@ repo_root=$(git rev-parse --show-toplevel)
 # two criteria to pass:
 # 1. At least 5 terms in the universe ($4)
 # 2. P value < 0.05 OR if it contains the character '<' (because R outputs stuff like '< 1e-30') ($7)
-for test in "$repo_root"/results/go_enrichment/odds_ratio_test/*/; do
+for test in "$repo_root"/results/go_enrichment/*/; do
   # Remove trailing slash and get just the directory name
   test_name=$(basename "$test")
   echo "Processing directory: $test_name"
@@ -17,7 +19,8 @@ for test in "$repo_root"/results/go_enrichment/odds_ratio_test/*/; do
   rm -f summary_*.txt
   rm -f network_*.txt
 
-  for a in bp*.txt; do
+    for a in bp*.txt; do
+      [ -e "$a" ] || continue
       echo -e 'Description\tCount\tp\tOntology' >> ${a/bp_/summary_}
       
       for b in $a ${a/bp/cc} ${a/bp/mf}; do

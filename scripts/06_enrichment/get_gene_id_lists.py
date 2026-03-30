@@ -1,28 +1,51 @@
-"""
-Extract gene LOCs from permutation-test results or HyPhy results.
-"""
+"""Extract gene LOCs from permulation-test results or HyPhy results."""
 
 import os
 import pickle
+import importlib.util
 import warnings
 import pandas as pd
 
 scripts = os.path.dirname(__file__)
-repo_root = os.path.abspath(os.path.join(scripts, ".."))
+repo_root = os.path.abspath(os.path.join(scripts, "..", ".."))
 src_path = os.path.join(repo_root, "src")
+stage04_path = os.path.join(repo_root, "scripts", "04_selection_tests")
+stage05_path = os.path.join(repo_root, "scripts", "05_permulation_loss_dup")
 
 import sys
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
+for path in (src_path, stage04_path, stage05_path):
+    if path not in sys.path:
+        sys.path.insert(0, path)
 
-import odds_ratio_test
 from id_converter import convert_hogs_to_locs
-from hyphy_results_helpers import get_fltrd_LOCs, filter_omega
-from hyphy_results_parser import HyphyResult
+
+
+def _load_module(module_name, module_path):
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load module {module_name} from {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+odds_ratio_test = _load_module(
+    "odds_ratio_test", os.path.join(stage05_path, "odds_ratio_test.py")
+)
+hyphy_results_helpers = _load_module(
+    "hyphy_results_helpers", os.path.join(stage04_path, "hyphy_results_helpers.py")
+)
+hyphy_results_parser = _load_module(
+    "hyphy_results_parser", os.path.join(stage04_path, "hyphy_results_parser.py")
+)
+
+get_fltrd_LOCs = hyphy_results_helpers.get_fltrd_LOCs
+filter_omega = hyphy_results_helpers.filter_omega
+HyphyResult = hyphy_results_parser.HyphyResult
 
 warnings.filterwarnings("ignore", category=SyntaxWarning)
 
-assets = os.path.join(repo_root, "assets")
+data_dir = os.path.join(repo_root, "data")
 
 
 def load_pickle_file(fname):
@@ -36,14 +59,14 @@ def load_pickle_file(fname):
     return results
 
 
-def get_universe_permutation(perm_results) -> pd.Series:
+def get_universe_permulation(perm_results) -> pd.Series:
     """
     Generate universe LOC files for topGO analysis at different occupancy thresholds.
     """
     min_occupancy = perm_results.occupancy_threshold
     max_occupancy = perm_results.maximum
     genecount_df = perm_results.true_odds.genecount_df
-    genes_tsv = os.path.join(assets, "N5.tsv")
+    genes_tsv = os.path.join(data_dir, "N5.tsv")
 
     print("Generating universe LOCs...")
 
@@ -64,14 +87,14 @@ def get_universe_permutation(perm_results) -> pd.Series:
 
     LOCs_df = convert_hogs_to_locs(genecount_df, genes_tsv)
 
-    universe_locs = LOCs_df["LOC"].dropna().unique()
+    universe_loc_ids = LOCs_df["LOC"].dropna().unique()
 
-    return universe_locs
+    return universe_loc_ids
 
 
-def main_permutation(perm_results, tail=None):
+def main_permulation(perm_results, tail=None):
     """
-    Main function to load permutation-test results and extract LOCs.
+    Main function to load permulation-test results and extract LOCs.
     """
 
     print("Extracting LOCs for hits...")
@@ -85,9 +108,9 @@ def main_permutation(perm_results, tail=None):
     elif tail == "right":
         df = df[df["Log odds ratio"] > 0]
 
-    hit_locs = df["LOC"].dropna().unique()
+    hit_loc_ids = df["LOC"].dropna().unique()
 
-    return hit_locs
+    return hit_loc_ids
 
 
 def main_hyphy(hyphy_results, omega=10000, relax_result=None):
@@ -98,18 +121,18 @@ def main_hyphy(hyphy_results, omega=10000, relax_result=None):
     hyphy_df = hyphy_results.results_df
     test = hyphy_results.analysis_type
 
-    genes_tsv = os.path.join(assets, "N5.tsv")
+    genes_tsv = os.path.join(data_dir, "N5.tsv")
     print("Extracting LOCs...")
     merged_df = convert_hogs_to_locs(hyphy_df, genes_tsv)
 
-    hit_locs = get_fltrd_LOCs(
+    hit_loc_ids = get_fltrd_LOCs(
         merged_df, omega=omega, test=test, relax_result=relax_result
     )
 
     universe_fltrd = filter_omega(merged_df, omega)
-    universe_locs = universe_fltrd["LOC"].dropna().unique()
+    universe_loc_ids = universe_fltrd["LOC"].dropna().unique()
 
-    return hit_locs, universe_locs
+    return hit_loc_ids, universe_loc_ids
 
 
 if __name__ == "__main__":
@@ -117,13 +140,13 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Extract LOCs from permutation-test or HyPhy results pickle file",
+        description="Extract LOCs from permulation-test or HyPhy results pickle file",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-    python scripts/get_gene_id_lists.py results.pkl
-    python scripts/get_gene_id_lists.py results.pkl --tail left
-    python scripts/get_gene_id_lists.py results.pkl --tail right --hits-file locs.txt
+    python scripts/06_enrichment/get_gene_id_lists.py results.pkl
+    python scripts/06_enrichment/get_gene_id_lists.py results.pkl --tail left
+    python scripts/06_enrichment/get_gene_id_lists.py results.pkl --tail right --hits-file locs.txt
         """,
     )
 
@@ -131,7 +154,7 @@ Examples:
     parser.add_argument(
         "--tail",
         choices=["left", "right"],
-        help="Filter permutation-test results by tail direction (left or right)",
+        help="Filter permulation-test results by tail direction (left or right)",
     )
     parser.add_argument(
         "--omega",
@@ -176,8 +199,8 @@ Examples:
 
     if isinstance(loaded_results, odds_ratio_test.PermutationTestResults):
         if universe_file:
-            universe_locs = get_universe_permutation(loaded_results)
-        hit_locs = main_permutation(loaded_results, tail=tail_arg)
+            universe_locs = get_universe_permulation(loaded_results)
+        hit_locs = main_permulation(loaded_results, tail=tail_arg)
     elif isinstance(loaded_results, HyphyResult):
         hit_locs, universe_locs = main_hyphy(
             loaded_results, omega=omega_arg, relax_result=relax_result_arg

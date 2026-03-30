@@ -1,11 +1,20 @@
 """
-Extracts gene LOCs from bootstrap results or HyPhy results.
+Extract gene LOCs from permutation-test results or HyPhy results.
 """
 
 import os
 import pickle
 import warnings
 import pandas as pd
+
+scripts = os.path.dirname(__file__)
+repo_root = os.path.abspath(os.path.join(scripts, ".."))
+src_path = os.path.join(repo_root, "src")
+
+import sys
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
 import odds_ratio_test
 from id_converter import convert_hogs_to_locs
 from hyphy_results_helpers import get_fltrd_LOCs, filter_omega
@@ -13,13 +22,12 @@ from hyphy_results_parser import HyphyResult
 
 warnings.filterwarnings("ignore", category=SyntaxWarning)
 
-scripts = os.path.dirname(__file__)
-assets = os.path.join(scripts, "..", "assets")
+assets = os.path.join(repo_root, "assets")
 
 
 def load_pickle_file(fname):
     """
-    Loads a previously saved the bootstrap results pickle file.
+    Load a previously saved results pickle file.
     """
 
     with open(fname, "rb") as file:
@@ -28,14 +36,14 @@ def load_pickle_file(fname):
     return results
 
 
-def get_universe_bootstrap(bs_results) -> pd.Series:
+def get_universe_permutation(perm_results) -> pd.Series:
     """
     Generate universe LOC files for topGO analysis at different occupancy thresholds.
     """
-    min_occupancy = bs_results.occupancy_threshold
-    max_occupancy = bs_results.maximum
-    genecount_df = bs_results.true_odds.genecount_df
-    genes_tsv = f"{assets}/N5.tsv"
+    min_occupancy = perm_results.occupancy_threshold
+    max_occupancy = perm_results.maximum
+    genecount_df = perm_results.true_odds.genecount_df
+    genes_tsv = os.path.join(assets, "N5.tsv")
 
     print("Generating universe LOCs...")
 
@@ -61,14 +69,14 @@ def get_universe_bootstrap(bs_results) -> pd.Series:
     return universe_locs
 
 
-def main_bootstrap(bs_results, tail=None):
+def main_permutation(perm_results, tail=None):
     """
-    Main function to load the bootstrap results and extract LOCs.
+    Main function to load permutation-test results and extract LOCs.
     """
 
     print("Extracting LOCs for hits...")
-    df = bs_results.results_fltrd_df
-    genes_tsv = bs_results.true_odds.hog_node_genes_tsv
+    df = perm_results.results_fltrd_df
+    genes_tsv = perm_results.true_odds.hog_node_genes_tsv
 
     df = convert_hogs_to_locs(df, genes_tsv)
 
@@ -90,7 +98,7 @@ def main_hyphy(hyphy_results, omega=10000, relax_result=None):
     hyphy_df = hyphy_results.results_df
     test = hyphy_results.analysis_type
 
-    genes_tsv = f"{assets}/N5.tsv"
+    genes_tsv = os.path.join(assets, "N5.tsv")
     print("Extracting LOCs...")
     merged_df = convert_hogs_to_locs(hyphy_df, genes_tsv)
 
@@ -106,17 +114,16 @@ def main_hyphy(hyphy_results, omega=10000, relax_result=None):
 
 if __name__ == "__main__":
 
-    import sys
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Extract LOCs from bootstrap results pickle file",
+        description="Extract LOCs from permutation-test or HyPhy results pickle file",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python get_loc_lists.py results.pkl
-  python get_loc_lists.py results.pkl --tail left
-  python get_loc_lists.py results.pkl --tail right --hits-file locs.txt
+    python scripts/get_gene_id_lists.py results.pkl
+    python scripts/get_gene_id_lists.py results.pkl --tail left
+    python scripts/get_gene_id_lists.py results.pkl --tail right --hits-file locs.txt
         """,
     )
 
@@ -124,7 +131,7 @@ Examples:
     parser.add_argument(
         "--tail",
         choices=["left", "right"],
-        help="Filter bootstrap results by tail direction (left or right)",
+        help="Filter permutation-test results by tail direction (left or right)",
     )
     parser.add_argument(
         "--omega",
@@ -148,36 +155,36 @@ Examples:
 
     args = parser.parse_args()
 
-    fname = args.pickle_file
-    tail = args.tail
-    omega = args.omega
-    relax_result = args.relax_result
+    pickle_file_path = args.pickle_file
+    tail_arg = args.tail
+    omega_arg = args.omega
+    relax_result_arg = args.relax_result
     hits_file = args.hits_file
     universe_file = args.universe_file
 
     universe_locs = []
 
-    if not fname.endswith(".pkl"):
+    if not pickle_file_path.endswith(".pkl"):
         print("Error: The file must be a pickle file with .pkl extension.")
         sys.exit(1)
-    if not os.path.exists(fname):
-        print(f"Error: The file {fname} does not exist.")
+    if not os.path.exists(pickle_file_path):
+        print(f"Error: The file {pickle_file_path} does not exist.")
         sys.exit(1)
 
-    print(f"Loading results from {fname}...")
-    results = load_pickle_file(fname)
+    print(f"Loading results from {pickle_file_path}...")
+    loaded_results = load_pickle_file(pickle_file_path)
 
-    if isinstance(results, odds_ratio_test.BootstrapTestResults):
+    if isinstance(loaded_results, odds_ratio_test.PermutationTestResults):
         if universe_file:
-            universe_locs = get_universe_bootstrap(results)
-        hit_locs = main_bootstrap(results, tail=tail)
-    elif isinstance(results, HyphyResult):
+            universe_locs = get_universe_permutation(loaded_results)
+        hit_locs = main_permutation(loaded_results, tail=tail_arg)
+    elif isinstance(loaded_results, HyphyResult):
         hit_locs, universe_locs = main_hyphy(
-            results, omega=omega, relax_result=relax_result
+            loaded_results, omega=omega_arg, relax_result=relax_result_arg
         )
     else:
         print(
-            "Error: Unsupported results type. Expected BootstrapTestResults or HyphyResult."
+            "Error: Unsupported results type. Expected PermutationTestResults or HyphyResult."
         )
         sys.exit(1)
 
@@ -186,7 +193,7 @@ Examples:
     if hits_file:
         # Save to file
         try:
-            with open(hits_file, "w") as f:
+            with open(hits_file, "w", encoding="utf-8") as f:
                 for loc in hit_locs:
                     f.write(f"{loc}\n")
             print(f"Results saved to {hits_file}")
@@ -196,7 +203,7 @@ Examples:
 
     if universe_file:
         try:
-            with open(universe_file, "w") as f:
+            with open(universe_file, "w", encoding="utf-8") as f:
                 for loc in universe_locs:
                     f.write(f"{loc}\n")
             print(f"Universe LOCs saved to {universe_file}")

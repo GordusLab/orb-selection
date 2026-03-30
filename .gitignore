@@ -169,3 +169,4 @@ cython_debug/
 data
 *.pkl
 src/__pycache__/odds_ratio_test.cpython-313.pyc
+renv

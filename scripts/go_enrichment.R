@@ -9,7 +9,7 @@
 library(here)
 library(topGO)
 
-folders <- dir(here("results/significant_gene_id_lists/odds_ratio_test"), full.names = TRUE)
+folders <- dir(here("results/significant_gene_id_lists/"), full.names = TRUE)
 annot_filename <- here("assets/udiv_go_annots.all.tsv")
 
 for (folder in folders) {
@@ -96,7 +96,7 @@ for (folder in folders) {
       base_name <- sub("_hits\\.txt$", "", basename(hits))
 
       output_dir <- here(
-        "results/go_enrichment/odds_ratio_test", base_name
+        "results/go_enrichment", base_name
       )
       if (!dir.exists(output_dir)) {
         dir.create(output_dir, recursive = TRUE)

@@ -16,7 +16,7 @@ src_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, src_dir)
 
 try:
-    from id_converter import main as convert_hogs_to_locs
+    from id_converter import convert_hogs_to_locs
 except ImportError:
     print("Warning: id_converter module not found. LOC conversion functions will not work.")
     convert_hogs_to_locs = None

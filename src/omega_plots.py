@@ -14,7 +14,8 @@ def plot_omega_distributions(
         bottom_title,
         numeral="",
         suptitle=None,
-        filename=None, 
+        filename=None,
+        shift_top_title=False,
         transparent=True
         ):
 
@@ -190,13 +191,14 @@ def plot_omega_distributions(
         if result == 'all':
             
             # labels for top vs bottom axes
-            ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+            ax_avgs.set_title(top_title, x=0.2, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
             ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
 
         else: 
             # labels for top vs bottom axes
-            ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
-            ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=13, color='silver', weight='bold', backgroundcolor='white')
+            bottom_title_x = 0.185 if result in ('relaxed', 'intensified') else 0.2
+            ax_avgs.set_title(top_title, x=0.75, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+            ax_avgs2.set_title(bottom_title, x=bottom_title_x, y=0.075, fontsize=13, color='silver', weight='bold', backgroundcolor='white')
 
             if result == 'intensified':
                 plt.text(0.8, 0.7, 
@@ -284,9 +286,6 @@ def plot_omega_distributions(
         axs[1].invert_yaxis()
         # axs[0].set_facecolor('lightgray')
 
-        
-
-
         # axs[0].legend(fontsize='small')
 
         # Plot distributions for ω1, ω2, and ω3 for the TEST group
@@ -350,8 +349,11 @@ def plot_omega_distributions(
         ax_avgs2.axvline(1, linewidth=0.5, linestyle='dashed', color='k', alpha=0.5)
 
         # labels for top vs bottom axes
-        ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
-        ax_avgs2.set_title(bottom_title, x=0.2, y=0.1, fontsize=13, color='silver', weight='bold', backgroundcolor= 'white')
+        if shift_top_title:
+            ax_avgs.set_title(top_title, x=0.8, y=0.6, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+        else:
+            ax_avgs.set_title(top_title, x=0.8, y=0.7, fontsize=13, color='white', weight='bold', backgroundcolor='lightgray')
+        ax_avgs2.set_title(bottom_title, x=0.185, y=0.1, fontsize=13, color='silver', weight='bold', backgroundcolor= 'white')
 
         # ax_avgs2.legend(loc='lower right', fontsize='small')
 
@@ -400,7 +402,8 @@ def plot_omega_distributions(
                  bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if suptitle is not None:
-        fig.suptitle(f"{numeral}{suptitle}", y=0.97, fontsize=14, fontweight='bold')
+        y_pos = 0.96 if result == 'all' else 0.98
+        fig.suptitle(f"{numeral}{suptitle}", y=y_pos, fontsize=16)
 
     if filename is not None:
         plt.savefig(filename, dpi=600, transparent=transparent, bbox_inches='tight')
@@ -507,12 +510,12 @@ def plot_omega_single_gene(
         if k:
             plt.text(0.7, 0.9, 
                     '$\it{k}$='+f'{round(x["k"], 2)}\n'+'$\it{p}$='+f'{'{:.2e}'.format(x["p_value"])}', 
-                    fontsize=15, ha='left', va='center', transform=ax.transAxes, 
+                fontsize=13, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         else:
             plt.text(0.65, 0.9, 
                     '$\it{p_1}$='+f'{'{:.2e}'.format(x["test_pval"])}\n'+'$\it{p_3}$='+f'{'{:.2e}'.format(x["shared_pval"])}', 
-                    fontsize=15, ha='left', va='center', transform=ax.transAxes, 
+                fontsize=13, ha='left', va='center', transform=ax.transAxes, 
                     bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if filename is not None:

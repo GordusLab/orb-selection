@@ -213,3 +213,4 @@ This repository uses **permulation / permulated** terminology for the RERconverg
 ## Change Log
 
 See `CHANGELOG.md` for repository reorganization details.
+Reorganization support in this pass was performed with GitHub Copilot (GPT-5.3-Codex).

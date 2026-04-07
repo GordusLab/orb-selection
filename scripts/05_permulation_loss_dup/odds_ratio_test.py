@@ -30,7 +30,7 @@ random.seed(42)
 plt.rcParams['font.family'] = 'Verdana'
 
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
-_REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir))
+_REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir, os.pardir))
 TGAUSS_PARAM_NAMES = [
     "weight_1",
     "mean_1",

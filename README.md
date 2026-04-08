@@ -22,6 +22,8 @@ TODO:
 |`README.md`|Top-level project overview, pipeline stage documentation, and usage notes.|
 |`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
 |`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
+|`.Rprofile`|Project-level R startup settings.|
+|`.gitignore`|Version control exclusion rules.|
 |`environment.yml`|Python dependencies.|
 |`renv.lock`|R dependencies.|
 

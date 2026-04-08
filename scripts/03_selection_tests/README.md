@@ -6,9 +6,8 @@ This module provides classes to store and manage results from HyPhy selection an
 
 - `scripts/03_selection_tests/hyphy_results_parser.py` - Main module with result classes
 - `scripts/03_selection_tests/hyphy_results_helpers.py` - Helper functions
-- `tests/test_hyphy_module.py` - Test script with sample data
 - `scripts/03_selection_tests/parse_hyphy_results.py` - Project parser workflow script
-- `scripts/03_selection_tests/README_hyphy_module.md` - This documentation
+- `scripts/03_selection_tests/README.md` - This documentation
 
 ## Quick Start
 

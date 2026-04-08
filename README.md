@@ -5,212 +5,173 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 
 TODO:
 
-- [ ] add N5 list to assets
 - [ ] edit slurm comments in rockfish scripts
-- [ ] clear out assets directory
-- [ ] edit stages 1 and 2
 - [ ] read through and edit all updated docstrings
+- [ ] update ORT readme to indicate which results are which
+- [ ] add data archive locations
 
-## What Is In This Repository
+## Repository contents
 
-- Stage scripts for preprocessing, HyPhy analyses, permulation testing, and GO enrichment.
-- Source/helper modules in `src/`.
-- Figure/table notebooks and plotting code.
-- Supplementary output tables under `results/`.
+|Directory / Filename|Description|
+|---|---|
+|`data/`| Raw and intermediate data files used in the pipeline, _e.g._ OrthoFinder outputs, BUSCO scores, lists of species belonging to different categories, lists of HOGs tested in the HyPhy analyses, permulation-generated phenotype designations, and resources used to annotate results.|
+|`figures/`| PDFs and Adobe Illustrator files of all figures and figure elements output by the figure-generating notebooks in [`scripts/06_figures_tables`](scripts/06_figures_tables).|
+|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/05_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)). |
+|`scripts/`| Full analysis pipeline divided into stages following the paper's methods section. See below for a complete description of the steps required for each stage of the analysis.|
+|`src/` | Contains helper modules used in various stages of the analysis. |
+|`README.md`|Top-level project overview, pipeline stage documentation, and usage notes.|
+|`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
+|`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
+|`environment.yml`|Python dependencies.|
+|`renv.lock`|R dependencies.|
 
 ## Important Data Availability Notes
 
 Some required inputs and outputs are not available in this repository.
 
-- Raw transcriptome FASTA inputs for OrthoFinder and the HyPhy pipeline are external.
-- HyPhy per-gene JSON outputs are external.
-- Some `.pkl` cache/result files used by downstream scripts are external.
+- Raw and processed transcriptome FASTA inputs for OrthoFinder and the HyPhy pipeline are external. `TODO_ADD_TXTOME_DATA_ARCHIVE_LOCATION`
+- HyPhy per-gene JSON outputs are external. `TODO_ADD_HYPHY_JSON_ARCHIVE_LOCATION`
+- Some cache pickle files for HyPhy and Log Odds Ratio test results used by downstream scripts are external. `TODO_ADD_PKL_ARCHIVE_LOCATION`
 
-Placeholders for final archive links:
+## Stage 01: Transcriptome data collection and pre-processing
+
+The scripts in [`scripts/01_pre_processing`](scripts/01_pre_processing) prepare the raw sequence set used in the orthology search.
+
+### Steps: 
+1. Download transcriptomes ([Supplementary Table 1](results/Supplementary_Table_1_SpiderAccessions_BUSCOs.xlsx)) from NCBI GenBank.
+2. Cluster with CD-HIT: [`process_fsas_cd-hit.sh`](scripts/01_pre_processing/process_fsas_cd-hit.sh)
+3. Identify open reading frames with TransDecoder.LongOrfs: [`process_fsas.TD-LO.sh`](scripts/01_pre_processing/process_fsas.TD-LO.sh)
+4. Identify homology with BLAST-P: [`process_fsas.blastp.sh`](scripts/01_pre_processing/process_fsas.blastp.sh)
+5. Predict coding sequences with TransDecoder.Predict: [`process_fsas.TD-P.sh`](scripts/01_pre_processing/process_fsas.TD-P.sh)
+6. Analyze transcriptome quality using BUSCO: [`process_fsas.busco.sh`](scripts/01_pre_processing/process_fsas.busco.sh)
 
-- Raw transcriptomes and other large stage-1/2 inputs: `TODO_ADD_RAW_DATA_ARCHIVE_LOCATION`
-- HyPhy JSON result archive: `TODO_ADD_HYPHY_JSON_ARCHIVE_LOCATION`
-- Large `.pkl` cache files archive: `TODO_ADD_PKL_ARCHIVE_LOCATION`
+## Stage 02: Orthology search and pre-testing pipeline
 
-Git tracking note for large files/directories:
+The scripts in [`scripts/02_orthofinder_prep_hyphy`](scripts/02_orthofinder_prep_hyphy) process OrthoFinder results and corresponding sequences to prepare them for selection testing. OrthoFinder was re-run several times due to errors related to the number of files and the need to use an edited species tree; a record of the options used each time is below.
 
-- The following raw-result data directories are intentionally gitignored:
-	- `data/absrel_rerun/`
-	- `data/busted_ph/`
-	- `data/busted_ph_rev/`
-	- `data/relax/`
-- `.pkl` files are intentionally gitignored repository-wide.
+### Steps: 
+1. Run OrthoFinder (see below)
+2. Filter orthogroups to N5 HOGs with occupancy ≥ 75 and get nucleotide sequences: [`get_nuc_seqs.sh`](scripts/02_orthofinder_prep_hyphy/get_nuc_seqs.sh)
+3. Preparation for HyPhy testing: [`prep_for_hyphy.sh`](scripts/02_orthofinder_prep_hyphy/prep_for_hyphy.sh). Includes:
+   - Pre-alignment quality filtering with PREQUAL
+   - Alignment with MACSE 
+   - Gene tree generation with IQ-TREE 
+   - Error-filtering alignments and trees with BUSTED + hyphy error-filter
+4. Foreground branch labeling: [`label_trees.sh`](scripts/02_orthofinder_prep_hyphy/label_trees.sh)
 
-## Stage 01: Transcriptome Data Acquisition and Initial Input Set
+### **OrthoFinder run log:**
 
-This stage corresponds to the first methods section and prepares the raw sequence set used downstream.
+### 2023-09-28
+Initial run with 102 species (101 spiders + _Drosophila_).
 
-Use methods-described software/workflow for your run (outside this repo where needed):
+```bash
+orthofinder \
+	-f PATH_TO_ORIG_FASTAS_DIR/ \
+	-a 36 -t 36
+```
 
-- obtain transcriptome assemblies using accession metadata
-- perform any stated acquisition/QC steps from methods section 1
-- collect final FASTA inputs for comparative analyses
+### 2023-11-27
+Added in _Antrodiaetus_roretzi_ (mygalomorph); started analysis from BLAST results in RESULTS_SEP28 and added one FASTA file in ADDL_FASTAS_DIR
 
-Raw accessions:
+```bash
+orthofinder \
+	-b PATH_TO_RESULTS_SEP28/ \
+	-f PATH_TO_ADDL_FASTAS_DIR/ \
+	-a 35 -t 35 -M msa
+```
 
-- Transcriptome accessions used in this project are listed in `results/Supplementary_Table_1_SpiderAccessions_BUSCOs.xlsx`.
+### 2024-05-12
+The tree from the above OrthoFinder runs was edited to concur with Kulkarni et al. 2023. OrthoFinder was re-run from the beginning, using all species and an edited species tree.
 
-Expected output of Stage 01:
+```bash
+orthofinder \
+	-f PATH_TO_FINAL_FASTAS_DIR/ \
+	-s PATH_TO_EDITED_ORTHO_TREE \
+	-a 36 -t 36 -y 
+```
 
-- A local/external directory of transcriptome FASTA files ready for orthology and phylogenetic stages.
+### 2024-06-03
+Restarted from BLAST results step (`-b`) after timeout.
 
-## Stage 02: Orthology and Comparative Input Preparation
+```bash
+orthofinder \
+	-b PATH_TO_RESULTS_MAY12/ \
+	-s PATH_TO_EDITED_ORTHO_TREE \
+	-a 34 -t 34 -y
+```
 
-This stage corresponds to the second methods section and prepares orthogroup/species-tree inputs used by downstream scripts.
+### 2024-06-04
+Restart from orthogroups directory (`-fg`) after "too many files" error.
 
-Use methods-described software/workflow for your run (outside this repo where needed):
+```bash
+su USERNAME
 
-- OrthoFinder (or equivalent orthology pipeline in your methods)
-- species tree preparation/editing steps described in methods
-- any BUSCO/ortholog mapping steps described in methods
+ulimit -n 100000
 
-Expected output of Stage 02:
+orthofinder \
+	-fg PATH_TO_RESULTS_JUN03 \
+	-s PATH_TO_EDITED_ORTHO_TREE \
+	--fewer-files -t 70 -y 
+```
 
-- Orthogroup-derived input tables/files required by stage 03+
-- Species tree + tip/foreground labeling inputs
-- Working directories consumed by the stage scripts below
+### 2025-01-06
+Final re-run from tree inference step (`-ft`) with finalized species tree.
 
-## Stage 03: Phylogenetic Prep
+```bash
+orthofinder \
+	-ft PATH_TO_RESULTS_JUN04/ \
+	-s PATH_TO_FINAL_SPECIES_TREE \
+	--fewer-files -t 70 -y 
+```
 
-Purpose:
+Data note: Stage 02 uses processed FASTA files not tracked in GitHub due to size.
 
-- PREQUAL filtering
-- MACSE alignment
-- IQ-TREE trees
-- initial BUSTED + error-filtered outputs
-- foreground branch labeling
-- prerequisite alignment/tree files for HyPhy
+## Stage 03: Testing for positive and relaxed selection
 
-Scripts to run from `scripts/03_phylo_prep/`:
+The scripts/modules in [`scripts/03_selection_tests`](scripts/03_selection_tests/) run the HyPhy analyses on the 4,576 N5 orthogroups and parse the results. 
 
-- `prep_for_hyphy.sh`
-- `label_trees.sh`
-- `get_nuc_seqs.sh`
+### Steps: 
 
-External programs used in this stage:
+1. Run RELAX: [`relax.sh`](scripts/03_selection_tests/relax.sh)
+2. Run BUSTED-PH with orb-weavers as foreground: [`busted_ph.sh`](scripts/03_selection_tests/busted_ph.sh)
+3. Run BUSTED-PH with non-orb-weavers as foreground: [`busted_ph_switch_fg.sh`](scripts/03_selection_tests/busted_ph_switch_fg.sh)
+4. Parse the results: [`parse_hyphy_results.py`](scripts/03_selection_tests/parse_hyphy_results.py)
 
-- PREQUAL
-- MACSE
-- IQ-TREE
-- seqkit/csvtk (if used in your methods pipeline)
+Data note: Stage 03 uses thousands of JSON result files not tracked in GitHub due to size.
 
-## Stage 04: Selection Tests and HyPhy Result Parsing
+## Stage 04: Gene loss and duplication analysis
 
-Purpose:
+The scripts and notebooks in [`scripts/04_permulation_loss_dup`](scripts/04_permulation_loss_dup) run the odds-ratio permulation workflow and evaluate distribution shape assumptions for test statistics.
 
-- run HyPhy analyses for selection tests
-- parse large HyPhy JSON outputs into usable result objects/tables
+### Steps:
+1. Generate and export permulation tip assignments: [`permulations.R`](scripts/04_permulation_loss_dup/permulations.R)
+2. Run loss/duplication odds-ratio test module [`odds_ratio_test.py`](scripts/04_permulation_loss_dup/odds_ratio_test.py) using the workflow in the [`Odds Ratio Permulation Test.ipynb`](scripts/04_permulation_loss_dup/Odds%20Ratio%20Permulation%20Test.ipynb) notebook
+3. Test whether the log odds ratio distributions are better modeled as double, triple or quadruple Gaussian: [`Multimodal Test.ipynb`](scripts/04_permulation_loss_dup/Multimodal%20Test.ipynb)
 
-Scripts/modules in `scripts/04_selection_tests/`:
+`TODO_ADD_REMOVED_CLADES_VERSIONS`
 
-- `busted_ph.sh`
-- `busted_ph_switch_fg.sh`
-- `relax.sh`
-- `hyphy_results_parser.py`
-- `hyphy_results_helpers.py`
-- `parse_hyphy_results.py`
-- `README_hyphy_module.md`
+Data note: Stage 04 uses some cached pickle inputs/outputs that are external to this repository due to size.
 
-Data note:
+## Stage 05: Ontology enrichment analysis
 
-- Stage 04 uses thousands of JSON result files not tracked in GitHub due to size.
-- Add your archive/location to: `TODO_ADD_HYPHY_JSON_ARCHIVE_LOCATION`.
+The scripts in [`scripts/05_enrichment`](scripts/05_enrichment) create significant gene ID lists from HyPhy and `odds_ratio_test.py` results and run GO enrichment summaries.
 
-## Stage 05: Permulation/Odds-Ratio Testing
+### Steps:
+1. Generate significant ID list files for downstream enrichment: [`generate_significant_gene_id_lists.sh`](scripts/05_enrichment/generate_significant_gene_id_lists.sh)
+2. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/05_enrichment/go_enrichment.R)
+3. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/05_enrichment/summarise_topgo_output.sh)
 
-Purpose:
+Data note: Stage 05 depends on cached HyPhy and odds ratio test result objects for hit-list generation.
 
-- run the odds-ratio permulation testing workflow
-- generate/consume permulated phenotype assignments
+## Stage 06: Figures and tables
 
-Scripts in `scripts/05_permulation_loss_dup/`:
+The scripts and notebooks in [`scripts/06_figures_tables`](scripts/06_figures_tables) generate manuscript figures, significant results intersections, and supplementary data tables.
 
-- `permulations.R`
-- `odds_ratio_test.py`
-- `README_odds_ratio_test.md`
-- `Odds Ratio Permulation Test.ipynb`
-- `Multimodal Test.ipynb`
+### Steps:
 
-Notes:
+1. Plot HyPhy omega distributions and selected gene examples: [`Hyphy Omega Plots.ipynb`](scripts/06_figures_tables/Hyphy%20Omega%20Plots.ipynb)
+2. Plot odds ratio test results: [`Odds Ratio Test Plots.ipynb`](scripts/06_figures_tables/Odds%20Ratio%20Test%20Plots.ipynb)
+3. Generate UpSet plots and intersections of significant results: [`UpSet Plots.ipynb`](scripts/06_figures_tables/UpSet%20Plots.ipynb)
+4. Compile supplementary result tables for export: [`Supplementary Data Tables.ipynb`](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)
 
-- `odds_ratio_test.py` moved to this stage and is documented in `README_odds_ratio_test.md`.
-- The notebook `Odds Ratio Permulation Test.ipynb` demonstrates how to run the module.
-- Some `.pkl` outputs/read inputs are external due to size limits.
-
-## Stage 06: Significant Gene ID Lists and GO Enrichment
-
-Purpose:
-
-- generate significant gene ID lists from odds-ratio/HyPhy cached results
-- run and summarize GO enrichment
-
-Scripts in `scripts/06_enrichment/`:
-
-- `get_gene_id_lists.py`
-- `generate_significant_gene_id_lists.sh`
-- `go_enrichment.R`
-- `summarise_topgo_output.sh`
-- `go_barplots.R`
-
-## Stage 07: Figures and Tables
-
-Purpose:
-
-- generate figure/table outputs and supplementary summaries
-
-Scripts/notebooks in `scripts/07_figures_tables/`:
-
-- `omega_plots.py`
-- `Hyphy Omega Plots.ipynb`
-- `Odds Ratio Test Plots.ipynb`
-- `Supplementary Data Tables.ipynb`
-- `UpSet Plots.ipynb`
-
-## src Modules
-
-`src/` contains general helper modules, including:
-
-- `id_converter.py`
-- `orthogroup_filter.py`
-- `orthogroup_gene_count.py`
-- `get_silk_genes.py`
-
-## Dependencies
-
-Python dependencies are managed in `environment.yml`.
-
-R dependencies are managed via `renv` (`renv.lock`).
-
-External software commonly used by the full workflow (depending on stage):
-
-- HyPhy
-- PREQUAL
-- MACSE
-- IQ-TREE
-- OrthoFinder
-- BLAST+
-- CD-HIT
-- BUSCO
-
-## Results and Supplementary Files
-
-Key outputs are under `results/`, including:
-
-- `results/significant_gene_id_lists/`
-- `results/go_enrichment/`
-- `results/hyphy_results_cache/`
-- supplementary tables
-
-## Terminology
-
-This repository uses **permulation / permulated** terminology for the RERconverge method.
-
-## Change Log
-
-See `CHANGELOG.md` for repository reorganization details.
-Reorganization support in this pass was performed with GitHub Copilot (GPT-5.3-Codex).
+Data note: Stage 06 expects completed outputs from stages 03-05 and writes figure/table artifacts to `figures/` and `results/`.

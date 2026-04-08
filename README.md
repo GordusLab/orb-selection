@@ -6,7 +6,6 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 TODO:
 
 - [ ] read through and edit all updated docstrings
-- [ ] update ORT readme to indicate which results are which
 - [ ] add data archive locations
 
 ## Repository contents

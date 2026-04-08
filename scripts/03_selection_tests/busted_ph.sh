@@ -2,13 +2,7 @@
 
 # Runs BUSTED-PH for one HOG per SLURM array task.
 
-#SBATCH --job-name=250218_busted_alphabet_errors
-#SBATCH --partition=parallel
-#SBATCH --account=agordus1
-#SBATCH --time=3-00:00:00
-#SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
-#SBATCH --array=1-2
+#SBATCH --array=1-4756
 #SBATCH -n 12
 #SBATCH --output=reports/%x/%A_%a.out
 

@@ -2,13 +2,7 @@
 
 # Extract coding nucleotide sequences for one HOG per array task.
 
-#SBATCH --job-name=260304_get_nuc_seqs
-#SBATCH --partition=parallel
-#SBATCH --account=agordus1
-#SBATCH --time=00:05:00
-#SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
-#SBATCH --array=1-3375
+#SBATCH --array=1-4756
 #SBATCH --output=reports/%x/%A_%a.out
 
 #run the program from desired CDS output directory

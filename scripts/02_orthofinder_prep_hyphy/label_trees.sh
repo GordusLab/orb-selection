@@ -2,12 +2,6 @@
 
 # Labels foreground branches on filtered trees using HyPhy LabelTrees.
 
-#SBATCH --job-name=250605_label_trees
-#SBATCH --partition=parallel
-#SBATCH --account=agordus1
-#SBATCH --time=00:10:00
-#SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
 #SBATCH --array=1-4756
 #SBATCH --output=reports/%x/%A_%a.out
 

@@ -5,7 +5,6 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 
 TODO:
 
-- [ ] edit slurm comments in rockfish scripts
 - [ ] read through and edit all updated docstrings
 - [ ] update ORT readme to indicate which results are which
 - [ ] add data archive locations

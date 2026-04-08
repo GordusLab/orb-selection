@@ -2,13 +2,7 @@
 
 # Prepares HOG alignments/trees for HyPhy analyses (PREQUAL -> MACSE -> IQ-TREE -> BUSTED -> error-filter).
 
-#SBATCH --job-name=140125_prep_hyphy_max_resources
-#SBATCH --partition=parallel
-#SBATCH --account=agordus1
-#SBATCH --time=3-00:00:00
-#SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
-#SBATCH --array=1-30
+#SBATCH --array=1-4756
 #SBATCH -n 12
 #SBATCH --output=reports/%x/%A_%a.out
 

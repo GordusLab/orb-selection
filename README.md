@@ -3,11 +3,6 @@
 Analysis repository for "Comparative transcriptomic analysis reveals signatures of selection
 for orb-weaving behavior in spiders," Runnels et al. 2026
 
-TODO:
-
-- [ ] read through and edit all updated docstrings
-- [ ] add data archive locations
-
 ## Repository contents
 
 |Directory / Filename|Description|

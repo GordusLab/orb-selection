@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Regenerate significant_gene_id_lists outputs from current pickle files.
+# Generate significant_gene_id_lists outputs from pickle files.
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 SCRIPT="$REPO_ROOT/scripts/05_enrichment/get_gene_id_lists.py"

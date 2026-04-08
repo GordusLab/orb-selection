@@ -1,5 +1,5 @@
 
-### **OrthoFinder run log:**
+# OrthoFinder run log
 
 ### 2023-09-28
 Initial run with 102 species (101 spiders + _Drosophila_).

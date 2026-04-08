@@ -80,8 +80,6 @@ source(here("scripts/05_permulation_loss_dup/permulations.R"))
 
 # save_tip_values(testCatPerms, here("data/perms_tip_values_no_tetragnathids.csv"))
 
-save_tip_values(testCatPerms, here("data/perms_tip_values_only_araneids.csv"))
-
 # Run only araneids
 # For odds ratio test, use "non-orb-weavers-list.txt" as background and "araneids-orbweavers.txt" as foreground
 testCatPerms <- run_categorical_permulations(

@@ -83,7 +83,11 @@ def id_converter_with_hogs(hog_node_genes_tsv):
 
 
 def get_udiv_dmel_genes(
-    hog_node_genes_tsv, hogs_of_interest, ortholog_tsv, one_random_gene=False
+    hog_node_genes_tsv,
+    hogs_of_interest,
+    ortholog_tsv,
+    one_random_gene=False,
+    show_progress=True,
 ):
     """Retrieves Uloborus diversus genes and their Drosophila melanogaster orthologs
     for a given list (csv or df) of hogs. The orthogroup file for the hierarchical orthogroup node
@@ -108,7 +112,11 @@ def get_udiv_dmel_genes(
     # and their Drosophila melanogaster orthologs
     # If one_random_gene is True, select one random gene per orthogroup
     # Otherwise, list all genes and their orthologs
-    for hog in tqdm(df.index.to_list(), desc="Processing HOGs"):
+    for hog in tqdm(
+        df.index.to_list(),
+        desc="Processing HOGs",
+        disable=not show_progress,
+    ):
         try:
             ud_genes = hog_node_df.at[hog, "Uloborus_diversus"].split(", ")
 
@@ -137,7 +145,7 @@ def get_udiv_dmel_genes(
     return df
 
 
-def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv):
+def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True):
     """Main function to process the results DataFrame and merge it with
     Uloborus diversus genes and their Drosophila melanogaster orthologs."""
 
@@ -147,6 +155,7 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv):
         hog_node_genes_tsv,
         hogs_of_interest,
         f"{data_dir}/Uloborus_diversus__v__Drosophila_melanogaster.tsv",
+        show_progress=show_progress,
     )
 
     res_with_udiv_df = res_with_udiv_df.explode("udiv_genes")

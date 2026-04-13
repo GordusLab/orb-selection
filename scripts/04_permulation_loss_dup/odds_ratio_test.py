@@ -540,12 +540,12 @@ def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]
 
 def save_loc_list(df, NX_path, output_path):
     locs_df = id_converter.convert_hogs_to_locs(df, NX_path, show_progress=False)
-    list = locs_df['LOC'].dropna().unique()
-    with open(output_path, 'w', encoding="utf-8") as f:
-        for loc in list:
-            f.write(f"{loc}\n")
-    print(f"Wrote {len(list)} items to {output_path}")
-    return list
+    loc_ids = locs_df["LOC"].dropna().unique()
+    with open(output_path, "w", encoding="utf-8") as file_obj:
+        for loc in loc_ids:
+            file_obj.write(f"{loc}\n")
+    print(f"Wrote {len(loc_ids)} items to {output_path}")
+    return loc_ids
 
 class PermulationTestResults:
     """Class to perform the permulation test for the odds ratio"""
@@ -676,48 +676,63 @@ class PermulationTestResults:
         """
         Generate universe LOC files for topGO analysis at different occupancy thresholds.
         """
-        min_occupancy = self.min_occ
-        max_occupancy = self.max_occ
-        genecount_df = self.true_odds.genecount_df
+        genecount_df = self.true_odds.genecount_df.copy()
 
         print("Generating universe LOCs...")
 
-        genecount_df["occupancy"] = (
-            genecount_df.select_dtypes(include="number").astype("bool").sum(axis=1)
-        )
-
-        # Drop all columns except 'HOG' and 'occupancy'
+        genecount_df["occupancy"] = genecount_df.select_dtypes(include="number").astype(
+            "bool"
+        ).sum(axis=1)
         genecount_df = genecount_df[["occupancy"]]
+        dup_uni_df = genecount_df[genecount_df["occupancy"] >= self.min_occ]
 
-        # Filter for minimum occupancy    
-        genecount_df = genecount_df[genecount_df["occupancy"] >= min_occupancy]
-
-        loss_uni_df = genecount_df[
-            (genecount_df["occupancy"] >= min_occupancy)
-            & (genecount_df["occupancy"] <= max_occupancy)
+        loss_uni_df = dup_uni_df.loc[
+            (dup_uni_df["occupancy"] <= self.max_occ)
         ]
-        dup_uni_df = genecount_df.copy()
 
         return loss_uni_df, dup_uni_df
 
     def save_go_lists(self, results_dir: str, use_perm_pvals=False):
-        
         dfs = self.results_fltrd_dfs
+        keys_to_write = list(dfs.keys())
+        locs_dir = os.path.join(results_dir, "loc_lists")
+        os.makedirs(locs_dir, exist_ok=True)
         if use_perm_pvals:
-            dfs["loss_fg_perm_pval"] = dfs["loss_fg"][dfs["loss_fg"]["Significant in permulation test"] == True]
-            dfs["loss_bg_perm_pval"] = dfs["loss_bg"][dfs["loss_bg"]["Significant in permulation test"] == True]
-            dfs["dup_fg_perm_pval"] = dfs["dup_fg"][dfs["dup_fg"]["Significant in permulation test"] == True]
-            dfs["dup_bg_perm_pval"] = dfs["dup_bg"][dfs["dup_bg"]["Significant in permulation test"] == True]
+            dfs_perm_pvals = {
+                key: dfs[key][dfs[key]["Significant in permulation test"]]
+                for key in keys_to_write
+            }
+        else:
+            dfs_perm_pvals = None
 
         # Convert HOG hit list to LOCs + descriptions and save as a companion file.
-        for key in dfs.keys():
-            save_loc_list(self.results_fltrd_dfs[key], self.true_odds.hog_node_genes_tsv, f"{results_dir}/{key}_sig_locs.txt")
-        
-        loss_uni, dup_uni = self.get_universe_permulation()
-        
-        save_loc_list(loss_uni, self.true_odds.hog_node_genes_tsv, f"{results_dir}/loss_universe_locs.txt")
-        save_loc_list(dup_uni, self.true_odds.hog_node_genes_tsv, f"{results_dir}/dup_universe_locs.txt")
+        for key in keys_to_write:
+            save_loc_list(
+                dfs[key],
+                self.true_odds.hog_node_genes_tsv,
+                f"{locs_dir}/{key}_sig_locs.txt",
+            )
 
+        if dfs_perm_pvals is not None:
+            for key in keys_to_write:
+                save_loc_list(
+                    dfs_perm_pvals[key],
+                    self.true_odds.hog_node_genes_tsv,
+                    f"{locs_dir}/{key}_sig_locs_perm_pval.txt",
+                )
+
+        loss_uni, dup_uni = self.get_universe_permulation()
+
+        save_loc_list(
+            loss_uni,
+            self.true_odds.hog_node_genes_tsv,
+            f"{locs_dir}/loss_universe_locs.txt",
+        )
+        save_loc_list(
+            dup_uni,
+            self.true_odds.hog_node_genes_tsv,
+            f"{locs_dir}/dup_universe_locs.txt",
+        )
 
     @staticmethod
     def _fmt_stat(value: float, ndigits: int = 2) -> str:
@@ -735,6 +750,172 @@ class PermulationTestResults:
             return "[]"
         formatted = ", ".join(f"{x:.{ndigits}f}" for x in ci_arr)
         return f"[{formatted}]"
+
+    def _get_permulation_plot_data(self, test, bins=100):
+        """Return shared arrays used by permulation plotting functions."""
+        true_vals = getattr(self, f"true_fltrd_{test}_lors")
+        x = np.linspace(true_vals.min(), true_vals.max(), 100)
+        avg_pdf = norm.pdf(
+            x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+        )
+        true_pdf = norm.pdf(
+            x,
+            getattr(self, f"true_mean_{test}"),
+            getattr(self, f"true_stddev_{test}"),
+        )
+        hist_vals, _ = np.histogram(true_vals, bins=bins, density=True)
+        hist_max = hist_vals.max() if hist_vals.size else 0.0
+        y_max = max(avg_pdf.max(), true_pdf.max(), hist_max) * 1.05
+        if y_max == 0:
+            y_max = 1.0
+        return true_vals, x, avg_pdf, true_pdf, y_max
+
+    def _get_permulation_thresholds(self, test):
+        """Return the confidence interval vector for the chosen test."""
+        if test == "loss":
+            return self.loss_ci_av
+        if test == "dup":
+            return self.dup_ci_av
+        raise ValueError(f"Invalid test type: {test}. Must be 'loss' or 'dup'.")
+
+    @staticmethod
+    def _plot_average_permulation_curve(
+        ax,
+        x,
+        avg_pdf,
+        color,
+        linestyle="-",
+        fill=True,
+    ):
+        ax.plot(
+            x,
+            avg_pdf,
+            color=color,
+            linestyle=linestyle,
+            zorder=4,
+            label="Average permulated\ndistribution",
+        )
+        if fill:
+            ax.fill_between(x, avg_pdf, alpha=0.2, color=color, zorder=0)
+
+    @staticmethod
+    def _plot_true_histogram(ax, true_vals, bins, hist_color, hist_alpha, edgecolor):
+        ax.hist(
+            true_vals,
+            bins=bins,
+            density=True,
+            color=hist_color,
+            alpha=hist_alpha,
+            edgecolor=edgecolor,
+            label="True distribution",
+            zorder=3,
+        )
+
+    @staticmethod
+    def _plot_true_gaussian_fit(ax, x, true_pdf, color):
+        ax.plot(
+            x,
+            true_pdf,
+            color=color,
+            linestyle="--",
+            zorder=4,
+            label="Gaussian fit to\ntrue distribution",
+        )
+
+    @staticmethod
+    def _plot_stat_histogram(ax, values, binwidth, hist_color, hist_alpha, edgecolor):
+        sns.histplot(
+            data=values,
+            binwidth=binwidth,
+            stat="count",
+            ax=ax,
+            legend=False,
+            color=hist_color,
+            alpha=hist_alpha,
+            edgecolor=edgecolor,
+        )
+
+    @staticmethod
+    def _save_figure(fig, output_path):
+        fig.savefig(
+            output_path,
+            dpi=300,
+            bbox_inches="tight",
+            pad_inches=0.3,
+        )
+
+    def _count_species_of_interest_hits(self, species_name):
+        return {
+            key: filter_for_sp_of_interest(
+                self.results_fltrd_dfs[key],
+                self.true_odds.genecount_df,
+                species_name,
+            )
+            for key in ("loss_fg", "loss_bg", "dup_fg", "dup_bg")
+        }
+
+    def _count_permulation_significant_hits(self):
+        return {
+            key: self.results_fltrd_dfs[key][
+                self.results_fltrd_dfs[key]["Significant in permulation test"]
+            ].shape[0]
+            for key in ("loss_fg", "loss_bg", "dup_fg", "dup_bg")
+        }
+
+    def _plot_threshold_lines(self, ax, test, thresholds_color):
+        ci_av = self._get_permulation_thresholds(test)
+        ax.axvline(
+            x=ci_av[0],
+            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
+            linestyle="dotted",
+            color=thresholds_color,
+            zorder=4,
+        )
+        ax.axvline(
+            x=ci_av[1],
+            linestyle="dotted",
+            color=thresholds_color,
+            zorder=4,
+        )
+
+    @staticmethod
+    def _style_density_axes(
+        ax,
+        x,
+        y_max,
+        legend_fontsize=13,
+        axis_label_fontsize=14,
+        tick_fontsize=13,
+    ):
+        ax.set_xlabel("Log odds ratio", fontsize=axis_label_fontsize, fontweight="bold")
+        ax.set_ylabel("Density", fontsize=axis_label_fontsize, fontweight="bold")
+        ax.set_ylim(bottom=0, top=y_max)
+        ax.set_xlim(x.min(), x.max())
+        plt.setp(ax.get_xticklabels(), fontsize=tick_fontsize)
+        plt.setp(ax.get_yticklabels(), fontsize=tick_fontsize)
+        ax.legend(
+            fontsize=legend_fontsize, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        )
+
+    @staticmethod
+    def _style_stat_axes(
+        ax,
+        xlabel="Means",
+        axis_label_fontsize=12,
+        legend_fontsize=10,
+        xlim=None,
+        ylim=None,
+    ):
+        ax.set(xlabel=xlabel, ylabel="Count")
+        ax.xaxis.label.set_fontsize(axis_label_fontsize)
+        ax.xaxis.label.set_fontweight("bold")
+        ax.yaxis.label.set_fontsize(axis_label_fontsize)
+        ax.yaxis.label.set_fontweight("bold")
+        ax.legend(fontsize=legend_fontsize)
+        if xlim is not None:
+            ax.set_xlim(xlim)
+        if ylim is not None:
+            ax.set_ylim(ylim)
 
     def _foreground_background_from_permulation(
         self,
@@ -1024,6 +1205,7 @@ class PermulationTestResults:
         axis_label_fontsize=12,
         xlim=None,
         ylim=None,
+        binwidth=None,
     ):
         """Plotting the permulation means and standard deviations
         and alpha thresholds to ensure the results are relatively
@@ -1033,15 +1215,17 @@ class PermulationTestResults:
         fig_width = 12 if include_stddev else 6.5
         fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
         axs = np.atleast_1d(axs)
+        means = getattr(self, f"means_{test}")
+        stddevs = getattr(self, f"stddevs_{test}")
+        true_mean = getattr(self, f"true_mean_{test}")
+        true_stddev = getattr(self, f"true_stddev_{test}")
         if test=="loss":
             test_name = "loss"
             maximum=self.max_occ
-            binwidth=0.05
 
         elif test=="dup":
             test_name = "duplication"
             maximum=self.true_odds.total_species_count
-            binwidth=0.01
         
         else:
             raise ValueError(f"Invalid test type: {test}. Must be 'loss' or 'dup'.")
@@ -1054,24 +1238,12 @@ class PermulationTestResults:
                 fontsize=16,
             )
 
-        sns.histplot(
-            data=getattr(self, f"means_{test}"),
-            binwidth=binwidth,
-            stat="count",
-            ax=axs[0],
-            legend=False,
-            color=hist_color,
-            alpha=hist_alpha,
-            edgecolor=edgecolor,
+        self._plot_stat_histogram(
+            axs[0], means, binwidth, hist_color, hist_alpha, edgecolor
         )
 
         if subplot_titles:
             axs[0].set_title("permulated means")
-        axs[0].set(xlabel="Means", ylabel="Count")
-        axs[0].xaxis.label.set_fontsize(axis_label_fontsize)
-        axs[0].xaxis.label.set_fontweight("bold")
-        axs[0].yaxis.label.set_fontsize(axis_label_fontsize)
-        axs[0].yaxis.label.set_fontweight("bold")
         axs[0].axvline(
             x=getattr(self, f"{test}_mean_av"),
             linestyle="dotted",
@@ -1079,38 +1251,27 @@ class PermulationTestResults:
             label="Avg. permulated mean",
         )
         axs[0].axvline(
-            x=getattr(self, f"true_mean_{test}"),
+            x=true_mean,
             linestyle="--",
             color="salmon",
             label="True mean",
         )
-        axs[0].legend(fontsize=legend_fontsize)
-        if xlim is not None:
-            axs[0].set_xlim(xlim)
-        if ylim is not None:
-            axs[0].set_ylim(ylim)
+        self._style_stat_axes(
+            axs[0],
+            xlabel="Means",
+            axis_label_fontsize=axis_label_fontsize,
+            legend_fontsize=legend_fontsize,
+            xlim=xlim,
+            ylim=ylim,
+        )
 
         if include_stddev:
-            sns.histplot(
-                data=getattr(self, f"stddevs_{test}"),
-                binwidth=binwidth,
-                stat="count",
-                ax=axs[1],
-                legend=False,
-                color=hist_color,
-                alpha=hist_alpha,
-                edgecolor=edgecolor,
+            self._plot_stat_histogram(
+                axs[1], stddevs, binwidth, hist_color, hist_alpha, edgecolor
             )
 
             if subplot_titles:
                 axs[1].set_title("Standard deviations")
-            axs[1].set(xlabel="Standard deviations", ylabel="Count")
-
-            axs[1].xaxis.label.set_fontsize(axis_label_fontsize)
-            axs[1].xaxis.label.set_fontweight("bold")
-
-            axs[1].yaxis.label.set_fontsize(axis_label_fontsize)
-            axs[1].yaxis.label.set_fontweight("bold")
 
             axs[1].axvline(
                 x=getattr(self, f"{test}_stddev_av"),
@@ -1119,16 +1280,19 @@ class PermulationTestResults:
                 label="Avg. permulated stddev",
             )
             axs[1].axvline(
-                x=getattr(self, f"true_stddev_{test}"),
+                x=true_stddev,
                 linestyle="--",
                 color="salmon",
                 label="True stddev",
             )
-            axs[1].legend(fontsize=legend_fontsize)
-            if xlim is not None:
-                axs[1].set_xlim(xlim)
-            if ylim is not None:
-                axs[1].set_ylim(ylim)
+            self._style_stat_axes(
+                axs[1],
+                xlabel="Standard deviations",
+                axis_label_fontsize=axis_label_fontsize,
+                legend_fontsize=legend_fontsize,
+                xlim=xlim,
+                ylim=ylim,
+            )
 
         plt.tight_layout()
 
@@ -1154,6 +1318,9 @@ class PermulationTestResults:
         """Function to plot the results of the permulation test"""
 
         fig, ax = plt.subplots(figsize=(6, 5))
+        true_vals, x, avg_pdf, true_pdf, y_max = self._get_permulation_plot_data(
+            test, bins=bins
+        )
 
         if title:
             fig.suptitle(
@@ -1162,59 +1329,17 @@ class PermulationTestResults:
                 fontsize=14,
             )
 
-        # Histogram of the true log odds ratios, filtered for occupancy
-        ax.hist(
-            getattr(self, f"true_fltrd_{test}_lors"),
-            bins=bins,
-            density=True,
-            color=hist_color,
-            alpha=hist_alpha,
-            edgecolor=edgecolor,
-        )
-
-        x = np.linspace(
-            getattr(self, f"true_fltrd_{test}_lors").min(),
-            getattr(self, f"true_fltrd_{test}_lors").max(),
-            100,
-        )
-
-        # Gaussian fit to the true log odds ratios
-        ax.plot(
+        self._plot_true_histogram(ax, true_vals, bins, hist_color, hist_alpha, edgecolor)
+        self._plot_true_gaussian_fit(ax, x, true_pdf, gaussfit_color)
+        self._plot_average_permulation_curve(
+            ax,
             x,
-            norm.pdf(
-                x,
-                np.mean(getattr(self, f"true_fltrd_{test}_lors")),
-                np.std(getattr(self, f"true_fltrd_{test}_lors")),
-            ),
-            color=gaussfit_color,
+            avg_pdf,
+            avpermulation_color,
             linestyle="--",
-            label="Gaussian fit to\ntrue distribution",
+            fill=False,
         )
-
-        # Normal distribution using the average permulated stats
-        ax.plot(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            color=avpermulation_color,
-            linestyle="--",
-            label="Average permulated\ndistribution",
-        )
-
-        # permulation-derived confidence intervals
-        ax.axvline(
-            x=getattr(self, f"{test}_ci_av")[0],
-            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
-            linestyle="dotted",
-            color=thresholds_color,
-        )
-
-        ax.axvline(
-            x=getattr(self, f"{test}_ci_av")[1],
-            linestyle="dotted",
-            color=thresholds_color,
-        )
+        self._plot_threshold_lines(ax, test, thresholds_color)
 
         ax.text(
             0.03,
@@ -1236,12 +1361,13 @@ class PermulationTestResults:
             ),
         )
 
-        plt.xlabel("Log odds ratio", fontsize=axis_label_fontsize, fontweight="bold")
-        plt.ylabel("Density", fontsize=axis_label_fontsize, fontweight="bold")
-        plt.xticks(fontsize=12)
-        plt.yticks(fontsize=12)
-
-        plt.legend(fontsize=legend_fontsize, loc="upper right")
+        self._style_density_axes(
+            ax,
+            x,
+            y_max,
+            legend_fontsize=legend_fontsize,
+            axis_label_fontsize=axis_label_fontsize,
+        )
         plt.tight_layout()
 
         return fig, ax
@@ -1257,6 +1383,8 @@ class PermulationTestResults:
         thresholds_color="darkred",
         bins=100,
         title=True,
+        legend_fontsize=10,
+        axis_label_fontsize=12,
     ):
         """Function to create 4 sequential plots with elements layered on top of each other.
 
@@ -1266,31 +1394,9 @@ class PermulationTestResults:
         3. + Histogram of true log odds ratios (with permulated stats)
         4. + Gaussian fit to the histogram (with true and permulated stats)
         """
-
-        # Define x-axis range
-        x = np.linspace(
-            getattr(self, f"true_fltrd_{test}_lors").min(),
-            getattr(self, f"true_fltrd_{test}_lors").max(),
-            100,
+        true_vals, x, avg_pdf, true_pdf, y_max = self._get_permulation_plot_data(
+            test, bins=bins
         )
-
-        # ----------- Compute a common y-limit so all panels share the same scale -----------
-        avg_pdf = norm.pdf(
-            x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-        )
-        true_pdf = norm.pdf(
-            x,
-            getattr(self, f"true_mean_{test}"),
-            getattr(self, f"true_stddev_{test}"),
-        )
-        hist_vals, _ = np.histogram(
-            getattr(self, f"true_fltrd_{test}_lors"), bins=bins, density=True
-        )
-        hist_max = hist_vals.max() if hist_vals.size else 0.0
-        y_max = max(avg_pdf.max(), true_pdf.max(), hist_max) * 1.05
-        if y_max == 0:
-            y_max = 1  # fallback to avoid zero-height axis
-        # -------------------------------------------------------------------------------
 
         title_str = (
             f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
@@ -1306,32 +1412,13 @@ class PermulationTestResults:
         if title:
             fig1.suptitle(title_str, fontsize=14)
 
-        ax1.plot(
+        self._plot_average_permulation_curve(ax1, x, avg_pdf, avpermulation_color)
+        self._style_density_axes(
+            ax1,
             x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            color=avpermulation_color,
-            linewidth=2.5,
-            label="Average permulated\ndistribution",
-        )
-        ax1.fill_between(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            alpha=0.2,
-            color=avpermulation_color,
-        )
-
-        ax1.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
-        ax1.set_ylabel("Density", fontsize=14, fontweight="bold")
-        ax1.set_ylim(bottom=0, top=y_max)
-        ax1.set_xlim(x.min(), x.max())
-        plt.setp(ax1.get_xticklabels(), fontsize=13)
-        plt.setp(ax1.get_yticklabels(), fontsize=13)
-        ax1.legend(
-            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+            y_max,
+            legend_fontsize=legend_fontsize,
+            axis_label_fontsize=axis_label_fontsize,
         )
         plt.tight_layout()
         figs.append(fig1)
@@ -1343,38 +1430,8 @@ class PermulationTestResults:
         if title:
             fig2.suptitle(title_str, fontsize=14)
 
-        ax2.plot(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            color=avpermulation_color,
-            linewidth=2.5,
-            label="Average permulated\ndistribution",
-        )
-        ax2.fill_between(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            alpha=0.2,
-            color=avpermulation_color,
-            zorder=0,
-        )
-
-        ax2.axvline(
-            x=getattr(self, f"{test}_ci_av")[0],
-            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
-            linestyle="dotted",
-            color=thresholds_color,
-            linewidth=2,
-        )
-        ax2.axvline(
-            x=getattr(self, f"{test}_ci_av")[1],
-            linestyle="dotted",
-            color=thresholds_color,
-            linewidth=2,
-        )
+        self._plot_average_permulation_curve(ax2, x, avg_pdf, avpermulation_color)
+        self._plot_threshold_lines(ax2, test, thresholds_color)
 
         ax2.text(
             0.03,
@@ -1394,14 +1451,12 @@ class PermulationTestResults:
             ),
         )
 
-        ax2.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
-        ax2.set_ylabel("Density", fontsize=14, fontweight="bold")
-        ax2.set_ylim(bottom=0, top=y_max)
-        ax2.set_xlim(x.min(), x.max())
-        plt.setp(ax2.get_xticklabels(), fontsize=13)
-        plt.setp(ax2.get_yticklabels(), fontsize=13)
-        ax2.legend(
-            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        self._style_density_axes(
+            ax2,
+            x,
+            y_max,
+            legend_fontsize=legend_fontsize,
+            axis_label_fontsize=axis_label_fontsize,
         )
         plt.tight_layout()
         figs.append(fig2)
@@ -1413,49 +1468,9 @@ class PermulationTestResults:
         if title:
             fig3.suptitle(title_str, fontsize=14)
 
-        ax3.plot(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            color=avpermulation_color,
-            linewidth=2.5,
-            label="Average permulated\ndistribution",
-        )
-        ax3.fill_between(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            alpha=0.2,
-            color=avpermulation_color,
-            zorder=0,
-        )
-
-        ax3.axvline(
-            x=getattr(self, f"{test}_ci_av")[0],
-            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
-            linestyle="dotted",
-            color=thresholds_color,
-            linewidth=2,
-        )
-        ax3.axvline(
-            x=getattr(self, f"{test}_ci_av")[1],
-            linestyle="dotted",
-            color=thresholds_color,
-            linewidth=2,
-        )
-
-        ax3.hist(
-            getattr(self, f"true_fltrd_{test}_lors"),
-            bins=bins,
-            density=True,
-            color=hist_color,
-            alpha=0.3,
-            edgecolor=hist_color,
-            label="True distribution",
-            zorder=3,
-        )
+        self._plot_average_permulation_curve(ax3, x, avg_pdf, avpermulation_color)
+        self._plot_threshold_lines(ax3, test, thresholds_color)
+        self._plot_true_histogram(ax3, true_vals, bins, hist_color, 0.3, hist_color)
 
         ax3.text(
             0.03,
@@ -1475,14 +1490,12 @@ class PermulationTestResults:
             ),
         )
 
-        ax3.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
-        ax3.set_ylabel("Density", fontsize=14, fontweight="bold")
-        ax3.set_xlim(x.min(), x.max())
-        ax3.set_ylim(bottom=0, top=y_max)
-        plt.setp(ax3.get_xticklabels(), fontsize=13)
-        plt.setp(ax3.get_yticklabels(), fontsize=13)
-        ax3.legend(
-            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        self._style_density_axes(
+            ax3,
+            x,
+            y_max,
+            legend_fontsize=legend_fontsize,
+            axis_label_fontsize=axis_label_fontsize,
         )
         plt.tight_layout()
         figs.append(fig3)
@@ -1494,70 +1507,18 @@ class PermulationTestResults:
         if title:
             fig4.suptitle(title_str, fontsize=14)
 
-        ax4.plot(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            color=avpermulation_color,
-            linewidth=2.5,
-            label="Average permulated\ndistribution",
-        )
-        ax4.fill_between(
-            x,
-            norm.pdf(
-                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-            ),
-            alpha=0.2,
-            color=avpermulation_color,
-            zorder=0,
-        )
-
-        ax4.axvline(
-            x=getattr(self, f"{test}_ci_av")[0],
-            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
-            linestyle="dotted",
-            color=thresholds_color,
-            linewidth=2,
-        )
-        ax4.axvline(
-            x=getattr(self, f"{test}_ci_av")[1],
-            linestyle="dotted",
-            color=thresholds_color,
-            linewidth=2,
-        )
-
-        ax4.hist(
-            getattr(self, f"true_fltrd_{test}_lors"),
-            bins=bins,
-            density=True,
-            color=hist_color,
-            alpha=0.3,
-            edgecolor=hist_color,
-            label="True distribution",
-            zorder=3,
-        )
-
-        ax4.plot(
-            x,
-            norm.pdf(
-                x,
-                getattr(self, f"true_mean_{test}"),
-                getattr(self, f"true_stddev_{test}"),
-            ),
-            color=gaussfit_color,
-            linestyle="--",
-            linewidth=2,
-            label="Gaussian fit to\ntrue distribution",
-        )
+        self._plot_average_permulation_curve(ax4, x, avg_pdf, avpermulation_color)
+        self._plot_threshold_lines(ax4, test, thresholds_color)
+        self._plot_true_histogram(ax4, true_vals, bins, hist_color, 0.3, hist_color)
+        self._plot_true_gaussian_fit(ax4, x, true_pdf, gaussfit_color)
 
         ax4.text(
             0.03,
             0.95,
             f"Permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
             f"Permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}\n\n"
-            f"True mean = {self._fmt_stat(getattr(self, f'{test}_true_mean'))}\n"
-            f"True std. dev. = {self._fmt_stat(getattr(self, f'{test}_true_stddev'))}",
+            f"True mean = {self._fmt_stat(getattr(self, f'true_mean_{test}'))}\n"
+            f"True std. dev. = {self._fmt_stat(getattr(self, f'true_stddev_{test}'))}",
             transform=ax4.transAxes,
             fontsize=12,
             ha="left",
@@ -1571,14 +1532,12 @@ class PermulationTestResults:
             ),
         )
 
-        ax4.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
-        ax4.set_ylabel("Density", fontsize=14, fontweight="bold")
-        ax4.set_xlim(x.min(), x.max())
-        ax4.set_ylim(bottom=0, top=y_max)
-        plt.setp(ax4.get_xticklabels(), fontsize=13)
-        plt.setp(ax4.get_yticklabels(), fontsize=13)
-        ax4.legend(
-            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        self._style_density_axes(
+            ax4,
+            x,
+            y_max,
+            legend_fontsize=legend_fontsize,
+            axis_label_fontsize=axis_label_fontsize,
         )
         plt.tight_layout()
         figs.append(fig4)
@@ -1598,6 +1557,10 @@ class PermulationTestResults:
         self.results_fltrd_df_all = df_all
         self.all_hits_count = total_count
         self.counts_hits = counts
+
+    def _emit_count_summary(self, file_obj, counts_dict):
+        for label in ("loss_fg", "loss_bg", "dup_fg", "dup_bg"):
+            _emit(f"  - {label}: {counts_dict[label]}\n", file_obj)
 
     def print_permulation_results(self, fname=sys.stdout):
         """Function to print the results of the permulation test"""
@@ -1659,44 +1622,24 @@ class PermulationTestResults:
                 f"Significant HOGs (all): {self.all_hits_count}\n",
                 file_obj,
             )
-            _emit(
-                    f"  - loss_fg: {self.counts_hits['loss_fg']}\n"
-                    f"  - loss_bg: {self.counts_hits['loss_bg']}\n"
-                    f"  - dup_fg: {self.counts_hits['dup_fg']}\n"
-                    f"  - dup_bg: {self.counts_hits['dup_bg']}\n",
-                    file_obj,
-                )
+            self._emit_count_summary(file_obj, self.counts_hits)
 
             if self.species_of_interest is not None:
-                sp_of_int_counts = {
-                    "loss_fg": filter_for_sp_of_interest(self.results_fltrd_dfs['loss_fg'], self.true_odds.genecount_df, self.species_of_interest),
-                    "loss_bg": filter_for_sp_of_interest(self.results_fltrd_dfs['loss_bg'], self.true_odds.genecount_df, self.species_of_interest),
-                    "dup_fg": filter_for_sp_of_interest(self.results_fltrd_dfs['dup_fg'], self.true_odds.genecount_df, self.species_of_interest),
-                    "dup_bg": filter_for_sp_of_interest(self.results_fltrd_dfs['dup_bg'], self.true_odds.genecount_df, self.species_of_interest)
-                }
-                _emit(
-                    f"Significant HOGs, {self.species_of_interest} present:\n",
-                    file_obj,
+                sp_of_int_counts = self._count_species_of_interest_hits(
+                    self.species_of_interest
                 )
                 _emit(
-                    f"  - loss_fg: {sp_of_int_counts['loss_fg']}\n"
-                    f"  - loss_bg: {sp_of_int_counts['loss_bg']}\n"
-                    f"  - dup_fg: {sp_of_int_counts['dup_fg']}\n"
-                    f"  - dup_bg: {sp_of_int_counts['dup_bg']}\n",
+                    "Significant HOGs, {} present:\n".format(self.species_of_interest),
                     file_obj,
                 )
+                self._emit_count_summary(file_obj, sp_of_int_counts)
 
                 _emit(
-                    f"Significant HOGs, using permulation p-values:\n",
+                    "Significant HOGs, using permulation p-values:\n",
                     file_obj,
                 )
-                _emit(
-                    f"  - loss_fg: {self.results_fltrd_dfs['loss_fg'][self.results_fltrd_dfs['loss_fg']['Significant in permulation test'] == True].shape[0]}\n"
-                    f"  - loss_bg: {self.results_fltrd_dfs['loss_bg'][self.results_fltrd_dfs['loss_bg']['Significant in permulation test'] == True].shape[0]}\n"
-                    f"  - dup_fg: {self.results_fltrd_dfs['dup_fg'][self.results_fltrd_dfs['dup_fg']['Significant in permulation test'] == True].shape[0]}\n"
-                    f"  - dup_bg: {self.results_fltrd_dfs['dup_bg'][self.results_fltrd_dfs['dup_bg']['Significant in permulation test'] == True].shape[0]}\n",
-                    file_obj,
-                )
+                perm_pval_counts = self._count_permulation_significant_hits()
+                self._emit_count_summary(file_obj, perm_pval_counts)
 
         if fname is sys.stdout:
             _write_results(sys.stdout)
@@ -1746,48 +1689,19 @@ class PermulationTestResults:
         # Save a text file summarizing results from the analysis
         self.print_permulation_results(fname=f"{results_dir}/" + "results_summary.txt")
 
+        # Save LOC lists for significant hits and universes.
+        self.save_go_lists(results_dir=results_dir, use_perm_pvals=True)
+
         #### Save figures ####
 
-        # permulation statistics
-        lossfig, _ = self.plot_permulation_stats("loss", fg_name, bg_name)
-
-        lossfig.savefig(
-            os.path.join(results_dir, "loss_stats_dists.png"),
-            dpi=300,
-            bbox_inches="tight",
-            pad_inches=0.3,
-        )
-
-        dupfig, _ = self.plot_permulation_stats(
-            "dup",
-            fg_name,
-            bg_name,
-        )
-
-        dupfig.savefig(
-            os.path.join(results_dir, "dup_stats_dists.png"),
-            dpi=300,
-            bbox_inches="tight",
-            pad_inches=0.3,
-        )
-
-        # True distribution overlaid with average permulated distribution
-        lossfig, _ = self.plot_permulation_results("loss", fg_name, bg_name)
-
-        lossfig.savefig(
-            os.path.join(results_dir, "loss_results.png"),
-            dpi=300,
-            bbox_inches="tight",
-            pad_inches=0.3,
-        )
-
-        dupfig, _ = self.plot_permulation_results("dup", fg_name, bg_name)
-        dupfig.savefig(
-            os.path.join(results_dir, "dup_results.png"),
-            dpi=300,
-            bbox_inches="tight",
-            pad_inches=0.3,
-        )
+        figure_outputs = [
+            (self.plot_permulation_stats("loss", fg_name, bg_name)[0], "loss_stats_dists.png"),
+            (self.plot_permulation_stats("dup", fg_name, bg_name)[0], "dup_stats_dists.png"),
+            (self.plot_permulation_results("loss", fg_name, bg_name)[0], "loss_results.png"),
+            (self.plot_permulation_results("dup", fg_name, bg_name)[0], "dup_results.png"),
+        ]
+        for figure, filename in figure_outputs:
+            self._save_figure(figure, os.path.join(results_dir, filename))
         rel_results_dir = os.path.relpath(results_dir, _REPO_ROOT)
         
         _cprint(
@@ -1797,6 +1711,10 @@ class PermulationTestResults:
             "  - results_all.csv: all HOG odds/log-odds and p-values\n"
             "  - fltrd_hits.csv: significant hits after occupancy/p-value filters\n"
             "  - results_summary.txt: text summary of run settings and statistics\n"
+            "  - loc_lists/: LOC exports for hits and universes\n"
+            "    - *_sig_locs.txt: hit LOC lists\n"
+            "    - *_sig_locs_perm_pval.txt: hit LOC lists filtered by permulation p-values\n"
+            "    - loss_universe_locs.txt / dup_universe_locs.txt: universe LOC lists\n"
             "  - loss_stats_dists.png: permulated mean/stddev histograms for loss\n"
             "  - dup_stats_dists.png: permulated mean/stddev histograms for duplication\n"
             "  - loss_results.png: loss LOR true distribution vs permulated average\n"

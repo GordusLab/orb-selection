@@ -27,7 +27,7 @@ import id_converter
 # Set the random seed for reproducibility
 random.seed(42)
 
-plt.rcParams['font.family'] = 'Verdana'
+plt.rcParams["font.family"] = "Verdana"
 
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 _REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir, os.pardir))
@@ -116,7 +116,12 @@ def _resolve_repo_path(path: Optional[str]) -> Optional[str]:
     if os.path.isabs(expanded):
         return expanded
 
-    if expanded.startswith(f".{os.sep}") or expanded == "." or expanded.startswith(f"..{os.sep}") or expanded == "..":
+    if (
+        expanded.startswith(f".{os.sep}")
+        or expanded == "."
+        or expanded.startswith(f"..{os.sep}")
+        or expanded == ".."
+    ):
         return os.path.abspath(expanded)
 
     return os.path.abspath(os.path.join(_REPO_ROOT, expanded))
@@ -129,7 +134,10 @@ def _normalize_alternative(alternative: str) -> str:
         return "greater"
     if alt in {"lt", "less"}:
         return "less"
-    raise ValueError("Invalid alternative hypothesis. Expected one of: ['less', 'greater', 'LT', 'RT']")
+    raise ValueError(
+        "Invalid alternative hypothesis. Expected one of: ['less', 'greater', 'LT', 'RT']"
+    )
+
 
 def _unique_results_dir(
     parent_dir: str,
@@ -138,12 +146,12 @@ def _unique_results_dir(
     alternative: str,
     occupancy_threshold: int,
     max_occ: Optional[int],
-    permutation_reps: int
+    permutation_reps: int,
 ) -> str:
     """
     Create a dated parent folder, then return a unique run subdirectory inside it
     named with sequential run number and test parameters.
-    
+
     Example: If parent_results_dir is "results/", this creates:
       results/Results_Jan29/Run1_Loss_LT_0-100/
       results/Results_Jan29/Run2_Dup_RT_50-75/ (different params, Run2)
@@ -153,24 +161,24 @@ def _unique_results_dir(
     date_short = time_obj.strftime("%b%d")
     dated_parent = f"{parent_dir}/Results_{date_short}"
     os.makedirs(dated_parent, exist_ok=True)
-    
+
     # Build the directory name with test parameters
     # Abbreviated test name
     test_name = "Dup" if test == "duplication" else test.capitalize()
-    
+
     # Alternative as LT (less) or RT (greater)
     alt_norm = _normalize_alternative(alternative)
     alt_short = "LT" if alt_norm == "less" else "RT"
-    
+
     # Format occupancy range
     if max_occ is None:
         occ_range = f"{occupancy_threshold}-max"
     else:
         occ_range = f"{occupancy_threshold}-{max_occ}"
-    
+
     # Build base directory name
     base_name = f"{test_name}_{alt_short}_{occ_range}_{permutation_reps}x"
-    
+
     # Find the highest run number across all existing directories
     existing_run_nums = []
     if os.path.exists(dated_parent):
@@ -182,25 +190,28 @@ def _unique_results_dir(
                     existing_run_nums.append(run_num)
                 except (ValueError, IndexError):
                     pass
-    
+
     # Determine next run number
     next_run_num = max(existing_run_nums) + 1 if existing_run_nums else 1
-    
+
     subdir_name = f"Run{next_run_num}_{base_name}"
     subdir_path = f"{dated_parent}/{subdir_name}"
-    
+
     return subdir_path
+
 
 def drop_empty_cols(df, print_txt=True):
     """
     Drops columns where all entries (ignoring headers) are 0,
     to get rid of species not included in the current node/hierarchy.
-    """    
+    """
 
     # Print the number of columns before cleaning
     num_columns_before = df.shape[1]
     if print_txt:
-        _cprint(f"Number of columns before dropping empty columns: {num_columns_before}")
+        _cprint(
+            f"Number of columns before dropping empty columns: {num_columns_before}"
+        )
 
     # Drop columns where all entries (ignoring headers) are 0
     df_cleaned = df.loc[:, (df.ne(0)).any(axis=0)]
@@ -224,9 +235,9 @@ def occupancy_filter(arr, minimum, maximum, total_occ_arr):
         arr, minimum, maximum, total_occ_arr
 
     Returns:
-        fltrd_arr (numpy array): occupancy array filtered according 
+        fltrd_arr (numpy array): occupancy array filtered according
         to thresholds provided
-    """    
+    """
 
     if maximum is None:
         maximum = total_occ_arr.max()
@@ -254,9 +265,10 @@ def filter_for_sp_of_interest(df, genecount_df, species_name):
 
     return df_fltrd_sp_of_int, sp_of_interest_hogs_count
 
-def tgauss_fun(params,x):
+
+def tgauss_fun(params, x):
     """Triple Gaussian function."""
-    
+
     w1 = params[0]
     mu1 = params[1]
     sigma1 = params[2]
@@ -266,43 +278,42 @@ def tgauss_fun(params,x):
     mu3 = params[6]
     sigma3 = params[7]
 
-    gauss1 = norm.pdf(x,mu1,sigma1)
-    gauss2 = norm.pdf(x,mu2,sigma2)
-    gauss3 = norm.pdf(x,mu3,sigma3)
-    
-    p = w1*gauss1 + w2*gauss2 + (1-w1-w2)*gauss3
-    
+    gauss1 = norm.pdf(x, mu1, sigma1)
+    gauss2 = norm.pdf(x, mu2, sigma2)
+    gauss3 = norm.pdf(x, mu3, sigma3)
+
+    p = w1 * gauss1 + w2 * gauss2 + (1 - w1 - w2) * gauss3
+
     return p
 
+
 def tgausslogl(params, x):
+    """Negative log-likelihood function for the triple Gaussian."""
     p = tgauss_fun(params, x)
     return -np.nansum(np.log(p), axis=0)
+
 
 def optimize_tgauss(params, data):
     """Optimize the parameters of the triple Gaussian function."""
 
     constraints = (
-        {"type": "ineq", "fun": lambda p: p[0]},          # w1 >= 0
-        {"type": "ineq", "fun": lambda p: p[3]},          # w2 >= 0
-        {"type": "ineq", "fun": lambda p: 1 - p[0] - p[3]}  # w1 + w2 <= 1
+        {"type": "ineq", "fun": lambda p: p[0]},  # w1 >= 0
+        {"type": "ineq", "fun": lambda p: p[3]},  # w2 >= 0
+        {"type": "ineq", "fun": lambda p: 1 - p[0] - p[3]},  # w1 + w2 <= 1
     )
 
     result = minimize(
         tgausslogl,
         params,
         args=(data,),
-        method='COBYLA',
+        method="COBYLA",
         constraints=constraints,
     )
 
     return result.x
 
-def calculate_odds(
-    foreground_bool_arr,
-    background_bool_arr,
-    test_bool_mat,
-    busco_arr
-):
+
+def calculate_odds(foreground_bool_arr, background_bool_arr, test_bool_mat, busco_arr):
     """Function to calculate the odds ratio and log odds ratio"""
 
     # I don't know why this is necessary but my kernel crashes without it
@@ -369,7 +380,7 @@ class OddsRatioResults:
         time,
         foreground_list_filename,
         background_list_filename=None,
-        buscos_filename=None
+        buscos_filename=None,
     ):
         """Initialize the inputs for the odds ratio calculations"""
         self.genecount_csv = genecount_csv
@@ -392,7 +403,14 @@ class OddsRatioResults:
 
         if buscos_filename is not None:
             self.buscos = pd.read_csv(buscos_filename, header=None)
-            self.buscos.columns = ['Species', 'Single_copy_buscos', 'Duplicated_buscos','Total_buscos', 'Fraction_sc', 'Fraction_total']
+            self.buscos.columns = [
+                "Species",
+                "Single_copy_buscos",
+                "Duplicated_buscos",
+                "Total_buscos",
+                "Fraction_sc",
+                "Fraction_total",
+            ]
 
         # Get the genecount arrays and matrices
         self._get_genecount_arrays()
@@ -406,7 +424,7 @@ class OddsRatioResults:
                 self.foreground_bool_arr,
                 self.background_bool_arr,
                 self.test_bool_mat,
-                busco_arr=getattr(self, 'busco_arr', None)
+                busco_arr=getattr(self, "busco_arr", None),
             )
         )
 
@@ -441,12 +459,12 @@ class OddsRatioResults:
         )
 
         # If there is a 'Total' column, drop it
-        if 'Total' in genecount_df.columns:
-            genecount_df = genecount_df.drop(columns=['Total'])
+        if "Total" in genecount_df.columns:
+            genecount_df = genecount_df.drop(columns=["Total"])
 
         # If there is an 'Occupancy' column, drop it
-        if 'Occupancy' in genecount_df.columns:
-            genecount_df = genecount_df.drop(columns=['Occupancy'])
+        if "Occupancy" in genecount_df.columns:
+            genecount_df = genecount_df.drop(columns=["Occupancy"])
 
         # Remove any empty columns (species with no genes in any HOGs)
         genecount_df = drop_empty_cols(genecount_df, print_txt=False)
@@ -467,9 +485,17 @@ class OddsRatioResults:
         all_species_arr = genecount_df.columns.to_numpy()
 
         # Get busco scores for each species
-        if hasattr(self, 'buscos'):
-            sc_busco_arr = self.buscos.set_index('Species').loc[all_species_arr]['Fraction_sc'].values
-            total_busco_arr = self.buscos.set_index('Species').loc[all_species_arr]['Fraction_total'].values
+        if hasattr(self, "buscos"):
+            sc_busco_arr = (
+                self.buscos.set_index("Species")
+                .loc[all_species_arr]["Fraction_sc"]
+                .values
+            )
+            total_busco_arr = (
+                self.buscos.set_index("Species")
+                .loc[all_species_arr]["Fraction_total"]
+                .values
+            )
 
         # Convert counts df to numpy
         genecount_mat = genecount_df.to_numpy()
@@ -496,9 +522,9 @@ class OddsRatioResults:
         if self.test == "loss":
             self.test_bool_mat = loss_bool_mat
 
-            # If testing for loss, the total fraction of complete buscos, whether single-copy or 
+            # If testing for loss, the total fraction of complete buscos, whether single-copy or
             # duplicated, should be a good proxy for how reliable loss calls will be
-            if hasattr(self, 'buscos'):
+            if hasattr(self, "buscos"):
                 self.busco_arr = total_busco_arr
 
         elif self.test == "duplication":
@@ -506,7 +532,7 @@ class OddsRatioResults:
 
             # If testing for duplication, the fraction of recovered buscos that are single-copy
             # should be a good proxy for how reliable duplication calls will be
-            if hasattr(self, 'buscos'):
+            if hasattr(self, "buscos"):
                 self.busco_arr = sc_busco_arr
 
     def _define_foreground(self):
@@ -620,6 +646,7 @@ class OddsRatioResults:
 
         return df_fltrd, total_hits
 
+
 # DEPRECATED: Now using permulations method
 def define_foreground_random(species_incl_idx, total_species_count, foreground_count):
     """Function to randomly define the species designated as
@@ -671,9 +698,7 @@ def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]
 
     tip_numeric = tip_df[species_cols].apply(pd.to_numeric, errors="raise")
     if tip_numeric.isnull().any().any():
-        raise ValueError(
-            f"Permulation tip-values CSV contains NaN values: {csv_path}"
-        )
+        raise ValueError(f"Permulation tip-values CSV contains NaN values: {csv_path}")
 
     return [
         {species: float(value) for species, value in row.items()}
@@ -741,18 +766,35 @@ class PermutationTestResults:
         self.true_mean = np.mean(self.true_fltrd_log_odds_ratios)
         self.true_stddev = np.std(self.true_fltrd_log_odds_ratios)
 
-        _cprint(f"Mean: {self._fmt_stat(self.true_mean)}, Stddev: {self._fmt_stat(self.true_stddev)}, Count: {len(self.true_fltrd_log_odds_ratios)}")
+        _cprint(
+            f"Mean: {self._fmt_stat(self.true_mean)}, Stddev: {self._fmt_stat(self.true_stddev)}, Count: {len(self.true_fltrd_log_odds_ratios)}"
+        )
         if self.test_triple_gaussian_params:
             # Optimize the parameters for a triple gaussian fit to the true LOR distribution.
-            initial_params = [0.33, self.true_mean - self.true_stddev, self.true_stddev, 0.33, self.true_mean, self.true_stddev, self.true_mean + self.true_stddev, self.true_stddev]
-            self.true_tgauss_params = optimize_tgauss(initial_params, self.true_fltrd_log_odds_ratios)
+            initial_params = [
+                0.33,
+                self.true_mean - self.true_stddev,
+                self.true_stddev,
+                0.33,
+                self.true_mean,
+                self.true_stddev,
+                self.true_mean + self.true_stddev,
+                self.true_stddev,
+            ]
+            self.true_tgauss_params = optimize_tgauss(
+                initial_params, self.true_fltrd_log_odds_ratios
+            )
             _cprint("Optimized triple Gaussian parameters:")
-            for param_name, param_value in zip(TGAUSS_PARAM_NAMES, self.true_tgauss_params):
+            for param_name, param_value in zip(
+                TGAUSS_PARAM_NAMES, self.true_tgauss_params
+            ):
                 _cprint(f"  {param_name}: {float(param_value):.3f}")
         else:
             self.true_tgauss_params = None
-            _cprint("Skipping triple Gaussian parameter testing (test_triple_gaussian_params=False).")
-           
+            _cprint(
+                "Skipping triple Gaussian parameter testing (test_triple_gaussian_params=False)."
+            )
+
         # Run the permutation test
         self._run_permutation()
 
@@ -783,10 +825,10 @@ class PermutationTestResults:
     def get_pval_thresholds(self, alpha, alternative):
         """Calculate the permutation p-value thresholds for the log odds ratio"""
 
-        if alternative == 'two-tailed':
-            z_crit = norm.ppf(1 - alpha / 2) # two-tailed z critical value
+        if alternative == "two-tailed":
+            z_crit = norm.ppf(1 - alpha / 2)  # two-tailed z critical value
         else:
-            z_crit = norm.ppf(1 - alpha) # one-tailed z critical value
+            z_crit = norm.ppf(1 - alpha)  # one-tailed z critical value
 
         lowers = self.means - z_crit * self.stddevs
         uppers = self.means + z_crit * self.stddevs
@@ -795,10 +837,12 @@ class PermutationTestResults:
         self.cis = np.column_stack((lowers, uppers))
 
         # Average CI as [mean_lower, mean_upper].
-        ci_av = np.array([
-            np.mean(self.cis[:, 0]),
-            np.mean(self.cis[:, 1]),
-        ])
+        ci_av = np.array(
+            [
+                np.mean(self.cis[:, 0]),
+                np.mean(self.cis[:, 1]),
+            ]
+        )
 
         self.ci_av = ci_av
 
@@ -850,9 +894,11 @@ class PermutationTestResults:
                 self.true_odds.foreground_count,
             )
         else:
-            new_foregrounds, new_backgrounds = self._foreground_background_from_permulation(
-                perm_tips,
-                species_incl_idx,
+            new_foregrounds, new_backgrounds = (
+                self._foreground_background_from_permulation(
+                    perm_tips,
+                    species_incl_idx,
+                )
             )
 
         # Recalculate the odds ratios and log odds ratios for the new foreground/background arrays
@@ -860,7 +906,7 @@ class PermutationTestResults:
             new_foregrounds,
             new_backgrounds,
             self.true_odds.test_bool_mat,
-            busco_arr=getattr(self.true_odds, 'busco_arr', None)
+            busco_arr=getattr(self.true_odds, "busco_arr", None),
         )[
             2
         ]  # only return the log odds ratio array
@@ -878,8 +924,19 @@ class PermutationTestResults:
 
         if self.test_triple_gaussian_params:
             # Optimize the parameters for a triple gaussian fit to the permulated distribution.
-            initial_params = [0.33, new_mean - new_stddev, new_stddev, 0.33, new_mean, new_stddev, new_mean + new_stddev, new_stddev]
-            new_tgauss_params = optimize_tgauss(initial_params, new_log_odds_ratio_fltrd)
+            initial_params = [
+                0.33,
+                new_mean - new_stddev,
+                new_stddev,
+                0.33,
+                new_mean,
+                new_stddev,
+                new_mean + new_stddev,
+                new_stddev,
+            ]
+            new_tgauss_params = optimize_tgauss(
+                initial_params, new_log_odds_ratio_fltrd
+            )
 
         # Permutation test using single Gaussian parameters
         if self.alternative == "greater":
@@ -900,18 +957,30 @@ class PermutationTestResults:
         # Permutation test using triple Gaussian parameters.
         if self.test_triple_gaussian_params:
             if self.alternative == "greater":
-                if new_tgauss_params[1] > self.true_tgauss_params[1]:  # comparing the mean of the first Gaussian component
+                if (
+                    new_tgauss_params[1] > self.true_tgauss_params[1]
+                ):  # comparing the mean of the first Gaussian component
                     counters["mn_1"] += 1
-                if new_tgauss_params[4] > self.true_tgauss_params[4]:  # comparing the mean of the second Gaussian component
+                if (
+                    new_tgauss_params[4] > self.true_tgauss_params[4]
+                ):  # comparing the mean of the second Gaussian component
                     counters["mn_2"] += 1
-                if new_tgauss_params[6] > self.true_tgauss_params[6]:  # comparing the mean of the third Gaussian component
+                if (
+                    new_tgauss_params[6] > self.true_tgauss_params[6]
+                ):  # comparing the mean of the third Gaussian component
                     counters["mn_3"] += 1
             else:
-                if new_tgauss_params[1] < self.true_tgauss_params[1]:  # comparing the mean of the first Gaussian component
+                if (
+                    new_tgauss_params[1] < self.true_tgauss_params[1]
+                ):  # comparing the mean of the first Gaussian component
                     counters["mn_1"] += 1
-                if new_tgauss_params[4] < self.true_tgauss_params[4]:  # comparing the mean of the second Gaussian component
+                if (
+                    new_tgauss_params[4] < self.true_tgauss_params[4]
+                ):  # comparing the mean of the second Gaussian component
                     counters["mn_2"] += 1
-                if new_tgauss_params[6] < self.true_tgauss_params[6]:  # comparing the mean of the third Gaussian component
+                if (
+                    new_tgauss_params[6] < self.true_tgauss_params[6]
+                ):  # comparing the mean of the third Gaussian component
                     counters["mn_3"] += 1
 
             self.perm_tgauss_params[i] = new_tgauss_params
@@ -983,7 +1052,9 @@ class PermutationTestResults:
                 counters = self._permutation_iter(i, counters, species_incl_idx)
         else:
             for i, perm_tips in enumerate(tqdm(self.permulation_tip_values)):
-                counters = self._permutation_iter(i, counters, species_incl_idx, perm_tips=perm_tips)
+                counters = self._permutation_iter(
+                    i, counters, species_incl_idx, perm_tips=perm_tips
+                )
 
         p_vals = {
             "mn": counters["mn"] / self.permutation_reps,
@@ -1003,12 +1074,20 @@ class PermutationTestResults:
         #     self.means - self.z_crit * self.stddevs,
         # ]
 
-        _cprint(f"Permutation counter for MEAN (single Gaussian): {str(counters['mn'])}")
+        _cprint(
+            f"Permutation counter for MEAN (single Gaussian): {str(counters['mn'])}"
+        )
         # print(f"Permutation counter for STD DEV: {str(counters['sd'])}")
         if self.test_triple_gaussian_params:
-            _cprint(f"Permutation counter for MEAN 1 (triple Gaussian): {str(counters['mn_1'])}")
-            _cprint(f"Permutation counter for MEAN 2 (triple Gaussian): {str(counters['mn_2'])}")
-            _cprint(f"Permutation counter for MEAN 3 (triple Gaussian): {str(counters['mn_3'])}\n")
+            _cprint(
+                f"Permutation counter for MEAN 1 (triple Gaussian): {str(counters['mn_1'])}"
+            )
+            _cprint(
+                f"Permutation counter for MEAN 2 (triple Gaussian): {str(counters['mn_2'])}"
+            )
+            _cprint(
+                f"Permutation counter for MEAN 3 (triple Gaussian): {str(counters['mn_3'])}\n"
+            )
 
         _cprint()
 
@@ -1018,80 +1097,129 @@ class PermutationTestResults:
         self.mean_av = np.mean(self.means)
         self.stddev_av = np.mean(self.stddevs)
 
-    def plot_permutation_stats(self, fg_name, bg_name="background"):
+    def plot_permutation_stats(
+        self,
+        fg_name="foreground",
+        bg_name="background",
+        include_stddev=True,
+        title=True,
+        subplot_titles=True,
+        hist_color="blue",
+        hist_alpha=0.3,
+        edgecolor=None,
+        legend_fontsize=10,
+        axis_label_fontsize=12,
+        xlim=None,
+        ylim=None,
+        binwidth=0.05,
+    ):
         """Plotting the permutation means and standard deviations
         and alpha thresholds to ensure the results are relatively
         tightly distributed"""
 
-        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
+        ncols = 2 if include_stddev else 1
+        fig_width = 12 if include_stddev else 6.5
+        fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
+        axs = np.atleast_1d(axs)
 
         # Making the text bold deletes spaces
         fg_name = fg_name.replace(" ", r"\ ")
         bg_name = bg_name.replace(" ", r"\ ")
 
-        fig.suptitle(
-            rf"$\bf{{Permuted\ (null)\ distributions\ single\ Gaussian\  stats\ for\ gene\ {self.true_odds.test},}}$" + "\n"
-            rf"$\bf{{{fg_name}\ vs. {bg_name}}}$" + "\n"
-            f"Maximum occupancy = {self.maximum}, "
-            f"minimum occupancy = {self.occupancy_threshold}",
-            fontsize=16,
-        )
+        if title:
+            fig.suptitle(
+                rf"$\bf{{Permuted\ (null)\ distributions\ single\ Gaussian\  stats\ for\ gene\ {self.true_odds.test},}}$"
+                + "\n"
+                rf"$\bf{{{fg_name}\ vs. {bg_name}}}$" + "\n"
+                f"Maximum occupancy = {self.maximum}, "
+                f"minimum occupancy = {self.occupancy_threshold}",
+                fontsize=16,
+            )
 
         sns.histplot(
             data=self.means,
-            kde=True,
-            bins=50,
-            stat="density",
+            # kde=True,
+            binwidth=binwidth,
+            stat="count",
             ax=axs[0],
             legend=False,
+            color=hist_color,
+            alpha=hist_alpha,
+            edgecolor=edgecolor,
         )
-        axs[0].set_title("Means")
-        axs[0].set(xlabel="mean", ylabel="Density")
+
+        if subplot_titles:
+            axs[0].set_title("Permuted means")
+        axs[0].set(xlabel="Means", ylabel="Count")
+        axs[0].xaxis.label.set_fontsize(axis_label_fontsize)
+        axs[0].xaxis.label.set_fontweight("bold")
+        axs[0].yaxis.label.set_fontsize(axis_label_fontsize)
+        axs[0].yaxis.label.set_fontweight("bold")
         axs[0].axvline(
             x=self.mean_av,
             linestyle="dotted",
             color="black",
-            label="Permuted mean",
+            label="Avg. permuted mean",
         )
         axs[0].axvline(
             x=self.true_mean,
             linestyle="--",
-            color="red",
+            color="salmon",
             label="True mean",
         )
-        axs[0].legend()
+        axs[0].legend(fontsize=legend_fontsize)
+        if xlim is not None:
+            axs[0].set_xlim(xlim)
+        if ylim is not None:
+            axs[0].set_ylim(ylim)
 
-        sns.histplot(
-            data=self.stddevs,
-            kde=True,
-            bins=50,
-            stat="density",
-            ax=axs[1],
-            legend=False,
-        )
+        if include_stddev:
+            sns.histplot(
+                data=self.stddevs,
+                # kde=True,
+                binwidth=binwidth,
+                stat="count",
+                ax=axs[1],
+                legend=False,
+                color=hist_color,
+                alpha=hist_alpha,
+                edgecolor=edgecolor,
+            )
 
-        axs[1].set_title("Standard deviations")
-        axs[1].set(xlabel="stddev", ylabel="Density")
-        axs[1].axvline(
-            x=self.stddev_av,
-            linestyle="dotted",
-            color="black",
-            label="Permuted mean",
-        )
-        axs[1].axvline(
-            x=self.true_stddev,
-            linestyle="--",
-            color="red",
-            label="True stddev",
-        )
-        axs[1].legend()
+            if subplot_titles:
+                axs[1].set_title("Standard deviations")
+            axs[1].set(xlabel="Standard deviations", ylabel="Count")
+
+            axs[1].xaxis.label.set_fontsize(axis_label_fontsize)
+            axs[1].xaxis.label.set_fontweight("bold")
+
+            axs[1].yaxis.label.set_fontsize(axis_label_fontsize)
+            axs[1].yaxis.label.set_fontweight("bold")
+
+            axs[1].axvline(
+                x=self.stddev_av,
+                linestyle="dotted",
+                color="black",
+                label="Avg. permuted stddev",
+            )
+            axs[1].axvline(
+                x=self.true_stddev,
+                linestyle="--",
+                color="salmon",
+                label="True stddev",
+            )
+            axs[1].legend(fontsize=legend_fontsize)
+            if xlim is not None:
+                axs[1].set_xlim(xlim)
+            if ylim is not None:
+                axs[1].set_ylim(ylim)
 
         plt.tight_layout()
 
         return fig, axs
-    
+
     def plot_permutation_stats_tgauss(self, fg_name, bg_name="background"):
-        """Plotting the permutation triple gaussian means to ensure the 
+        """Plotting the permutation triple gaussian means to ensure the
         results are relatively tightly distributed"""
 
         if not self.test_triple_gaussian_params or self.perm_tgauss_params is None:
@@ -1107,7 +1235,8 @@ class PermutationTestResults:
         bg_name = bg_name.replace(" ", r"\ ")
 
         fig.suptitle(
-            rf"$\bf{{Permuted\ (null)\ distributions\ triple\ Gaussian\ stats\ for\ gene\ {self.true_odds.test},}}$" + "\n"
+            rf"$\bf{{Permuted\ (null)\ distributions\ triple\ Gaussian\ stats\ for\ gene\ {self.true_odds.test},}}$"
+            + "\n"
             rf"$\bf{{{fg_name}\ vs. {bg_name}}}$" + "\n"
             f"Maximum occupancy = {self.maximum}, "
             f"minimum occupancy = {self.occupancy_threshold}",
@@ -1116,9 +1245,14 @@ class PermutationTestResults:
 
         # Keep means and stddevs vertically aligned by leaving bottom-left empty.
         axis_positions = [
-            (0, 0), (0, 1), (0, 2),
-            (1, 0), (1, 1), (1, 2),
-            (2, 1), (2, 2),
+            (0, 0),
+            (0, 1),
+            (0, 2),
+            (1, 0),
+            (1, 1),
+            (1, 2),
+            (2, 1),
+            (2, 2),
         ]
 
         for param, (row, col) in enumerate(axis_positions):
@@ -1144,9 +1278,9 @@ class PermutationTestResults:
                 label="True value",
             )
             axs[row, col].legend(fontsize=8)
-        
+
         axs[2, 0].axis("off")
-        
+
         plt.tight_layout()
 
         return fig, axs
@@ -1168,7 +1302,7 @@ class PermutationTestResults:
         axis_label_fontsize=12,
     ):
         """Function to plot the results of the permutation test"""
-        
+
         # Making the text bold deletes spaces
         fg_name = fg_name.replace(" ", r"\ ")
         bg_name = bg_name.replace(" ", r"\ ")
@@ -1177,7 +1311,8 @@ class PermutationTestResults:
 
         if title:
             fig.suptitle(
-                rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+                rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$"
+                + "\n"
                 f"Maximum occupancy = {self.maximum}, "
                 f"minimum occupancy = {self.occupancy_threshold}",
                 fontsize=14,
@@ -1190,7 +1325,7 @@ class PermutationTestResults:
             density=True,
             color=hist_color,
             alpha=hist_alpha,
-            edgecolor=edgecolor
+            edgecolor=edgecolor,
         )
 
         x = np.linspace(
@@ -1226,14 +1361,10 @@ class PermutationTestResults:
             x=self.ci_av[0],
             label=f"Mean permuted\nthresholds for\nalpha={self.a}",
             linestyle="dotted",
-            color=thresholds_color
+            color=thresholds_color,
         )
 
-        ax.axvline(
-            x=self.ci_av[1],
-            linestyle="dotted",
-            color=thresholds_color
-        )
+        ax.axvline(x=self.ci_av[1], linestyle="dotted", color=thresholds_color)
 
         ax.text(
             0.03,
@@ -1246,7 +1377,13 @@ class PermutationTestResults:
             fontsize=textbox_fontsize,
             ha="left",
             va="top",
-            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
         )
 
         plt.xlabel("Log odds ratio", fontsize=axis_label_fontsize, fontweight="bold")
@@ -1268,17 +1405,17 @@ class PermutationTestResults:
         hist_color="red",
         thresholds_color="darkred",
         bins=100,
-        title=True
+        title=True,
     ):
         """Function to create 4 sequential plots with elements layered on top of each other.
-        
+
         Returns 4 figures showing progressive buildup:
         1. Average permuted distribution
         2. + Permutation-derived thresholds (with permuted stats)
         3. + Histogram of true log odds ratios (with permuted stats)
         4. + Gaussian fit to the histogram (with true and permuted stats)
         """
-        
+
         # Making the text bold deletes spaces
         fg_name = fg_name.replace(" ", r"\ ")
         bg_name = bg_name.replace(" ", r"\ ")
@@ -1307,7 +1444,8 @@ class PermutationTestResults:
         # -------------------------------------------------------------------------------
 
         title_str = (
-            rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$" + "\n"
+            rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$"
+            + "\n"
             f"Maximum occupancy = {self.maximum}, "
             f"minimum occupancy = {self.occupancy_threshold}"
         )
@@ -1317,7 +1455,7 @@ class PermutationTestResults:
 
         # ========== PLOT 1: Average permuted distribution ==========
         fig1, ax1 = plt.subplots(figsize=(8, 6))
-        
+
         if title:
             fig1.suptitle(title_str, fontsize=14)
 
@@ -1334,21 +1472,23 @@ class PermutationTestResults:
             alpha=0.2,
             color=avpermutation_color,
         )
-        
+
         ax1.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
         ax1.set_ylabel("Density", fontsize=14, fontweight="bold")
         ax1.set_ylim(bottom=0, top=y_max)
         ax1.set_xlim(x.min(), x.max())
         plt.setp(ax1.get_xticklabels(), fontsize=13)
         plt.setp(ax1.get_yticklabels(), fontsize=13)
-        ax1.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        ax1.legend(
+            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        )
         plt.tight_layout()
         figs.append(fig1)
         axes.append(ax1)
 
         # ========== PLOT 2: + Permutation-derived thresholds ==========
         fig2, ax2 = plt.subplots(figsize=(8, 6))
-        
+
         if title:
             fig2.suptitle(title_str, fontsize=14)
 
@@ -1390,7 +1530,13 @@ class PermutationTestResults:
             fontsize=12,
             ha="left",
             va="top",
-            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
         )
 
         ax2.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
@@ -1399,14 +1545,16 @@ class PermutationTestResults:
         ax2.set_xlim(x.min(), x.max())
         plt.setp(ax2.get_xticklabels(), fontsize=13)
         plt.setp(ax2.get_yticklabels(), fontsize=13)
-        ax2.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        ax2.legend(
+            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        )
         plt.tight_layout()
         figs.append(fig2)
         axes.append(ax2)
 
         # ========== PLOT 3: + Histogram ==========
         fig3, ax3 = plt.subplots(figsize=(8, 6))
-        
+
         if title:
             fig3.suptitle(title_str, fontsize=14)
 
@@ -1459,7 +1607,13 @@ class PermutationTestResults:
             fontsize=12,
             ha="left",
             va="top",
-            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
         )
 
         ax3.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
@@ -1468,14 +1622,16 @@ class PermutationTestResults:
         ax3.set_ylim(bottom=0, top=y_max)
         plt.setp(ax3.get_xticklabels(), fontsize=13)
         plt.setp(ax3.get_yticklabels(), fontsize=13)
-        ax3.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        ax3.legend(
+            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        )
         plt.tight_layout()
         figs.append(fig3)
         axes.append(ax3)
 
         # ========== PLOT 4: + Gaussian fit ==========
         fig4, ax4 = plt.subplots(figsize=(8, 6))
-        
+
         if title:
             fig4.suptitle(title_str, fontsize=14)
 
@@ -1543,7 +1699,13 @@ class PermutationTestResults:
             fontsize=12,
             ha="left",
             va="top",
-            bbox=dict(facecolor="white", alpha=0.7, edgecolor="0.5", linewidth=0.6, boxstyle="round,pad=0.2"),
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
         )
 
         ax4.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
@@ -1552,7 +1714,9 @@ class PermutationTestResults:
         ax4.set_ylim(bottom=0, top=y_max)
         plt.setp(ax4.get_xticklabels(), fontsize=13)
         plt.setp(ax4.get_yticklabels(), fontsize=13)
-        ax4.legend(fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5)
+        ax4.legend(
+            fontsize=13, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
+        )
         plt.tight_layout()
         figs.append(fig4)
         axes.append(ax4)
@@ -1564,7 +1728,9 @@ class PermutationTestResults:
         alpha values determined by permutation, and filter for those
         which include a species of interest if specified."""
 
-        hits_alternative = "two-tailed" if self.save_two_tailed_hits else self.alternative
+        hits_alternative = (
+            "two-tailed" if self.save_two_tailed_hits else self.alternative
+        )
         self.hits_alternative = hits_alternative
         self.get_pval_thresholds(self.a, self.hits_alternative)
 
@@ -1615,11 +1781,19 @@ class PermutationTestResults:
                 file_obj,
             )
 
-            _emit(f"Foreground list: {self.true_odds.foreground_list_filename}", file_obj)
+            _emit(
+                f"Foreground list: {self.true_odds.foreground_list_filename}", file_obj
+            )
             if self.true_odds.background_list_filename is not None:
-                _emit(f"Background list: {self.true_odds.background_list_filename}", file_obj)
+                _emit(
+                    f"Background list: {self.true_odds.background_list_filename}",
+                    file_obj,
+                )
             _emit(f"Gene count file: {self.true_odds.genecount_csv}", file_obj)
-            _emit(f"Hierarchical orthogroup file: {self.true_odds.hog_node_genes_tsv}\n", file_obj)
+            _emit(
+                f"Hierarchical orthogroup file: {self.true_odds.hog_node_genes_tsv}\n",
+                file_obj,
+            )
 
             _emit(
                 f"Total number of HOGs in node: {len(self.true_odds.hog_list)}\n"
@@ -1675,7 +1849,7 @@ class PermutationTestResults:
         if fname is sys.stdout:
             _write_results(sys.stdout)
         else:
-            with open(fname, 'w', encoding='utf-8') as file_obj:
+            with open(fname, "w", encoding="utf-8") as file_obj:
                 _write_results(file_obj)
 
     def save_pickle_file(self, fname):
@@ -1683,16 +1857,18 @@ class PermutationTestResults:
         Saves the permutation results object to a pickle file.
         """
 
-        with open(fname, 'wb') as file:
+        with open(fname, "wb") as file:
             pickle.dump(self, file)
 
     @classmethod
-    def load_from_pickle(cls, filepath: str) -> 'PermutationTestResults':
+    def load_from_pickle(cls, filepath: str) -> "PermutationTestResults":
         """Load results object from a pickle file."""
-        with open(filepath, 'rb') as f:
+        with open(filepath, "rb") as f:
             return pickle.load(f)
 
-    def save_results_files(self, results_dir, save_pickle, fg_name, bg_name="background"):
+    def save_results_files(
+        self, results_dir, save_pickle, fg_name, bg_name="background"
+    ):
         """
         Takes in permutation test results instance and saves all
         relevant plots and tables.
@@ -1700,8 +1876,7 @@ class PermutationTestResults:
 
         # Save the full table of odds and odds ratios to a csv
         self.true_odds.results_df.to_csv(
-            f"{results_dir}/{self.true_odds.test}_odds_results_all.csv",
-            index=True
+            f"{results_dir}/{self.true_odds.test}_odds_results_all.csv", index=True
         )
 
         filename = (
@@ -1719,21 +1894,16 @@ class PermutationTestResults:
         if self.species_of_interest is not None:
             self.results_fltrd_df.to_csv(
                 (
-                    filename +
-                    f"{alt}" +
-                    f"_{self.species_of_interest}" +
-                    "_fltrd_permutation_hits.csv"
-                    ),
-                index=True
+                    filename
+                    + f"{alt}"
+                    + f"_{self.species_of_interest}"
+                    + "_fltrd_permutation_hits.csv"
+                ),
+                index=True,
             )
         else:
             self.results_fltrd_df.to_csv(
-                (
-                    filename + 
-                    f"{alt}" +
-                    "_fltrd_permutation_hits.csv"
-                    ),
-                index=True
+                (filename + f"{alt}" + "_fltrd_permutation_hits.csv"), index=True
             )
 
         # Convert HOG hit list to LOCs + descriptions and save as a companion file.
@@ -1742,32 +1912,22 @@ class PermutationTestResults:
             self.true_odds.hog_node_genes_tsv,
         )
         hits_with_locs_df.to_csv(
-            (
-                filename +
-                f"{alt}" +
-                "_fltrd_permutation_hits_locs_desc.csv"
-            ),
+            (filename + f"{alt}" + "_fltrd_permutation_hits_locs_desc.csv"),
             index=False,
         )
 
         # Save a text file summarizing results from the analysis
         self.print_permutation_results(
-            fname = filename +
-                f"{alt}" +
-                "_results_summary.txt"
-            )
-        
+            fname=filename + f"{alt}" + "_results_summary.txt"
+        )
+
         # Save the permutation results object as a pickle file
         if save_pickle:
-            self.save_pickle_file(
-                fname = filename +
-                f"{alt}" +
-                ".pkl"
-        )
+            self.save_pickle_file(fname=filename + f"{alt}" + ".pkl")
         else:
             _cprint(
                 "save_pickle is set to False, so the full results object will not be saved as a pickle file.\n"
-                "To save the results object for future use, set save_pickle to True. If you stored the test \n" 
+                "To save the results object for future use, set save_pickle to True. If you stored the test \n"
                 "results object in a variable, you can also save it as a pickle file using the `save_pickle_file` method, e.g. \n"
                 "my_results.save_pickle_file('path/to/save/my_results.pkl')\n"
             )
@@ -1778,11 +1938,7 @@ class PermutationTestResults:
         fig, _ = self.plot_permutation_stats(fg_name, bg_name)
 
         fig.savefig(
-            (
-                filename + 
-                f"{alt}" +
-                "_permutation_stats_dists_single_gauss.png"
-                ),
+            (filename + f"{alt}" + "_permutation_stats_dists_single_gauss.png"),
             dpi=300,
             bbox_inches="tight",
             pad_inches=0.3,
@@ -1792,25 +1948,17 @@ class PermutationTestResults:
             fig, _ = self.plot_permutation_stats_tgauss(fg_name, bg_name)
 
             fig.savefig(
-                (
-                    filename + 
-                    f"{alt}" +
-                    "_permutation_stats_dists_triple_gauss.png"
-                    ),
+                (filename + f"{alt}" + "_permutation_stats_dists_triple_gauss.png"),
                 dpi=300,
                 bbox_inches="tight",
                 pad_inches=0.3,
             )
-        
+
         # True distribution overlaid with average permuted distribution
         fig, _ = self.plot_permutation_results(fg_name, bg_name)
 
         fig.savefig(
-            (
-                filename + 
-                f"{alt}" +
-                "_permutation_results.png"
-                ),
+            (filename + f"{alt}" + "_permutation_results.png"),
             dpi=300,
             bbox_inches="tight",
             pad_inches=0.3,
@@ -1819,7 +1967,7 @@ class PermutationTestResults:
         _cprint(
             f"Results files saved to {results_dir}\n\n"
             "Files include: \n"
-            "\t 1. [test]_permutation_results.png: True LORs distribution\n" 
+            "\t 1. [test]_permutation_results.png: True LORs distribution\n"
             "\t\tvs. average permuted distribution\n"
             "\t 2. [test]_permutation_stats_dists.png: Histograms of the\n"
             "\t\tmeans, standard deviations, and skews of all 10,000\n"
@@ -1835,7 +1983,8 @@ class PermutationTestResults:
             "\t\trows per HOG if there are multiple genes from the U.div. in the HOG.\n"
             "\t 7. All odds and log odds ratios (not filtered for occupancy,\n"
             "\t\tspecies, or significance)"
-            )
+        )
+
 
 def odds_ratio_test(
     test,
@@ -1847,7 +1996,7 @@ def odds_ratio_test(
     alternative="less",  # or "greater" (legacy: "LT"/"RT")
     alpha=0.05,
     permutation_reps=10000,
-    test_triple_gaussian_params=True,
+    test_triple_gaussian_params=False,
     permulation_tip_values=None,
     permulations_tip_values_csv="data/perms_tip_values.csv",
     background_list_filename=None,
@@ -1858,7 +2007,7 @@ def odds_ratio_test(
     buscos_filename="data/buscos.csv",
     correct_for_buscos=True,
     save_pickle=True,
-    save_two_tailed_hits=False
+    save_two_tailed_hits=False,
 ):
     """Run the full odds ratio test.
 
@@ -1867,13 +2016,14 @@ def odds_ratio_test(
     provided, the original random foreground/background permutation is used.
     """
 
-    if results_dir is not None: 
-        if fg_name is None: 
+    if results_dir is not None:
+        if fg_name is None:
             raise ValueError(
                 "Please provide a descriptive name for your test group, \n"
                 "e.g. fg_name = 'orbweavers'. "
                 "You may also name your background, e.g.\n"
-                "bg_name = 'non-orbweavers'")
+                "bg_name = 'non-orbweavers'"
+            )
 
     time = datetime.now()
     time_fmtd = time.strftime("%Y-%m-%d at %H:%M:%S")
@@ -1882,7 +2032,9 @@ def odds_ratio_test(
     background_list_filename = _resolve_repo_path(background_list_filename)
     hog_node_genes_tsv = _resolve_repo_path(hog_node_genes_tsv)
     genecount_csv = _resolve_repo_path(genecount_csv)
-    buscos_filename = _resolve_repo_path(buscos_filename) if correct_for_buscos else None
+    buscos_filename = (
+        _resolve_repo_path(buscos_filename) if correct_for_buscos else None
+    )
     permulations_tip_values_csv = _resolve_repo_path(permulations_tip_values_csv)
     results_dir = _resolve_repo_path(results_dir)
 
@@ -1897,8 +2049,8 @@ def odds_ratio_test(
         test=test,
         time=time_fmtd,
         foreground_list_filename=foreground_list_filename,
-        background_list_filename=background_list_filename, 
-        buscos_filename=buscos_filename
+        background_list_filename=background_list_filename,
+        buscos_filename=buscos_filename,
     )
 
     # Determine permutation assignments source.
@@ -1951,16 +2103,16 @@ def odds_ratio_test(
             alternative,
             occupancy_threshold,
             max_occ,
-            permutation_reps
+            permutation_reps,
         )
         os.makedirs(unique_results_dir, exist_ok=True)
         permutation_test_results.save_results_files(
             results_dir=unique_results_dir,
             save_pickle=save_pickle,
             fg_name=fg_name,
-            bg_name=bg_name
+            bg_name=bg_name,
         )
-            
+
     else:
         _cprint(
             "No results directory provided, so plots and tables will not be saved to files.\n"
@@ -1976,10 +2128,16 @@ def odds_ratio_test(
         display_fg_name = fg_name if fg_name is not None else "foreground"
         display_bg_name = bg_name if bg_name is not None else "background"
 
-        permutation_test_results.plot_permutation_stats(display_fg_name, display_bg_name)
+        permutation_test_results.plot_permutation_stats(
+            display_fg_name, display_bg_name
+        )
         if permutation_test_results.test_triple_gaussian_params:
-            permutation_test_results.plot_permutation_stats_tgauss(display_fg_name, display_bg_name)
-        permutation_test_results.plot_permutation_results(display_fg_name, display_bg_name)
+            permutation_test_results.plot_permutation_stats_tgauss(
+                display_fg_name, display_bg_name
+            )
+        permutation_test_results.plot_permutation_results(
+            display_fg_name, display_bg_name
+        )
         plt.show()
 
     return permutation_test_results

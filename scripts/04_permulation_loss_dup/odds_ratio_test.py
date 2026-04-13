@@ -18,7 +18,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
-from scipy.optimize import minimize
 from tqdm.auto import tqdm
 import seaborn as sns
 import orthogroup_gene_count
@@ -31,16 +30,6 @@ plt.rcParams["font.family"] = "Verdana"
 
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 _REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir, os.pardir))
-TGAUSS_PARAM_NAMES = [
-    "weight_1",
-    "mean_1",
-    "stddev_1",
-    "weight_2",
-    "mean_2",
-    "stddev_2",
-    "mean_3",
-    "stddev_3",
-]
 CONSOLE_PRINT_WIDTH = 96
 
 
@@ -53,26 +42,26 @@ def _fixed_width_lines(text: str, width: int = CONSOLE_PRINT_WIDTH) -> List[str]
 
         wrapped: List[str] = []
         remaining = line
+        break_chars = (" ", "\t", "/", "_", "-", ",", ";")
+
         while len(remaining) > width:
             window = remaining[: width + 1]
-            break_at = max(window.rfind(" "), window.rfind("\t"))
+            break_at = max(window.rfind(ch) for ch in break_chars)
 
             if break_at <= 0:
-                # No natural break before width; only break at a later space/tab.
-                later_break = -1
-                for idx in range(width, len(remaining)):
-                    if remaining[idx] in {" ", "\t"}:
-                        later_break = idx
-                        break
-                if later_break == -1:
-                    wrapped.append(remaining)
-                    return wrapped
-                wrapped.append(remaining[:later_break].rstrip())
-                remaining = remaining[later_break + 1 :]
+                # No useful breakpoints; hard-wrap at fixed width.
+                wrapped.append(remaining[:width])
+                remaining = remaining[width:]
                 continue
 
-            wrapped.append(remaining[:break_at].rstrip())
-            remaining = remaining[break_at + 1 :]
+            split_idx = break_at + 1
+            wrapped.append(remaining[:split_idx].rstrip())
+
+            # Drop leading whitespace only when splitting on whitespace.
+            if remaining[break_at] in {" ", "\t"}:
+                remaining = remaining[split_idx:].lstrip()
+            else:
+                remaining = remaining[split_idx:]
 
         wrapped.append(remaining)
         return wrapped
@@ -81,9 +70,9 @@ def _fixed_width_lines(text: str, width: int = CONSOLE_PRINT_WIDTH) -> List[str]
     for raw_line in str(text).splitlines() or [""]:
         segments = _wrap_no_word_breaks(raw_line)
         if not segments:
-            wrapped_lines.append("".ljust(width))
+            wrapped_lines.append("")
             continue
-        wrapped_lines.extend(segment.ljust(width) for segment in segments)
+        wrapped_lines.extend(segments)
     return wrapped_lines
 
 
@@ -127,35 +116,21 @@ def _resolve_repo_path(path: Optional[str]) -> Optional[str]:
     return os.path.abspath(os.path.join(_REPO_ROOT, expanded))
 
 
-def _normalize_alternative(alternative: str) -> str:
-    """Normalize legacy and modern alternative labels to greater/less."""
-    alt = str(alternative).strip().lower()
-    if alt in {"rt", "greater"}:
-        return "greater"
-    if alt in {"lt", "less"}:
-        return "less"
-    raise ValueError(
-        "Invalid alternative hypothesis. Expected one of: ['less', 'greater', 'LT', 'RT']"
-    )
-
-
 def _unique_results_dir(
     parent_dir: str,
     time_obj: datetime,
-    test: str,
-    alternative: str,
-    occupancy_threshold: int,
+    min_occ: int,
     max_occ: Optional[int],
-    permutation_reps: int,
+    permulation_reps: int,
 ) -> str:
     """
     Create a dated parent folder, then return a unique run subdirectory inside it
     named with sequential run number and test parameters.
 
     Example: If parent_results_dir is "results/", this creates:
-      results/Results_Jan29/Run1_Loss_LT_0-100/
-      results/Results_Jan29/Run2_Dup_RT_50-75/ (different params, Run2)
-      results/Results_Jan29/Run3_Loss_LT_0-100/ (same params as Run1, Run3)
+      results/Results_Jan29/Run1_occ_0-100_10000x/
+      results/Results_Jan29/Run2_occ_50-75_10000x/ (different params, Run2)
+      results/Results_Jan29/Run3_occ_0-100_10000x/ (same params as Run1, Run3)
     """
     # Create the dated parent folder (e.g., Results_Jan29)
     date_short = time_obj.strftime("%b%d")
@@ -163,21 +138,11 @@ def _unique_results_dir(
     os.makedirs(dated_parent, exist_ok=True)
 
     # Build the directory name with test parameters
-    # Abbreviated test name
-    test_name = "Dup" if test == "duplication" else test.capitalize()
-
-    # Alternative as LT (less) or RT (greater)
-    alt_norm = _normalize_alternative(alternative)
-    alt_short = "LT" if alt_norm == "less" else "RT"
-
     # Format occupancy range
-    if max_occ is None:
-        occ_range = f"{occupancy_threshold}-max"
-    else:
-        occ_range = f"{occupancy_threshold}-{max_occ}"
+    occ_range = f"{min_occ}-{max_occ}"
 
     # Build base directory name
-    base_name = f"{test_name}_{alt_short}_{occ_range}_{permutation_reps}x"
+    base_name = f"occ_{occ_range}_{permulation_reps}x"
 
     # Find the highest run number across all existing directories
     existing_run_nums = []
@@ -226,34 +191,31 @@ def drop_empty_cols(df, print_txt=True):
     return df_cleaned
 
 
-def occupancy_filter(arr, minimum, maximum, total_occ_arr):
+def occupancy_filter(arr, min_occ, max_occ, total_occ_arr):
     """
     Function to filter an array of values according to whether the
     orthogroup meets a certain occupancy threshold.
 
     Args:
-        arr, minimum, maximum, total_occ_arr
+        arr, min_occ, max_occ, total_occ_arr
 
     Returns:
         fltrd_arr (numpy array): occupancy array filtered according
         to thresholds provided
     """
 
-    if maximum is None:
-        maximum = total_occ_arr.max()
+    if max_occ is None:
+        max_occ = total_occ_arr.max()
 
-    idx = np.asarray((total_occ_arr >= minimum) & (total_occ_arr <= maximum)).nonzero()[
+    idx = np.asarray((total_occ_arr >= min_occ) & (total_occ_arr <= max_occ)).nonzero()[
         0
     ]
     fltrd_arr = arr[idx]
 
     return fltrd_arr
 
-
 def filter_for_sp_of_interest(df, genecount_df, species_name):
     """Filter the DataFrame for HOGs that include a species of interest"""
-
-    _cprint(f"Filtering for presence of {species_name}\n\n")
 
     sp_of_interest_present = genecount_df[genecount_df[species_name] != 0]
 
@@ -261,56 +223,7 @@ def filter_for_sp_of_interest(df, genecount_df, species_name):
     sp_of_interest_present_hogs = set(sp_of_interest_present_hogs)
     df_fltrd_sp_of_int = df[df.index.isin(sp_of_interest_present_hogs)]
 
-    sp_of_interest_hogs_count = len(df_fltrd_sp_of_int)
-
-    return df_fltrd_sp_of_int, sp_of_interest_hogs_count
-
-
-def tgauss_fun(params, x):
-    """Triple Gaussian function."""
-
-    w1 = params[0]
-    mu1 = params[1]
-    sigma1 = params[2]
-    w2 = params[3]
-    mu2 = params[4]
-    sigma2 = params[5]
-    mu3 = params[6]
-    sigma3 = params[7]
-
-    gauss1 = norm.pdf(x, mu1, sigma1)
-    gauss2 = norm.pdf(x, mu2, sigma2)
-    gauss3 = norm.pdf(x, mu3, sigma3)
-
-    p = w1 * gauss1 + w2 * gauss2 + (1 - w1 - w2) * gauss3
-
-    return p
-
-
-def tgausslogl(params, x):
-    """Negative log-likelihood function for the triple Gaussian."""
-    p = tgauss_fun(params, x)
-    return -np.nansum(np.log(p), axis=0)
-
-
-def optimize_tgauss(params, data):
-    """Optimize the parameters of the triple Gaussian function."""
-
-    constraints = (
-        {"type": "ineq", "fun": lambda p: p[0]},  # w1 >= 0
-        {"type": "ineq", "fun": lambda p: p[3]},  # w2 >= 0
-        {"type": "ineq", "fun": lambda p: 1 - p[0] - p[3]},  # w1 + w2 <= 1
-    )
-
-    result = minimize(
-        tgausslogl,
-        params,
-        args=(data,),
-        method="COBYLA",
-        constraints=constraints,
-    )
-
-    return result.x
+    return len(df_fltrd_sp_of_int)
 
 
 def calculate_odds(foreground_bool_arr, background_bool_arr, test_bool_mat, busco_arr):
@@ -366,7 +279,7 @@ def calculate_odds(foreground_bool_arr, background_bool_arr, test_bool_mat, busc
     ## log odds ratio
     log_odds_ratio_arr = np.log(odds_ratio_arr)
 
-    return odds_foreground_arr, odds_background_arr, log_odds_ratio_arr
+    return log_odds_ratio_arr
 
 
 class OddsRatioResults:
@@ -376,7 +289,6 @@ class OddsRatioResults:
         self,
         genecount_csv,
         hog_node_genes_tsv,
-        test,
         time,
         foreground_list_filename,
         background_list_filename=None,
@@ -385,14 +297,9 @@ class OddsRatioResults:
         """Initialize the inputs for the odds ratio calculations"""
         self.genecount_csv = genecount_csv
         self.hog_node_genes_tsv = hog_node_genes_tsv
-        self.test = test
         self.time = time
         self.foreground_list_filename = foreground_list_filename
         self.background_list_filename = background_list_filename
-
-        tests = ["duplication", "loss"]
-        if test not in tests:
-            raise ValueError("Invalid test. Expected one of: %s" % tests)
 
         self.foreground_list_arr = np.loadtxt(foreground_list_filename, dtype=str)
 
@@ -418,14 +325,20 @@ class OddsRatioResults:
         # Define the foreground and background arrays
         self._define_foreground()
 
-        # Calculate the odds ratios and log odds ratios
-        self.odds_foreground_arr, self.odds_background_arr, self.log_odds_ratio_arr = (
-            calculate_odds(
-                self.foreground_bool_arr,
-                self.background_bool_arr,
-                self.test_bool_mat,
-                busco_arr=getattr(self, "busco_arr", None),
-            )
+        # Calculate the log odds ratios of loss
+        self.loss_lor_arr = calculate_odds(
+            self.foreground_bool_arr,
+            self.background_bool_arr,
+            self.loss_bool_mat,
+            busco_arr=getattr(self, "loss_busco_arr", None),
+        )
+
+        # Calculate the log odds ratios of duplication
+        self.dup_lor_arr = calculate_odds(
+            self.foreground_bool_arr,
+            self.background_bool_arr,
+            self.dup_bool_mat,
+            busco_arr=getattr(self, "dup_busco_arr", None),
         )
 
         # Create the results DataFrame
@@ -436,7 +349,7 @@ class OddsRatioResults:
         return (
             f"OddsRatioResults(genecount_csv={self.genecount_csv}, "
             f"hog_node_genes_tsv={self.hog_node_genes_tsv}, "
-            f"test={self.test}, foreground_list_filename={self.foreground_list_filename}, "
+            f"foreground_list_filename={self.foreground_list_filename}, "
             f"background_list_filename={self.background_list_filename})"
         )
 
@@ -519,21 +432,15 @@ class OddsRatioResults:
         self.loss_bool_mat = loss_bool_mat
         self.dup_bool_mat = dup_bool_mat
 
-        if self.test == "loss":
-            self.test_bool_mat = loss_bool_mat
+        # When testing for loss, the total fraction of complete buscos, whether single-copy or
+        # duplicated, should be a good proxy for how reliable loss calls will be
+        if hasattr(self, "buscos"):
+            self.loss_busco_arr = total_busco_arr
 
-            # If testing for loss, the total fraction of complete buscos, whether single-copy or
-            # duplicated, should be a good proxy for how reliable loss calls will be
-            if hasattr(self, "buscos"):
-                self.busco_arr = total_busco_arr
-
-        elif self.test == "duplication":
-            self.test_bool_mat = dup_bool_mat
-
-            # If testing for duplication, the fraction of recovered buscos that are single-copy
-            # should be a good proxy for how reliable duplication calls will be
-            if hasattr(self, "buscos"):
-                self.busco_arr = sc_busco_arr
+        # When testing for duplication, the fraction of recovered buscos that are single-copy
+        # should be a good proxy for how reliable duplication calls will be
+        if hasattr(self, "buscos"):
+            self.dup_busco_arr = sc_busco_arr
 
     def _define_foreground(self):
         """Function to make a numpy vector corresponding to whether
@@ -580,7 +487,7 @@ class OddsRatioResults:
         self.foreground_bool_arr = foreground_bool_arr
         self.background_bool_arr = background_bool_arr
 
-    def results_to_df(self, occupancy_threshold=0, maximum=None):
+    def results_to_df(self):
         """Function to convert the results of the odds ratio calculations
         into a DataFrame for easier analysis and plotting"""
 
@@ -588,88 +495,14 @@ class OddsRatioResults:
         results_df = pd.DataFrame(
             {
                 "HOG": self.hog_list,
-                "Occupancy": self.total_occ_arr.flatten(),
-                f"Odds {self.test}, foreground": self.odds_foreground_arr.flatten(),
-                f"Odds {self.test}, background": self.odds_background_arr.flatten(),
-                "Log odds ratio": self.log_odds_ratio_arr.flatten(),
+                "Occupancy": self.total_occ_arr.flatten().astype(int),
+                "Log odds ratio of loss": self.loss_lor_arr.flatten(),
+                "Log odds ratio of duplication": self.dup_lor_arr.flatten(),
             }
         )
         results_df = results_df.set_index("HOG")
 
-        # Filter the results based on the occupancy threshold
-        if occupancy_threshold > 0:
-            results_df = results_df[
-                results_df["Occupancy"] >= occupancy_threshold
-            ].copy()
-
-        # If a maximum occupancy is specified, filter the results further
-        if maximum is not None:
-            results_df = results_df[
-                (results_df["Occupancy"] >= occupancy_threshold)
-                & (results_df["Occupancy"] <= maximum)
-            ].copy()
-        else:
-            maximum = "none"
-
         return results_df
-
-    def filter_for_permutation_hits(self, minimum, maximum, ci, alternative):
-        """Filter the DataFrame based on the occupancy and log odds ratio"""
-        df = self.results_df
-
-        _cprint(
-            f"Filtering log odds ratio results df for occupancy >= {minimum}, <= {maximum} with alternative hypothesis '{alternative}' and log odds ratio threshold {ci} \n\n"
-        )
-
-        alt = str(alternative).strip().lower()
-
-        if alt in {"rt", "greater"}:
-            df_fltrd = df[
-                (df["Occupancy"] >= minimum)
-                & (df["Occupancy"] <= maximum)
-                & (df["Log odds ratio"] > ci[1])
-            ]
-        elif alt in {"lt", "less"}:
-            df_fltrd = df[
-                (df["Occupancy"] >= minimum)
-                & (df["Occupancy"] <= maximum)
-                & (df["Log odds ratio"] < ci[0])
-            ]
-        else:
-            df_fltrd = df[
-                (df["Occupancy"] >= minimum)
-                & (df["Occupancy"] <= maximum)
-                & ((df["Log odds ratio"] < ci[0]) | (df["Log odds ratio"] > ci[1]))
-            ]
-
-        total_hits = len(df_fltrd)
-
-        return df_fltrd, total_hits
-
-
-# DEPRECATED: Now using permulations method
-def define_foreground_random(species_incl_idx, total_species_count, foreground_count):
-    """Function to randomly define the species designated as
-    foreground and background (with the same number of each
-    as the true number) for permutation."""
-
-    # Create new (empty for now) foreground and background arrays
-    new_foregrounds = np.zeros(total_species_count)
-    new_backgrounds = np.zeros(total_species_count)
-
-    # Randomly select indices for the new foreground
-    new_foregrounds_idx = np.random.choice(
-        species_incl_idx, foreground_count, replace=False
-    )
-    new_foregrounds[new_foregrounds_idx] = 1
-
-    # The rest of the species are background
-    new_backgrounds_idx = np.setdiff1d(
-        species_incl_idx, new_foregrounds_idx, assume_unique=True
-    )
-    new_backgrounds[new_backgrounds_idx] = 1
-
-    return new_foregrounds, new_backgrounds
 
 
 def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]]:
@@ -705,115 +538,103 @@ def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]
         for row in tip_numeric.to_dict(orient="records")
     ]
 
+def save_loc_list(df, NX_path, output_path):
+    locs_df = id_converter.convert_hogs_to_locs(df, NX_path, show_progress=False)
+    list = locs_df['LOC'].dropna().unique()
+    with open(output_path, 'w', encoding="utf-8") as f:
+        for loc in list:
+            f.write(f"{loc}\n")
+    print(f"Wrote {len(list)} items to {output_path}")
+    return list
 
-class PermutationTestResults:
-    """Class to perform the permutation test for the odds ratio"""
+class PermulationTestResults:
+    """Class to perform the permulation test for the odds ratio"""
 
     def __init__(
         self,
         true_odds,
-        occupancy_threshold=0,
-        maximum=None,
-        alternative="less",
-        a=0.05,
-        permutation_reps=10000,
-        permulation_tip_values: Optional[List[Dict[str, float]]] = None,
+        permulation_tip_values,
+        min_occ=0,
+        max_occ=None,
+        alpha=0.05,
+        permulation_reps=10000,
         permulation_rows_available: Optional[int] = None,
-        test_triple_gaussian_params=True,
-        save_two_tailed_hits=False,
+        sampled_from_available: bool = False,
         species_of_interest=None,
     ):
-        """Initialize the permutation test for a given odds ratio results object"""
+        """Initialize the permulation test for a given odds ratio results object"""
 
         self.true_odds = true_odds
 
-        self.occupancy_threshold = occupancy_threshold
+        self.min_occ = min_occ
 
-        self.alternative = _normalize_alternative(alternative)
         self.permulation_tip_values = permulation_tip_values
         self.permulation_rows_available = permulation_rows_available
-        self.test_triple_gaussian_params = test_triple_gaussian_params
-        self.save_two_tailed_hits = save_two_tailed_hits
+        self.sampled_from_available = sampled_from_available
 
         if self.permulation_tip_values is not None:
             if len(self.permulation_tip_values) == 0:
                 raise ValueError("permulation_tip_values cannot be empty.")
-            self.permutation_reps = len(self.permulation_tip_values)
+            self.permulation_reps = len(self.permulation_tip_values)
         else:
-            self.permutation_reps = permutation_reps
+            self.permulation_reps = permulation_reps
 
         self.species_of_interest = species_of_interest
 
-        if maximum is not None:
-            self.maximum = maximum
+        if max_occ is not None:
+            self.max_occ = max_occ
         else:
-            self.maximum = self.true_odds.total_species_count
+            self.max_occ = self.true_odds.total_species_count
 
-        self.a = a
-        self.z_crit = norm.ppf(1 - self.a / 2)
-        self.cis = None
-        self.ci_av = None
+        self.alpha = alpha
+        self.loss_ci_av = None
+        self.dup_ci_av = None
 
         # Filter the true log odds ratios based on the occupancy threshold
-        self.true_fltrd_log_odds_ratios = occupancy_filter(
-            self.true_odds.log_odds_ratio_arr,
-            self.occupancy_threshold,
-            self.maximum,
+        self.true_fltrd_loss_lors = occupancy_filter(
+            self.true_odds.loss_lor_arr,
+            self.min_occ,
+            self.max_occ,
+            self.true_odds.total_occ_arr,
+        )
+
+        self.true_fltrd_dup_lors = occupancy_filter(
+            self.true_odds.dup_lor_arr,
+            self.min_occ,
+            None,
             self.true_odds.total_occ_arr,
         )
 
         # Calculate the mean and standard deviation of the true log odds ratios
-        self.true_mean = np.mean(self.true_fltrd_log_odds_ratios)
-        self.true_stddev = np.std(self.true_fltrd_log_odds_ratios)
+        self.true_mean_loss = np.mean(self.true_fltrd_loss_lors)
+        self.true_stddev_loss = np.std(self.true_fltrd_loss_lors)
+        self.true_mean_dup = np.mean(self.true_fltrd_dup_lors)
+        self.true_stddev_dup = np.std(self.true_fltrd_dup_lors)
 
         _cprint(
-            f"Mean: {self._fmt_stat(self.true_mean)}, Stddev: {self._fmt_stat(self.true_stddev)}, Count: {len(self.true_fltrd_log_odds_ratios)}"
+            f"Log odds ratios of LOSS: \n Mean: {self._fmt_stat(self.true_mean_loss)}, Stddev: {self._fmt_stat(self.true_stddev_loss)}, Count of HOGs: {len(self.true_fltrd_loss_lors)}"
         )
-        if self.test_triple_gaussian_params:
-            # Optimize the parameters for a triple gaussian fit to the true LOR distribution.
-            initial_params = [
-                0.33,
-                self.true_mean - self.true_stddev,
-                self.true_stddev,
-                0.33,
-                self.true_mean,
-                self.true_stddev,
-                self.true_mean + self.true_stddev,
-                self.true_stddev,
-            ]
-            self.true_tgauss_params = optimize_tgauss(
-                initial_params, self.true_fltrd_log_odds_ratios
-            )
-            _cprint("Optimized triple Gaussian parameters:")
-            for param_name, param_value in zip(
-                TGAUSS_PARAM_NAMES, self.true_tgauss_params
-            ):
-                _cprint(f"  {param_name}: {float(param_value):.3f}")
-        else:
-            self.true_tgauss_params = None
-            _cprint(
-                "Skipping triple Gaussian parameter testing (test_triple_gaussian_params=False)."
-            )
+        _cprint(
+            f"Log odds ratios of DUPLICATION: \n Mean: {self._fmt_stat(self.true_mean_dup)}, Stddev: {self._fmt_stat(self.true_stddev_dup)}, Count of HOGs: {len(self.true_fltrd_dup_lors)}"
+        )
 
-        # Run the permutation test
-        self._run_permutation()
+        # Run the permulation test
+        self._run_permulation()
 
         # Get the list of HOGs which are significantly different between
-        # the test groups according to the permutation thresholds
-        self._get_hits_df()
-        self._get_hits_hogs()
+        # the test groups according to the permulation thresholds
+        self._get_hits_dfs()
 
-        # Print the results of the permutation test
-        self.print_permutation_results()
+        # Print the results of the permulation test
+        self.print_permulation_results()
 
     def __repr__(self):
-        """String representation of the PermutationTestResults object"""
+        """String representation of the PermulationTestResults object"""
         return (
-            f"PermutationTestResults(true_odds={self.true_odds}, "
+            f"PermulationTestResults(true_odds={self.true_odds}, "
             #            f"stat={self.stat}, "
-            f"occupancy_threshold={self.occupancy_threshold}, "
-            f"maximum={self.maximum}, alternative={self.alternative}, "
-            f"permutation_reps={self.permutation_reps})"
+            f"min_occ={self.min_occ}, "
+            f"permulation_reps={self.permulation_reps})"
         )
 
     def print_attributes(self):
@@ -823,30 +644,80 @@ class PermutationTestResults:
             _cprint(f"{attr_name}: {type(attr_value).__name__}")
 
     def get_pval_thresholds(self, alpha, alternative):
-        """Calculate the permutation p-value thresholds for the log odds ratio"""
+        """Calculate the permulation p-value thresholds for the log odds ratio"""
 
         if alternative == "two-tailed":
             z_crit = norm.ppf(1 - alpha / 2)  # two-tailed z critical value
         else:
             z_crit = norm.ppf(1 - alpha)  # one-tailed z critical value
 
-        lowers = self.means - z_crit * self.stddevs
-        uppers = self.means + z_crit * self.stddevs
+        def compute_ci(means, stddevs):
+            lowers = means - z_crit * stddevs
+            uppers = means + z_crit * stddevs
 
-        # Shape: (n_permutations, 2) where each row is [lower, upper].
-        self.cis = np.column_stack((lowers, uppers))
+            # Shape: (n_permulations, 2) where each row is [lower, upper].
+            cis = np.column_stack((lowers, uppers))
 
-        # Average CI as [mean_lower, mean_upper].
-        ci_av = np.array(
-            [
-                np.mean(self.cis[:, 0]),
-                np.mean(self.cis[:, 1]),
-            ]
+            # Average CI as [mean_lower, mean_upper].
+            ci_av = np.array(
+                [
+                    np.mean(cis[:, 0]),
+                    np.mean(cis[:, 1]),
+                ]
+            )
+            return ci_av
+
+        self.loss_ci_av = compute_ci(self.means_loss, self.stddevs_loss)
+        self.dup_ci_av = compute_ci(self.means_dup, self.stddevs_dup)
+
+        return self.loss_ci_av, self.dup_ci_av
+    
+    def get_universe_permulation(self) -> tuple:
+        """
+        Generate universe LOC files for topGO analysis at different occupancy thresholds.
+        """
+        min_occupancy = self.min_occ
+        max_occupancy = self.max_occ
+        genecount_df = self.true_odds.genecount_df
+
+        print("Generating universe LOCs...")
+
+        genecount_df["occupancy"] = (
+            genecount_df.select_dtypes(include="number").astype("bool").sum(axis=1)
         )
 
-        self.ci_av = ci_av
+        # Drop all columns except 'HOG' and 'occupancy'
+        genecount_df = genecount_df[["occupancy"]]
 
-        return ci_av
+        # Filter for minimum occupancy    
+        genecount_df = genecount_df[genecount_df["occupancy"] >= min_occupancy]
+
+        loss_uni_df = genecount_df[
+            (genecount_df["occupancy"] >= min_occupancy)
+            & (genecount_df["occupancy"] <= max_occupancy)
+        ]
+        dup_uni_df = genecount_df.copy()
+
+        return loss_uni_df, dup_uni_df
+
+    def save_go_lists(self, results_dir: str, use_perm_pvals=False):
+        
+        dfs = self.results_fltrd_dfs
+        if use_perm_pvals:
+            dfs["loss_fg_perm_pval"] = dfs["loss_fg"][dfs["loss_fg"]["Significant in permulation test"] == True]
+            dfs["loss_bg_perm_pval"] = dfs["loss_bg"][dfs["loss_bg"]["Significant in permulation test"] == True]
+            dfs["dup_fg_perm_pval"] = dfs["dup_fg"][dfs["dup_fg"]["Significant in permulation test"] == True]
+            dfs["dup_bg_perm_pval"] = dfs["dup_bg"][dfs["dup_bg"]["Significant in permulation test"] == True]
+
+        # Convert HOG hit list to LOCs + descriptions and save as a companion file.
+        for key in dfs.keys():
+            save_loc_list(self.results_fltrd_dfs[key], self.true_odds.hog_node_genes_tsv, f"{results_dir}/{key}_sig_locs.txt")
+        
+        loss_uni, dup_uni = self.get_universe_permulation()
+        
+        save_loc_list(loss_uni, self.true_odds.hog_node_genes_tsv, f"{results_dir}/loss_universe_locs.txt")
+        save_loc_list(dup_uni, self.true_odds.hog_node_genes_tsv, f"{results_dir}/dup_universe_locs.txt")
+
 
     @staticmethod
     def _fmt_stat(value: float, ndigits: int = 2) -> str:
@@ -855,6 +726,15 @@ class PermutationTestResults:
         if rounded == 0.0:
             rounded = 0.0
         return f"{rounded:.{ndigits}f}"
+
+    @staticmethod
+    def _fmt_ci(ci_values, ndigits: int = 3) -> str:
+        """Format CI vectors like [lower, upper] with fixed precision."""
+        ci_arr = np.asarray(ci_values, dtype=float).flatten()
+        if ci_arr.size == 0:
+            return "[]"
+        formatted = ", ".join(f"{x:.{ndigits}f}" for x in ci_arr)
+        return f"[{formatted}]"
 
     def _foreground_background_from_permulation(
         self,
@@ -882,163 +762,146 @@ class PermutationTestResults:
 
         return new_foregrounds, new_backgrounds
 
-    def _permutation_iter(self, i, counters, species_incl_idx, perm_tips=None):
-        """Function to perform a single iteration of the permutation test"""
+    def _permulation_iter(
+        self,
+        i,
+        counter_mean_loss,
+        counter_mean_dup,
+        counters_hogs,
+        species_incl_idx,
+        perm_tips=None,
+    ):
+        """Function to perform a single iteration of the permulation test"""
 
-        # Create a new set of foreground and background arrays for permutation.
-        # In permulation mode, these come from simulated tree tip-value assignments.
-        if perm_tips is None:
-            new_foregrounds, new_backgrounds = define_foreground_random(
-                species_incl_idx,
-                self.true_odds.total_species_count,
-                self.true_odds.foreground_count,
-            )
-        else:
-            new_foregrounds, new_backgrounds = (
-                self._foreground_background_from_permulation(
-                    perm_tips,
-                    species_incl_idx,
-                )
-            )
-
-        # Recalculate the odds ratios and log odds ratios for the new foreground/background arrays
-        new_log_odds_ratio = calculate_odds(
-            new_foregrounds,
-            new_backgrounds,
-            self.true_odds.test_bool_mat,
-            busco_arr=getattr(self.true_odds, "busco_arr", None),
-        )[
-            2
-        ]  # only return the log odds ratio array
-
-        new_log_odds_ratio_fltrd = occupancy_filter(
-            new_log_odds_ratio,
-            self.occupancy_threshold,
-            self.maximum,
-            self.true_odds.total_occ_arr,
+        # Create a new set of foreground and background arrays for permulation.
+        new_foregrounds, new_backgrounds = self._foreground_background_from_permulation(
+            perm_tips,
+            species_incl_idx,
         )
 
-        # Calculate the statistics for the new permuted distribution
-        new_mean = np.mean(new_log_odds_ratio_fltrd)
-        new_stddev = np.std(new_log_odds_ratio_fltrd)
+        # Recalculate the odds ratios and log odds ratios for the new foreground/background arrays
+        # for loss
+        new_log_odds_ratio_loss = calculate_odds(
+            new_foregrounds,
+            new_backgrounds,
+            self.true_odds.loss_bool_mat,
+            busco_arr=getattr(self.true_odds, "loss_busco_arr", None),
+        )
 
-        if self.test_triple_gaussian_params:
-            # Optimize the parameters for a triple gaussian fit to the permulated distribution.
-            initial_params = [
-                0.33,
-                new_mean - new_stddev,
-                new_stddev,
-                0.33,
-                new_mean,
-                new_stddev,
-                new_mean + new_stddev,
-                new_stddev,
-            ]
-            new_tgauss_params = optimize_tgauss(
-                initial_params, new_log_odds_ratio_fltrd
-            )
+        # for duplication
+        new_log_odds_ratio_dup = calculate_odds(
+            new_foregrounds,
+            new_backgrounds,
+            self.true_odds.dup_bool_mat,
+            busco_arr=getattr(self.true_odds, "dup_busco_arr", None),
+        )
 
-        # Permutation test using single Gaussian parameters
-        if self.alternative == "greater":
-            if new_mean > self.true_mean:
-                counters["mn"] += 1
-            # if new_stddev > self.true_stddev:
-            #     counters["sd"] += 1
+        # Compare the log odds ratio of each gene in the new permulated distribution
+        # to the log odds ratio of the same gene in the true distribution, and count
+        # how many times the permulated log odds ratio is more extreme than the true
+        # log odds ratio according to the alternative hypothesis
 
-        else:
-            if new_mean < self.true_mean:
-                counters["mn"] += 1
-            # if new_stddev < self.true_stddev:
-            #     counters["sd"] += 1
+        # for loss, greater
+        counters_hogs[:, 0] += (
+            new_log_odds_ratio_loss > self.true_odds.loss_lor_arr
+        ).flatten()
+        # for loss, less
+        counters_hogs[:, 1] += (
+            new_log_odds_ratio_loss < self.true_odds.loss_lor_arr
+        ).flatten()
 
-        self.means[i] = new_mean
-        self.stddevs[i] = new_stddev
+        # for duplication, greater
+        counters_hogs[:, 2] += (
+            new_log_odds_ratio_dup > self.true_odds.dup_lor_arr
+        ).flatten()
+        # for duplication, less
+        counters_hogs[:, 3] += (
+            new_log_odds_ratio_dup < self.true_odds.dup_lor_arr
+        ).flatten()
 
-        # Permutation test using triple Gaussian parameters.
-        if self.test_triple_gaussian_params:
-            if self.alternative == "greater":
-                if (
-                    new_tgauss_params[1] > self.true_tgauss_params[1]
-                ):  # comparing the mean of the first Gaussian component
-                    counters["mn_1"] += 1
-                if (
-                    new_tgauss_params[4] > self.true_tgauss_params[4]
-                ):  # comparing the mean of the second Gaussian component
-                    counters["mn_2"] += 1
-                if (
-                    new_tgauss_params[6] > self.true_tgauss_params[6]
-                ):  # comparing the mean of the third Gaussian component
-                    counters["mn_3"] += 1
-            else:
-                if (
-                    new_tgauss_params[1] < self.true_tgauss_params[1]
-                ):  # comparing the mean of the first Gaussian component
-                    counters["mn_1"] += 1
-                if (
-                    new_tgauss_params[4] < self.true_tgauss_params[4]
-                ):  # comparing the mean of the second Gaussian component
-                    counters["mn_2"] += 1
-                if (
-                    new_tgauss_params[6] < self.true_tgauss_params[6]
-                ):  # comparing the mean of the third Gaussian component
-                    counters["mn_3"] += 1
+        # Filter the new log odds ratio arrays based on the occupancy threshold
+        new_loss_lor_fltrd = occupancy_filter(
+            new_log_odds_ratio_loss,
+            self.min_occ,
+            self.max_occ,
+            self.true_odds.total_occ_arr,
+        )
+        new_dup_lor_fltrd = occupancy_filter(
+            new_log_odds_ratio_dup,
+            self.min_occ,
+            None,
+            self.true_odds.total_occ_arr,
+        )
+        # Calculate the statistics for the new filtered, permulated distribution
+        new_mean_loss = np.mean(new_loss_lor_fltrd)
+        new_stddev_loss = np.std(new_loss_lor_fltrd)
+        new_mean_dup = np.mean(new_dup_lor_fltrd)
+        new_stddev_dup = np.std(new_dup_lor_fltrd)
 
-            self.perm_tgauss_params[i] = new_tgauss_params
+        # Compare permulated mean to true mean according to the alternative hypothesis and update counter
+        if new_mean_loss < self.true_mean_loss:
+            counter_mean_loss += 1
+        if new_mean_dup > self.true_mean_dup:
+            counter_mean_dup += 1
 
-        return counters
+        self.means_loss[i] = new_mean_loss
+        self.stddevs_loss[i] = new_stddev_loss
+        self.means_dup[i] = new_mean_dup
+        self.stddevs_dup[i] = new_stddev_dup
 
-    def _run_permutation(self):
+        return counter_mean_loss, counter_mean_dup, counters_hogs
+
+    def _run_permulation(self):
         """Creating 10,000 test log odds ratio distributions with the set
         of species defined as "foreground" chosen via permulations (but still the
         same number of foreground  as the true number)"""
 
-        _cprint("\nLAUNCHING PERMUTATION TEST\n\n")
+        _cprint("\nLAUNCHING PERMULATION TEST\n\n")
 
         if (
             self.permulation_rows_available is not None
-            and self.permutation_reps < self.permulation_rows_available
+            and self.permulation_reps < self.permulation_rows_available
         ):
-            _cprint(
-                f"Using first {self.permutation_reps} permulation rows "
-                f"(out of {self.permulation_rows_available} available)."
-            )
+            if self.sampled_from_available:
+                _cprint(
+                    f"Using {self.permulation_reps} randomly sampled permulation rows "
+                    f"(out of {self.permulation_rows_available} available)."
+                )
+            else:
+                _cprint(
+                    f"Using {self.permulation_reps} permulation rows "
+                    f"(out of {self.permulation_rows_available} available)."
+                )
 
-        if self.maximum != self.true_odds.total_species_count:
-            _cprint(f"** Maximum occupancy set to {self.maximum} **\n")
+        if self.max_occ != self.true_odds.total_species_count:
+            _cprint(f"** Maximum occupancy set to {self.max_occ} for loss test **\n")
         else:
             pass
 
-        if self.occupancy_threshold > 0:
-            _cprint(f"** Minimum occupancy set to {self.occupancy_threshold} **\n\n")
+        if self.min_occ > 0:
+            _cprint(f"** Minimum occupancy set to {self.min_occ} **\n\n")
 
         if self.permulation_tip_values is not None:
             _cprint(
-                f"Using {self.permutation_reps} permulation-derived foreground/background assignments (from simulated trees) instead of random assignment.\n"
+                f"Using {self.permulation_reps} permulation-derived foreground/background assignments.\n"
             )
 
-        if self.alternative == "greater":
-            _cprint(
-                f"Counting permuted distributions in which statistics derived from {'permulation-derived' if self.permulation_tip_values is not None else 'randomly assigned'} test groups EXCEED the true distribution's statistics...\n"
-            )
-        else:
-            _cprint(
-                f"Counting permuted distributions in which statistics derived from {'permulation-derived' if self.permulation_tip_values is not None else 'randomly assigned'} test groups are SMALLER than the true distribution's statistics...\n"
-            )
+        # Initialize lists to store the results of the permulation
+        self.means_loss = np.zeros(self.permulation_reps)
+        self.means_dup = np.zeros(self.permulation_reps)
+        self.stddevs_loss = np.zeros(self.permulation_reps)
+        self.stddevs_dup = np.zeros(self.permulation_reps)
 
-        # Initialize lists to store the results of the permutation
-        self.means = np.zeros(self.permutation_reps)
-        self.stddevs = np.zeros(self.permutation_reps)
-        self.perm_tgauss_params = (
-            np.zeros((self.permutation_reps, 8))
-            if self.test_triple_gaussian_params
-            else None
-        )
+        # Initialize counter for how often the means of the permulated
+        # distributions exceed the true mean
+        counter_mean_loss = 0
+        counter_mean_dup = 0
 
-        # Initialize counters for how often the means of the permuted
-        # distributions exceed the true mean (for single Gaussian) and the mean parameters of the triple Gaussian fit
-        counters = {"mn": 0}
-        if self.test_triple_gaussian_params:
-            counters.update({"mn_1": 0, "mn_2": 0, "mn_3": 0})
+        # Initialize an array which counts how many times the gene's log
+        # odds ratio in the permulated distribution is more extreme than the
+        # gene's log odds ratio in the true distribution, according to the
+        # alternative hypothesis, across all genes in the analysis
+        counters_hogs = np.zeros((len(self.true_odds.loss_lor_arr), 4))
 
         # Get a list of the indices of the species being compared,
         # in case not all species are included in the analysis
@@ -1047,58 +910,108 @@ class PermutationTestResults:
         ).astype(bool)
         species_incl_idx = species_incl_arr.nonzero()[0]
 
-        if self.permulation_tip_values is None:
-            for i in tqdm(range(self.permutation_reps)):
-                counters = self._permutation_iter(i, counters, species_incl_idx)
-        else:
-            for i, perm_tips in enumerate(tqdm(self.permulation_tip_values)):
-                counters = self._permutation_iter(
-                    i, counters, species_incl_idx, perm_tips=perm_tips
-                )
-
-        p_vals = {
-            "mn": counters["mn"] / self.permutation_reps,
-            # "sd": counters["sd"] / self.permutation_reps,
-        }
-        if self.test_triple_gaussian_params:
-            p_vals.update(
-                {
-                    "mn_1": counters["mn_1"] / self.permutation_reps,
-                    "mn_2": counters["mn_2"] / self.permutation_reps,
-                    "mn_3": counters["mn_3"] / self.permutation_reps,
-                }
+        for i, perm_tips in enumerate(tqdm(self.permulation_tip_values)):
+            counter_mean_loss, counter_mean_dup, counters_hogs = self._permulation_iter(
+                i,
+                counter_mean_loss,
+                counter_mean_dup,
+                counters_hogs,
+                species_incl_idx,
+                perm_tips=perm_tips,
             )
 
-        # self.cis = [
-        #     self.means + self.z_crit * self.stddevs,  # the z-crit value is negative
-        #     self.means - self.z_crit * self.stddevs,
-        # ]
-
+        pval_mean_loss = counter_mean_loss / self.permulation_reps
+        pval_mean_dup = counter_mean_dup / self.permulation_reps
+        pvals_hogs = counters_hogs / self.permulation_reps
         _cprint(
-            f"Permutation counter for MEAN (single Gaussian): {str(counters['mn'])}"
+            f"Permulation counter for MEANS:\n Loss: {str(counter_mean_loss)}, Duplication: {str(counter_mean_dup)}\n"
         )
-        # print(f"Permutation counter for STD DEV: {str(counters['sd'])}")
-        if self.test_triple_gaussian_params:
-            _cprint(
-                f"Permutation counter for MEAN 1 (triple Gaussian): {str(counters['mn_1'])}"
-            )
-            _cprint(
-                f"Permutation counter for MEAN 2 (triple Gaussian): {str(counters['mn_2'])}"
-            )
-            _cprint(
-                f"Permutation counter for MEAN 3 (triple Gaussian): {str(counters['mn_3'])}\n"
-            )
 
-        _cprint()
+        self.pval_mean_loss = pval_mean_loss
+        self.pval_mean_dup = pval_mean_dup
+        self.pvals_hogs = pvals_hogs
+        self.results_df = self.true_odds.results_df.copy()
+        self.results_df["P-value loss more likely in fg"] = pvals_hogs[:, 0]
+        self.results_df["P-value loss more likely in bg"] = pvals_hogs[:, 1]
+        self.results_df["P-value duplication more likely in fg"] = pvals_hogs[:, 2]
+        self.results_df["P-value duplication more likely in bg"] = pvals_hogs[:, 3]
 
-        self.p_values = p_vals
+        # Getting average stats from across the 10000 permulated distributions
+        self.loss_mean_av = np.mean(self.means_loss)
+        self.loss_stddev_av = np.mean(self.stddevs_loss)
+        self.dup_mean_av = np.mean(self.means_dup)
+        self.dup_stddev_av = np.mean(self.stddevs_dup)
 
-        # Getting average stats from across the 10000 permuted distributions
-        self.mean_av = np.mean(self.means)
-        self.stddev_av = np.mean(self.stddevs)
+    def filter_for_permulation_hits(
+            self, 
+            min_occ=None,
+            max_occ=None
+            ):
+        """Filter the DataFrame based on the occupancy and confidence threshold"""
+        df = self.results_df
 
-    def plot_permutation_stats(
+        if min_occ is None:
+            min_occ = self.min_occ
+        if max_occ is None:
+            max_occ = self.max_occ
+
+        loss_fg_df = df[
+            (df["Occupancy"] >= min_occ)
+            & (df["Occupancy"] <= max_occ)
+            & (df["Log odds ratio of loss"] > self.loss_ci_av[1])
+        ].copy()
+
+        loss_fg_df["Significant in permulation test"] = (
+            loss_fg_df["P-value loss more likely in fg"] <= self.alpha
+        )
+
+        loss_bg_df = df[
+            (df["Occupancy"] >= min_occ)
+            & (df["Occupancy"] <= max_occ)
+            & (df["Log odds ratio of loss"] < self.loss_ci_av[0])
+        ].copy()
+
+        loss_bg_df["Significant in permulation test"] = (
+            loss_bg_df["P-value loss more likely in bg"] <= self.alpha
+        )
+
+        dup_fg_df = df[
+            (df["Occupancy"] >= min_occ)
+            & (df["Log odds ratio of duplication"] > self.dup_ci_av[1])
+        ].copy()
+
+        dup_fg_df["Significant in permulation test"] = (
+            dup_fg_df["P-value duplication more likely in fg"] <= self.alpha
+        )
+
+        dup_bg_df = df[
+            (df["Occupancy"] >= min_occ)
+            & (df["Log odds ratio of duplication"] < self.dup_ci_av[0])
+        ].copy()
+
+        dup_bg_df["Significant in permulation test"] = (
+            dup_bg_df["P-value duplication more likely in bg"] <= self.alpha
+        )
+
+        dfs = {
+            "loss_fg": loss_fg_df,
+            "loss_bg": loss_bg_df,
+            "dup_fg": dup_fg_df,
+            "dup_bg": dup_bg_df
+        }
+
+        df_all = pd.concat(list(dfs.values())).drop_duplicates()
+        total_count = len(df_all)
+
+        counts = {
+            key: len(df) for key, df in dfs.items()
+        }
+
+        return dfs, counts, df_all, total_count
+    
+    def plot_permulation_stats(
         self,
+        test,
         fg_name="foreground",
         bg_name="background",
         include_stddev=True,
@@ -1111,9 +1024,8 @@ class PermutationTestResults:
         axis_label_fontsize=12,
         xlim=None,
         ylim=None,
-        binwidth=0.05,
     ):
-        """Plotting the permutation means and standard deviations
+        """Plotting the permulation means and standard deviations
         and alpha thresholds to ensure the results are relatively
         tightly distributed"""
 
@@ -1121,24 +1033,29 @@ class PermutationTestResults:
         fig_width = 12 if include_stddev else 6.5
         fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
         axs = np.atleast_1d(axs)
+        if test=="loss":
+            test_name = "loss"
+            maximum=self.max_occ
+            binwidth=0.05
 
-        # Making the text bold deletes spaces
-        fg_name = fg_name.replace(" ", r"\ ")
-        bg_name = bg_name.replace(" ", r"\ ")
+        elif test=="dup":
+            test_name = "duplication"
+            maximum=self.true_odds.total_species_count
+            binwidth=0.01
+        
+        else:
+            raise ValueError(f"Invalid test type: {test}. Must be 'loss' or 'dup'.")
 
         if title:
             fig.suptitle(
-                rf"$\bf{{Permuted\ (null)\ distributions\ single\ Gaussian\  stats\ for\ gene\ {self.true_odds.test},}}$"
-                + "\n"
-                rf"$\bf{{{fg_name}\ vs. {bg_name}}}$" + "\n"
-                f"Maximum occupancy = {self.maximum}, "
-                f"minimum occupancy = {self.occupancy_threshold}",
+                f"Permulated (null) distribution stats for gene {test_name},\n"
+                f"{fg_name} vs. {bg_name}\n"
+                f"Maximum occupancy = {maximum}, minimum occupancy = {self.min_occ}",
                 fontsize=16,
             )
 
         sns.histplot(
-            data=self.means,
-            # kde=True,
+            data=getattr(self, f"means_{test}"),
             binwidth=binwidth,
             stat="count",
             ax=axs[0],
@@ -1149,20 +1066,20 @@ class PermutationTestResults:
         )
 
         if subplot_titles:
-            axs[0].set_title("Permuted means")
+            axs[0].set_title("permulated means")
         axs[0].set(xlabel="Means", ylabel="Count")
         axs[0].xaxis.label.set_fontsize(axis_label_fontsize)
         axs[0].xaxis.label.set_fontweight("bold")
         axs[0].yaxis.label.set_fontsize(axis_label_fontsize)
         axs[0].yaxis.label.set_fontweight("bold")
         axs[0].axvline(
-            x=self.mean_av,
+            x=getattr(self, f"{test}_mean_av"),
             linestyle="dotted",
             color="black",
-            label="Avg. permuted mean",
+            label="Avg. permulated mean",
         )
         axs[0].axvline(
-            x=self.true_mean,
+            x=getattr(self, f"true_mean_{test}"),
             linestyle="--",
             color="salmon",
             label="True mean",
@@ -1175,8 +1092,7 @@ class PermutationTestResults:
 
         if include_stddev:
             sns.histplot(
-                data=self.stddevs,
-                # kde=True,
+                data=getattr(self, f"stddevs_{test}"),
                 binwidth=binwidth,
                 stat="count",
                 ax=axs[1],
@@ -1197,13 +1113,13 @@ class PermutationTestResults:
             axs[1].yaxis.label.set_fontweight("bold")
 
             axs[1].axvline(
-                x=self.stddev_av,
+                x=getattr(self, f"{test}_stddev_av"),
                 linestyle="dotted",
                 color="black",
-                label="Avg. permuted stddev",
+                label="Avg. permulated stddev",
             )
             axs[1].axvline(
-                x=self.true_stddev,
+                x=getattr(self, f"true_stddev_{test}"),
                 linestyle="--",
                 color="salmon",
                 label="True stddev",
@@ -1218,79 +1134,13 @@ class PermutationTestResults:
 
         return fig, axs
 
-    def plot_permutation_stats_tgauss(self, fg_name, bg_name="background"):
-        """Plotting the permutation triple gaussian means to ensure the
-        results are relatively tightly distributed"""
-
-        if not self.test_triple_gaussian_params or self.perm_tgauss_params is None:
-            raise ValueError(
-                "Triple Gaussian parameter testing is disabled. "
-                "Re-run with test_triple_gaussian_params=True to plot these distributions."
-            )
-
-        fig, axs = plt.subplots(3, 3, figsize=(12, 12))
-
-        # Making the text bold deletes spaces
-        fg_name = fg_name.replace(" ", r"\ ")
-        bg_name = bg_name.replace(" ", r"\ ")
-
-        fig.suptitle(
-            rf"$\bf{{Permuted\ (null)\ distributions\ triple\ Gaussian\ stats\ for\ gene\ {self.true_odds.test},}}$"
-            + "\n"
-            rf"$\bf{{{fg_name}\ vs. {bg_name}}}$" + "\n"
-            f"Maximum occupancy = {self.maximum}, "
-            f"minimum occupancy = {self.occupancy_threshold}",
-            fontsize=16,
-        )
-
-        # Keep means and stddevs vertically aligned by leaving bottom-left empty.
-        axis_positions = [
-            (0, 0),
-            (0, 1),
-            (0, 2),
-            (1, 0),
-            (1, 1),
-            (1, 2),
-            (2, 1),
-            (2, 2),
-        ]
-
-        for param, (row, col) in enumerate(axis_positions):
-            sns.histplot(
-                data=self.perm_tgauss_params[:, param],
-                kde=True,
-                bins=50,
-                stat="density",
-                ax=axs[row, col],
-                legend=False,
-            )
-            axs[row, col].set(xlabel=f"{TGAUSS_PARAM_NAMES[param]}", ylabel="Density")
-            axs[row, col].axvline(
-                x=np.mean(self.perm_tgauss_params[:, param]),
-                linestyle="dotted",
-                color="black",
-                label="Mean permuted value",
-            )
-            axs[row, col].axvline(
-                x=self.true_tgauss_params[param],
-                linestyle="--",
-                color="red",
-                label="True value",
-            )
-            axs[row, col].legend(fontsize=8)
-
-        axs[2, 0].axis("off")
-
-        plt.tight_layout()
-
-        return fig, axs
-
-    def plot_permutation_results(
+    def plot_permulation_results(
         self,
+        test,
         fg_name,
         bg_name="background",
         gaussfit_color="blue",
-        avpermutation_color="red",
+        avpermulation_color="red",
         hist_color="red",
         thresholds_color="darkred",
         hist_alpha=0.3,
@@ -1301,26 +1151,20 @@ class PermutationTestResults:
         textbox_fontsize=10,
         axis_label_fontsize=12,
     ):
-        """Function to plot the results of the permutation test"""
-
-        # Making the text bold deletes spaces
-        fg_name = fg_name.replace(" ", r"\ ")
-        bg_name = bg_name.replace(" ", r"\ ")
+        """Function to plot the results of the permulation test"""
 
         fig, ax = plt.subplots(figsize=(6, 5))
 
         if title:
             fig.suptitle(
-                rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$"
-                + "\n"
-                f"Maximum occupancy = {self.maximum}, "
-                f"minimum occupancy = {self.occupancy_threshold}",
+                f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
+                f"Maximum occupancy = {self.max_occ}, minimum occupancy = {self.min_occ}",
                 fontsize=14,
             )
 
         # Histogram of the true log odds ratios, filtered for occupancy
         ax.hist(
-            self.true_fltrd_log_odds_ratios,
+            getattr(self, f"true_fltrd_{test}_lors"),
             bins=bins,
             density=True,
             color=hist_color,
@@ -1329,8 +1173,8 @@ class PermutationTestResults:
         )
 
         x = np.linspace(
-            self.true_fltrd_log_odds_ratios.min(),
-            self.true_fltrd_log_odds_ratios.max(),
+            getattr(self, f"true_fltrd_{test}_lors").min(),
+            getattr(self, f"true_fltrd_{test}_lors").max(),
             100,
         )
 
@@ -1339,40 +1183,46 @@ class PermutationTestResults:
             x,
             norm.pdf(
                 x,
-                np.mean(self.true_fltrd_log_odds_ratios),
-                np.std(self.true_fltrd_log_odds_ratios),
+                np.mean(getattr(self, f"true_fltrd_{test}_lors")),
+                np.std(getattr(self, f"true_fltrd_{test}_lors")),
             ),
             color=gaussfit_color,
             linestyle="--",
             label="Gaussian fit to\ntrue distribution",
         )
 
-        # Normal distribution using the average permuted stats
+        # Normal distribution using the average permulated stats
         ax.plot(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
-            color=avpermutation_color,
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
+            color=avpermulation_color,
             linestyle="--",
-            label="Average permuted\ndistribution",
+            label="Average permulated\ndistribution",
         )
 
-        # Permutation-derived confidence intervals
+        # permulation-derived confidence intervals
         ax.axvline(
-            x=self.ci_av[0],
-            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
+            x=getattr(self, f"{test}_ci_av")[0],
+            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
             linestyle="dotted",
             color=thresholds_color,
         )
 
-        ax.axvline(x=self.ci_av[1], linestyle="dotted", color=thresholds_color)
+        ax.axvline(
+            x=getattr(self, f"{test}_ci_av")[1],
+            linestyle="dotted",
+            color=thresholds_color,
+        )
 
         ax.text(
             0.03,
             0.95,
-            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
-            f"True mean = {self._fmt_stat(self.true_mean)}\n\n"
-            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
+            f"Permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
+            f"True mean = {self._fmt_stat(getattr(self, f'true_mean_{test}'))}\n\n"
+            f"Permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}\n"
+            f"True std. dev. = {self._fmt_stat(getattr(self, f'true_stddev_{test}'))}",
             transform=ax.transAxes,
             fontsize=textbox_fontsize,
             ha="left",
@@ -1396,12 +1246,13 @@ class PermutationTestResults:
 
         return fig, ax
 
-    def plot_permutation_results_layered(
+    def plot_permulation_results_layered(
         self,
+        test,
         fg_name,
         bg_name="background",
         gaussfit_color="blue",
-        avpermutation_color="red",
+        avpermulation_color="red",
         hist_color="red",
         thresholds_color="darkred",
         bins=100,
@@ -1410,32 +1261,30 @@ class PermutationTestResults:
         """Function to create 4 sequential plots with elements layered on top of each other.
 
         Returns 4 figures showing progressive buildup:
-        1. Average permuted distribution
-        2. + Permutation-derived thresholds (with permuted stats)
-        3. + Histogram of true log odds ratios (with permuted stats)
-        4. + Gaussian fit to the histogram (with true and permuted stats)
+        1. Average permulated distribution
+        2. + permulation-derived thresholds (with permulated stats)
+        3. + Histogram of true log odds ratios (with permulated stats)
+        4. + Gaussian fit to the histogram (with true and permulated stats)
         """
-
-        # Making the text bold deletes spaces
-        fg_name = fg_name.replace(" ", r"\ ")
-        bg_name = bg_name.replace(" ", r"\ ")
 
         # Define x-axis range
         x = np.linspace(
-            self.true_fltrd_log_odds_ratios.min(),
-            self.true_fltrd_log_odds_ratios.max(),
+            getattr(self, f"true_fltrd_{test}_lors").min(),
+            getattr(self, f"true_fltrd_{test}_lors").max(),
             100,
         )
 
         # ----------- Compute a common y-limit so all panels share the same scale -----------
-        avg_pdf = norm.pdf(x, self.mean_av, self.stddev_av)
+        avg_pdf = norm.pdf(
+            x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+        )
         true_pdf = norm.pdf(
             x,
-            np.mean(self.true_fltrd_log_odds_ratios),
-            np.std(self.true_fltrd_log_odds_ratios),
+            getattr(self, f"true_mean_{test}"),
+            getattr(self, f"true_stddev_{test}"),
         )
         hist_vals, _ = np.histogram(
-            self.true_fltrd_log_odds_ratios, bins=bins, density=True
+            getattr(self, f"true_fltrd_{test}_lors"), bins=bins, density=True
         )
         hist_max = hist_vals.max() if hist_vals.size else 0.0
         y_max = max(avg_pdf.max(), true_pdf.max(), hist_max) * 1.05
@@ -1444,16 +1293,14 @@ class PermutationTestResults:
         # -------------------------------------------------------------------------------
 
         title_str = (
-            rf"$\bf{{Log\ odds\ ratio\ of\ gene\ {self.true_odds.test}, {fg_name}\ vs. {bg_name}}}$"
-            + "\n"
-            f"Maximum occupancy = {self.maximum}, "
-            f"minimum occupancy = {self.occupancy_threshold}"
+            f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
+            f"Maximum occupancy = {self.max_occ}, minimum occupancy = {self.min_occ}"
         )
 
         figs = []
         axes = []
 
-        # ========== PLOT 1: Average permuted distribution ==========
+        # ========== PLOT 1: Average permulated distribution ==========
         fig1, ax1 = plt.subplots(figsize=(8, 6))
 
         if title:
@@ -1461,16 +1308,20 @@ class PermutationTestResults:
 
         ax1.plot(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
-            color=avpermutation_color,
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
+            color=avpermulation_color,
             linewidth=2.5,
-            label="Average permuted\ndistribution",
+            label="Average permulated\ndistribution",
         )
         ax1.fill_between(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
             alpha=0.2,
-            color=avpermutation_color,
+            color=avpermulation_color,
         )
 
         ax1.set_xlabel("Log odds ratio", fontsize=14, fontweight="bold")
@@ -1486,7 +1337,7 @@ class PermutationTestResults:
         figs.append(fig1)
         axes.append(ax1)
 
-        # ========== PLOT 2: + Permutation-derived thresholds ==========
+        # ========== PLOT 2: + permulation-derived thresholds ==========
         fig2, ax2 = plt.subplots(figsize=(8, 6))
 
         if title:
@@ -1494,28 +1345,32 @@ class PermutationTestResults:
 
         ax2.plot(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
-            color=avpermutation_color,
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
+            color=avpermulation_color,
             linewidth=2.5,
-            label="Average permuted\ndistribution",
+            label="Average permulated\ndistribution",
         )
         ax2.fill_between(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
             alpha=0.2,
-            color=avpermutation_color,
+            color=avpermulation_color,
             zorder=0,
         )
 
         ax2.axvline(
-            x=self.ci_av[0],
-            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
+            x=getattr(self, f"{test}_ci_av")[0],
+            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
         )
         ax2.axvline(
-            x=self.ci_av[1],
+            x=getattr(self, f"{test}_ci_av")[1],
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
@@ -1524,8 +1379,8 @@ class PermutationTestResults:
         ax2.text(
             0.03,
             0.95,
-            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
-            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}",
+            f"permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
+            f"permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}",
             transform=ax2.transAxes,
             fontsize=12,
             ha="left",
@@ -1560,35 +1415,39 @@ class PermutationTestResults:
 
         ax3.plot(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
-            color=avpermutation_color,
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
+            color=avpermulation_color,
             linewidth=2.5,
-            label="Average permuted\ndistribution",
+            label="Average permulated\ndistribution",
         )
         ax3.fill_between(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
             alpha=0.2,
-            color=avpermutation_color,
+            color=avpermulation_color,
             zorder=0,
         )
 
         ax3.axvline(
-            x=self.ci_av[0],
-            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
+            x=getattr(self, f"{test}_ci_av")[0],
+            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
         )
         ax3.axvline(
-            x=self.ci_av[1],
+            x=getattr(self, f"{test}_ci_av")[1],
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
         )
 
         ax3.hist(
-            self.true_fltrd_log_odds_ratios,
+            getattr(self, f"true_fltrd_{test}_lors"),
             bins=bins,
             density=True,
             color=hist_color,
@@ -1601,8 +1460,8 @@ class PermutationTestResults:
         ax3.text(
             0.03,
             0.95,
-            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
-            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}",
+            f"permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
+            f"permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}",
             transform=ax3.transAxes,
             fontsize=12,
             ha="left",
@@ -1637,35 +1496,39 @@ class PermutationTestResults:
 
         ax4.plot(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
-            color=avpermutation_color,
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
+            color=avpermulation_color,
             linewidth=2.5,
-            label="Average permuted\ndistribution",
+            label="Average permulated\ndistribution",
         )
         ax4.fill_between(
             x,
-            norm.pdf(x, self.mean_av, self.stddev_av),
+            norm.pdf(
+                x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
+            ),
             alpha=0.2,
-            color=avpermutation_color,
+            color=avpermulation_color,
             zorder=0,
         )
 
         ax4.axvline(
-            x=self.ci_av[0],
-            label=f"Mean permuted\nthresholds for\nalpha={self.a}",
+            x=getattr(self, f"{test}_ci_av")[0],
+            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
         )
         ax4.axvline(
-            x=self.ci_av[1],
+            x=getattr(self, f"{test}_ci_av")[1],
             linestyle="dotted",
             color=thresholds_color,
             linewidth=2,
         )
 
         ax4.hist(
-            self.true_fltrd_log_odds_ratios,
+            getattr(self, f"true_fltrd_{test}_lors"),
             bins=bins,
             density=True,
             color=hist_color,
@@ -1679,8 +1542,8 @@ class PermutationTestResults:
             x,
             norm.pdf(
                 x,
-                np.mean(self.true_fltrd_log_odds_ratios),
-                np.std(self.true_fltrd_log_odds_ratios),
+                getattr(self, f"true_mean_{test}"),
+                getattr(self, f"true_stddev_{test}"),
             ),
             color=gaussfit_color,
             linestyle="--",
@@ -1691,10 +1554,10 @@ class PermutationTestResults:
         ax4.text(
             0.03,
             0.95,
-            f"Permuted mean = {self._fmt_stat(self.mean_av)}\n"
-            f"Permuted std. dev. = {self._fmt_stat(self.stddev_av)}\n\n"
-            f"True mean = {self._fmt_stat(self.true_mean)}\n"
-            f"True std. dev. = {self._fmt_stat(self.true_stddev)}",
+            f"Permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
+            f"Permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}\n\n"
+            f"True mean = {self._fmt_stat(getattr(self, f'{test}_true_mean'))}\n"
+            f"True std. dev. = {self._fmt_stat(getattr(self, f'{test}_true_stddev'))}",
             transform=ax4.transAxes,
             fontsize=12,
             ha="left",
@@ -1723,60 +1586,28 @@ class PermutationTestResults:
 
         return figs, axes
 
-    def _get_hits_df(self):
+    def _get_hits_dfs(self):
         """Filter the dataframe for HOGs that have LORs exceeding the
-        alpha values determined by permutation, and filter for those
+        alpha values determined by permulation, and filter for those
         which include a species of interest if specified."""
 
-        hits_alternative = (
-            "two-tailed" if self.save_two_tailed_hits else self.alternative
-        )
-        self.hits_alternative = hits_alternative
-        self.get_pval_thresholds(self.a, self.hits_alternative)
+        self.get_pval_thresholds(self.alpha, "two-tailed")
 
-        # Filter the DataFrame for significant hits
-        df_fltrd, total_hits = self.true_odds.filter_for_permutation_hits(
-            self.occupancy_threshold,
-            self.maximum,
-            self.ci_av,
-            alternative=hits_alternative,
-        )
+        dfs, counts, df_all, total_count = self.filter_for_permulation_hits()
+        self.results_fltrd_dfs = dfs
+        self.results_fltrd_df_all = df_all
+        self.all_hits_count = total_count
+        self.counts_hits = counts
 
-        if self.species_of_interest is not None:
-            # Filter out the hits that do not include the
-            # species of interest if specified
-            df_fltrd_sp_of_int, sp_of_int_hits = filter_for_sp_of_interest(
-                df_fltrd, self.true_odds.genecount_df, self.species_of_interest
-            )
-
-            self.results_fltrd_df = df_fltrd_sp_of_int
-            self.all_hits_count = total_hits
-            self.sp_of_int_hits_count = sp_of_int_hits
-
-        else:
-            self.results_fltrd_df = df_fltrd
-            self.all_hits_count = total_hits
-            self.sp_of_int_hits_count = None
-
-    def _get_hits_hogs(self):
-        """Get list of HOGs which are significant according to
-        the permutation test"""
-
-        self.hits_hogs_list = self.results_fltrd_df.index.tolist()
-
-    def print_permutation_results(self, fname=sys.stdout):
-        """Function to print the results of the permutation test"""
+    def print_permulation_results(self, fname=sys.stdout):
+        """Function to print the results of the permulation test"""
 
         def _write_results(file_obj):
 
-            if self.maximum == self.true_odds.total_species_count:
-                maximum = "no"
-            else:
-                maximum = self.maximum
-
             _emit(
                 "*********************** RESULTS ***********************\n\n"
-                f"Permutation test with {self.permutation_reps} repetitions for {self.true_odds.test} (alternative = {self.alternative}) with minimum occupancy *{self.occupancy_threshold}* and maximum occupancy *{maximum}* \n"
+                f"Permulation test with {self.permulation_reps} repetitions\n"
+                f"Minimum occupancy: {self.min_occ}; max occupancy (loss): {self.max_occ}\n"
                 f"Analysis run on {self.true_odds.time}",
                 file_obj,
             )
@@ -1798,51 +1629,72 @@ class PermutationTestResults:
             _emit(
                 f"Total number of HOGs in node: {len(self.true_odds.hog_list)}\n"
                 f"Total number of HOGs within occupancy threshold: "
-                f"{len(self.true_fltrd_log_odds_ratios)}\n"
+                f"{len(self.true_fltrd_loss_lors)} (loss), "
+                f"{len(self.true_fltrd_dup_lors)} (duplication)\n"
                 f"Total species: {self.true_odds.total_species_count}\n"
                 f"Foreground count: {self.true_odds.foreground_count}\n"
                 f"Background count: {self.true_odds.background_count}\n"
-                f"True mean: {self._fmt_stat(self.true_mean, ndigits=3)}\n"
-                f"True standard deviation: {self._fmt_stat(self.true_stddev, ndigits=3)}\n\n",
+                f"True mean, loss: {self._fmt_stat(self.true_mean_loss, ndigits=3)}\n"
+                f"True standard deviation, loss: {self._fmt_stat(self.true_stddev_loss, ndigits=3)}\n"
+                f"True mean, duplication: {self._fmt_stat(self.true_mean_dup, ndigits=3)}\n"
+                f"True standard deviation, duplication: {self._fmt_stat(self.true_stddev_dup, ndigits=3)}\n\n",
                 file_obj,
             )
 
             _emit(
-                "** PERMUTATION P-VALUES ** \n\n"
-                f"Probability that the null is true for MEAN (single Gaussian): {self.p_values['mn']}\n",
+                "** Permulation P-VALUES ** \n\n"
+                f"Probability that the null is true for MEAN, loss (alt=less): {self._fmt_stat(self.pval_mean_loss, ndigits=3)}\n"
+                f"Probability that the null is true for MEAN, duplication (alt=greater): {self._fmt_stat(self.pval_mean_dup, ndigits=3)}\n\n",
                 file_obj,
             )
 
-            if self.test_triple_gaussian_params:
-                _emit(
-                    f"Probability that the null is true for MEAN 1 (triple Gaussian): {self.p_values['mn_1']}\n"
-                    f"Probability that the null is true for MEAN 2 (triple Gaussian): {self.p_values['mn_2']}\n"
-                    f"Probability that the null is true for MEAN 3 (triple Gaussian): {self.p_values['mn_3']}\n\n",
+            _emit(
+                f"Permulated average mean, loss: {self._fmt_stat(self.loss_mean_av, ndigits=3)}\n"
+                f"Permulated average standard deviation, loss: {self._fmt_stat(self.loss_stddev_av, ndigits=3)}\n"
+                f"Permulated average mean, duplication: {self._fmt_stat(self.dup_mean_av, ndigits=3)}\n"
+                f"Permulated average standard deviation, duplication: {self._fmt_stat(self.dup_stddev_av, ndigits=3)}\n"
+                f"User-defined significance threshold: {self.alpha}\n"
+                f"Permulation-derived alpha threshold, loss: {self._fmt_ci(self.loss_ci_av, ndigits=3)}\n"
+                f"Permulation-derived alpha threshold, duplication: {self._fmt_ci(self.dup_ci_av, ndigits=3)}\n\n"
+                f"Significant HOGs (all): {self.all_hits_count}\n",
+                file_obj,
+            )
+            _emit(
+                    f"  - loss_fg: {self.counts_hits['loss_fg']}\n"
+                    f"  - loss_bg: {self.counts_hits['loss_bg']}\n"
+                    f"  - dup_fg: {self.counts_hits['dup_fg']}\n"
+                    f"  - dup_bg: {self.counts_hits['dup_bg']}\n",
                     file_obj,
                 )
 
-            if self.hits_alternative == "two-tailed":
-                comparison_str = "different"
-                conj = "and"
-            elif self.hits_alternative == "less":
-                comparison_str = "lower"
-                conj = "than"
-            else:
-                comparison_str = f"{self.hits_alternative}"
-                conj = "than"
-
-            _emit(
-                f"Permuted average mean: {self.mean_av}\n"
-                f"Permuted average standard deviation: {self.stddev_av}\n"
-                f"User-defined significance threshold: {self.a}\n"
-                f"Permutation-derived alpha threshold: {self.ci_av}\n\n"
-                f"Total HOGs with significantly {comparison_str} odds of {self.true_odds.test} in foreground {conj} background (alternative = {self.hits_alternative}): {self.all_hits_count}\n",
-                file_obj,
-            )
-
             if self.species_of_interest is not None:
+                sp_of_int_counts = {
+                    "loss_fg": filter_for_sp_of_interest(self.results_fltrd_dfs['loss_fg'], self.true_odds.genecount_df, self.species_of_interest),
+                    "loss_bg": filter_for_sp_of_interest(self.results_fltrd_dfs['loss_bg'], self.true_odds.genecount_df, self.species_of_interest),
+                    "dup_fg": filter_for_sp_of_interest(self.results_fltrd_dfs['dup_fg'], self.true_odds.genecount_df, self.species_of_interest),
+                    "dup_bg": filter_for_sp_of_interest(self.results_fltrd_dfs['dup_bg'], self.true_odds.genecount_df, self.species_of_interest)
+                }
                 _emit(
-                    f"Total HOGs with significantly {comparison_str} odds of {self.true_odds.test} in foreground {conj} background (alternative = {self.hits_alternative}, {self.species_of_interest} present): {self.sp_of_int_hits_count}\n\n",
+                    f"Significant HOGs, {self.species_of_interest} present:\n",
+                    file_obj,
+                )
+                _emit(
+                    f"  - loss_fg: {sp_of_int_counts['loss_fg']}\n"
+                    f"  - loss_bg: {sp_of_int_counts['loss_bg']}\n"
+                    f"  - dup_fg: {sp_of_int_counts['dup_fg']}\n"
+                    f"  - dup_bg: {sp_of_int_counts['dup_bg']}\n",
+                    file_obj,
+                )
+
+                _emit(
+                    f"Significant HOGs, using permulation p-values:\n",
+                    file_obj,
+                )
+                _emit(
+                    f"  - loss_fg: {self.results_fltrd_dfs['loss_fg'][self.results_fltrd_dfs['loss_fg']['Significant in permulation test'] == True].shape[0]}\n"
+                    f"  - loss_bg: {self.results_fltrd_dfs['loss_bg'][self.results_fltrd_dfs['loss_bg']['Significant in permulation test'] == True].shape[0]}\n"
+                    f"  - dup_fg: {self.results_fltrd_dfs['dup_fg'][self.results_fltrd_dfs['dup_fg']['Significant in permulation test'] == True].shape[0]}\n"
+                    f"  - dup_bg: {self.results_fltrd_dfs['dup_bg'][self.results_fltrd_dfs['dup_bg']['Significant in permulation test'] == True].shape[0]}\n",
                     file_obj,
                 )
 
@@ -1854,14 +1706,14 @@ class PermutationTestResults:
 
     def save_pickle_file(self, fname):
         """
-        Saves the permutation results object to a pickle file.
+        Saves the permulation results object to a pickle file.
         """
 
         with open(fname, "wb") as file:
             pickle.dump(self, file)
 
     @classmethod
-    def load_from_pickle(cls, filepath: str) -> "PermutationTestResults":
+    def load_from_pickle(cls, filepath: str) -> "PermulationTestResults":
         """Load results object from a pickle file."""
         with open(filepath, "rb") as f:
             return pickle.load(f)
@@ -1870,60 +1722,13 @@ class PermutationTestResults:
         self, results_dir, save_pickle, fg_name, bg_name="background"
     ):
         """
-        Takes in permutation test results instance and saves all
+        Takes in permulation test results instance and saves all
         relevant plots and tables.
         """
 
-        # Save the full table of odds and odds ratios to a csv
-        self.true_odds.results_df.to_csv(
-            f"{results_dir}/{self.true_odds.test}_odds_results_all.csv", index=True
-        )
-
-        filename = (
-            f"{results_dir}/{self.true_odds.test}"
-            f"_occ{self.occupancy_threshold}-"
-            f"{self.maximum}"
-        )
-
-        if self.alternative == "greater":
-            alt = "_greater"
-        else:
-            alt = "_less"
-
-        # Save the table filtered to HOGs considered "hits"
-        if self.species_of_interest is not None:
-            self.results_fltrd_df.to_csv(
-                (
-                    filename
-                    + f"{alt}"
-                    + f"_{self.species_of_interest}"
-                    + "_fltrd_permutation_hits.csv"
-                ),
-                index=True,
-            )
-        else:
-            self.results_fltrd_df.to_csv(
-                (filename + f"{alt}" + "_fltrd_permutation_hits.csv"), index=True
-            )
-
-        # Convert HOG hit list to LOCs + descriptions and save as a companion file.
-        hits_with_locs_df = id_converter.convert_hogs_to_locs(
-            self.results_fltrd_df,
-            self.true_odds.hog_node_genes_tsv,
-        )
-        hits_with_locs_df.to_csv(
-            (filename + f"{alt}" + "_fltrd_permutation_hits_locs_desc.csv"),
-            index=False,
-        )
-
-        # Save a text file summarizing results from the analysis
-        self.print_permutation_results(
-            fname=filename + f"{alt}" + "_results_summary.txt"
-        )
-
-        # Save the permutation results object as a pickle file
+        # Save the permulation results object as a pickle file
         if save_pickle:
-            self.save_pickle_file(fname=filename + f"{alt}" + ".pkl")
+            self.save_pickle_file(fname=f"{results_dir}/results.pkl")
         else:
             _cprint(
                 "save_pickle is set to False, so the full results object will not be saved as a pickle file.\n"
@@ -1932,72 +1737,82 @@ class PermutationTestResults:
                 "my_results.save_pickle_file('path/to/save/my_results.pkl')\n"
             )
 
+        # Save the full table of odds ratios and p-values to a csv
+        # Overwrites the results_all.csv from OddsRatioTest
+        self.results_df.to_csv(f"{results_dir}/results_all.csv", index=True)
+
+        self.results_fltrd_df_all.to_csv((f"{results_dir}/" + "fltrd_hits.csv"), index=True)
+
+        # Save a text file summarizing results from the analysis
+        self.print_permulation_results(fname=f"{results_dir}/" + "results_summary.txt")
+
         #### Save figures ####
 
-        # Permutation statistics
-        fig, _ = self.plot_permutation_stats(fg_name, bg_name)
+        # permulation statistics
+        lossfig, _ = self.plot_permulation_stats("loss", fg_name, bg_name)
 
-        fig.savefig(
-            (filename + f"{alt}" + "_permutation_stats_dists_single_gauss.png"),
+        lossfig.savefig(
+            os.path.join(results_dir, "loss_stats_dists.png"),
             dpi=300,
             bbox_inches="tight",
             pad_inches=0.3,
         )
 
-        if self.test_triple_gaussian_params:
-            fig, _ = self.plot_permutation_stats_tgauss(fg_name, bg_name)
+        dupfig, _ = self.plot_permulation_stats(
+            "dup",
+            fg_name,
+            bg_name,
+        )
 
-            fig.savefig(
-                (filename + f"{alt}" + "_permutation_stats_dists_triple_gauss.png"),
-                dpi=300,
-                bbox_inches="tight",
-                pad_inches=0.3,
-            )
-
-        # True distribution overlaid with average permuted distribution
-        fig, _ = self.plot_permutation_results(fg_name, bg_name)
-
-        fig.savefig(
-            (filename + f"{alt}" + "_permutation_results.png"),
+        dupfig.savefig(
+            os.path.join(results_dir, "dup_stats_dists.png"),
             dpi=300,
             bbox_inches="tight",
             pad_inches=0.3,
         )
 
+        # True distribution overlaid with average permulated distribution
+        lossfig, _ = self.plot_permulation_results("loss", fg_name, bg_name)
+
+        lossfig.savefig(
+            os.path.join(results_dir, "loss_results.png"),
+            dpi=300,
+            bbox_inches="tight",
+            pad_inches=0.3,
+        )
+
+        dupfig, _ = self.plot_permulation_results("dup", fg_name, bg_name)
+        dupfig.savefig(
+            os.path.join(results_dir, "dup_results.png"),
+            dpi=300,
+            bbox_inches="tight",
+            pad_inches=0.3,
+        )
+        rel_results_dir = os.path.relpath(results_dir, _REPO_ROOT)
+        
         _cprint(
-            f"Results files saved to {results_dir}\n\n"
-            "Files include: \n"
-            "\t 1. [test]_permutation_results.png: True LORs distribution\n"
-            "\t\tvs. average permuted distribution\n"
-            "\t 2. [test]_permutation_stats_dists.png: Histograms of the\n"
-            "\t\tmeans, standard deviations, and skews of all 10,000\n"
-            "\t\tpermuted LOR distributions\n"
-            "\t 3. [test]_results_summary.txt: Text file summarizing results\n"
-            "\t 4. [test].pkl: Pickle file storing the BoostrapTestResults\n"
-            "\t\tinstance generated by this analysis\n"
-            "\t 5. [test]_[species]_fltrd_permutation_hits.csv: Results table \n"
-            "\t\tfiltered for occupancy, species of interest (if specified),\n"
-            "\t\tand surpassing permutation-derived significance thresholds\n"
-            "\t 6. [test]_[species]_fltrd_permutation_hits_locs_desc.csv: Hits with\n"
-            "\t\tLOC IDs and descriptions from id_converter. There may be multiple\n"
-            "\t\trows per HOG if there are multiple genes from the U.div. in the HOG.\n"
-            "\t 7. All odds and log odds ratios (not filtered for occupancy,\n"
-            "\t\tspecies, or significance)"
+            "Results files saved.\n"
+            f"Directory: {rel_results_dir}\n\n"
+            "Files include:\n"
+            "  - results_all.csv: all HOG odds/log-odds and p-values\n"
+            "  - fltrd_hits.csv: significant hits after occupancy/p-value filters\n"
+            "  - results_summary.txt: text summary of run settings and statistics\n"
+            "  - loss_stats_dists.png: permulated mean/stddev histograms for loss\n"
+            "  - dup_stats_dists.png: permulated mean/stddev histograms for duplication\n"
+            "  - loss_results.png: loss LOR true distribution vs permulated average\n"
+            "  - dup_results.png: duplication LOR true distribution vs permulated average\n"
+            "  - results.pkl: full results object (only when save_pickle=True)"
         )
 
 
 def odds_ratio_test(
-    test,
     foreground_list_filename="data/orbweavers-list.txt",
     hog_node_genes_tsv="data/N5.tsv",
     genecount_csv="data/N5.GeneCount.tsv",
-    occupancy_threshold=0,
+    min_occ=0,
     max_occ=None,
-    alternative="less",  # or "greater" (legacy: "LT"/"RT")
     alpha=0.05,
-    permutation_reps=10000,
-    test_triple_gaussian_params=False,
-    permulation_tip_values=None,
+    permulation_reps=10000,
     permulations_tip_values_csv="data/perms_tip_values.csv",
     background_list_filename=None,
     species_of_interest=None,
@@ -2007,14 +1822,8 @@ def odds_ratio_test(
     buscos_filename="data/buscos.csv",
     correct_for_buscos=True,
     save_pickle=True,
-    save_two_tailed_hits=False,
 ):
-    """Run the full odds ratio test.
-
-    Permulation assignments can be provided directly (`permulation_tip_values`)
-    or loaded from a CSV (`permulations_tip_values_csv`). If neither is
-    provided, the original random foreground/background permutation is used.
-    """
+    """Run the full odds ratio test."""
 
     if results_dir is not None:
         if fg_name is None:
@@ -2046,67 +1855,56 @@ def odds_ratio_test(
     true_odds = OddsRatioResults(
         genecount_csv=genecount_csv,
         hog_node_genes_tsv=hog_node_genes_tsv,
-        test=test,
         time=time_fmtd,
         foreground_list_filename=foreground_list_filename,
         background_list_filename=background_list_filename,
         buscos_filename=buscos_filename,
     )
 
-    # Determine permutation assignments source.
-    # Priority: explicit in-memory values > provided CSV > random permutation.
-    if permulation_tip_values is None and permulations_tip_values_csv is not None:
-        permulation_tip_values = load_permulation_tip_values_from_csv(
-            permulations_tip_values_csv
-        )
-
-    # If permulation assignments are provided, cap to the requested number of reps.
-    # This keeps behavior intuitive when CSV rows exceed permutation_reps.
-    permulation_rows_available = None
-    if permulation_tip_values is not None:
-        if permutation_reps is not None:
-            if permutation_reps <= 0:
-                raise ValueError("permutation_reps must be a positive integer.")
-            available_reps = len(permulation_tip_values)
-            permulation_rows_available = available_reps
-            if permutation_reps < available_reps:
-                permulation_tip_values = permulation_tip_values[:permutation_reps]
-        else:
-            permulation_rows_available = len(permulation_tip_values)
-        effective_permutation_reps = len(permulation_tip_values)
-    else:
-        effective_permutation_reps = permutation_reps
-
-    # if permulation_tip_values is not None and len(permulation_tip_values) > 0:
-    #     print("First permulated tip values (species -> value):")
-    #     print(permulation_tip_values[0])
-
-    permutation_test_results = PermutationTestResults(
-        true_odds=true_odds,
-        occupancy_threshold=occupancy_threshold,
-        maximum=max_occ,
-        alternative=alternative,
-        a=alpha,
-        permutation_reps=effective_permutation_reps,
-        permulation_tip_values=permulation_tip_values,
-        permulation_rows_available=permulation_rows_available,
-        test_triple_gaussian_params=test_triple_gaussian_params,
-        save_two_tailed_hits=save_two_tailed_hits,
-        species_of_interest=species_of_interest,
+    # Determine permulation assignments source.
+    # Priority: explicit in-memory values > provided CSV > random permulation.
+    permulation_tip_values = load_permulation_tip_values_from_csv(
+        permulations_tip_values_csv
     )
+
+    # Cap to the requested number of reps when the CSV contains more rows than needed.
+    if permulation_reps <= 0:
+        raise ValueError("permulation_reps must be a positive integer.")
+
+    permulation_rows_available = len(permulation_tip_values)
+    effective_permulation_reps = min(permulation_reps, permulation_rows_available)
+    sampled_from_available = False
+    if effective_permulation_reps < permulation_rows_available:
+        permulation_tip_values = random.sample(
+            permulation_tip_values, k=effective_permulation_reps
+        )
+        sampled_from_available = True
 
     if results_dir is not None:
         unique_results_dir = _unique_results_dir(
             results_dir,
             time,
-            test,
-            alternative,
-            occupancy_threshold,
+            min_occ,
             max_occ,
-            permutation_reps,
+            permulation_reps,
         )
         os.makedirs(unique_results_dir, exist_ok=True)
-        permutation_test_results.save_results_files(
+        true_odds.results_df.to_csv(f"{unique_results_dir}/results_all.csv", index=True)
+
+    permulation_test_results = PermulationTestResults(
+        true_odds=true_odds,
+        permulation_tip_values=permulation_tip_values,
+        min_occ=min_occ,
+        max_occ=max_occ,
+        alpha=alpha,
+        permulation_reps=effective_permulation_reps,
+        permulation_rows_available=permulation_rows_available,
+        sampled_from_available=sampled_from_available,
+        species_of_interest=species_of_interest,
+    )
+
+    if results_dir is not None:
+        permulation_test_results.save_results_files(
             results_dir=unique_results_dir,
             save_pickle=save_pickle,
             fg_name=fg_name,
@@ -2128,16 +1926,17 @@ def odds_ratio_test(
         display_fg_name = fg_name if fg_name is not None else "foreground"
         display_bg_name = bg_name if bg_name is not None else "background"
 
-        permutation_test_results.plot_permutation_stats(
+        permulation_test_results.plot_permulation_stats(
             display_fg_name, display_bg_name
         )
-        if permutation_test_results.test_triple_gaussian_params:
-            permutation_test_results.plot_permutation_stats_tgauss(
-                display_fg_name, display_bg_name
-            )
-        permutation_test_results.plot_permutation_results(
+
+        permulation_test_results.plot_permulation_results(
             display_fg_name, display_bg_name
         )
         plt.show()
 
-    return permutation_test_results
+    return permulation_test_results
+
+
+# Backward-compatible alias for old pickle files
+PermutationTestResults = PermulationTestResults

@@ -46,7 +46,7 @@ for row in range(0, len(df)):
             gene = df.loc[row,species].split(",")[0]
         
             ### Extract gene from species fasta #############
-            infasta = f"{sys.argv[2]}/{species}.fasta"
+            infasta = f"{sys.argv[2]}/{species}.faa"
             for seq_record in SeqIO.parse(infasta, "fasta"):
 
                 if seq_record.id == gene:

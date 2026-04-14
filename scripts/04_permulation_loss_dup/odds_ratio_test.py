@@ -13,273 +13,34 @@ import os
 import random
 import pickle
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 from tqdm.auto import tqdm
-import seaborn as sns
+from odds_ratio_test_helpers import (
+    _cprint,
+    _emit,
+    _resolve_repo_path,
+    _unique_results_dir,
+    calculate_odds,
+    drop_empty_cols,
+    filter_for_sp_of_interest,
+    load_permulation_tip_values_from_csv,
+    occupancy_filter,
+    save_loc_list,
+)
+import odds_ratio_test_plotting as plotting
 import orthogroup_gene_count
-import id_converter
+
 
 # Set the random seed for reproducibility
 random.seed(42)
 
-plt.rcParams["font.family"] = "Verdana"
-
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 _REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir, os.pardir))
 CONSOLE_PRINT_WIDTH = 96
-
-
-def _fixed_width_lines(text: str, width: int = CONSOLE_PRINT_WIDTH) -> List[str]:
-    """Return fixed-width wrapped lines for aligned console printing."""
-
-    def _wrap_no_word_breaks(line: str) -> List[str]:
-        if len(line) <= width:
-            return [line]
-
-        wrapped: List[str] = []
-        remaining = line
-        break_chars = (" ", "\t", "/", "_", "-", ",", ";")
-
-        while len(remaining) > width:
-            window = remaining[: width + 1]
-            break_at = max(window.rfind(ch) for ch in break_chars)
-
-            if break_at <= 0:
-                # No useful breakpoints; hard-wrap at fixed width.
-                wrapped.append(remaining[:width])
-                remaining = remaining[width:]
-                continue
-
-            split_idx = break_at + 1
-            wrapped.append(remaining[:split_idx].rstrip())
-
-            # Drop leading whitespace only when splitting on whitespace.
-            if remaining[break_at] in {" ", "\t"}:
-                remaining = remaining[split_idx:].lstrip()
-            else:
-                remaining = remaining[split_idx:]
-
-        wrapped.append(remaining)
-        return wrapped
-
-    wrapped_lines: List[str] = []
-    for raw_line in str(text).splitlines() or [""]:
-        segments = _wrap_no_word_breaks(raw_line)
-        if not segments:
-            wrapped_lines.append("")
-            continue
-        wrapped_lines.extend(segments)
-    return wrapped_lines
-
-
-def _cprint(text: str = "", width: int = CONSOLE_PRINT_WIDTH) -> None:
-    """Print fixed-width lines to stdout."""
-    for line in _fixed_width_lines(text, width=width):
-        print(line)
-
-
-def _emit(text: str, file_obj, width: int = CONSOLE_PRINT_WIDTH) -> None:
-    """Write output to file object; fixed-width only when writing to stdout."""
-    if file_obj is sys.stdout:
-        _cprint(text, width=width)
-    else:
-        print(text, file=file_obj)
-
-
-def _resolve_repo_path(path: Optional[str]) -> Optional[str]:
-    """Resolve user paths with repo-relative defaults and external path support.
-
-    Resolution order:
-    1. Absolute paths and '~' expanded paths are used as-is.
-    2. Explicit './' or '../' paths are resolved from current working directory.
-    3. Bare relative paths are resolved from repository root.
-    """
-    if path is None:
-        return None
-
-    expanded = os.path.expanduser(path)
-    if os.path.isabs(expanded):
-        return expanded
-
-    if (
-        expanded.startswith(f".{os.sep}")
-        or expanded == "."
-        or expanded.startswith(f"..{os.sep}")
-        or expanded == ".."
-    ):
-        return os.path.abspath(expanded)
-
-    return os.path.abspath(os.path.join(_REPO_ROOT, expanded))
-
-
-def _unique_results_dir(
-    parent_dir: str,
-    time_obj: datetime,
-    min_occ: int,
-    max_occ: Optional[int],
-    permulation_reps: int,
-) -> str:
-    """
-    Create a dated parent folder, then return a unique run subdirectory inside it
-    named with sequential run number and test parameters.
-
-    Example: If parent_results_dir is "results/", this creates:
-      results/Results_Jan29/Run1_occ_0-100_10000x/
-      results/Results_Jan29/Run2_occ_50-75_10000x/ (different params, Run2)
-      results/Results_Jan29/Run3_occ_0-100_10000x/ (same params as Run1, Run3)
-    """
-    # Create the dated parent folder (e.g., Results_Jan29)
-    date_short = time_obj.strftime("%b%d")
-    dated_parent = f"{parent_dir}/Results_{date_short}"
-    os.makedirs(dated_parent, exist_ok=True)
-
-    # Build the directory name with test parameters
-    # Format occupancy range
-    occ_range = f"{min_occ}-{max_occ}"
-
-    # Build base directory name
-    base_name = f"occ_{occ_range}_{permulation_reps}x"
-
-    # Find the highest run number across all existing directories
-    existing_run_nums = []
-    if os.path.exists(dated_parent):
-        for entry in os.listdir(dated_parent):
-            if entry.startswith("Run"):
-                # Extract run number from "Run1_...", "Run2_...", etc.
-                try:
-                    run_num = int(entry.split("_")[0][3:])
-                    existing_run_nums.append(run_num)
-                except (ValueError, IndexError):
-                    pass
-
-    # Determine next run number
-    next_run_num = max(existing_run_nums) + 1 if existing_run_nums else 1
-
-    subdir_name = f"Run{next_run_num}_{base_name}"
-    subdir_path = f"{dated_parent}/{subdir_name}"
-
-    return subdir_path
-
-
-def drop_empty_cols(df, print_txt=True):
-    """
-    Drops columns where all entries (ignoring headers) are 0,
-    to get rid of species not included in the current node/hierarchy.
-    """
-
-    # Print the number of columns before cleaning
-    num_columns_before = df.shape[1]
-    if print_txt:
-        _cprint(
-            f"Number of columns before dropping empty columns: {num_columns_before}"
-        )
-
-    # Drop columns where all entries (ignoring headers) are 0
-    df_cleaned = df.loc[:, (df.ne(0)).any(axis=0)]
-
-    # Print the number of columns after cleaning
-    num_columns_after = df_cleaned.shape[1]
-
-    if print_txt:
-        _cprint(f"Number of columns after dropping empty columns: {num_columns_after}")
-        _cprint("Species with no sequences in any orthogroup have been dropped.")
-
-    return df_cleaned
-
-
-def occupancy_filter(arr, min_occ, max_occ, total_occ_arr):
-    """
-    Function to filter an array of values according to whether the
-    orthogroup meets a certain occupancy threshold.
-
-    Args:
-        arr, min_occ, max_occ, total_occ_arr
-
-    Returns:
-        fltrd_arr (numpy array): occupancy array filtered according
-        to thresholds provided
-    """
-
-    if max_occ is None:
-        max_occ = total_occ_arr.max()
-
-    idx = np.asarray((total_occ_arr >= min_occ) & (total_occ_arr <= max_occ)).nonzero()[
-        0
-    ]
-    fltrd_arr = arr[idx]
-
-    return fltrd_arr
-
-def filter_for_sp_of_interest(df, genecount_df, species_name):
-    """Filter the DataFrame for HOGs that include a species of interest"""
-
-    sp_of_interest_present = genecount_df[genecount_df[species_name] != 0]
-
-    sp_of_interest_present_hogs = sp_of_interest_present.index.values
-    sp_of_interest_present_hogs = set(sp_of_interest_present_hogs)
-    df_fltrd_sp_of_int = df[df.index.isin(sp_of_interest_present_hogs)]
-
-    return len(df_fltrd_sp_of_int)
-
-
-def calculate_odds(foreground_bool_arr, background_bool_arr, test_bool_mat, busco_arr):
-    """Function to calculate the odds ratio and log odds ratio"""
-
-    # I don't know why this is necessary but my kernel crashes without it
-    foreground_bool_arr = foreground_bool_arr.reshape(foreground_bool_arr.size, 1)
-    background_bool_arr = background_bool_arr.reshape(background_bool_arr.size, 1)
-
-    # If a busco array is provided, weight the foreground and background arrays
-    if busco_arr is not None:
-        foreground_bool_arr = foreground_bool_arr.flatten() * busco_arr
-        background_bool_arr = background_bool_arr.flatten() * busco_arr
-
-        foreground_bool_arr = foreground_bool_arr.reshape(foreground_bool_arr.size, 1)
-        background_bool_arr = background_bool_arr.reshape(background_bool_arr.size, 1)
-
-    # Calculate the number of foreground and background that are
-    # [missing, duplicated]
-
-    ## foreground yes
-    foreground_yes_arr = np.matmul(test_bool_mat, foreground_bool_arr)
-
-    ## background yes
-    background_yes_arr = np.matmul(test_bool_mat, background_bool_arr)
-
-    # Calculate the number of foreground and background that are
-    # [not missing, not duplicated]
-    test_inv_bool_mat = 1 - test_bool_mat
-
-    ## foreground no
-    foreground_no_arr = np.matmul(test_inv_bool_mat, foreground_bool_arr)
-
-    ## background no
-    background_no_arr = np.matmul(test_inv_bool_mat, background_bool_arr)
-
-    # Use the Haldane-Anscombe correction to account for any 0 entries
-    # when calculating the odds ratios
-    foreground_yes_arr += 0.5
-    background_yes_arr += 0.5
-    foreground_no_arr += 0.5
-    background_no_arr += 0.5
-
-    # Calculate odds missing for foreground & background, odds ratio, and log odds ratio
-
-    ## odds
-    odds_foreground_arr = foreground_yes_arr / foreground_no_arr
-    odds_background_arr = background_yes_arr / background_no_arr
-
-    ## odds ratio
-    odds_ratio_arr = odds_foreground_arr / odds_background_arr
-
-    ## log odds ratio
-    log_odds_ratio_arr = np.log(odds_ratio_arr)
-
-    return log_odds_ratio_arr
 
 
 class OddsRatioResults:
@@ -505,48 +266,6 @@ class OddsRatioResults:
         return results_df
 
 
-def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]]:
-    """Load permulated tip values from a CSV file.
-
-    Expected format:
-    - One row per permulation.
-    - Species names as columns.
-    - Optional first column named `perm_id`.
-    - Cell values are numeric (typically 0/1) tip assignments.
-    """
-
-    csv_path = _resolve_repo_path(csv_path)
-    if not os.path.exists(csv_path):
-        raise FileNotFoundError(f"Permulation tip-values CSV not found: {csv_path}")
-
-    tip_df = pd.read_csv(csv_path)
-    if tip_df.empty:
-        raise ValueError(f"Permulation tip-values CSV is empty: {csv_path}")
-
-    species_cols = [c for c in tip_df.columns if c != "perm_id"]
-    if not species_cols:
-        raise ValueError(
-            f"Permulation tip-values CSV has no species columns: {csv_path}"
-        )
-
-    tip_numeric = tip_df[species_cols].apply(pd.to_numeric, errors="raise")
-    if tip_numeric.isnull().any().any():
-        raise ValueError(f"Permulation tip-values CSV contains NaN values: {csv_path}")
-
-    return [
-        {species: float(value) for species, value in row.items()}
-        for row in tip_numeric.to_dict(orient="records")
-    ]
-
-def save_loc_list(df, NX_path, output_path):
-    locs_df = id_converter.convert_hogs_to_locs(df, NX_path, show_progress=False)
-    loc_ids = locs_df["LOC"].dropna().unique()
-    with open(output_path, "w", encoding="utf-8") as file_obj:
-        for loc in loc_ids:
-            file_obj.write(f"{loc}\n")
-    print(f"Wrote {len(loc_ids)} items to {output_path}")
-    return loc_ids
-
 class PermulationTestResults:
     """Class to perform the permulation test for the odds ratio"""
 
@@ -636,6 +355,23 @@ class PermulationTestResults:
             f"min_occ={self.min_occ}, "
             f"permulation_reps={self.permulation_reps})"
         )
+
+    @staticmethod
+    def _fmt_stat(value: float, ndigits: int = 2) -> str:
+        """Format a float while normalizing negative zero to positive zero."""
+        rounded = round(float(value), ndigits)
+        if rounded == 0.0:
+            rounded = 0.0
+        return f"{rounded:.{ndigits}f}"
+
+    @staticmethod
+    def _fmt_ci(ci_values, ndigits: int = 3) -> str:
+        """Format CI vectors like [lower, upper] with fixed precision."""
+        ci_arr = np.asarray(ci_values, dtype=float).flatten()
+        if ci_arr.size == 0:
+            return "[]"
+        formatted = ", ".join(f"{x:.{ndigits}f}" for x in ci_arr)
+        return f"[{formatted}]"
 
     def print_attributes(self):
         """Print all instance attribute names and types."""
@@ -751,99 +487,6 @@ class PermulationTestResults:
         formatted = ", ".join(f"{x:.{ndigits}f}" for x in ci_arr)
         return f"[{formatted}]"
 
-    def _get_permulation_plot_data(self, test, bins=100):
-        """Return shared arrays used by permulation plotting functions."""
-        true_vals = getattr(self, f"true_fltrd_{test}_lors")
-        x = np.linspace(true_vals.min(), true_vals.max(), 100)
-        avg_pdf = norm.pdf(
-            x, getattr(self, f"{test}_mean_av"), getattr(self, f"{test}_stddev_av")
-        )
-        true_pdf = norm.pdf(
-            x,
-            getattr(self, f"true_mean_{test}"),
-            getattr(self, f"true_stddev_{test}"),
-        )
-        hist_vals, _ = np.histogram(true_vals, bins=bins, density=True)
-        hist_max = hist_vals.max() if hist_vals.size else 0.0
-        y_max = max(avg_pdf.max(), true_pdf.max(), hist_max) * 1.05
-        if y_max == 0:
-            y_max = 1.0
-        return true_vals, x, avg_pdf, true_pdf, y_max
-
-    def _get_permulation_thresholds(self, test):
-        """Return the confidence interval vector for the chosen test."""
-        if test == "loss":
-            return self.loss_ci_av
-        if test == "dup":
-            return self.dup_ci_av
-        raise ValueError(f"Invalid test type: {test}. Must be 'loss' or 'dup'.")
-
-    @staticmethod
-    def _plot_average_permulation_curve(
-        ax,
-        x,
-        avg_pdf,
-        color,
-        linestyle="-",
-        fill=True,
-    ):
-        ax.plot(
-            x,
-            avg_pdf,
-            color=color,
-            linestyle=linestyle,
-            zorder=4,
-            label="Average permulated\ndistribution",
-        )
-        if fill:
-            ax.fill_between(x, avg_pdf, alpha=0.2, color=color, zorder=0)
-
-    @staticmethod
-    def _plot_true_histogram(ax, true_vals, bins, hist_color, hist_alpha, edgecolor):
-        ax.hist(
-            true_vals,
-            bins=bins,
-            density=True,
-            color=hist_color,
-            alpha=hist_alpha,
-            edgecolor=edgecolor,
-            label="True distribution",
-            zorder=3,
-        )
-
-    @staticmethod
-    def _plot_true_gaussian_fit(ax, x, true_pdf, color):
-        ax.plot(
-            x,
-            true_pdf,
-            color=color,
-            linestyle="--",
-            zorder=4,
-            label="Gaussian fit to\ntrue distribution",
-        )
-
-    @staticmethod
-    def _plot_stat_histogram(ax, values, binwidth, hist_color, hist_alpha, edgecolor):
-        sns.histplot(
-            data=values,
-            binwidth=binwidth,
-            stat="count",
-            ax=ax,
-            legend=False,
-            color=hist_color,
-            alpha=hist_alpha,
-            edgecolor=edgecolor,
-        )
-
-    @staticmethod
-    def _save_figure(fig, output_path):
-        fig.savefig(
-            output_path,
-            dpi=300,
-            bbox_inches="tight",
-            pad_inches=0.3,
-        )
-
     def _count_species_of_interest_hits(self, species_name):
         return {
             key: filter_for_sp_of_interest(
@@ -861,61 +504,6 @@ class PermulationTestResults:
             ].shape[0]
             for key in ("loss_fg", "loss_bg", "dup_fg", "dup_bg")
         }
-
-    def _plot_threshold_lines(self, ax, test, thresholds_color):
-        ci_av = self._get_permulation_thresholds(test)
-        ax.axvline(
-            x=ci_av[0],
-            label=f"Mean permulated\nthresholds for\nalpha={self.alpha}",
-            linestyle="dotted",
-            color=thresholds_color,
-            zorder=4,
-        )
-        ax.axvline(
-            x=ci_av[1],
-            linestyle="dotted",
-            color=thresholds_color,
-            zorder=4,
-        )
-
-    @staticmethod
-    def _style_density_axes(
-        ax,
-        x,
-        y_max,
-        legend_fontsize=13,
-        axis_label_fontsize=14,
-        tick_fontsize=13,
-    ):
-        ax.set_xlabel("Log odds ratio", fontsize=axis_label_fontsize, fontweight="bold")
-        ax.set_ylabel("Density", fontsize=axis_label_fontsize, fontweight="bold")
-        ax.set_ylim(bottom=0, top=y_max)
-        ax.set_xlim(x.min(), x.max())
-        plt.setp(ax.get_xticklabels(), fontsize=tick_fontsize)
-        plt.setp(ax.get_yticklabels(), fontsize=tick_fontsize)
-        ax.legend(
-            fontsize=legend_fontsize, loc="upper right", ncol=1, labelspacing=0.8, handlelength=1.5
-        )
-
-    @staticmethod
-    def _style_stat_axes(
-        ax,
-        xlabel="Means",
-        axis_label_fontsize=12,
-        legend_fontsize=10,
-        xlim=None,
-        ylim=None,
-    ):
-        ax.set(xlabel=xlabel, ylabel="Count")
-        ax.xaxis.label.set_fontsize(axis_label_fontsize)
-        ax.xaxis.label.set_fontweight("bold")
-        ax.yaxis.label.set_fontsize(axis_label_fontsize)
-        ax.yaxis.label.set_fontweight("bold")
-        ax.legend(fontsize=legend_fontsize)
-        if xlim is not None:
-            ax.set_xlim(xlim)
-        if ylim is not None:
-            ax.set_ylim(ylim)
 
     def _foreground_background_from_permulation(
         self,
@@ -1207,96 +795,23 @@ class PermulationTestResults:
         ylim=None,
         binwidth=None,
     ):
-        """Plotting the permulation means and standard deviations
-        and alpha thresholds to ensure the results are relatively
-        tightly distributed"""
-
-        ncols = 2 if include_stddev else 1
-        fig_width = 12 if include_stddev else 6.5
-        fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
-        axs = np.atleast_1d(axs)
-        means = getattr(self, f"means_{test}")
-        stddevs = getattr(self, f"stddevs_{test}")
-        true_mean = getattr(self, f"true_mean_{test}")
-        true_stddev = getattr(self, f"true_stddev_{test}")
-        if test=="loss":
-            test_name = "loss"
-            maximum=self.max_occ
-
-        elif test=="dup":
-            test_name = "duplication"
-            maximum=self.true_odds.total_species_count
-        
-        else:
-            raise ValueError(f"Invalid test type: {test}. Must be 'loss' or 'dup'.")
-
-        if title:
-            fig.suptitle(
-                f"Permulated (null) distribution stats for gene {test_name},\n"
-                f"{fg_name} vs. {bg_name}\n"
-                f"Maximum occupancy = {maximum}, minimum occupancy = {self.min_occ}",
-                fontsize=16,
-            )
-
-        self._plot_stat_histogram(
-            axs[0], means, binwidth, hist_color, hist_alpha, edgecolor
-        )
-
-        if subplot_titles:
-            axs[0].set_title("permulated means")
-        axs[0].axvline(
-            x=getattr(self, f"{test}_mean_av"),
-            linestyle="dotted",
-            color="black",
-            label="Avg. permulated mean",
-        )
-        axs[0].axvline(
-            x=true_mean,
-            linestyle="--",
-            color="salmon",
-            label="True mean",
-        )
-        self._style_stat_axes(
-            axs[0],
-            xlabel="Means",
-            axis_label_fontsize=axis_label_fontsize,
+        return plotting.plot_permulation_stats(
+            self,
+            test,
+            fg_name=fg_name,
+            bg_name=bg_name,
+            include_stddev=include_stddev,
+            title=title,
+            subplot_titles=subplot_titles,
+            hist_color=hist_color,
+            hist_alpha=hist_alpha,
+            edgecolor=edgecolor,
             legend_fontsize=legend_fontsize,
+            axis_label_fontsize=axis_label_fontsize,
             xlim=xlim,
             ylim=ylim,
+            binwidth=binwidth,
         )
-
-        if include_stddev:
-            self._plot_stat_histogram(
-                axs[1], stddevs, binwidth, hist_color, hist_alpha, edgecolor
-            )
-
-            if subplot_titles:
-                axs[1].set_title("Standard deviations")
-
-            axs[1].axvline(
-                x=getattr(self, f"{test}_stddev_av"),
-                linestyle="dotted",
-                color="black",
-                label="Avg. permulated stddev",
-            )
-            axs[1].axvline(
-                x=true_stddev,
-                linestyle="--",
-                color="salmon",
-                label="True stddev",
-            )
-            self._style_stat_axes(
-                axs[1],
-                xlabel="Standard deviations",
-                axis_label_fontsize=axis_label_fontsize,
-                legend_fontsize=legend_fontsize,
-                xlim=xlim,
-                ylim=ylim,
-            )
-
-        plt.tight_layout()
-
-        return fig, axs
 
     def plot_permulation_results(
         self,
@@ -1315,62 +830,23 @@ class PermulationTestResults:
         textbox_fontsize=10,
         axis_label_fontsize=12,
     ):
-        """Function to plot the results of the permulation test"""
-
-        fig, ax = plt.subplots(figsize=(6, 5))
-        true_vals, x, avg_pdf, true_pdf, y_max = self._get_permulation_plot_data(
-            test, bins=bins
-        )
-
-        if title:
-            fig.suptitle(
-                f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
-                f"Maximum occupancy = {self.max_occ}, minimum occupancy = {self.min_occ}",
-                fontsize=14,
-            )
-
-        self._plot_true_histogram(ax, true_vals, bins, hist_color, hist_alpha, edgecolor)
-        self._plot_true_gaussian_fit(ax, x, true_pdf, gaussfit_color)
-        self._plot_average_permulation_curve(
-            ax,
-            x,
-            avg_pdf,
-            avpermulation_color,
-            linestyle="--",
-            fill=False,
-        )
-        self._plot_threshold_lines(ax, test, thresholds_color)
-
-        ax.text(
-            0.03,
-            0.95,
-            f"Permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
-            f"True mean = {self._fmt_stat(getattr(self, f'true_mean_{test}'))}\n\n"
-            f"Permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}\n"
-            f"True std. dev. = {self._fmt_stat(getattr(self, f'true_stddev_{test}'))}",
-            transform=ax.transAxes,
-            fontsize=textbox_fontsize,
-            ha="left",
-            va="top",
-            bbox=dict(
-                facecolor="white",
-                alpha=0.7,
-                edgecolor="0.5",
-                linewidth=0.6,
-                boxstyle="round,pad=0.2",
-            ),
-        )
-
-        self._style_density_axes(
-            ax,
-            x,
-            y_max,
+        return plotting.plot_permulation_results(
+            self,
+            test,
+            fg_name=fg_name,
+            bg_name=bg_name,
+            gaussfit_color=gaussfit_color,
+            avpermulation_color=avpermulation_color,
+            hist_color=hist_color,
+            thresholds_color=thresholds_color,
+            hist_alpha=hist_alpha,
+            edgecolor=edgecolor,
+            bins=bins,
+            title=title,
             legend_fontsize=legend_fontsize,
+            textbox_fontsize=textbox_fontsize,
             axis_label_fontsize=axis_label_fontsize,
         )
-        plt.tight_layout()
-
-        return fig, ax
 
     def plot_permulation_results_layered(
         self,
@@ -1386,164 +862,20 @@ class PermulationTestResults:
         legend_fontsize=10,
         axis_label_fontsize=12,
     ):
-        """Function to create 4 sequential plots with elements layered on top of each other.
-
-        Returns 4 figures showing progressive buildup:
-        1. Average permulated distribution
-        2. + permulation-derived thresholds (with permulated stats)
-        3. + Histogram of true log odds ratios (with permulated stats)
-        4. + Gaussian fit to the histogram (with true and permulated stats)
-        """
-        true_vals, x, avg_pdf, true_pdf, y_max = self._get_permulation_plot_data(
-            test, bins=bins
-        )
-
-        title_str = (
-            f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
-            f"Maximum occupancy = {self.max_occ}, minimum occupancy = {self.min_occ}"
-        )
-
-        figs = []
-        axes = []
-
-        # ========== PLOT 1: Average permulated distribution ==========
-        fig1, ax1 = plt.subplots(figsize=(8, 6))
-
-        if title:
-            fig1.suptitle(title_str, fontsize=14)
-
-        self._plot_average_permulation_curve(ax1, x, avg_pdf, avpermulation_color)
-        self._style_density_axes(
-            ax1,
-            x,
-            y_max,
+        return plotting.plot_permulation_results_layered(
+            self,
+            test,
+            fg_name,
+            bg_name=bg_name,
+            gaussfit_color=gaussfit_color,
+            avpermulation_color=avpermulation_color,
+            hist_color=hist_color,
+            thresholds_color=thresholds_color,
+            bins=bins,
+            title=title,
             legend_fontsize=legend_fontsize,
             axis_label_fontsize=axis_label_fontsize,
         )
-        plt.tight_layout()
-        figs.append(fig1)
-        axes.append(ax1)
-
-        # ========== PLOT 2: + permulation-derived thresholds ==========
-        fig2, ax2 = plt.subplots(figsize=(8, 6))
-
-        if title:
-            fig2.suptitle(title_str, fontsize=14)
-
-        self._plot_average_permulation_curve(ax2, x, avg_pdf, avpermulation_color)
-        self._plot_threshold_lines(ax2, test, thresholds_color)
-
-        ax2.text(
-            0.03,
-            0.95,
-            f"permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
-            f"permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}",
-            transform=ax2.transAxes,
-            fontsize=12,
-            ha="left",
-            va="top",
-            bbox=dict(
-                facecolor="white",
-                alpha=0.7,
-                edgecolor="0.5",
-                linewidth=0.6,
-                boxstyle="round,pad=0.2",
-            ),
-        )
-
-        self._style_density_axes(
-            ax2,
-            x,
-            y_max,
-            legend_fontsize=legend_fontsize,
-            axis_label_fontsize=axis_label_fontsize,
-        )
-        plt.tight_layout()
-        figs.append(fig2)
-        axes.append(ax2)
-
-        # ========== PLOT 3: + Histogram ==========
-        fig3, ax3 = plt.subplots(figsize=(8, 6))
-
-        if title:
-            fig3.suptitle(title_str, fontsize=14)
-
-        self._plot_average_permulation_curve(ax3, x, avg_pdf, avpermulation_color)
-        self._plot_threshold_lines(ax3, test, thresholds_color)
-        self._plot_true_histogram(ax3, true_vals, bins, hist_color, 0.3, hist_color)
-
-        ax3.text(
-            0.03,
-            0.95,
-            f"permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
-            f"permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}",
-            transform=ax3.transAxes,
-            fontsize=12,
-            ha="left",
-            va="top",
-            bbox=dict(
-                facecolor="white",
-                alpha=0.7,
-                edgecolor="0.5",
-                linewidth=0.6,
-                boxstyle="round,pad=0.2",
-            ),
-        )
-
-        self._style_density_axes(
-            ax3,
-            x,
-            y_max,
-            legend_fontsize=legend_fontsize,
-            axis_label_fontsize=axis_label_fontsize,
-        )
-        plt.tight_layout()
-        figs.append(fig3)
-        axes.append(ax3)
-
-        # ========== PLOT 4: + Gaussian fit ==========
-        fig4, ax4 = plt.subplots(figsize=(8, 6))
-
-        if title:
-            fig4.suptitle(title_str, fontsize=14)
-
-        self._plot_average_permulation_curve(ax4, x, avg_pdf, avpermulation_color)
-        self._plot_threshold_lines(ax4, test, thresholds_color)
-        self._plot_true_histogram(ax4, true_vals, bins, hist_color, 0.3, hist_color)
-        self._plot_true_gaussian_fit(ax4, x, true_pdf, gaussfit_color)
-
-        ax4.text(
-            0.03,
-            0.95,
-            f"Permulated mean = {self._fmt_stat(getattr(self, f'{test}_mean_av'))}\n"
-            f"Permulated std. dev. = {self._fmt_stat(getattr(self, f'{test}_stddev_av'))}\n\n"
-            f"True mean = {self._fmt_stat(getattr(self, f'true_mean_{test}'))}\n"
-            f"True std. dev. = {self._fmt_stat(getattr(self, f'true_stddev_{test}'))}",
-            transform=ax4.transAxes,
-            fontsize=12,
-            ha="left",
-            va="top",
-            bbox=dict(
-                facecolor="white",
-                alpha=0.7,
-                edgecolor="0.5",
-                linewidth=0.6,
-                boxstyle="round,pad=0.2",
-            ),
-        )
-
-        self._style_density_axes(
-            ax4,
-            x,
-            y_max,
-            legend_fontsize=legend_fontsize,
-            axis_label_fontsize=axis_label_fontsize,
-        )
-        plt.tight_layout()
-        figs.append(fig4)
-        axes.append(ax4)
-
-        return figs, axes
 
     def _get_hits_dfs(self):
         """Filter the dataframe for HOGs that have LORs exceeding the
@@ -1658,7 +990,8 @@ class PermulationTestResults:
     @classmethod
     def load_from_pickle(cls, filepath: str) -> "PermulationTestResults":
         """Load results object from a pickle file."""
-        with open(filepath, "rb") as f:
+        resolved_path = _resolve_repo_path(filepath)
+        with open(resolved_path, "rb") as f:
             return pickle.load(f)
 
     def save_results_files(
@@ -1701,7 +1034,7 @@ class PermulationTestResults:
             (self.plot_permulation_results("dup", fg_name, bg_name)[0], "dup_results.png"),
         ]
         for figure, filename in figure_outputs:
-            self._save_figure(figure, os.path.join(results_dir, filename))
+            plotting.save_figure(figure, os.path.join(results_dir, filename))
         rel_results_dir = os.path.relpath(results_dir, _REPO_ROOT)
         
         _cprint(
@@ -1740,6 +1073,7 @@ def odds_ratio_test(
     buscos_filename="data/buscos.csv",
     correct_for_buscos=True,
     save_pickle=True,
+    dir_suffix=None,
 ):
     """Run the full odds ratio test."""
 
@@ -1805,6 +1139,7 @@ def odds_ratio_test(
             min_occ,
             max_occ,
             permulation_reps,
+            dir_suffix=dir_suffix,
         )
         os.makedirs(unique_results_dir, exist_ok=True)
         true_odds.results_df.to_csv(f"{unique_results_dir}/results_all.csv", index=True)

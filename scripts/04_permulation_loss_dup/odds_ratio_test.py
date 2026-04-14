@@ -711,6 +711,7 @@ class PermulationTestResults:
         self.dup_mean_av = np.mean(self.means_dup)
         self.dup_stddev_av = np.mean(self.stddevs_dup)
 
+    # Maybe switch which one is filtered first?
     def filter_for_permulation_hits(
             self, 
             min_occ=None,
@@ -730,9 +731,11 @@ class PermulationTestResults:
             & (df["Log odds ratio of loss"] > self.loss_ci_av[1])
         ].copy()
 
-        loss_fg_df["Significant in permulation test"] = (
-            loss_fg_df["P-value loss more likely in fg"] <= self.alpha
-        )
+        loss_fg_df["Significant in permulation test"] = ""
+        loss_fg_df.loc[
+            loss_fg_df["P-value loss more likely in fg"] <= self.alpha,
+            "Significant in permulation test",
+        ] = "loss_fg"
 
         loss_bg_df = df[
             (df["Occupancy"] >= min_occ)
@@ -740,27 +743,33 @@ class PermulationTestResults:
             & (df["Log odds ratio of loss"] < self.loss_ci_av[0])
         ].copy()
 
-        loss_bg_df["Significant in permulation test"] = (
-            loss_bg_df["P-value loss more likely in bg"] <= self.alpha
-        )
+        loss_bg_df["Significant in permulation test"] = ""
+        loss_bg_df.loc[
+            loss_bg_df["P-value loss more likely in bg"] <= self.alpha,
+            "Significant in permulation test",
+        ] = "loss_bg"
 
         dup_fg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["Log odds ratio of duplication"] > self.dup_ci_av[1])
         ].copy()
 
-        dup_fg_df["Significant in permulation test"] = (
-            dup_fg_df["P-value duplication more likely in fg"] <= self.alpha
-        )
+        dup_fg_df["Significant in permulation test"] = ""
+        dup_fg_df.loc[
+            dup_fg_df["P-value duplication more likely in fg"] <= self.alpha,
+            "Significant in permulation test",
+        ] = "dup_fg"
 
         dup_bg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["Log odds ratio of duplication"] < self.dup_ci_av[0])
         ].copy()
 
-        dup_bg_df["Significant in permulation test"] = (
-            dup_bg_df["P-value duplication more likely in bg"] <= self.alpha
-        )
+        dup_bg_df["Significant in permulation test"] = ""
+        dup_bg_df.loc[
+            dup_bg_df["P-value duplication more likely in bg"] <= self.alpha,
+            "Significant in permulation test",
+        ] = "dup_bg"
 
         dfs = {
             "loss_fg": loss_fg_df,
@@ -769,7 +778,20 @@ class PermulationTestResults:
             "dup_bg": dup_bg_df
         }
 
-        df_all = pd.concat(list(dfs.values())).drop_duplicates()
+        loss_fg_df["Significant by confidence interval"] = "loss_fg"
+        loss_bg_df["Significant by confidence interval"] = "loss_bg"
+        dup_fg_df["Significant by confidence interval"] = "dup_fg"
+        dup_bg_df["Significant by confidence interval"] = "dup_bg"
+
+        df = pd.concat(list(dfs.values())).drop_duplicates()
+
+        df_all = (
+            df.reset_index()
+            .groupby("HOG", as_index=False)
+            .agg(lambda s: ", ".join(pd.unique(s.dropna().astype(str))))
+            .set_index("HOG")
+            )
+
         total_count = len(df_all)
 
         counts = {
@@ -785,7 +807,7 @@ class PermulationTestResults:
         bg_name="background",
         include_stddev=True,
         title=True,
-        subplot_titles=True,
+        subplot_titles=False,
         hist_color="blue",
         hist_alpha=0.3,
         edgecolor=None,
@@ -1180,11 +1202,17 @@ def odds_ratio_test(
         display_bg_name = bg_name if bg_name is not None else "background"
 
         permulation_test_results.plot_permulation_stats(
-            display_fg_name, display_bg_name
+            "loss", display_fg_name, display_bg_name
+        )
+        permulation_test_results.plot_permulation_stats(
+            "dup", display_fg_name, display_bg_name
         )
 
         permulation_test_results.plot_permulation_results(
-            display_fg_name, display_bg_name
+            "loss", display_fg_name, display_bg_name
+        )
+        permulation_test_results.plot_permulation_results(
+            "dup", display_fg_name, display_bg_name
         )
         plt.show()
 

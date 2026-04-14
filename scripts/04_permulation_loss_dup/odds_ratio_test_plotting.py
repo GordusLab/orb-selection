@@ -188,7 +188,7 @@ def plot_permulation_stats(
     bg_name="background",
     include_stddev=True,
     title=True,
-    subplot_titles=True,
+    subplot_titles=False,
     hist_color="blue",
     hist_alpha=0.3,
     edgecolor=None,
@@ -300,13 +300,28 @@ def plot_permulation_results(
     textbox_fontsize=10,
     axis_label_fontsize=12,
 ):
+    # Normalize test parameter: allow "loss", "dup", or "duplication"
+    if test == "duplication":
+        test = "dup"
+    elif test not in ("loss", "dup"):
+        raise ValueError(f"Invalid test type: {test}. Must be 'loss', 'dup', or 'duplication'.")
+    
+    # Use "dup" internally for attribute lookups, "duplication" for display
+    test_name_display = "duplication" if test == "dup" else test
+    
+    # Compute maximum occupancy based on test type
+    if test == "loss":
+        maximum = results.max_occ
+    else:
+        maximum = results.true_odds.total_species_count
+    
     fig, ax = plt.subplots(figsize=(6, 5))
     true_vals, x, avg_pdf, true_pdf, y_max = get_permulation_plot_data(results, test, bins=bins)
 
     if title:
         fig.suptitle(
-            f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
-            f"Maximum occupancy = {results.max_occ}, minimum occupancy = {results.min_occ}",
+            f"Log odds ratio of gene {test_name_display}, {fg_name} vs. {bg_name}\n"
+            f"Maximum occupancy = {maximum}, minimum occupancy = {results.min_occ}",
             fontsize=14,
         )
 
@@ -367,11 +382,26 @@ def plot_permulation_results_layered(
     legend_fontsize=10,
     axis_label_fontsize=12,
 ):
+    # Normalize test parameter: allow "loss", "dup", or "duplication"
+    if test == "duplication":
+        test = "dup"
+    elif test not in ("loss", "dup"):
+        raise ValueError(f"Invalid test type: {test}. Must be 'loss', 'dup', or 'duplication'.")
+    
+    # Use "dup" internally for attribute lookups, "duplication" for display
+    test_name_display = "duplication" if test == "dup" else test
+    
+    # Compute maximum occupancy based on test type
+    if test == "loss":
+        maximum = results.max_occ
+    else:
+        maximum = results.true_odds.total_species_count
+    
     true_vals, x, avg_pdf, true_pdf, y_max = get_permulation_plot_data(results, test, bins=bins)
 
     title_str = (
-        f"Log odds ratio of gene {test}, {fg_name} vs. {bg_name}\n"
-        f"Maximum occupancy = {results.max_occ}, minimum occupancy = {results.min_occ}"
+        f"Log odds ratio of gene {test_name_display}, {fg_name} vs. {bg_name}\n"
+        f"Maximum occupancy = {maximum}, minimum occupancy = {results.min_occ}"
     )
 
     figs = []
@@ -400,8 +430,8 @@ def plot_permulation_results_layered(
     ax2.text(
         0.03,
         0.95,
-        f"permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
-        f"permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
+        f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
+        f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
         transform=ax2.transAxes,
         fontsize=12,
         ha="left",
@@ -434,8 +464,8 @@ def plot_permulation_results_layered(
     ax3.text(
         0.03,
         0.95,
-        f"permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
-        f"permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
+        f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
+        f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
         transform=ax3.transAxes,
         fontsize=12,
         ha="left",

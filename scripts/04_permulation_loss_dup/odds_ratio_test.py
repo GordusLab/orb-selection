@@ -435,7 +435,7 @@ class PermulationTestResults:
         os.makedirs(locs_dir, exist_ok=True)
         if use_perm_pvals:
             dfs_perm_pvals = {
-                key: dfs[key][dfs[key]["Significant in permulation test"]]
+                key: dfs[key][self._permulation_significant_mask(dfs[key])]
                 for key in keys_to_write
             }
         else:
@@ -497,10 +497,23 @@ class PermulationTestResults:
             for key in ("loss_fg", "loss_bg", "dup_fg", "dup_bg")
         }
 
+    def _permulation_significant_mask(self, df: pd.DataFrame) -> pd.Series:
+        """Return a robust boolean mask for permulation-significant rows."""
+        col = "Significant in permulation test"
+        if col not in df.columns:
+            return pd.Series(False, index=df.index)
+
+        vals = df[col]
+        if pd.api.types.is_bool_dtype(vals):
+            return vals.fillna(False)
+
+        # Column stores labels like "loss_fg"/"dup_bg" or empty strings.
+        return vals.fillna("").astype(str).ne("")
+
     def _count_permulation_significant_hits(self):
         return {
             key: self.results_fltrd_dfs[key][
-                self.results_fltrd_dfs[key]["Significant in permulation test"]
+                self._permulation_significant_mask(self.results_fltrd_dfs[key])
             ].shape[0]
             for key in ("loss_fg", "loss_bg", "dup_fg", "dup_bg")
         }

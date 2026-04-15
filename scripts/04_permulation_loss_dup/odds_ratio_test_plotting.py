@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+from matplotlib import ticker
 from scipy.stats import norm
 
 plt.rcParams["font.family"] = "Verdana"
@@ -145,6 +146,7 @@ def style_density_axes(
     legend_fontsize=13,
     axis_label_fontsize=14,
     tick_fontsize=13,
+    show_legend=True,
 ):
     ax.set_xlabel("Log odds ratio", fontsize=axis_label_fontsize, fontweight="bold")
     ax.set_ylabel("Density", fontsize=axis_label_fontsize, fontweight="bold")
@@ -152,13 +154,14 @@ def style_density_axes(
     ax.set_xlim(x.min(), x.max())
     plt.setp(ax.get_xticklabels(), fontsize=tick_fontsize)
     plt.setp(ax.get_yticklabels(), fontsize=tick_fontsize)
-    ax.legend(
-        fontsize=legend_fontsize,
-        loc="upper right",
-        ncol=1,
-        labelspacing=0.8,
-        handlelength=1.5,
-    )
+    if show_legend:
+        ax.legend(
+            fontsize=legend_fontsize,
+            loc="upper right",
+            ncol=1,
+            labelspacing=0.8,
+            handlelength=1.5,
+        )
 
 
 def style_stat_axes(
@@ -168,17 +171,104 @@ def style_stat_axes(
     legend_fontsize=10,
     xlim=None,
     ylim=None,
+    show_legend=True,
 ):
     ax.set(xlabel=xlabel, ylabel="Count")
     ax.xaxis.label.set_fontsize(axis_label_fontsize)
     ax.xaxis.label.set_fontweight("bold")
     ax.yaxis.label.set_fontsize(axis_label_fontsize)
     ax.yaxis.label.set_fontweight("bold")
-    ax.legend(fontsize=legend_fontsize)
+    if show_legend:
+        ax.legend(fontsize=legend_fontsize)
     if xlim is not None:
         ax.set_xlim(xlim)
     if ylim is not None:
         ax.set_ylim(ylim)
+
+
+def _draw_y_axis_break_marks(ax_top, ax_bottom, dx=0.012, angle_deg=55.0):
+    """Draw equal-angle diagonal break marks for stacked y-split axes."""
+
+    def _dy_for_angle(ax, dx_local, angle_local):
+        bbox = ax.get_position()
+        width = max(bbox.width, 1e-9)
+        height = max(bbox.height, 1e-9)
+        return dx_local * (width / height) * np.tan(np.deg2rad(angle_local))
+
+    dy_top = _dy_for_angle(ax_top, dx, angle_deg)
+    dy_bottom = _dy_for_angle(ax_bottom, dx, angle_deg)
+    kwargs = dict(color="k", clip_on=False, linewidth=1)
+
+    ax_top.plot((-dx, +dx), (-dy_top, +dy_top), transform=ax_top.transAxes, **kwargs)
+    ax_top.plot((1 - dx, 1 + dx), (-dy_top, +dy_top), transform=ax_top.transAxes, **kwargs)
+    ax_bottom.plot(
+        (-dx, +dx),
+        (1 - dy_bottom, 1 + dy_bottom),
+        transform=ax_bottom.transAxes,
+        **kwargs,
+    )
+    ax_bottom.plot(
+        (1 - dx, 1 + dx),
+        (1 - dy_bottom, 1 + dy_bottom),
+        transform=ax_bottom.transAxes,
+        **kwargs,
+    )
+
+
+def _compute_shared_split_tick_step(lower_ylim, upper_ylim, tick_count=4):
+    """Compute a shared y-tick step for split axes, following omega-plots logic."""
+    intervals = []
+    for ymin, ymax in (lower_ylim, upper_ylim):
+        auto_locator = ticker.AutoLocator()
+        ticks = auto_locator.tick_values(ymin, ymax)
+        ticks = ticks[(ticks >= ymin) & (ticks <= ymax)]
+        if ticks.size >= 2:
+            diffs = np.diff(ticks)
+            diffs = diffs[diffs > 0]
+            if diffs.size:
+                intervals.append(float(np.min(diffs)))
+
+    if intervals:
+        return max(intervals)
+
+    span = max(lower_ylim[1] - lower_ylim[0], upper_ylim[1] - upper_ylim[0])
+    if span <= 0:
+        return 1.0
+    return span / max(tick_count, 1)
+
+
+def _split_axis_ticks(lower_ylim, upper_ylim, tick_count=4):
+    """Return split-axis y-ticks with a shared step and no ticks at the break."""
+    lower_min, lower_max = lower_ylim
+    upper_min, upper_max = upper_ylim
+    step = _compute_shared_split_tick_step(lower_ylim, upper_ylim, tick_count=tick_count)
+
+    lower_start = np.ceil(lower_min / step) * step
+    lower_ticks = np.arange(lower_start, lower_max + step * 0.5, step)
+
+    upper_start = np.ceil(upper_min / step) * step
+    upper_ticks = np.arange(upper_start, upper_max + step * 0.5, step)
+
+    eps = step * 1e-6
+    lower_ticks = lower_ticks[(lower_ticks >= lower_min - eps) & (lower_ticks < lower_max - eps)]
+    upper_ticks = upper_ticks[(upper_ticks > upper_min + eps) & (upper_ticks <= upper_max + eps)]
+
+    return lower_ticks, upper_ticks
+
+
+def _resolve_split_height_ratios(lower_ylim, upper_ylim, split_y_height_ratios):
+    """Resolve split panel height ratios; 'auto' uses y-span proportions."""
+    if split_y_height_ratios == "auto" or split_y_height_ratios is None:
+        lower_span = float(lower_ylim[1] - lower_ylim[0])
+        upper_span = float(upper_ylim[1] - upper_ylim[0])
+        if lower_span <= 0 or upper_span <= 0:
+            return (1, 1)
+        return (upper_span, lower_span)
+
+    if len(split_y_height_ratios) != 2:
+        raise ValueError("split_y_height_ratios must contain exactly two values (top, bottom).")
+
+    return split_y_height_ratios
 
 
 def plot_permulation_stats(
@@ -197,87 +287,221 @@ def plot_permulation_stats(
     xlim=None,
     ylim=None,
     binwidth=None,
+    show_legend=True,
+    split_y_axis=False,
+    split_y_lims=None,
+    split_y_height_ratios="auto",
+    split_y_tick_count=4,
 ):
+    # Normalize test parameter: allow "loss", "dup", or "duplication"
+    if test == "duplication":
+        test = "dup"
+    elif test not in ("loss", "dup"):
+        raise ValueError(f"Invalid test type: {test}. Must be 'loss', 'dup', or 'duplication'.")
+    
+    # Use "dup" internally for attribute lookups, "duplication" for display
+    test_name_display = "duplication" if test == "dup" else test
+    
     ncols = 2 if include_stddev else 1
     fig_width = 12 if include_stddev else 6.5
-    fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
-    axs = np.atleast_1d(axs)
+
+    if split_y_axis:
+        if split_y_lims is None:
+            raise ValueError(
+                "split_y_lims is required when split_y_axis=True. "
+                "Pass ((lower_min, lower_max), (upper_min, upper_max))."
+            )
+        if len(split_y_lims) != 2:
+            raise ValueError(
+                "split_y_lims must contain two ranges: "
+                "((lower_min, lower_max), (upper_min, upper_max))."
+            )
+
+        resolved_height_ratios = _resolve_split_height_ratios(
+            split_y_lims[0], split_y_lims[1], split_y_height_ratios
+        )
+
+        fig = plt.figure(figsize=(fig_width, 6.5))
+        gs = fig.add_gridspec(
+            2,
+            ncols,
+            height_ratios=resolved_height_ratios,
+            hspace=0.05,
+            wspace=0.25,
+        )
+        top_axes = []
+        bottom_axes = []
+        for col in range(ncols):
+            ax_top = fig.add_subplot(gs[0, col])
+            ax_bottom = fig.add_subplot(gs[1, col], sharex=ax_top)
+            top_axes.append(ax_top)
+            bottom_axes.append(ax_bottom)
+        axs = np.atleast_1d(bottom_axes)
+    else:
+        fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
+        axs = np.atleast_1d(axs)
     means = getattr(results, f"means_{test}")
     stddevs = getattr(results, f"stddevs_{test}")
     true_mean = getattr(results, f"true_mean_{test}")
     true_stddev = getattr(results, f"true_stddev_{test}")
     if test == "loss":
-        test_name = "loss"
         maximum = results.max_occ
         if binwidth is None:
             binwidth = 0.05
-    elif test == "dup":
-        test_name = "duplication"
+    else:
         maximum = results.true_odds.total_species_count
         if binwidth is None:
             binwidth = 0.01
-    else:
-        raise ValueError(f"Invalid test type: {test}. Must be 'loss' or 'dup'.")
 
     if title:
         fig.suptitle(
-            f"Permulated (null) distribution stats for gene {test_name},\n"
+            f"Permulated (null) distribution stats for gene {test_name_display},\n"
             f"{fg_name} vs. {bg_name}\n"
             f"Maximum occupancy = {maximum}, minimum occupancy = {results.min_occ}",
             fontsize=16,
         )
 
-    plot_stat_histogram(axs[0], means, binwidth, hist_color, hist_alpha, edgecolor)
+    if split_y_axis:
+        means_axes = (top_axes[0], bottom_axes[0])
+        for ax in means_axes:
+            plot_stat_histogram(ax, means, binwidth, hist_color, hist_alpha, edgecolor)
+            ax.axvline(
+                x=getattr(results, f"{test}_mean_av"),
+                linestyle="dotted",
+                color="black",
+                label="Avg. permulated mean",
+            )
+            ax.axvline(
+                x=true_mean,
+                linestyle="--",
+                color="salmon",
+                label="True mean",
+            )
 
-    if subplot_titles:
-        axs[0].set_title("permulated means")
-    axs[0].axvline(
-        x=getattr(results, f"{test}_mean_av"),
-        linestyle="dotted",
-        color="black",
-        label="Avg. permulated mean",
-    )
-    axs[0].axvline(
-        x=true_mean,
-        linestyle="--",
-        color="salmon",
-        label="True mean",
-    )
-    style_stat_axes(
-        axs[0],
-        xlabel="Means",
-        axis_label_fontsize=axis_label_fontsize,
-        legend_fontsize=legend_fontsize,
-        xlim=xlim,
-        ylim=ylim,
-    )
+        ax_top, ax_bottom = means_axes
+        if subplot_titles:
+            ax_top.set_title("permulated means")
+        ax_bottom.set_xlabel("Means", fontsize=axis_label_fontsize, fontweight="bold")
+        ax_bottom.set_ylabel("Count", fontsize=axis_label_fontsize, fontweight="bold")
+        if xlim is not None:
+            ax_top.set_xlim(xlim)
+            ax_bottom.set_xlim(xlim)
+        ax_bottom.set_ylim(split_y_lims[0])
+        ax_top.set_ylim(split_y_lims[1])
 
-    if include_stddev:
-        plot_stat_histogram(axs[1], stddevs, binwidth, hist_color, hist_alpha, edgecolor)
+        lower_ticks, upper_ticks = _split_axis_ticks(
+            split_y_lims[0], split_y_lims[1], tick_count=split_y_tick_count
+        )
+        ax_bottom.set_yticks(lower_ticks)
+        ax_top.set_yticks(upper_ticks)
+
+        ax_top.set_ylabel("")
+        if show_legend:
+            ax_top.legend(fontsize=legend_fontsize)
+        ax_top.spines["bottom"].set_visible(False)
+        ax_bottom.spines["top"].set_visible(False)
+        ax_top.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
+        ax_bottom.tick_params(axis="x", which="both", top=False)
+        _draw_y_axis_break_marks(ax_top, ax_bottom)
+    else:
+        plot_stat_histogram(axs[0], means, binwidth, hist_color, hist_alpha, edgecolor)
 
         if subplot_titles:
-            axs[1].set_title("Standard deviations")
-
-        axs[1].axvline(
-            x=getattr(results, f"{test}_stddev_av"),
+            axs[0].set_title("permulated means")
+        axs[0].axvline(
+            x=getattr(results, f"{test}_mean_av"),
             linestyle="dotted",
             color="black",
-            label="Avg. permulated stddev",
+            label="Avg. permulated mean",
         )
-        axs[1].axvline(
-            x=true_stddev,
+        axs[0].axvline(
+            x=true_mean,
             linestyle="--",
             color="salmon",
-            label="True stddev",
+            label="True mean",
         )
         style_stat_axes(
-            axs[1],
-            xlabel="Standard deviations",
+            axs[0],
+            xlabel="Means",
             axis_label_fontsize=axis_label_fontsize,
             legend_fontsize=legend_fontsize,
             xlim=xlim,
             ylim=ylim,
+            show_legend=show_legend,
         )
+
+    if include_stddev:
+        if split_y_axis:
+            std_axes = (top_axes[1], bottom_axes[1])
+            for ax in std_axes:
+                plot_stat_histogram(ax, stddevs, binwidth, hist_color, hist_alpha, edgecolor)
+                ax.axvline(
+                    x=getattr(results, f"{test}_stddev_av"),
+                    linestyle="dotted",
+                    color="black",
+                    label="Avg. permulated stddev",
+                )
+                ax.axvline(
+                    x=true_stddev,
+                    linestyle="--",
+                    color="salmon",
+                    label="True stddev",
+                )
+
+            ax_top, ax_bottom = std_axes
+            if subplot_titles:
+                ax_top.set_title("Standard deviations")
+            ax_bottom.set_xlabel(
+                "Standard deviations", fontsize=axis_label_fontsize, fontweight="bold"
+            )
+            ax_bottom.set_ylabel("Count", fontsize=axis_label_fontsize, fontweight="bold")
+            if xlim is not None:
+                ax_top.set_xlim(xlim)
+                ax_bottom.set_xlim(xlim)
+            ax_bottom.set_ylim(split_y_lims[0])
+            ax_top.set_ylim(split_y_lims[1])
+
+            lower_ticks, upper_ticks = _split_axis_ticks(
+                split_y_lims[0], split_y_lims[1], tick_count=split_y_tick_count
+            )
+            ax_bottom.set_yticks(lower_ticks)
+            ax_top.set_yticks(upper_ticks)
+
+            ax_top.set_ylabel("")
+            if show_legend:
+                ax_top.legend(fontsize=legend_fontsize)
+            ax_top.spines["bottom"].set_visible(False)
+            ax_bottom.spines["top"].set_visible(False)
+            ax_top.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
+            ax_bottom.tick_params(axis="x", which="both", top=False)
+            _draw_y_axis_break_marks(ax_top, ax_bottom)
+        else:
+            plot_stat_histogram(axs[1], stddevs, binwidth, hist_color, hist_alpha, edgecolor)
+
+            if subplot_titles:
+                axs[1].set_title("Standard deviations")
+
+            axs[1].axvline(
+                x=getattr(results, f"{test}_stddev_av"),
+                linestyle="dotted",
+                color="black",
+                label="Avg. permulated stddev",
+            )
+            axs[1].axvline(
+                x=true_stddev,
+                linestyle="--",
+                color="salmon",
+                label="True stddev",
+            )
+            style_stat_axes(
+                axs[1],
+                xlabel="Standard deviations",
+                axis_label_fontsize=axis_label_fontsize,
+                legend_fontsize=legend_fontsize,
+                xlim=xlim,
+                ylim=ylim,
+                show_legend=show_legend,
+            )
 
     plt.tight_layout()
     return fig, axs
@@ -299,6 +523,8 @@ def plot_permulation_results(
     legend_fontsize=10,
     textbox_fontsize=10,
     axis_label_fontsize=12,
+    show_legend=True,
+    show_textbox=True,
 ):
     # Normalize test parameter: allow "loss", "dup", or "duplication"
     if test == "duplication":
@@ -337,33 +563,56 @@ def plot_permulation_results(
     )
     plot_threshold_lines(results, ax, test, thresholds_color)
 
-    ax.text(
-        0.03,
-        0.95,
-        f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
-        f"True mean = {format_stat(getattr(results, f'true_mean_{test}'))}\n\n"
-        f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}\n"
-        f"True std. dev. = {format_stat(getattr(results, f'true_stddev_{test}'))}",
-        transform=ax.transAxes,
-        fontsize=textbox_fontsize,
-        ha="left",
-        va="top",
-        bbox=dict(
-            facecolor="white",
-            alpha=0.7,
-            edgecolor="0.5",
-            linewidth=0.6,
-            boxstyle="round,pad=0.2",
-        ),
-    )
-
     style_density_axes(
         ax,
         x,
         y_max,
         legend_fontsize=legend_fontsize,
         axis_label_fontsize=axis_label_fontsize,
+        show_legend=show_legend,
     )
+
+    if show_textbox:
+        legend = ax.get_legend()
+        text_bbox = {"boxstyle": "round,pad=0.2"}
+        if legend is not None:
+            frame = legend.get_frame()
+            frame_alpha = frame.get_alpha()
+            if frame_alpha is None:
+                frame_alpha = frame.get_facecolor()[-1]
+            text_bbox.update(
+                {
+                    "facecolor": frame.get_facecolor(),
+                    "edgecolor": frame.get_edgecolor(),
+                    "linewidth": frame.get_linewidth(),
+                    "alpha": frame_alpha,
+                }
+            )
+        else:
+            text_bbox.update(
+                {
+                    "facecolor": "white",
+                    "edgecolor": "0.8",
+                    "linewidth": 1.0,
+                    "alpha": 0.8,
+                }
+            )
+
+        ax.text(
+            0.03,
+            0.95,
+            f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
+            f"True mean = {format_stat(getattr(results, f'true_mean_{test}'))}\n\n"
+            f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}\n"
+            f"True std. dev. = {format_stat(getattr(results, f'true_stddev_{test}'))}",
+            transform=ax.transAxes,
+            fontsize=textbox_fontsize,
+            ha="left",
+            va="top",
+            bbox=text_bbox,
+            zorder=5,
+        )
+
     plt.tight_layout()
     return fig, ax
 
@@ -381,6 +630,8 @@ def plot_permulation_results_layered(
     title=True,
     legend_fontsize=10,
     axis_label_fontsize=12,
+    show_legend=True,
+    show_textbox=True,
 ):
     # Normalize test parameter: allow "loss", "dup", or "duplication"
     if test == "duplication":
@@ -417,6 +668,7 @@ def plot_permulation_results_layered(
         y_max,
         legend_fontsize=legend_fontsize,
         axis_label_fontsize=axis_label_fontsize,
+        show_legend=show_legend,
     )
     plt.tight_layout()
     figs.append(fig1)
@@ -427,29 +679,31 @@ def plot_permulation_results_layered(
         fig2.suptitle(title_str, fontsize=14)
     plot_average_permulation_curve(ax2, x, avg_pdf, avpermulation_color)
     plot_threshold_lines(results, ax2, test, thresholds_color)
-    ax2.text(
-        0.03,
-        0.95,
-        f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
-        f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
-        transform=ax2.transAxes,
-        fontsize=12,
-        ha="left",
-        va="top",
-        bbox=dict(
-            facecolor="white",
-            alpha=0.7,
-            edgecolor="0.5",
-            linewidth=0.6,
-            boxstyle="round,pad=0.2",
-        ),
-    )
+    if show_textbox:
+        ax2.text(
+            0.03,
+            0.95,
+            f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
+            f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
+            transform=ax2.transAxes,
+            fontsize=12,
+            ha="left",
+            va="top",
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
+        )
     style_density_axes(
         ax2,
         x,
         y_max,
         legend_fontsize=legend_fontsize,
         axis_label_fontsize=axis_label_fontsize,
+        show_legend=show_legend,
     )
     plt.tight_layout()
     figs.append(fig2)
@@ -461,29 +715,31 @@ def plot_permulation_results_layered(
     plot_average_permulation_curve(ax3, x, avg_pdf, avpermulation_color)
     plot_threshold_lines(results, ax3, test, thresholds_color)
     plot_true_histogram(ax3, true_vals, bins, hist_color, 0.3, hist_color)
-    ax3.text(
-        0.03,
-        0.95,
-        f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
-        f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
-        transform=ax3.transAxes,
-        fontsize=12,
-        ha="left",
-        va="top",
-        bbox=dict(
-            facecolor="white",
-            alpha=0.7,
-            edgecolor="0.5",
-            linewidth=0.6,
-            boxstyle="round,pad=0.2",
-        ),
-    )
+    if show_textbox:
+        ax3.text(
+            0.03,
+            0.95,
+            f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
+            f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}",
+            transform=ax3.transAxes,
+            fontsize=12,
+            ha="left",
+            va="top",
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
+        )
     style_density_axes(
         ax3,
         x,
         y_max,
         legend_fontsize=legend_fontsize,
         axis_label_fontsize=axis_label_fontsize,
+        show_legend=show_legend,
     )
     plt.tight_layout()
     figs.append(fig3)
@@ -496,31 +752,33 @@ def plot_permulation_results_layered(
     plot_threshold_lines(results, ax4, test, thresholds_color)
     plot_true_histogram(ax4, true_vals, bins, hist_color, 0.3, hist_color)
     plot_true_gaussian_fit(ax4, x, true_pdf, gaussfit_color)
-    ax4.text(
-        0.03,
-        0.95,
-        f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
-        f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}\n\n"
-        f"True mean = {format_stat(getattr(results, f'true_mean_{test}'))}\n"
-        f"True std. dev. = {format_stat(getattr(results, f'true_stddev_{test}'))}",
-        transform=ax4.transAxes,
-        fontsize=12,
-        ha="left",
-        va="top",
-        bbox=dict(
-            facecolor="white",
-            alpha=0.7,
-            edgecolor="0.5",
-            linewidth=0.6,
-            boxstyle="round,pad=0.2",
-        ),
-    )
+    if show_textbox:
+        ax4.text(
+            0.03,
+            0.95,
+            f"Permulated mean = {format_stat(getattr(results, f'{test}_mean_av'))}\n"
+            f"Permulated std. dev. = {format_stat(getattr(results, f'{test}_stddev_av'))}\n\n"
+            f"True mean = {format_stat(getattr(results, f'true_mean_{test}'))}\n"
+            f"True std. dev. = {format_stat(getattr(results, f'true_stddev_{test}'))}",
+            transform=ax4.transAxes,
+            fontsize=12,
+            ha="left",
+            va="top",
+            bbox=dict(
+                facecolor="white",
+                alpha=0.7,
+                edgecolor="0.5",
+                linewidth=0.6,
+                boxstyle="round,pad=0.2",
+            ),
+        )
     style_density_axes(
         ax4,
         x,
         y_max,
         legend_fontsize=legend_fontsize,
         axis_label_fontsize=axis_label_fontsize,
+        show_legend=show_legend,
     )
     plt.tight_layout()
     figs.append(fig4)

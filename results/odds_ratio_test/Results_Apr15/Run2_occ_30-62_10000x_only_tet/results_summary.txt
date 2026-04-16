@@ -1,0 +1,45 @@
+*********************** RESULTS ***********************
+
+Permulation test with 10000 repetitions
+Minimum occupancy: 30; max occupancy (loss): 62
+Analysis run on 2026-04-15 at 17:26:03
+Foreground list: /Users/calvin/orb-selection/data/tetragnathids.txt
+Background list: /Users/calvin/orb-selection/data/non-orb-weavers-no-araneids.txt
+Gene count file: /Users/calvin/orb-selection/data/N5.GeneCount.tsv
+Hierarchical orthogroup file: /Users/calvin/orb-selection/data/N5.tsv
+
+Total number of HOGs in node: 107986
+Total number of HOGs within occupancy threshold: 5564 (loss), 8532 (duplication)
+Total species: 65
+Foreground count: 14
+Background count: 51
+True mean, loss: -0.627
+True standard deviation, loss: 2.057
+True mean, duplication: 0.257
+True standard deviation, duplication: 1.229
+
+
+** Permulation P-VALUES ** 
+
+Probability that the null is true for MEAN, loss (alt=less): 0.142
+Probability that the null is true for MEAN, duplication (alt=greater): 0.100
+
+
+Permulated average mean, loss: -0.489
+Permulated average standard deviation, loss: 1.901
+Permulated average mean, duplication: 0.217
+Permulated average standard deviation, duplication: 1.173
+User-defined significance threshold: 0.05
+Permulation-derived alpha threshold, loss: [-4.214, 3.236]
+Permulation-derived alpha threshold, duplication: [-2.083, 2.517]
+
+Significant HOGs (all): 786
+
+  - loss_fg: 342
+
+  - loss_bg: 0
+
+  - dup_fg: 307
+
+  - dup_bg: 219
+

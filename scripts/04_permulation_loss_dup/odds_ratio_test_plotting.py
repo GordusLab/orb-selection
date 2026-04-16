@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import plot_split_helpers as psh
+from matplotlib.lines import Line2D
 from scipy.stats import norm
 
 plt.rcParams["font.family"] = "Verdana"
@@ -184,6 +185,189 @@ def style_stat_axes(
         ax.set_xlim(xlim)
     if ylim is not None:
         ax.set_ylim(ylim)
+
+
+def plot_permulation_stats_vertical_panels(
+    panel_specs,
+    title="Permulated means",
+    xlim=None,
+    binwidth=0.03,
+    fig_size=(9, 10),
+    axis_label_fontsize=14,
+    tick_fontsize=10,
+    title_fontsize=15,
+    panel_title_fontsize=13,
+    legend_fontsize=9,
+    show_legend=True,
+    ylims=None,
+):
+    """Plot permulation means as stacked vertical panels.
+
+    panel_specs should be an iterable of (panel_label, values, perm_mean, true_mean, color).
+    """
+
+    fig, axs = plt.subplots(len(panel_specs), 1, figsize=fig_size, sharex=True)
+    axs = np.atleast_1d(axs)
+
+    if xlim is None:
+        all_values = np.concatenate([np.asarray(spec[1]) for spec in panel_specs])
+        xlim = (float(np.min(all_values)), float(np.max(all_values)))
+
+    bins = np.arange(xlim[0], xlim[1] + binwidth, binwidth)
+    panel_ymax = 0.0
+
+    for ax, (panel_label, values, perm_mean, true_mean, color) in zip(axs, panel_specs):
+        counts, _, _ = ax.hist(
+            values,
+            bins=bins,
+            histtype="stepfilled",
+            linewidth=1.3,
+            color=color,
+            edgecolor=color,
+            alpha=0.22,
+        )
+        panel_ymax = max(panel_ymax, float(np.max(counts)) if np.size(counts) else 0.0)
+        ax.axvline(
+            perm_mean,
+            color="black",
+            linestyle=":",
+            linewidth=1.8,
+            alpha=0.95,
+        )
+        ax.axvline(
+            true_mean,
+            color=color,
+            linestyle="--",
+            linewidth=1.8,
+            alpha=0.95,
+        )
+        ax.set_title(panel_label, fontsize=panel_title_fontsize)
+        ax.set_ylabel("Count", fontsize=axis_label_fontsize, fontweight="bold")
+        ax.tick_params(axis="both", labelsize=tick_fontsize)
+        ax.set_xlim(xlim)
+
+        if show_legend:
+            legend_handles = [
+                Line2D([], [], color=color, linewidth=8, alpha=0.22, label="Histogram"),
+                Line2D(
+                    [],
+                    [],
+                    color="black",
+                    linestyle=":",
+                    linewidth=1.8,
+                    label="Permulated mean",
+                ),
+                Line2D(
+                    [],
+                    [],
+                    color=color,
+                    linestyle="--",
+                    linewidth=1.8,
+                    label="True mean",
+                ),
+            ]
+            ax.legend(handles=legend_handles, fontsize=legend_fontsize, frameon=True, loc="upper right")
+
+    axs[-1].set_xlabel("Means", fontsize=axis_label_fontsize, fontweight="bold")
+
+    shared_ymax = panel_ymax * 1.05 if panel_ymax > 0 else 1.0
+    if ylims is not None:
+        if isinstance(ylims, (tuple, list)) and len(ylims) == 2 and isinstance(ylims[0], (tuple, list)):
+            shared_ymax = max(shared_ymax, max(float(y[1]) for y in ylims))
+        elif isinstance(ylims, (tuple, list)) and len(ylims) == 2:
+            shared_ymax = max(shared_ymax, float(ylims[1]))
+
+    for ax in axs:
+        ax.set_ylim(0, shared_ymax)
+
+    if title:
+        fig.suptitle(title, fontsize=title_fontsize)
+
+    fig.tight_layout(rect=(0, 0, 1, 0.97))
+    return fig, axs
+
+
+def plot_permulation_hist_overlay(
+    series_specs,
+    title="Permulated means: overlaid histograms",
+    xlim=None,
+    binwidth=0.03,
+    fig_size=(9, 6),
+    axis_label_fontsize=14,
+    tick_fontsize=10,
+    title_fontsize=14,
+    legend_fontsize=9,
+    show_legend=True,
+):
+    """Plot multiple permulation histograms overlaid on one axis.
+
+    series_specs should be an iterable of (series_label, values, true_mean, color).
+    """
+
+    fig, ax = plt.subplots(figsize=fig_size)
+
+    if xlim is None:
+        all_values = np.concatenate([np.asarray(spec[1]) for spec in series_specs])
+        xlim = (float(np.min(all_values)), float(np.max(all_values)))
+
+    bins = np.arange(xlim[0], xlim[1] + binwidth, binwidth)
+
+    for label, values, true_mean, color in series_specs:
+        ax.hist(
+            values,
+            bins=bins,
+            histtype="stepfilled",
+            linewidth=1.3,
+            color=color,
+            edgecolor=color,
+            alpha=0.22,
+            label=label,
+        )
+        ax.axvline(
+            true_mean,
+            color=color,
+            linestyle="--",
+            linewidth=1.8,
+            alpha=0.95,
+            label=f"{label} true mean",
+        )
+
+    ax.set_xlim(xlim)
+    ax.set_xlabel("Means", fontsize=axis_label_fontsize, fontweight="bold")
+    ax.set_ylabel("Count", fontsize=axis_label_fontsize, fontweight="bold")
+    ax.set_title(title, fontsize=title_fontsize)
+    ax.tick_params(axis="both", labelsize=tick_fontsize)
+
+    if show_legend:
+        handles, labels = ax.get_legend_handles_labels()
+        hist_handles, hist_labels = [], []
+        mean_handles, mean_labels = [], []
+        for handle, label in zip(handles, labels):
+            if label.endswith(" true mean"):
+                mean_handles.append(handle)
+                mean_labels.append(label)
+            else:
+                hist_handles.append(handle)
+                hist_labels.append(label)
+
+        spacer = Line2D([], [], linestyle="none")
+        ordered_handles = hist_handles + [spacer] + mean_handles
+        ordered_labels = hist_labels + [""] + mean_labels
+
+        ax.legend(
+            ordered_handles,
+            ordered_labels,
+            fontsize=legend_fontsize,
+            ncol=1,
+            frameon=True,
+            handlelength=1.8,
+            labelspacing=0.5,
+            borderpad=0.6,
+            loc="upper right",
+        )
+
+    fig.tight_layout()
+    return fig, ax
 
 
 def _draw_y_axis_break_marks(ax_top, ax_bottom, dx=0.012, angle_deg=55.0):

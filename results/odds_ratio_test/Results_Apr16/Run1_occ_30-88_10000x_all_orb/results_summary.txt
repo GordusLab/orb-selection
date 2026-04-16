@@ -1,0 +1,64 @@
+*********************** RESULTS ***********************
+
+Permulation test with 10000 repetitions
+Minimum occupancy: 30; max occupancy (loss): 88
+Analysis run on 2026-04-16 at 14:27:52
+Foreground list: /Users/calvin/orb-selection/data/orbweavers-list.txt
+Gene count file: /Users/calvin/orb-selection/data/N5.GeneCount.tsv
+Hierarchical orthogroup file: /Users/calvin/orb-selection/data/N5.tsv
+
+Total number of HOGs in node: 107986
+Total number of HOGs within occupancy threshold: 8291 (loss), 12096 (duplication)
+Total species: 98
+Foreground count: 44
+Background count: 54
+True mean, loss: -0.500
+True standard deviation, loss: 1.591
+True mean, duplication: 0.079
+True standard deviation, duplication: 1.136
+
+
+** Permulation P-VALUES ** 
+
+Probability that the null is true for MEAN, loss (alt=less): 0.197
+Probability that the null is true for MEAN, duplication (alt=greater): 0.223
+
+
+Permulated average mean, loss: -0.001
+Permulated average standard deviation, loss: 1.486
+Permulated average mean, duplication: 0.004
+Permulated average standard deviation, duplication: 1.109
+User-defined significance threshold: 0.05
+Permulation-derived alpha threshold, loss: [-2.913, 2.910]
+Permulation-derived alpha threshold, duplication: [-2.170, 2.178]
+
+Significant HOGs (all): 1432
+
+  - loss_fg: 224
+
+  - loss_bg: 529
+
+  - dup_fg: 429
+
+  - dup_bg: 383
+
+Significant HOGs, Uloborus_diversus present:
+
+  - loss_fg: 85
+
+  - loss_bg: 431
+
+  - dup_fg: 283
+
+  - dup_bg: 291
+
+Significant HOGs, using permulation p-values:
+
+  - loss_fg: 52
+
+  - loss_bg: 217
+
+  - dup_fg: 141
+
+  - dup_bg: 86
+

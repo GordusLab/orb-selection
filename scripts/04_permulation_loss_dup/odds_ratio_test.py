@@ -428,18 +428,19 @@ class PermulationTestResults:
 
         return loss_uni_df, dup_uni_df
 
-    def save_go_lists(self, results_dir: str, use_perm_pvals=False):
-        dfs = self.results_fltrd_dfs
+    def save_go_lists(self, results_dir: str, use_avg_cis=False):
+        wanted = ("loss_bg", "dup_fg")
+        dfs = {k: self.results_fltrd_dfs[k] for k in wanted}
         keys_to_write = list(dfs.keys())
         locs_dir = os.path.join(results_dir, "loc_lists")
         os.makedirs(locs_dir, exist_ok=True)
-        if use_perm_pvals:
-            dfs_perm_pvals = {
+        if use_avg_cis:
+            dfs_avg_cis = {
                 key: dfs[key][self._permulation_significant_mask(dfs[key])]
                 for key in keys_to_write
             }
         else:
-            dfs_perm_pvals = None
+            dfs_avg_cis = None
 
         # Convert HOG hit list to LOCs + descriptions and save as a companion file.
         for key in keys_to_write:
@@ -449,12 +450,12 @@ class PermulationTestResults:
                 f"{locs_dir}/{key}_sig_locs.txt",
             )
 
-        if dfs_perm_pvals is not None:
+        if dfs_avg_cis is not None:
             for key in keys_to_write:
                 save_loc_list(
-                    dfs_perm_pvals[key],
+                    dfs_avg_cis[key],
                     self.true_odds.hog_node_genes_tsv,
-                    f"{locs_dir}/{key}_sig_locs_perm_pval.txt",
+                    f"{locs_dir}/{key}_sig_locs_avg_ci.txt",
                 )
 
         loss_uni, dup_uni = self.get_universe_permulation()
@@ -499,7 +500,7 @@ class PermulationTestResults:
 
     def _permulation_significant_mask(self, df: pd.DataFrame) -> pd.Series:
         """Return a robust boolean mask for permulation-significant rows."""
-        col = "Significant in permulation test"
+        col = "Significant by avgd thresholds"
         if col not in df.columns:
             return pd.Series(False, index=df.index)
 
@@ -726,7 +727,7 @@ class PermulationTestResults:
 
     # Maybe switch which one is filtered first?
     def filter_for_permulation_hits(
-            self, 
+            self,
             min_occ=None,
             max_occ=None
             ):
@@ -741,47 +742,48 @@ class PermulationTestResults:
         loss_fg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["Occupancy"] <= max_occ)
-            & (df["Log odds ratio of loss"] > self.loss_ci_av[1])
+            & (df["P-value loss more likely in fg"] <= self.alpha)
         ].copy()
 
-        loss_fg_df["Significant in permulation test"] = ""
+        loss_fg_df["Significant by avgd thresholds"] = ""
         loss_fg_df.loc[
-            loss_fg_df["P-value loss more likely in fg"] <= self.alpha,
-            "Significant in permulation test",
+            loss_fg_df["Log odds ratio of loss"] > self.loss_ci_av[1],
+            "Significant by avgd thresholds",
         ] = "loss_fg"
 
         loss_bg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["Occupancy"] <= max_occ)
-            & (df["Log odds ratio of loss"] < self.loss_ci_av[0])
+            & (df["P-value loss more likely in bg"] <= self.alpha)
         ].copy()
 
-        loss_bg_df["Significant in permulation test"] = ""
+        loss_bg_df["Significant by avgd thresholds"] = ""
         loss_bg_df.loc[
-            loss_bg_df["P-value loss more likely in bg"] <= self.alpha,
-            "Significant in permulation test",
+            (loss_bg_df["Log odds ratio of loss"] < self.loss_ci_av[0]),
+            "Significant by avgd thresholds",
         ] = "loss_bg"
 
         dup_fg_df = df[
             (df["Occupancy"] >= min_occ)
-            & (df["Log odds ratio of duplication"] > self.dup_ci_av[1])
+             & (df["P-value duplication more likely in fg"] <= self.alpha)
+            
         ].copy()
 
-        dup_fg_df["Significant in permulation test"] = ""
+        dup_fg_df["Significant by avgd thresholds"] = ""
         dup_fg_df.loc[
-            dup_fg_df["P-value duplication more likely in fg"] <= self.alpha,
-            "Significant in permulation test",
+            (dup_fg_df["Log odds ratio of duplication"] > self.dup_ci_av[1]),
+            "Significant by avgd thresholds",
         ] = "dup_fg"
 
         dup_bg_df = df[
             (df["Occupancy"] >= min_occ)
-            & (df["Log odds ratio of duplication"] < self.dup_ci_av[0])
+            & (df["P-value duplication more likely in bg"] <= self.alpha)
         ].copy()
 
-        dup_bg_df["Significant in permulation test"] = ""
+        dup_bg_df["Significant by avgd thresholds"] = ""
         dup_bg_df.loc[
-            dup_bg_df["P-value duplication more likely in bg"] <= self.alpha,
-            "Significant in permulation test",
+            (dup_bg_df["Log odds ratio of duplication"] < self.dup_ci_av[0]),
+            "Significant by avgd thresholds",
         ] = "dup_bg"
 
         dfs = {
@@ -791,10 +793,10 @@ class PermulationTestResults:
             "dup_bg": dup_bg_df
         }
 
-        loss_fg_df["Significant by confidence interval"] = "loss_fg"
-        loss_bg_df["Significant by confidence interval"] = "loss_bg"
-        dup_fg_df["Significant by confidence interval"] = "dup_fg"
-        dup_bg_df["Significant by confidence interval"] = "dup_bg"
+        loss_fg_df["Significant by permulation"] = "loss_fg"
+        loss_bg_df["Significant by permulation"] = "loss_bg"
+        dup_fg_df["Significant by permulation"] = "dup_fg"
+        dup_bg_df["Significant by permulation"] = "dup_bg"
 
         df = pd.concat(list(dfs.values())).drop_duplicates()
 
@@ -1058,7 +1060,7 @@ class PermulationTestResults:
         self.print_permulation_results(fname=f"{results_dir}/" + "results_summary.txt")
 
         # Save LOC lists for significant hits and universes.
-        self.save_go_lists(results_dir=results_dir, use_perm_pvals=True)
+        self.save_go_lists(results_dir=results_dir, use_avg_cis=True)
 
         #### Save figures ####
 

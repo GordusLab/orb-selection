@@ -1,3 +1,5 @@
+# Adapted from https://github.com/ViriatoII/C4Evol/blob/5580af8a61411b18b8b9bd1f8dd97e7d7101bbf5/annotate_ogroups_vs_ref.py
+
 #!/usr/bin/env python3
 
 import argparse
@@ -34,6 +36,12 @@ WORKER_CONFIG = {"ortho_dir": None, "ref_db": None}
 WORKER_SEQ_CACHE = {}
 
 
+def get_default_workers():
+    if "SLURM_CPUS_PER_TASK" in os.environ:
+        return int(os.environ["SLURM_CPUS_PER_TASK"])
+    return max(1, (os.cpu_count() or 1) - 1)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
@@ -45,10 +53,14 @@ def parse_args():
     parser.add_argument("ortho_dir", help="Directory containing per-species FASTA files")
     parser.add_argument("ref_db", help="Reference BLAST database path")
     parser.add_argument(
+        "--hog-list",
+        help="Optional text file with a list of HOGs to annotate. If provided, only these HOGs will be processed.",
+    )
+    parser.add_argument(
         "--workers",
         type=int,
-        default=max(1, (os.cpu_count() or 1) - 1),
-        help="Number of worker processes (default: CPU count - 1)",
+        default=get_default_workers(),
+        help="Number of worker processes (default: SLURM_CPUS_PER_TASK or CPU count - 1)",
     )
     parser.add_argument(
         "--chunksize",
@@ -209,7 +221,14 @@ def main():
     args = parse_args()
 
     df = pd.read_csv(args.n0_tsv, sep="\t")
-    out = pd.read_csv(args.n0_tsv, sep="\t", usecols=["HOG", "OG"])
+
+    if args.hog_list:
+        with open(args.hog_list, "r") as f:
+            hog_list = {line.strip() for line in f}
+        df = df[df["HOG"].isin(hog_list)].reset_index(drop=True)
+        print(f"Filtered to {len(df)} HOGs from {args.hog_list}")
+
+    out = df[["HOG", "OG"]].copy()
 
     for col, default in DEFAULT_NO_HIT.items():
         out[col] = default
@@ -234,10 +253,6 @@ def main():
         ) as ex:
             results_iter = ex.map(_process_row, tasks, chunksize=args.chunksize)
             _consume_results(results_iter, out, total_tasks, args.progress_every)
-
-            outname = args.n0_tsv[:-4] + "_blasted.tsv"
-            out.to_csv(outname, sep="\t", index=False)
-            return
 
     outname = args.n0_tsv[:-4] + "_blasted.tsv"
     out.to_csv(outname, sep="\t", index=False)

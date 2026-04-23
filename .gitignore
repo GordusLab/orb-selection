@@ -173,3 +173,12 @@ data/busted_ph_rev/
 data/relax/
 *.pkl
 renv
+
+# Conda environments and system files
+.conda/
+anaconda3/
+miniconda3/
+/envs/
+
+# VS Code settings
+.vscode/

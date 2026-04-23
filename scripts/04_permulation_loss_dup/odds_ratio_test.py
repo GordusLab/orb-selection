@@ -745,11 +745,9 @@ class PermulationTestResults:
             & (df["P-value loss more likely in fg"] <= self.alpha)
         ].copy()
 
-        loss_fg_df["Significant by avgd thresholds"] = ""
-        loss_fg_df.loc[
-            loss_fg_df["Log odds ratio of loss"] > self.loss_ci_av[1],
-            "Significant by avgd thresholds",
-        ] = "loss_fg"
+        loss_fg_df["Significant by avgd thresholds"] = np.where(
+            loss_fg_df["Log odds ratio of loss"] > self.loss_ci_av[1], "loss_fg", None
+        )
 
         loss_bg_df = df[
             (df["Occupancy"] >= min_occ)
@@ -757,11 +755,9 @@ class PermulationTestResults:
             & (df["P-value loss more likely in bg"] <= self.alpha)
         ].copy()
 
-        loss_bg_df["Significant by avgd thresholds"] = ""
-        loss_bg_df.loc[
-            (loss_bg_df["Log odds ratio of loss"] < self.loss_ci_av[0]),
-            "Significant by avgd thresholds",
-        ] = "loss_bg"
+        loss_bg_df["Significant by avgd thresholds"] = np.where(
+            loss_bg_df["Log odds ratio of loss"] < self.loss_ci_av[0], "loss_bg", None
+        )
 
         dup_fg_df = df[
             (df["Occupancy"] >= min_occ)
@@ -769,22 +765,22 @@ class PermulationTestResults:
             
         ].copy()
 
-        dup_fg_df["Significant by avgd thresholds"] = ""
-        dup_fg_df.loc[
-            (dup_fg_df["Log odds ratio of duplication"] > self.dup_ci_av[1]),
-            "Significant by avgd thresholds",
-        ] = "dup_fg"
+        dup_fg_df["Significant by avgd thresholds"] = np.where(
+            dup_fg_df["Log odds ratio of duplication"] > self.dup_ci_av[1],
+            "dup_fg",
+            None,
+        )
 
         dup_bg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["P-value duplication more likely in bg"] <= self.alpha)
         ].copy()
 
-        dup_bg_df["Significant by avgd thresholds"] = ""
-        dup_bg_df.loc[
-            (dup_bg_df["Log odds ratio of duplication"] < self.dup_ci_av[0]),
-            "Significant by avgd thresholds",
-        ] = "dup_bg"
+        dup_bg_df["Significant by avgd thresholds"] = np.where(
+            dup_bg_df["Log odds ratio of duplication"] < self.dup_ci_av[0],
+            "dup_bg",
+            None,
+        )
 
         dfs = {
             "loss_fg": loss_fg_df,

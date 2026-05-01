@@ -48,19 +48,21 @@ long_df <- gene_counts %>%
 treefile = here("data/SpeciesTree_full_brlen.nwk")
 speciesTree <- read.tree(treefile)
 
-phyloglm(
-  gene_count ~ orb_weaving,
-  data = long_df,
-  phy = speciesTree,
-  method = "poisson_GEE"
-)
 ## Subset to the first gene in long_df
-first_gene <- unique(long_df$gene)[1]
-df_gene <- subset(long_df, gene == first_gene)
+first_gene <- unique(long_df$HOG)[1]
+df_gene <- subset(long_df, HOG == first_gene)
 
 # Filter for complete cases
 complete_cases <- complete.cases(df_gene$gene_count, df_gene$orb_weaving)
 df_gene_complete <- df_gene[complete_cases, ]
+
+
+# Debug: check for mismatches between tree and data
+cat("Species in tree but not in data:\n")
+print(setdiff(speciesTree$tip.label, df_gene_complete$species))
+
+cat("Species in data but not in tree:\n")
+print(setdiff(df_gene_complete$species, speciesTree$tip.label))
 
 # Match tree and data
 common_species <- intersect(speciesTree$tip.label, df_gene_complete$species)

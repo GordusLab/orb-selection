@@ -119,3 +119,26 @@ print(dup_time)
 stopCluster(cl)
 
 cat("Finished parallelized phyloglm regressions for gene loss and duplication.\n")
+
+# Extract pvalues
+loss_pvals <- sapply(results_loss, function(res) {
+  fit <- res$fit
+  if (inherits(fit, "phyloglm")) {
+    coef_table <- summary(fit)$coefficients
+    if ("orb_weavingTRUE" %in% rownames(coef_table)) {
+      return(coef_table["orb_weavingTRUE", "p.value"])
+    }
+  }
+  return(NA)
+})
+
+dup_pvals <- sapply(results_dup, function(res) {
+  fit <- res$fit
+  if (inherits(fit, "phyloglm")) {
+    coef_table <- summary(fit)$coefficients
+    if ("orb_weavingTRUE" %in% rownames(coef_table)) {
+      return(coef_table["orb_weavingTRUE", "p.value"])
+    }
+  }
+  return(NA)
+})

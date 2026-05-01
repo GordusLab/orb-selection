@@ -68,10 +68,9 @@ registerDoParallel(cl)
 
 unique_genes <- unique(long_df$HOG)[1:11]
 
-# Parallel gene loss regressions (timed)
-cat("Timing gene loss regressions for first 11 genes...\n")
+cat("Timing gene loss regressions for first 10 genes...\n")
 loss_time <- system.time({
-  results_loss <- foreach(g = unique_genes, .packages = c("phytools", "ape")) %dopar% {
+  results_loss <- foreach(g = unique_genes, .packages = c("phylolm", "phytools", "ape")) %dopar% {
     df_gene <- subset(long_df, HOG == g)
     tab <- table(df_gene$gene_lost)
     if (length(tab) < 2 || any(tab < 2)) {
@@ -93,10 +92,9 @@ loss_time <- system.time({
 cat("Elapsed time for gene loss regressions (user, system, elapsed):\n")
 print(loss_time)
 
-# Parallel gene duplication regressions (timed)
-cat("Timing gene duplication regressions for first 11 genes...\n")
+cat("Timing gene duplication regressions for first 10 genes...\n")
 dup_time <- system.time({
-  results_dup <- foreach(g = unique_genes, .packages = c("phytools", "ape")) %dopar% {
+  results_dup <- foreach(g = unique_genes, .packages = c("phylolm", "phytools", "ape")) %dopar% {
     df_gene <- subset(long_df, HOG == g)
     tab <- table(df_gene$gene_duplicated)
     if (length(tab) < 2 || any(tab < 2)) {

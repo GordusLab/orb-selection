@@ -85,6 +85,8 @@ progress_monitor <- function(total, interval = 300) {
     }
     cat(sprintf("[Progress] %d of %d genes completed at %s\n", done, total, format(Sys.time(), "%H:%M:%S")))
     if (done >= total) break
+    # If a stop file exists, exit early (for test runs or manual stop)
+    if (file.exists(paste0(progress_file, ".stop"))) break
   }
 }
 
@@ -117,8 +119,18 @@ loss_time <- system.time({
   }
 })
 
-# Wait for progress monitor to finish
-parallel:::mccollect(progress_pid)
+
+# Wait for progress monitor to finish, but always kill if main loop is done
+try({
+  parallel:::mccollect(progress_pid, wait = FALSE)
+  Sys.sleep(1) # Give monitor a chance to print final update
+  if (parallel:::selectChildren(list(progress_pid), timeout = 0)[[1]] == 0) {
+    # Still running, create stop file and kill
+    file.create(paste0(progress_file, ".stop"))
+    parallel:::mckill(progress_pid, signal = 9)
+    parallel:::mccollect(progress_pid)
+  }
+}, silent = TRUE)
 
 cat("Elapsed time for gene loss regressions (user, system, elapsed):\n")
 print(loss_time)
@@ -154,8 +166,17 @@ dup_time <- system.time({
   }
 })
 
-# Wait for progress monitor to finish
-parallel:::mccollect(progress_pid2)
+
+# Wait for progress monitor to finish, but always kill if main loop is done
+try({
+  parallel:::mccollect(progress_pid2, wait = FALSE)
+  Sys.sleep(1)
+  if (parallel:::selectChildren(list(progress_pid2), timeout = 0)[[1]] == 0) {
+    file.create(paste0(progress_file, ".stop"))
+    parallel:::mckill(progress_pid2, signal = 9)
+    parallel:::mccollect(progress_pid2)
+  }
+}, silent = TRUE)
 
 cat("Elapsed time for gene duplication regressions (user, system, elapsed):\n")
 print(dup_time)

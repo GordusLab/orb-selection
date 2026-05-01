@@ -5,6 +5,10 @@ library(phylolm)
 library(here)
 library(ape)
 
+# Read in species tree
+treefile = here("data/SpeciesTree_full_brlen.nwk")
+speciesTree <- read.tree(treefile)
+
 # Read gene count table
 gene_counts <- read_tsv(here("data/N5.GeneCount.tsv"))
 
@@ -45,48 +49,75 @@ long_df <- gene_counts %>%
     orb_weaving = as.logical(orb_weaving)
   )
 
-treefile = here("data/SpeciesTree_full_brlen.nwk")
-speciesTree <- read.tree(treefile)
-
-## Subset to the first gene in long_df
-first_gene <- unique(long_df$HOG)[1]
-df_gene <- subset(long_df, HOG == first_gene)
-
-# Filter for complete cases
-complete_cases <- complete.cases(df_gene$gene_count, df_gene$orb_weaving)
-df_gene_complete <- df_gene[complete_cases, ]
-
-
-# Debug: check for mismatches between tree and data
-cat("Species in tree but not in data:\n")
-print(setdiff(speciesTree$tip.label, df_gene_complete$species))
-
-cat("Species in data but not in tree:\n")
-print(setdiff(df_gene_complete$species, speciesTree$tip.label))
-
-# Match tree and data
-common_species <- intersect(speciesTree$tip.label, df_gene_complete$species)
-speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, common_species))
-df_gene_matched <- df_gene_complete[df_gene_complete$species %in% common_species, ]
 
 # Add binary variables to long_df
 long_df$gene_lost <- ifelse(long_df$gene_count == 0, 1, 0)
 long_df$gene_duplicated <- ifelse(long_df$gene_count > 1, 1, 0)
 
-# Convert to standard data.frame
-df_gene_matched <- as.data.frame(df_gene_matched)
-rownames(df_gene_matched) <- df_gene_matched$species
+common_species <- intersect(speciesTree$tip.label, long_df$species)
+speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, common_species))
 
-# Run phyloglm for this gene
-fit <- phylolm(gene_count ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned)
-summary(fit)
+# Parallelized phyloglm regressions for gene loss and duplication
+library(foreach)
+library(doParallel)
 
-# Run phyloglm for gene_lost
-cat("\nphyloglm for gene_lost (gene_count == 0):\n")
-fit_lost <- phyloglm(gene_lost ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned, method = "poisson_GEE")
-print(summary(fit_lost))
+# Set up parallel backend
+n_cores <- parallel::detectCores() - 1
+cl <- makeCluster(n_cores)
+registerDoParallel(cl)
 
-# Run phyloglm for gene_duplicated
-cat("\nphyloglm for gene_duplicated (gene_count > 1):\n")
-fit_dup <- phyloglm(gene_duplicated ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned, method = "poisson_GEE")
-print(summary(fit_dup))
+unique_genes <- unique(long_df$HOG)[1:11]
+
+# Parallel gene loss regressions (timed)
+cat("Timing gene loss regressions for first 11 genes...\n")
+loss_time <- system.time({
+  results_loss <- foreach(g = unique_genes, .packages = c("phytools", "ape")) %dopar% {
+    df_gene <- subset(long_df, HOG == g)
+    tab <- table(df_gene$gene_lost)
+    if (length(tab) < 2 || any(tab < 2)) {
+      return(list(HOG = g, fit = NA, error = "Insufficient variation"))
+    }
+    # Convert to standard data.frame
+    df_gene <- as.data.frame(df_gene)
+    rownames(df_gene) <- df_gene$species
+    fit <- tryCatch(
+      phyloglm(gene_lost ~ orb_weaving, data = df_gene, phy = speciesTree_pruned, method = "poisson_GEE"),
+      error = function(e) e
+    )
+    if (inherits(fit, "error")) {
+      return(list(HOG = g, fit = NA, error = fit$message))
+    }
+    list(HOG = g, fit = fit, error = NA)
+  }
+})
+cat("Elapsed time for gene loss regressions (user, system, elapsed):\n")
+print(loss_time)
+
+# Parallel gene duplication regressions (timed)
+cat("Timing gene duplication regressions for first 11 genes...\n")
+dup_time <- system.time({
+  results_dup <- foreach(g = unique_genes, .packages = c("phytools", "ape")) %dopar% {
+    df_gene <- subset(long_df, HOG == g)
+    tab <- table(df_gene$gene_duplicated)
+    if (length(tab) < 2 || any(tab < 2)) {
+      return(list(HOG = g, fit = NA, error = "Insufficient variation"))
+    }
+    # Convert to standard data.frame
+    df_gene <- as.data.frame(df_gene)
+    rownames(df_gene) <- df_gene$species
+    fit <- tryCatch(
+      phyloglm(gene_duplicated ~ orb_weaving, data = df_gene, phy = speciesTree_pruned, method = "poisson_GEE"),
+      error = function(e) e
+    )
+    if (inherits(fit, "error")) {
+      return(list(HOG = g, fit = NA, error = fit$message))
+    }
+    list(HOG = g, fit = fit, error = NA)
+  }
+})
+cat("Elapsed time for gene duplication regressions (user, system, elapsed):\n")
+print(dup_time)
+
+stopCluster(cl)
+
+cat("Finished parallelized phyloglm regressions for gene loss and duplication.\n")

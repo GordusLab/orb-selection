@@ -2,18 +2,20 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(phylolm)
-library(here)
+# library(here)
 library(ape)
+library(foreach)
+library(doParallel)
 
 # Read in species tree
-treefile = here("data/SpeciesTree_full_brlen.nwk")
+treefile = "/home/crunnel2/orb-selection/data/SpeciesTree_full_brlen.nwk")
 speciesTree <- read.tree(treefile)
 
 # Read gene count table
-gene_counts <- read_tsv(here("data/N5.GeneCount.tsv"))
+gene_counts <- read_tsv("/home/crunnel2/orb-selection/data/N5.GeneCount.tsv"))
 
 # Read orb-weaver species list
-orb_weavers <- read_lines(here("data/orbweavers-list.txt"))
+orb_weavers <- read_lines("/home/crunnel2/orb-selection/data/orbweavers-list.txt"))
 
 # Filter rows with occupancy >= 30
 gene_counts <- gene_counts %>%
@@ -60,11 +62,9 @@ speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, 
 
 
 # Parallelized phyloglm regressions for gene loss and duplication
-library(foreach)
-library(doParallel)
 
 # Set up parallel backend
-n_cores <- parallel::detectCores() - 1
+n_cores <- parallel::detectCores()
 cl <- makeCluster(n_cores)
 registerDoParallel(cl)
 

@@ -32,7 +32,8 @@ species_cols <- gene_counts %>%
 gene_counts <- gene_counts %>%
   select(HOG, all_of(species_cols))
 
-# Pivot to long format
+
+# Pivot to long format and convert to data.frame
 long_df <- gene_counts %>%
   pivot_longer(
     cols = -HOG,
@@ -48,7 +49,7 @@ long_df <- gene_counts %>%
     gene_count = as.integer(gene_count),
     orb_weaving = as.logical(orb_weaving)
   )
-
+long_df <- as.data.frame(long_df)
 
 # Add binary variables to long_df
 long_df$gene_lost <- ifelse(long_df$gene_count == 0, 1, 0)
@@ -76,8 +77,7 @@ loss_time <- system.time({
     if (length(tab) < 2 || any(tab < 2)) {
       return(list(HOG = g, fit = NA, error = "Insufficient variation"))
     }
-    # Convert to standard data.frame
-    df_gene <- as.data.frame(df_gene)
+    # Set rownames for phyloglm
     rownames(df_gene) <- df_gene$species
     fit <- tryCatch(
       phyloglm(gene_lost ~ orb_weaving, data = df_gene, phy = speciesTree_pruned, method = "poisson_GEE"),
@@ -100,8 +100,7 @@ dup_time <- system.time({
     if (length(tab) < 2 || any(tab < 2)) {
       return(list(HOG = g, fit = NA, error = "Insufficient variation"))
     }
-    # Convert to standard data.frame
-    df_gene <- as.data.frame(df_gene)
+    # Set rownames for phyloglm
     rownames(df_gene) <- df_gene$species
     fit <- tryCatch(
       phyloglm(gene_duplicated ~ orb_weaving, data = df_gene, phy = speciesTree_pruned, method = "poisson_GEE"),

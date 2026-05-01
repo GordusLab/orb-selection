@@ -54,3 +54,19 @@ phyloglm(
   phy = speciesTree,
   method = "poisson_GEE"
 )
+## Subset to the first gene in long_df
+first_gene <- unique(long_df$gene)[1]
+df_gene <- subset(long_df, gene == first_gene)
+
+# Filter for complete cases
+complete_cases <- complete.cases(df_gene$gene_count, df_gene$orb_weaving)
+df_gene_complete <- df_gene[complete_cases, ]
+
+# Match tree and data
+common_species <- intersect(speciesTree$tip.label, df_gene_complete$species)
+speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, common_species))
+df_gene_matched <- df_gene_complete[df_gene_complete$species %in% common_species, ]
+
+# Run phyloglm for this gene
+fit <- phyloglm(gene_count ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned)
+summary(fit)

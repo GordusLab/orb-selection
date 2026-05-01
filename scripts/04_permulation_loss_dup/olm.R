@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyr)
 library(phylolm)
 library(here)
+library(ape)
 
 # Read gene count table
 gene_counts <- read_tsv(here("data/N5.GeneCount.tsv"))
@@ -44,4 +45,12 @@ long_df <- gene_counts %>%
     orb_weaving = as.logical(orb_weaving)
   )
 
-head(long_df)
+treefile = here("data/SpeciesTree_full_brlen.nwk")
+speciesTree <- read.tree(treefile)
+
+phyloglm(
+  gene_count ~ orb_weaving,
+  data = long_df,
+  phy = speciesTree,
+  method = "poisson_GEE"
+)

@@ -69,6 +69,10 @@ common_species <- intersect(speciesTree$tip.label, df_gene_complete$species)
 speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, common_species))
 df_gene_matched <- df_gene_complete[df_gene_complete$species %in% common_species, ]
 
+# Convert to standard data.frame
+df_gene_matched <- as.data.frame(df_gene_matched)
+rownames(df_gene_matched) <- df_gene_matched$species
+
 # Run phyloglm for this gene
-fit <- phyloglm(gene_count ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned)
+fit <- phylolm(gene_count ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned)
 summary(fit)

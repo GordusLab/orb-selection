@@ -69,6 +69,10 @@ common_species <- intersect(speciesTree$tip.label, df_gene_complete$species)
 speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, common_species))
 df_gene_matched <- df_gene_complete[df_gene_complete$species %in% common_species, ]
 
+# Add binary variables to long_df
+long_df$gene_lost <- ifelse(long_df$gene_count == 0, 1, 0)
+long_df$gene_duplicated <- ifelse(long_df$gene_count > 1, 1, 0)
+
 # Convert to standard data.frame
 df_gene_matched <- as.data.frame(df_gene_matched)
 rownames(df_gene_matched) <- df_gene_matched$species
@@ -76,3 +80,13 @@ rownames(df_gene_matched) <- df_gene_matched$species
 # Run phyloglm for this gene
 fit <- phylolm(gene_count ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned)
 summary(fit)
+
+# Run phyloglm for gene_lost
+cat("\nphyloglm for gene_lost (gene_count == 0):\n")
+fit_lost <- phyloglm(gene_lost ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned, method = "poisson_GEE")
+print(summary(fit_lost))
+
+# Run phyloglm for gene_duplicated
+cat("\nphyloglm for gene_duplicated (gene_count > 1):\n")
+fit_dup <- phyloglm(gene_duplicated ~ orb_weaving, data = df_gene_matched, phy = speciesTree_pruned, method = "poisson_GEE")
+print(summary(fit_dup))

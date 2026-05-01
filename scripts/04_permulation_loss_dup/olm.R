@@ -67,7 +67,7 @@ n_cores <- parallel::detectCores() - 1
 cl <- makeCluster(n_cores)
 registerDoParallel(cl)
 
-unique_genes <- unique(long_df$HOG)[1:11]
+unique_genes <- unique(long_df$HOG)
 
 cat("Timing gene loss regressions for first 10 genes...\n")
 loss_time <- system.time({

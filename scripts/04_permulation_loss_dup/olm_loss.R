@@ -5,6 +5,7 @@ library(phylolm)
 library(ape)
 library(foreach)
 library(doParallel)
+library(qvalue)
 
 # Read in species tree
 treefile = "/home/crunnel2/orb-selection/data/SpeciesTree_full_brlen.nwk"
@@ -76,6 +77,10 @@ combine_tmp_results <- function(tmp_dir, out_csv) {
     for (n in names(x)) row[[n]] <- x[[n]]
     row
   })))
+  # Calculate Storey FDR (q-values) and save updated CSV
+  pvals <- df$coef_orb_weavingTRUE_p.value
+  qobj <- qvalue(p = pvals)
+  df$qvalue <- qobj$qvalues
   write.csv(df, file = out_csv, row.names = FALSE)
 }
 

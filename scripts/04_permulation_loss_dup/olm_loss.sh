@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=260504_phyloglm_dup
+#SBATCH --job-name=260505_phyloglm_loss
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --nodes=1
@@ -21,4 +21,4 @@ mkdir -p /data/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/
 export OMP_NUM_THREADS=1
 export MKL_NUM_THREADS=1
 
-Rscript /home/crunnel2/orb-selection/scripts/04_permulation_loss_dup/olm_dup.R
+Rscript /home/crunnel2/orb-selection/scripts/04_permulation_loss_dup/olm_loss.R

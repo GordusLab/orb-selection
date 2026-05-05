@@ -2,7 +2,6 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(phylolm)
-library(here)
 library(ape)
 library(foreach)
 library(doParallel)
@@ -169,7 +168,7 @@ stopCluster(cl)
 cat("Finished parallelized phyloglm regressions for gene loss and duplication.\n")
 
 # Combine temp files into final CSV
-combine_tmp_results(tmp_loss_dir, here("results/phyloglm_loss.csv"))
+combine_tmp_results(tmp_loss_dir, "/home/crunnel2/orb-selection/phyloglm_loss.csv")
 
 # Note: For a binary predictor like orb_weaving, the coefficient for orb_weavingTRUE is the effect size (log-odds or log-rate ratio) for TRUE vs FALSE.
 # The effect for orb_weaving == FALSE is the negative of this coefficient, and the p-value is the same.

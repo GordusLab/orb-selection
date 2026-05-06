@@ -1,14 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=260506_phyloglm_loss
+#SBATCH --job-name=260506_phyloglm_permulate_loss_test_1-2
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --nodes=1
-#SBATCH --ntasks=24
+#SBATCH --ntasks=12
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:10:00
 #SBATCH --mail-type=ALL
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
+#SBATCH --array=1-2
 
 # module load GCC/11.3.0 GCC/12.2.0 GCC/12.3.0 GCC/13.2.0 foss/2022a foss/2022b foss/2023a gfbf/2022b gfbf/2023a gfbf/2023b intel/2019a intel/2020a intel/2023a intel/2023b intel/2024a
 # module load R/4.5.1-gfbf-2023b
@@ -21,4 +22,5 @@ mkdir -p /data/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/
 export OMP_NUM_THREADS=1
 export MKL_NUM_THREADS=1
 
-Rscript /home/crunnel2/orb-selection/scripts/04_permulation_loss_dup/olm_loss.R
+Rscript /home/crunnel2/orb-selection/scripts/04_permulation_loss_dup/olm_permulate_prep.R loss ${SLURM_ARRAY_TASK_ID}
+Rscript /home/crunnel2/orb-selection/scripts/04_permulation_loss_dup/olm_permulate.R loss ${SLURM_ARRAY_TASK_ID} ${SLURM_NTASKS}

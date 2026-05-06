@@ -5,7 +5,6 @@ library(phylolm)
 library(ape)
 library(foreach)
 library(doParallel)
-library(qvalue)
 
 # Read in species tree
 treefile = "/home/crunnel2/orb-selection/data/SpeciesTree_full_brlen.nwk"
@@ -17,14 +16,6 @@ gene_counts <- read_tsv("/home/crunnel2/orb-selection/data/N5.GeneCount.tsv")
 # Read orb-weaver species list
 orb_weavers <- read_lines("/home/crunnel2/orb-selection/data/orbweavers-list.txt")
 
-# Filter rows with occupancy >= 30
-gene_counts <- gene_counts %>%
-  filter(Occupancy >= 30)
-
-# Remove unwanted columns
-gene_counts <- gene_counts %>%
-  select(-OG, -`Gene Tree Parent Clade`, -Occupancy)
-
 # Drop species columns with all zeros
 species_cols <- gene_counts %>%
   select(-HOG) %>%
@@ -34,6 +25,13 @@ species_cols <- gene_counts %>%
 gene_counts <- gene_counts %>%
   select(HOG, all_of(species_cols))
 
+# Filter rows with occupancy >= 30
+gene_counts <- gene_counts %>%
+  filter(Occupancy >= 30)
+
+# Remove unwanted columns
+gene_counts <- gene_counts %>%
+  select(-OG, -`Gene Tree Parent Clade`, -Occupancy)
 
 # Pivot to long format and convert to data.frame
 long_df <- gene_counts %>%
@@ -76,10 +74,6 @@ combine_tmp_results <- function(tmp_dir, out_csv) {
     for (n in names(x)) row[[n]] <- x[[n]]
     row
   })))
-  # Calculate Storey FDR (q-values) and save updated CSV
-  pvals <- df$coef_orb_weavingTRUE_p.value
-  qobj <- qvalue(p = pvals)
-  df$qvalue <- qobj$qvalues
   write.csv(df, file = out_csv, row.names = FALSE)
 }
 
@@ -119,7 +113,6 @@ dup_time <- system.time({
     out <- list(HOG = g)
     if (length(tab) < 2 || any(tab < 2)) {
       out$error <- "Insufficient variation"
-      out$fit <- NA
     } else {
       rownames(df_gene) <- df_gene$species
       fit <- tryCatch(
@@ -128,10 +121,8 @@ dup_time <- system.time({
       )
       if (inherits(fit, "error")) {
         out$error <- fit$message
-        out$fit <- NA
       } else {
         out$error <- NA
-        out$fit <- NA
         s <- summary(fit)
         coef_table <- as.data.frame(s$coefficients)
         for (rn in rownames(coef_table)) {
@@ -140,8 +131,6 @@ dup_time <- system.time({
           }
         }
         out$logLik <- fit$logLik
-        out$alpha <- fit$alpha
-        out$converged <- fit$converged
       }
     }
     tmpfile <- file.path(tmp_dup_dir, paste0(g, ".rds"))
@@ -167,10 +156,22 @@ print(dup_time)
 
 stopCluster(cl)
 
-cat("Finished parallelized phyloglm regressions for gene loss and duplication.\n")
+cat("Finished parallelized phyloglm regressions for gene duplication.\n")
 
 # Combine temp files into final CSV
-combine_tmp_results(tmp_dup_dir, "/home/crunnel2/orb-selection/phyloglm_dup.csv")
+combine_tmp_results(tmp_dup_dir, "/home/crunnel2/orb-selection/results/phyloglm_dup.csv")
+
+# Calculate Storey FDR (q-values) and save updated CSV
+library(qvalue)
+results <- read.csv("/home/crunnel2/orb-selection/results/phyloglm_dup.csv")
+if ("coef_orb_weavingTRUE_p.value" %in% colnames(results)) {
+  pvals <- results$coef_orb_weavingTRUE_p.value
+  qobj <- qvalue(p = pvals)
+  results$qvalue <- qobj$qvalues
+  write.csv(results, "/home/crunnel2/orb-selection/results/phyloglm_dup_qvals.csv", row.names = FALSE)
+} else {
+  warning("Could not find p-value column 'coef_orb_weavingTRUE_p.value' in results. Please update the column name in the script.")
+}
 
 # Note: For a binary predictor like orb_weaving, the coefficient for orb_weavingTRUE is the effect size (log-odds or log-rate ratio) for TRUE vs FALSE.
 # The effect for orb_weaving == FALSE is the negative of this coefficient, and the p-value is the same.

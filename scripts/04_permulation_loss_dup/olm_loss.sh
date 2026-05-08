@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=260506_phyloglm_loss
+#SBATCH --job-name=260506_phyloglm_loss_obs
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --nodes=1
-#SBATCH --ntasks=24
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:10:00
 #SBATCH --mail-type=ALL

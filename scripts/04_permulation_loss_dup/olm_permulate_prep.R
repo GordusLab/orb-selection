@@ -59,7 +59,7 @@ long_df <- gene_counts %>%
 long_df <- as.data.frame(long_df)
 
 # Add binary variable to long_df
-if test == "loss" {
+if (test == "loss") {
   long_df$gene_copy_var <- ifelse(long_df$gene_count == 0, 1, 0)
 } else if (test == "dup") {
   long_df$gene_copy_var <- ifelse(long_df$gene_count > 1, 1, 0)

@@ -3,10 +3,10 @@ library(dplyr)
 library(tidyr)
 library(ape)
 
-# Command line arguments: 1) loss or duplication, 2) permulation array number
+# Command line arguments: 1) loss, duplication or continuous, 2) permulation array number
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 2) {
-  stop("Usage: Rscript olm_permulate_prep.R <loss|dup> <permulation_array_number>")
+  stop("Usage: Rscript olm_permulate_prep.R <loss|dup|cont> <permulation_array_number>")
 }
 
 test <- args[1]
@@ -63,8 +63,10 @@ if (test == "loss") {
   long_df$gene_copy_var <- ifelse(long_df$gene_count == 0, 1, 0)
 } else if (test == "dup") {
   long_df$gene_copy_var <- ifelse(long_df$gene_count > 1, 1, 0)
+} else if (test == "cont") {
+  long_df$gene_copy_var <- long_df$gene_count
 } else {
-  stop("First argument must be 'loss' or 'dup'")
+  stop("First argument must be 'loss', 'dup', or 'cont'")
 }
 
 common_species <- intersect(speciesTree$tip.label, long_df$species)

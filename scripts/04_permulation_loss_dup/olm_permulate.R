@@ -2,10 +2,10 @@ library(phylolm)
 library(foreach)
 library(doParallel)
 
-# Command line arguments: 1) loss or duplication, 2) permulation array number, 3) number of cpus to use in parallel
+# Command line arguments: 1) loss, duplication or continuous, 2) permulation array number, 3) number of cpus to use in parallel
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 3) {
-  stop("Usage: Rscript olm_permulate.R <loss|dup> <permulation_array_number> <CPUs>")
+  stop("Usage: Rscript olm_permulate.R <loss|dup|cont> <permulation_array_number> <CPUs>")
 }
 
 test <- args[1]
@@ -30,7 +30,7 @@ foreach(g = unique_genes, .packages = c("phylolm", "phytools", "ape")) %dopar% {
   df_gene <- subset(long_df, HOG == g)
   tab <- table(df_gene$gene_copy_var)
   out <- list(HOG = g)
-  if (length(tab) < 2 || any(tab < 2)) {
+  if (length(tab) < 2) {
     out$error <- "Insufficient variation"
   } else {
     rownames(df_gene) <- df_gene$species
@@ -50,13 +50,12 @@ foreach(g = unique_genes, .packages = c("phylolm", "phytools", "ape")) %dopar% {
   }
   tmpfile <- file.path(tmp_dir, paste0(g, ".rds"))
   saveRDS(out, tmpfile)
-  cat(g, file = progress_file, append = TRUE, sep = "\n")
   NULL
 }
 
 stopCluster(cl)
 
-cat(sprintf("Finished parallelized phyloglm regressions for gene loss, permulation number %d.\n", array_id))
+cat(sprintf("Finished parallelized phyloglm regressions for gene count (%s), permulation number %d.\n", test, array_id))
 
 # Note: For a binary predictor like orb_weaving, the coefficient for orb_weavingTRUE is the effect size (log-odds or log-rate ratio) for TRUE vs FALSE.
 # The effect for orb_weaving == FALSE is the negative of this coefficient, and the p-value is the same.

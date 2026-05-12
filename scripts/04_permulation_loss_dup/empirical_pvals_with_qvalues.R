@@ -1,65 +1,111 @@
-# Calculate empirical p-values and q-values for phyloglm permulations (loss and duplication)
-# Adjust file paths and perm_dirs as needed
+# Calculate one-tailed empirical p-values and q-values for continuous phyloglm permulations
+# Uses parallel processing over genes
+
+library(foreach)
+library(doParallel)
 
 # --- User settings ---
-perm_dirs <- sprintf("/scratch4/agordus1/crunnel2/tmp_permulate_loss_%d", 1:1000) # adjust as needed
-obs_loss_csv <- "/home/crunnel2/orb-selection/results/phyloglm_loss.csv"
-obs_dup_csv  <- "/home/crunnel2/orb-selection/results/phyloglm_dup.csv"
-z_col <- "coef_orb_weavingTRUE_z.value"
+perm_dirs <- sprintf("/scratch4/agordus1/crunnel2/tmp_permulate_cont_%d", 1:10)
+obs_csv <- "/home/crunnel2/orb-selection/results/phyloglm_continuous.csv"
+out_csv <- "/home/crunnel2/orb-selection/results/phyloglm_continuous_perm_pvals.csv"
+tmp_results_dir <- "/scratch4/agordus1/crunnel2/pval_results_tmp"
+n_cores <- as.numeric(commandArgs(trailingOnly = TRUE)[1])  # Adjust as needed
+
+# Use whichever z-value column exists in each file format.
+z_col_candidates <- c("coef_orb_weavingTRUE_z.value", "z_value")
+
+extract_z <- function(x, candidates) {
+  for (nm in candidates) {
+    if (!is.null(x[[nm]])) return(as.numeric(x[[nm]]))
+  }
+  NA_real_
+}
 
 # --- Load observed z-values ---
-obs_loss <- read.csv(obs_loss_csv, row.names = 1)
-obs_dup  <- read.csv(obs_dup_csv, row.names = 1)
-genes <- intersect(obs_loss$HOG, obs_dup$HOG)
-obs_loss_z <- setNames(obs_loss[[z_col]], obs_loss$HOG)
-obs_dup_z  <- setNames(obs_dup[[z_col]],  obs_dup$HOG)
+obs <- read.csv(obs_csv, stringsAsFactors = FALSE)
+obs_z <- sapply(seq_len(nrow(obs)), function(i) extract_z(obs[i, , drop = FALSE], z_col_candidates))
+genes <- obs$HOG
+names(obs_z) <- genes
 
-# --- Initialize counters ---
-loss_orb     <- setNames(rep(0, length(genes)), genes)
-loss_non_orb <- setNames(rep(0, length(genes)), genes)
-dup_orb      <- setNames(rep(0, length(genes)), genes)
-dup_non_orb  <- setNames(rep(0, length(genes)), genes)
+# Create temp directory for results
+if (!dir.exists(tmp_results_dir)) dir.create(tmp_results_dir, recursive = TRUE)
 
-# --- Loop over permulation directories ---
-for (perm_dir in perm_dirs) {
-  for (gene in genes) {
-    # Loss
-    rds_file_loss <- file.path(perm_dir, paste0(gene, ".rds"))
-    if (file.exists(rds_file_loss)) {
-      out_loss <- readRDS(rds_file_loss)
-      z_perm_loss <- out_loss[[z_col]]
-      z_obs_loss  <- obs_loss_z[gene]
-      if (!is.na(z_perm_loss) && !is.na(z_obs_loss)) {
-        if (z_perm_loss >= z_obs_loss) loss_orb[gene]     <- loss_orb[gene] + 1
-        if (z_perm_loss <= z_obs_loss) loss_non_orb[gene] <- loss_non_orb[gene] + 1
-      }
+# --- Set up parallel backend ---
+cl <- makeCluster(n_cores)
+registerDoParallel(cl)
+
+# --- Parallelize over genes ---
+foreach(gene = genes, .packages = "base") %dopar% {
+  # For each gene, loop through all permutation directories and accumulate counts
+  orb_cnt <- 0L
+  non_orb_cnt <- 0L
+  valid_cnt <- 0L
+  
+  z_obs <- obs_z[gene]
+  
+  for (perm_dir in perm_dirs) {
+    rds_file <- file.path(perm_dir, paste0(gene, ".rds"))
+    if (!file.exists(rds_file)) next
+    
+    out_perm <- readRDS(rds_file)
+    z_perm <- extract_z(out_perm, z_col_candidates)
+    
+    if (!is.na(z_perm) && !is.na(z_obs)) {
+      valid_cnt <- valid_cnt + 1L
+      if (z_perm >= z_obs) orb_cnt <- orb_cnt + 1L
+      if (z_perm <= z_obs) non_orb_cnt <- non_orb_cnt + 1L
     }
-    # Duplication
-    rds_file_dup <- file.path(gsub("loss", "dup", perm_dir), paste0(gene, ".rds"))
-    if (file.exists(rds_file_dup)) {
-      out_dup <- readRDS(rds_file_dup)
-      z_perm_dup <- out_dup[[z_col]]
-      z_obs_dup  <- obs_dup_z[gene]
-      if (!is.na(z_perm_dup) && !is.na(z_obs_dup)) {
-        if (z_perm_dup >= z_obs_dup) dup_orb[gene]     <- dup_orb[gene] + 1
-        if (z_perm_dup <= z_obs_dup) dup_non_orb[gene] <- dup_non_orb[gene] + 1
-      }
-    }
+  }
+  
+  # Calculate p-values with pseudocount
+  orb_p <- (orb_cnt + 1) / (valid_cnt + 1)
+  non_orb_p <- (non_orb_cnt + 1) / (valid_cnt + 1)
+  
+  if (valid_cnt == 0) {
+    orb_p <- NA_real_
+    non_orb_p <- NA_real_
+  }
+  
+  # Save results to temp file
+  gene_result <- list(
+    HOG = gene,
+    z_obs = as.numeric(z_obs),
+    orb_count = as.integer(orb_cnt),
+    non_orb_count = as.integer(non_orb_cnt),
+    n_perm_valid = as.integer(valid_cnt),
+    orb_p = as.numeric(orb_p),
+    non_orb_p = as.numeric(non_orb_p)
+  )
+  
+  tmpfile <- file.path(tmp_results_dir, paste0(gene, ".rds"))
+  saveRDS(gene_result, tmpfile)
+  NULL
+}
+
+stopCluster(cl)
+
+cat(sprintf("Finished parallelized empirical p-value calculations for %d genes.\n", length(genes)))
+
+# --- Load and combine all temp results ---
+result_list <- list()
+for (gene in genes) {
+  tmpfile <- file.path(tmp_results_dir, paste0(gene, ".rds"))
+  if (file.exists(tmpfile)) {
+    result_list[[gene]] <- readRDS(tmpfile)
   }
 }
 
-n_perm <- length(perm_dirs)
+# Convert list to data frame
 result <- data.frame(
-  HOG = genes,
-  loss_orb_count     = loss_orb,
-  loss_non_orb_count = loss_non_orb,
-  dup_orb_count      = dup_orb,
-  dup_non_orb_count  = dup_non_orb,
-  n_perm = n_perm,
-  loss_orb_p     = loss_orb / n_perm,
-  loss_non_orb_p = loss_non_orb / n_perm,
-  dup_orb_p      = dup_orb / n_perm,
-  dup_non_orb_p  = dup_non_orb / n_perm
+  HOG = sapply(result_list, function(x) x$HOG),
+  z_obs = sapply(result_list, function(x) x$z_obs),
+  orb_count = sapply(result_list, function(x) x$orb_count),
+  non_orb_count = sapply(result_list, function(x) x$non_orb_count),
+  n_perm_valid = sapply(result_list, function(x) x$n_perm_valid),
+  orb_p = sapply(result_list, function(x) x$orb_p),
+  non_orb_p = sapply(result_list, function(x) x$non_orb_p),
+  stringsAsFactors = FALSE,
+  row.names = NULL
 )
 
 # --- Calculate q-values ---
@@ -68,9 +114,23 @@ if (!requireNamespace("qvalue", quietly = TRUE)) {
 }
 library(qvalue)
 
-result$loss_orb_q     <- qvalue(result$loss_orb_p)$qvalues
-result$loss_non_orb_q <- qvalue(result$loss_non_orb_p)$qvalues
-result$dup_orb_q      <- qvalue(result$dup_orb_p)$qvalues
-result$dup_non_orb_q  <- qvalue(result$dup_non_orb_p)$qvalues
+result$orb_q <- NA_real_
+result$non_orb_q <- NA_real_
 
-write.csv(result, "/home/crunnel2/orb-selection/results/phyloglm_perm_pvals.csv", row.names = FALSE)
+idx_orb <- which(!is.na(result$orb_p))
+idx_non_orb <- which(!is.na(result$non_orb_p))
+
+if (length(idx_orb) > 0) {
+  result$orb_q[idx_orb] <- qvalue(result$orb_p[idx_orb])$qvalues
+}
+if (length(idx_non_orb) > 0) {
+  result$non_orb_q[idx_non_orb] <- qvalue(result$non_orb_p[idx_non_orb])$qvalues
+}
+
+# --- Write final results ---
+write.csv(result, out_csv, row.names = FALSE)
+
+cat(sprintf("Wrote results to %s\n", out_csv))
+
+# Optional: clean up temp files
+unlink(tmp_results_dir, recursive = TRUE)

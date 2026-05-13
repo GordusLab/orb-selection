@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0006805	xenobiotic metabolic process	4	4	0.38	7.7e-05
+2	GO:0006082	organic acid metabolic process	58	9	5.47	7.7e-05
+3	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	2	2	0.19	0.0088
+4	GO:0006646	phosphatidylethanolamine biosynthetic process	2	2	0.19	0.0088
+5	GO:0071786	endoplasmic reticulum tubular network organization	2	2	0.19	0.0088
+6	GO:0032922	circadian regulation of gene expression	3	2	0.28	0.0249
+7	GO:0043153	entrainment of circadian clock by photoperiod	3	2	0.28	0.0249
+8	GO:0046777	protein autophosphorylation	4	2	0.38	0.0467
+9	GO:0009653	anatomical structure morphogenesis	77	7	7.26	0.0712
+10	GO:0006164	purine nucleotide biosynthetic process	16	4	1.51	0.0724
+11	GO:0000077	DNA damage checkpoint signaling	6	3	0.57	0.0725
+12	GO:0006032	chitin catabolic process	5	2	0.47	0.0730
+13	GO:0007528	neuromuscular junction development	5	2	0.47	0.0730
+14	GO:0019693	ribose phosphate metabolic process	23	6	2.17	0.0929
+15	GO:0050801	monoatomic ion homeostasis	34	5	3.2	0.0938
+16	GO:2000651	positive regulation of sodium ion transmembrane transporter activity	1	1	0.09	0.0942
+17	GO:0045199	maintenance of epithelial cell apical/basal polarity	1	1	0.09	0.0942
+18	GO:0016121	carotene catabolic process	1	1	0.09	0.0942
+19	GO:0032218	riboflavin transport	1	1	0.09	0.0942
+20	GO:0010766	negative regulation of sodium ion transport	1	1	0.09	0.0942
+21	GO:0051443	positive regulation of ubiquitin-protein transferase activity	1	1	0.09	0.0942
+22	GO:0015842	aminergic neurotransmitter loading into synaptic vesicle	1	1	0.09	0.0942
+23	GO:0070936	protein K48-linked ubiquitination	1	1	0.09	0.0942
+24	GO:0009880	embryonic pattern specification	1	1	0.09	0.0942
+25	GO:1903457	lactate catabolic process	1	1	0.09	0.0942
+26	GO:0006488	dolichol-linked oligosaccharide biosynthetic process	1	1	0.09	0.0942
+27	GO:0006420	arginyl-tRNA aminoacylation	1	1	0.09	0.0942
+28	GO:0006419	alanyl-tRNA aminoacylation	1	1	0.09	0.0942
+29	GO:0016539	intein-mediated protein splicing	1	1	0.09	0.0942
+30	GO:0032781	positive regulation of ATP-dependent activity	1	1	0.09	0.0942
+31	GO:0043103	hypoxanthine salvage	1	1	0.09	0.0942
+32	GO:0061098	positive regulation of protein tyrosine kinase activity	1	1	0.09	0.0942
+33	GO:0042574	retinal metabolic process	1	1	0.09	0.0942
+34	GO:0001654	eye development	1	1	0.09	0.0942
+35	GO:0044773	mitotic DNA damage checkpoint signaling	1	1	0.09	0.0942
+36	GO:0009913	epidermal cell differentiation	1	1	0.09	0.0942
+37	GO:0006269	DNA replication, synthesis of primer	1	1	0.09	0.0942
+38	GO:1903288	positive regulation of potassium ion import across plasma membrane	1	1	0.09	0.0942
+39	GO:0010998	regulation of translational initiation by eIF2 alpha phosphorylation	1	1	0.09	0.0942
+40	GO:1903361	protein localization to basolateral plasma membrane	1	1	0.09	0.0942
+41	GO:0006995	cellular response to nitrogen starvation	1	1	0.09	0.0942
+42	GO:0019563	glycerol catabolic process	1	1	0.09	0.0942
+43	GO:0046166	glyceraldehyde-3-phosphate biosynthetic process	1	1	0.09	0.0942
+44	GO:0060169	negative regulation of adenosine receptor signaling pathway	1	1	0.09	0.0942
+45	GO:0033387	putrescine biosynthetic process from arginine, via ornithine	1	1	0.09	0.0942
+46	GO:0033389	putrescine biosynthetic process from arginine, via agmatine	1	1	0.09	0.0942
+47	GO:0008380	RNA splicing	37	3	3.49	0.0948
+48	GO:0007267	cell-cell signaling	71	7	6.69	0.1038
+49	GO:0044782	cilium organization	47	4	4.43	0.1372
+50	GO:0007010	cytoskeleton organization	122	10	11.5	0.1385
+51	GO:0006468	protein phosphorylation	129	18	12.16	0.1581
+52	GO:0006508	proteolysis	144	19	13.57	0.1644
+53	GO:0000122	negative regulation of transcription by RNA polymerase II	23	4	2.17	0.1649
+54	GO:0090630	activation of GTPase activity	8	2	0.75	0.1697
+55	GO:0018107	peptidyl-threonine phosphorylation	8	2	0.75	0.1697
+56	GO:0006753	nucleoside phosphate metabolic process	43	6	4.05	0.1787
+57	GO:0031398	positive regulation of protein ubiquitination	3	2	0.28	0.1789
+58	GO:0090263	positive regulation of canonical Wnt signaling pathway	2	1	0.19	0.1796
+59	GO:0034497	protein localization to phagophore assembly site	2	1	0.19	0.1796
+60	GO:0070989	oxidative demethylation	2	1	0.19	0.1796
+61	GO:0006689	ganglioside catabolic process	2	1	0.19	0.1796
+62	GO:0042420	dopamine catabolic process	2	1	0.19	0.1796
+63	GO:0042421	norepinephrine biosynthetic process	2	1	0.19	0.1796
+64	GO:0046103	inosine biosynthetic process	2	1	0.19	0.1796
+65	GO:0032237	activation of store-operated calcium channel activity	2	1	0.19	0.1796
+66	GO:0033617	mitochondrial cytochrome c oxidase assembly	2	1	0.19	0.1796
+67	GO:0045116	protein neddylation	2	1	0.19	0.1796
+68	GO:0048026	positive regulation of mRNA splicing, via spliceosome	2	1	0.19	0.1796
+69	GO:0009156	ribonucleoside monophosphate biosynthetic process	2	1	0.19	0.1796
+70	GO:0043113	receptor clustering	2	1	0.19	0.1796
+71	GO:0007193	adenylate cyclase-inhibiting G protein-coupled receptor signaling pathway	2	1	0.19	0.1796
+72	GO:0051123	RNA polymerase II preinitiation complex assembly	2	1	0.19	0.1796
+73	GO:0007172	signal complex assembly	2	1	0.19	0.1796
+74	GO:0045324	late endosome to vacuole transport	2	1	0.19	0.1796
+75	GO:0006154	adenosine catabolic process	2	1	0.19	0.1796
+76	GO:0006171	cAMP biosynthetic process	2	1	0.19	0.1796
+77	GO:0070836	caveola assembly	2	1	0.19	0.1796
+78	GO:0097037	heme export	2	1	0.19	0.1796
+79	GO:0000492	box C/D snoRNP assembly	2	1	0.19	0.1796
+80	GO:0051966	regulation of synaptic transmission, glutamatergic	2	1	0.19	0.1796
+81	GO:0006556	S-adenosylmethionine biosynthetic process	2	1	0.19	0.1796
+82	GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	2	1	0.19	0.1796
+83	GO:0007216	G protein-coupled glutamate receptor signaling pathway	2	1	0.19	0.1796
+84	GO:0006589	octopamine biosynthetic process	2	1	0.19	0.1796
+85	GO:0030166	proteoglycan biosynthetic process	2	1	0.19	0.1796
+86	GO:0000423	mitophagy	2	1	0.19	0.1796
+87	GO:0006382	adenosine to inosine editing	2	1	0.19	0.1796
+88	GO:0002183	cytoplasmic translational initiation	2	1	0.19	0.1796
+89	GO:0035556	intracellular signal transduction	142	16	13.38	0.1847
+90	GO:0016311	dephosphorylation	51	7	4.81	0.1847
+91	GO:0046854	phosphatidylinositol phosphate biosynthetic process	9	2	0.85	0.2052
+92	GO:0031146	SCF-dependent proteasomal ubiquitin-dependent protein catabolic process	10	2	0.94	0.2415
+93	GO:0000045	autophagosome assembly	5	2	0.47	0.2561
+94	GO:0006367	transcription initiation at RNA polymerase II promoter	5	2	0.47	0.2561
+95	GO:0042176	regulation of protein catabolic process	7	2	0.66	0.2563
+96	GO:0002115	store-operated calcium entry	3	1	0.28	0.2570
+97	GO:0051480	regulation of cytosolic calcium ion concentration	3	1	0.28	0.2570
+98	GO:0007602	phototransduction	3	1	0.28	0.2570
+99	GO:0034727	piecemeal microautophagy of the nucleus	3	1	0.28	0.2570
+100	GO:2000641	regulation of early endosome to late endosome transport	3	1	0.28	0.2570

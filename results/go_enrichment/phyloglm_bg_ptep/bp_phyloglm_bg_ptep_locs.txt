@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0006099	tricarboxylic acid cycle	18	5	0.72	0.00054
+2	GO:0007589	body fluid secretion	2	2	0.08	0.00158
+3	GO:1990180	mitochondrial tRNA 3'-end processing	3	2	0.12	0.00463
+4	GO:0006102	isocitrate metabolic process	3	2	0.12	0.00463
+5	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	25	4	1	0.01614
+6	GO:0000290	deadenylation-dependent decapping of nuclear-transcribed mRNA	7	2	0.28	0.02915
+7	GO:0006995	cellular response to nitrogen starvation	7	2	0.28	0.02915
+8	GO:0099518	vesicle cytoskeletal trafficking	12	3	0.48	0.03761
+9	GO:0031167	rRNA methylation	15	3	0.6	0.03765
+10	GO:0006012	galactose metabolic process	5	2	0.2	0.03975
+11	GO:0044878	mitotic cytokinesis checkpoint signaling	1	1	0.04	0.03989
+12	GO:0006227	dUDP biosynthetic process	1	1	0.04	0.03989
+13	GO:0097712	vesicle targeting, trans-Golgi to periciliary membrane compartment	1	1	0.04	0.03989
+14	GO:1900407	regulation of cellular response to oxidative stress	1	1	0.04	0.03989
+15	GO:0070183	mitochondrial tryptophanyl-tRNA aminoacylation	1	1	0.04	0.03989
+16	GO:0006617	SRP-dependent cotranslational protein targeting to membrane, signal sequence recognition	1	1	0.04	0.03989
+17	GO:0048172	regulation of short-term neuronal synaptic plasticity	1	1	0.04	0.03989
+18	GO:0006233	dTDP biosynthetic process	1	1	0.04	0.03989
+19	GO:0006235	dTTP biosynthetic process	1	1	0.04	0.03989
+20	GO:0001680	tRNA 3'-terminal CCA addition	1	1	0.04	0.03989
+21	GO:0070682	proteasome regulatory particle assembly	1	1	0.04	0.03989
+22	GO:0009838	abscission	1	1	0.04	0.03989
+23	GO:0001717	conversion of seryl-tRNAsec to selenocys-tRNAsec	1	1	0.04	0.03989
+24	GO:0030888	regulation of B cell proliferation	1	1	0.04	0.03989
+25	GO:0140570	extraction of mislocalized protein from mitochondrial outer membrane	1	1	0.04	0.03989
+26	GO:0006843	mitochondrial citrate transmembrane transport	1	1	0.04	0.03989
+27	GO:0016480	negative regulation of transcription by RNA polymerase III	1	1	0.04	0.03989
+28	GO:0000301	retrograde transport, vesicle recycling within Golgi	1	1	0.04	0.03989
+29	GO:2000042	negative regulation of double-strand break repair via homologous recombination	1	1	0.04	0.03989
+30	GO:2000812	regulation of barbed-end actin filament capping	1	1	0.04	0.03989
+31	GO:0045995	regulation of embryonic development	1	1	0.04	0.03989
+32	GO:0006106	fumarate metabolic process	1	1	0.04	0.03989
+33	GO:0019254	carnitine metabolic process, CoA-linked	1	1	0.04	0.03989
+34	GO:1900073	regulation of neuromuscular synaptic transmission	1	1	0.04	0.03989
+35	GO:1990519	pyrimidine nucleotide import into mitochondrion	1	1	0.04	0.03989
+36	GO:0006506	GPI anchor biosynthetic process	20	3	0.8	0.04329
+37	GO:0006614	SRP-dependent cotranslational protein targeting to membrane	10	3	0.4	0.04707
+38	GO:0035023	regulation of Rho protein signal transduction	10	2	0.4	0.05773
+39	GO:0000422	autophagy of mitochondrion	24	3	0.96	0.06847
+40	GO:0000045	autophagosome assembly	25	3	1	0.07561
+41	GO:0045333	cellular respiration	62	7	2.47	0.07706
+42	GO:0007091	metaphase/anaphase transition of mitotic cell cycle	15	2	0.6	0.07804
+43	GO:0016539	intein-mediated protein splicing	2	1	0.08	0.07819
+44	GO:0002939	tRNA N1-guanine methylation	2	1	0.08	0.07819
+45	GO:0051460	negative regulation of corticotropin secretion	2	1	0.08	0.07819
+46	GO:0046104	thymidine metabolic process	2	1	0.08	0.07819
+47	GO:0006393	termination of mitochondrial transcription	2	1	0.08	0.07819
+48	GO:0009098	L-leucine biosynthetic process	2	1	0.08	0.07819
+49	GO:0110032	positive regulation of G2/MI transition of meiotic cell cycle	2	1	0.08	0.07819
+50	GO:0034454	microtubule anchoring at centrosome	2	1	0.08	0.07819
+51	GO:0006346	DNA methylation-dependent constitutive heterochromatin formation	2	1	0.08	0.07819
+52	GO:0070212	protein poly-ADP-ribosylation	2	1	0.08	0.07819
+53	GO:0010971	positive regulation of G2/M transition of mitotic cell cycle	2	1	0.08	0.07819
+54	GO:0048211	Golgi vesicle docking	2	1	0.08	0.07819
+55	GO:0061355	Wnt protein secretion	2	1	0.08	0.07819
+56	GO:0060287	epithelial cilium movement involved in determination of left/right asymmetry	2	1	0.08	0.07819
+57	GO:0045056	transcytosis	2	1	0.08	0.07819
+58	GO:0006501	C-terminal protein lipidation	2	1	0.08	0.07819
+59	GO:1900011	negative regulation of corticotropin-releasing hormone receptor activity	2	1	0.08	0.07819
+60	GO:0061025	membrane fusion	43	2	1.72	0.07839
+61	GO:0001708	cell fate specification	12	2	0.48	0.08039
+62	GO:0055088	lipid homeostasis	14	2	0.56	0.10527
+63	GO:0010389	regulation of G2/M transition of mitotic cell cycle	18	4	0.72	0.11390
+64	GO:2000272	negative regulation of signaling receptor activity	5	2	0.2	0.11456
+65	GO:0034453	microtubule anchoring	6	2	0.24	0.11458
+66	GO:0046785	microtubule polymerization	13	2	0.52	0.11471
+67	GO:0006657	CDP-choline pathway	3	1	0.12	0.11498
+68	GO:0085020	protein K6-linked ubiquitination	3	1	0.12	0.11498
+69	GO:0097745	mitochondrial tRNA 5'-end processing	3	1	0.12	0.11498
+70	GO:0008625	extrinsic apoptotic signaling pathway via death domain receptors	3	1	0.12	0.11498
+71	GO:0008210	estrogen metabolic process	3	1	0.12	0.11498
+72	GO:0009099	L-valine biosynthetic process	3	1	0.12	0.11498
+73	GO:0008209	androgen metabolic process	3	1	0.12	0.11498
+74	GO:0006750	glutathione biosynthetic process	3	1	0.12	0.11498
+75	GO:0071786	endoplasmic reticulum tubular network organization	3	1	0.12	0.11498
+76	GO:0006777	Mo-molybdopterin cofactor biosynthetic process	3	1	0.12	0.11498
+77	GO:0019433	triglyceride catabolic process	3	1	0.12	0.11498
+78	GO:0034501	protein localization to kinetochore	3	1	0.12	0.11498
+79	GO:0006999	nuclear pore organization	3	1	0.12	0.11498
+80	GO:0038203	TORC2 signaling	3	1	0.12	0.11498
+81	GO:0006121	mitochondrial electron transport, succinate to ubiquinone	3	1	0.12	0.11498
+82	GO:0061817	endoplasmic reticulum-plasma membrane tethering	3	1	0.12	0.11498
+83	GO:0006101	citrate metabolic process	3	1	0.12	0.11498
+84	GO:0006108	malate metabolic process	3	1	0.12	0.11498
+85	GO:0019287	isopentenyl diphosphate biosynthetic process, mevalonate pathway	3	1	0.12	0.11498
+86	GO:0006888	endoplasmic reticulum to Golgi vesicle-mediated transport	56	5	2.23	0.11554
+87	GO:0006383	transcription by RNA polymerase III	23	4	0.92	0.11704
+88	GO:0030968	endoplasmic reticulum unfolded protein response	17	2	0.68	0.14572
+89	GO:0045786	negative regulation of cell cycle	55	4	2.19	0.14974
+90	GO:0070131	positive regulation of mitochondrial translation	4	1	0.16	0.15030
+91	GO:0006607	NLS-bearing protein import into nucleus	4	1	0.16	0.15030
+92	GO:0033499	galactose catabolic process via UDP-galactose, Leloir pathway	4	1	0.16	0.15030
+93	GO:0043122	regulation of canonical NF-kappaB signal transduction	4	1	0.16	0.15030
+94	GO:0006370	7-methylguanosine mRNA capping	4	1	0.16	0.15030
+95	GO:0030050	vesicle transport along actin filament	4	1	0.16	0.15030
+96	GO:0010906	regulation of glucose metabolic process	4	1	0.16	0.15030
+97	GO:0000244	spliceosomal tri-snRNP complex assembly	4	1	0.16	0.15030
+98	GO:0018344	protein geranylgeranylation	4	1	0.16	0.15030
+99	GO:0033540	fatty acid beta-oxidation using acyl-CoA oxidase	4	1	0.16	0.15030
+100	GO:0090158	endoplasmic reticulum membrane organization	4	1	0.16	0.15030

@@ -9,8 +9,8 @@
 library(here)
 library(topGO)
 
-folders <- dir(here("results/significant_gene_id_lists/"), full.names = TRUE)
-annot_filename <- here("data/udiv_go_annots.all.tsv")
+folders <- dir(here("results/significant_gene_id_lists/copy_number/ptep"), full.names = TRUE)
+annot_filename <- here("data/ptep_go_annots.all.tsv")
 
 for (folder in folders) {
   # hit files are all files without "universe" in the name
@@ -92,8 +92,8 @@ for (folder in folders) {
       }
 
       # write it out into a file for python post-processing
-      # Remove _hits.txt from the filename to get clean base name
-      base_name <- sub("_hits\\.txt$", "", basename(hits))
+      # Remove _locs.txt from the filename to get clean base name
+      base_name <- sub("_locs\\.txt$", "", basename(hits))
 
       output_dir <- here(
         "results/go_enrichment", base_name

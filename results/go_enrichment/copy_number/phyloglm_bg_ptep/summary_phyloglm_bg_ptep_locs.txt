@@ -1,0 +1,22 @@
+Description	Count	p	Ontology
+tricarboxylic acid cycle	5	0.00054	bp
+maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	4	0.01614	bp
+deadenylation-dependent decapping of nuclear-transcribed mRNA	2	0.02915	bp
+cellular response to nitrogen starvation	2	0.02915	bp
+vesicle cytoskeletal trafficking	3	0.03761	bp
+rRNA methylation	3	0.03765	bp
+galactose metabolic process	2	0.03975	bp
+GPI anchor biosynthetic process	3	0.04329	bp
+SRP-dependent cotranslational protein targeting to membrane	3	0.04707	bp
+signal recognition particle, endoplasmic reticulum targeting	3	0.00071	cc
+mitochondrion	40	0.00168	cc
+mitochondrial large ribosomal subunit	5	0.01048	cc
+nucleolus	13	0.01447	cc
+TRAPP complex	3	0.02395	cc
+ER to Golgi transport vesicle membrane	3	0.02398	cc
+BLOC-1 complex	2	0.02410	cc
+vesicle membrane	4	0.04272	cc
+7S RNA binding	3	0.00047	mf
+NAD binding	5	0.00542	mf
+serine hydrolase activity	4	0.03686	mf
+RNA helicase activity	4	0.04987	mf

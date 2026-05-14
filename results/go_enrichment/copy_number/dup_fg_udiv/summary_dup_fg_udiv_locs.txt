@@ -1,0 +1,20 @@
+Description	Count	p	Ontology
+snRNA transcription by RNA polymerase II	3	0.00041	bp
+cell-matrix adhesion	3	0.00308	bp
+regulation of transcription by RNA polymerase II	22	0.00556	bp
+response to hydrogen peroxide	2	0.01148	bp
+piecemeal microautophagy of the nucleus	2	0.01148	bp
+hydrogen peroxide catabolic process	2	0.02302	bp
+protein localization to phagophore assembly site	2	0.02999	bp
+monoatomic ion homeostasis	3	0.03517	bp
+signaling	19	0.03678	bp
+isoprenoid biosynthetic process	2	0.03768	bp
+ubiquinone biosynthetic process	2	0.04603	bp
+mitochondrion	21	0.00934	cc
+proteasome core complex, alpha-subunit complex	2	0.01989	cc
+vacuole	4	0.03244	cc
+DNA-binding transcription factor activity, RNA polymerase II-specific	19	0.0025	mf
+sequence-specific DNA binding	26	0.0070	mf
+calcium ion binding	11	0.0159	mf
+RNA polymerase II cis-regulatory region sequence-specific DNA binding	14	0.0184	mf
+heme binding	6	0.0382	mf

@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0045252	oxoglutarate dehydrogenase complex	0.005
+GO:0005759	mitochondrial matrix	0.020
+GO:0032797	SMN complex	0.023
+GO:0030136	clathrin-coated vesicle	0.031
+GO:0030130	clathrin coat of trans-Golgi network vesicle	0.031
+GO:0030428	cell septum	0.042
+GO:0017146	NMDA selective glutamate receptor complex	0.042
+GO:0016533	protein kinase 5 complex	0.042
+GO:1990923	PET complex	0.042
+GO:0030678	mitochondrial ribonuclease P complex	0.042
+GO:0035550	urease complex	0.042
+GO:0031213	RSF complex	0.042
+GO:0012506	vesicle membrane	0.042
+GO:0031966	mitochondrial membrane	0.071
+GO:0048471	perinuclear region of cytoplasm	0.073
+GO:0030117	membrane coat	0.081
+GO:0005882	intermediate filament	0.081
+GO:0071541	eukaryotic translation initiation factor 3 complex, eIF3m	0.081
+GO:0042721	TIM22 mitochondrial import inner membrane insertion complex	0.081
+GO:0016035	zeta DNA polymerase complex	0.081
+GO:0030056	hemidesmosome	0.081
+GO:1990423	RZZ complex	0.081
+GO:0097038	perinuclear endoplasmic reticulum	0.081
+GO:0005745	m-AAA complex	0.081
+GO:0031463	Cul3-RING ubiquitin ligase complex	0.081
+GO:0005953	CAAX-protein geranylgeranyltransferase complex	0.081
+GO:0071598	neuronal ribonucleoprotein granule	0.081
+GO:0071439	clathrin complex	0.081
+GO:0098894	extrinsic component of presynaptic endocytic zone membrane	0.081
+GO:0008290	F-actin capping protein complex	0.081
+GO:0005945	6-phosphofructokinase complex	0.081
+GO:0005741	mitochondrial outer membrane	0.100
+GO:0008021	synaptic vesicle	0.108
+GO:0043005	neuron projection	0.112
+GO:0030140	trans-Golgi network transport vesicle	0.119
+GO:0005905	clathrin-coated pit	0.119
+GO:0048179	activin receptor complex	0.120
+GO:0005787	signal peptidase complex	0.120
+GO:1990246	uniplex complex	0.120
+GO:1990429	peroxisomal importomer complex	0.120
+GO:0002189	ribose phosphate diphosphokinase complex	0.120
+GO:0140284	endoplasmic reticulum-endosome membrane contact site	0.120
+GO:0071944	cell periphery	0.121
+GO:0005739	mitochondrion	0.138
+GO:0030687	preribosome, large subunit precursor	0.141
+GO:0030424	axon	0.145
+GO:0005581	collagen trimer	0.156
+GO:0030123	AP-3 adaptor complex	0.156
+GO:0034399	nuclear periphery	0.156
+GO:0036396	RNA N6-methyladenosine methyltransferase complex	0.156
+GO:0043197	dendritic spine	0.156
+GO:0030877	beta-catenin destruction complex	0.156
+GO:0005743	mitochondrial inner membrane	0.157
+GO:0000407	phagophore assembly site	0.170
+GO:0042765	GPI-anchor transamidase complex	0.191
+GO:0031080	nuclear pore outer ring	0.191
+GO:0043240	Fanconi anaemia nuclear complex	0.191
+GO:0030479	actin cortical patch	0.191
+GO:0032809	neuronal cell body membrane	0.191
+GO:0045334	clathrin-coated endocytic vesicle	0.191
+GO:0034388	Pwp2p-containing subcomplex of 90S preribosome	0.191
+GO:0005663	DNA replication factor C complex	0.191
+GO:0005778	peroxisomal membrane	0.216
+GO:0030991	intraciliary transport particle A	0.225
+GO:0030426	growth cone	0.225
+GO:0035098	ESC/E(Z) complex	0.225
+GO:0030132	clathrin coat of coated pit	0.225
+GO:0070822	Sin3-type complex	0.225
+GO:0031462	Cul2-RING ubiquitin ligase complex	0.225
+GO:0045335	phagocytic vesicle	0.257
+GO:0070847	core mediator complex	0.257
+GO:0005777	peroxisome	0.261
+GO:0005776	autophagosome	0.287
+GO:0005868	cytoplasmic dynein complex	0.288
+GO:0005604	basement membrane	0.288
+GO:0016514	SWI/SNF complex	0.288
+GO:0000421	autophagosome membrane	0.288
+GO:0016592	mediator complex	0.310
+GO:0005852	eukaryotic translation initiation factor 3 complex	0.317
+GO:0008540	proteasome regulatory particle, base subcomplex	0.318
+GO:0031901	early endosome membrane	0.318
+GO:0005834	heterotrimeric G-protein complex	0.318
+GO:0008076	voltage-gated potassium channel complex	0.318
+GO:0097730	non-motile cilium	0.318
+GO:0071011	precatalytic spliceosome	0.325
+GO:0000786	nucleosome	0.346
+GO:0008180	COP9 signalosome	0.346
+GO:0030131	clathrin adaptor complex	0.346
+GO:0005847	mRNA cleavage and polyadenylation specificity factor complex	0.346
+GO:0035102	PRC1 complex	0.346
+GO:0009986	cell surface	0.371
+GO:0042734	presynaptic membrane	0.372
+GO:0030688	preribosome, small subunit precursor	0.373
+GO:0043186	P granule	0.373
+GO:0005680	anaphase-promoting complex	0.373
+GO:0005762	mitochondrial large ribosomal subunit	0.386
+GO:0005881	cytoplasmic microtubule	0.399
+GO:0043231	intracellular membrane-bounded organelle	0.399
+GO:0016342	catenin complex	0.424
+GO:0005942	phosphatidylinositol 3-kinase complex	0.424

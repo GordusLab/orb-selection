@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0019185	snRNA-activating protein complex	0.00013
+GO:1990316	Atg1/ULK1 kinase complex	0.00310
+GO:0005739	mitochondrion	0.00934
+GO:0019773	proteasome core complex, alpha-subunit complex	0.01989
+GO:0005773	vacuole	0.03244
+GO:0000444	MIS12/MIND type complex	0.03259
+GO:0001726	ruffle	0.03259
+GO:0034245	mitochondrial DNA-directed RNA polymerase complex	0.03259
+GO:0005762	mitochondrial large ribosomal subunit	0.06132
+GO:0015934	large ribosomal subunit	0.06312
+GO:0005901	caveola	0.06412
+GO:0005902	microvillus	0.06412
+GO:0031616	spindle pole centrosome	0.06412
+GO:0000938	GARP complex	0.06412
+GO:0031262	Ndc80 complex	0.06412
+GO:0001405	PAM complex, Tim23 associated import motor	0.06412
+GO:1990745	EARP complex	0.06412
+GO:0071797	LUBAC complex	0.09464
+GO:0005777	peroxisome	0.10392
+GO:0031012	extracellular matrix	0.10936
+GO:0032133	chromosome passenger complex	0.12416
+GO:0000421	autophagosome membrane	0.12416
+GO:0044545	NSL complex	0.12416
+GO:0140268	endoplasmic reticulum-plasma membrane contact site	0.12416
+GO:0034657	GID complex	0.12416
+GO:0031298	replication fork protection complex	0.12416
+GO:0070652	HAUS complex	0.12416
+GO:0000407	phagophore assembly site	0.12581
+GO:0005876	spindle microtubule	0.15273
+GO:0009897	external side of plasma membrane	0.15273
+GO:0051233	spindle midzone	0.15273
+GO:0034518	RNA cap binding complex	0.15273
+GO:0005758	mitochondrial intermembrane space	0.15273
+GO:0005615	extracellular space	0.16235
+GO:0031901	early endosome membrane	0.18037
+GO:0019005	SCF ubiquitin ligase complex	0.18322
+GO:0005643	nuclear pore	0.19514
+GO:0072546	EMC complex	0.20712
+GO:0017101	aminoacyl-tRNA synthetase multienzyme complex	0.20712
+GO:0005685	U1 snRNP	0.20712
+GO:0031982	vesicle	0.21012
+GO:0005576	extracellular region	0.21845
+GO:0043296	apical junction complex	0.23300
+GO:0062129	chitin-based extracellular matrix	0.25579
+GO:0005921	gap junction	0.28227
+GO:0048471	perinuclear region of cytoplasm	0.28227
+GO:0030014	CCR4-NOT complex	0.32839
+GO:0016324	apical plasma membrane	0.35034
+GO:0030864	cortical actin cytoskeleton	0.35034
+GO:0016459	myosin complex	0.35034
+GO:0005811	lipid droplet	0.37157
+GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	0.37157
+GO:0005912	adherens junction	0.37157
+GO:0019898	extrinsic component of membrane	0.40001
+GO:0005765	lysosomal membrane	0.44982
+GO:0009986	cell surface	0.46590
+GO:0031519	PcG protein complex	0.46782
+GO:0005789	endoplasmic reticulum membrane	0.49105
+GO:0005829	cytosol	0.49892
+GO:0030134	COPII-coated ER to Golgi transport vesicle	0.50209
+GO:0005778	peroxisomal membrane	0.50209
+GO:0022625	cytosolic large ribosomal subunit	0.53416
+GO:0005886	plasma membrane	0.53917
+GO:0012505	endomembrane system	0.54195
+GO:0005764	lysosome	0.56316
+GO:0005694	chromosome	0.56318
+GO:0010008	endosome membrane	0.59027
+GO:0032040	small-subunit processome	0.59228
+GO:1990234	transferase complex	0.61980
+GO:0005743	mitochondrial inner membrane	0.66503
+GO:0043235	receptor complex	0.69803
+GO:0005856	cytoskeleton	0.72488
+GO:0005634	nucleus	0.73866
+GO:0000139	Golgi membrane	0.75290
+GO:0005783	endoplasmic reticulum	0.75376
+GO:0045202	synapse	0.77170
+GO:0005667	transcription regulator complex	0.77349
+GO:0000785	chromatin	0.85021
+GO:0016020	membrane	0.89459
+GO:0005681	spliceosomal complex	0.93974
+GO:0005794	Golgi apparatus	0.94015
+GO:0043005	neuron projection	0.95984
+GO:0005654	nucleoplasm	0.96135
+GO:0005730	nucleolus	0.98160
+GO:0005737	cytoplasm	0.99623
+GO:0045177	apical part of cell	1.00000
+GO:0000313	organellar ribosome	1.00000
+GO:0030532	small nuclear ribonucleoprotein complex	1.00000
+GO:0000315	organellar large ribosomal subunit	1.00000
+GO:0099512	supramolecular fiber	1.00000
+GO:0099513	polymeric cytoskeletal fiber	1.00000
+GO:0031461	cullin-RING ubiquitin ligase complex	1.00000
+GO:0045121	membrane raft	1.00000
+GO:0055037	recycling endosome	1.00000
+GO:0043226	organelle	1.00000
+GO:0099023	vesicle tethering complex	1.00000
+GO:0043227	membrane-bounded organelle	1.00000
+GO:0031981	nuclear lumen	1.00000
+GO:0043228	membraneless organelle	1.00000
+GO:0043229	intracellular organelle	1.00000

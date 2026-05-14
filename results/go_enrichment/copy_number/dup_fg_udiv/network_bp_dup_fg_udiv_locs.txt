@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0042796	snRNA transcription by RNA polymerase III	0.00017
+GO:0042795	snRNA transcription by RNA polymerase II	0.00041
+GO:2000304	positive regulation of ceramide biosynthetic process	0.00123
+GO:0007160	cell-matrix adhesion	0.00308
+GO:0006166	purine ribonucleoside salvage	0.00361
+GO:0006357	regulation of transcription by RNA polymerase II	0.00556
+GO:0000423	mitophagy	0.00705
+GO:0042542	response to hydrogen peroxide	0.01148
+GO:0034727	piecemeal microautophagy of the nucleus	0.01148
+GO:0042744	hydrogen peroxide catabolic process	0.02302
+GO:0034497	protein localization to phagophore assembly site	0.02999
+GO:0050801	monoatomic ion homeostasis	0.03517
+GO:0006430	lysyl-tRNA aminoacylation	0.03520
+GO:1903288	positive regulation of potassium ion import across plasma membrane	0.03520
+GO:0042531	positive regulation of tyrosine phosphorylation of STAT protein	0.03520
+GO:0019427	acetyl-CoA biosynthetic process from acetate	0.03520
+GO:0043407	negative regulation of MAP kinase activity	0.03520
+GO:0051457	maintenance of protein location in nucleus	0.03520
+GO:0010766	negative regulation of sodium ion transport	0.03520
+GO:0016926	protein desumoylation	0.03520
+GO:2000651	positive regulation of sodium ion transmembrane transporter activity	0.03520
+GO:0046580	negative regulation of Ras protein signal transduction	0.03520
+GO:0009443	pyridoxal 5'-phosphate salvage	0.03520
+GO:0040037	negative regulation of fibroblast growth factor receptor signaling pathway	0.03520
+GO:1901190	regulation of formation of translation initiation ternary complex	0.03520
+GO:0042264	peptidyl-aspartic acid hydroxylation	0.03520
+GO:0023052	signaling	0.03678
+GO:0008299	isoprenoid biosynthetic process	0.03768
+GO:0006744	ubiquinone biosynthetic process	0.04603
+GO:0015886	heme transport	0.06878
+GO:0032469	endoplasmic reticulum calcium ion homeostasis	0.06917
+GO:0006747	FAD biosynthetic process	0.06917
+GO:0070836	caveola assembly	0.06917
+GO:0048332	mesoderm morphogenesis	0.06917
+GO:0006809	nitric oxide biosynthetic process	0.06917
+GO:0097037	heme export	0.06917
+GO:0043103	hypoxanthine salvage	0.06917
+GO:0045046	protein import into peroxisome membrane	0.06917
+GO:0060169	negative regulation of adenosine receptor signaling pathway	0.06917
+GO:0030198	extracellular matrix organization	0.07450
+GO:0016311	dephosphorylation	0.09511
+GO:0007264	small GTPase-mediated signal transduction	0.09965
+GO:0008543	fibroblast growth factor receptor signaling pathway	0.10139
+GO:0046839	phospholipid dephosphorylation	0.10143
+GO:0006670	sphingosine metabolic process	0.10195
+GO:0032781	positive regulation of ATP-dependent activity	0.10195
+GO:0006154	adenosine catabolic process	0.10195
+GO:0048026	positive regulation of mRNA splicing, via spliceosome	0.10195
+GO:0072331	signal transduction by p53 class mediator	0.10195
+GO:0046103	inosine biosynthetic process	0.10195
+GO:0030050	vesicle transport along actin filament	0.10195
+GO:0097039	protein linear polyubiquitination	0.10195
+GO:0032218	riboflavin transport	0.10195
+GO:0006488	dolichol-linked oligosaccharide biosynthetic process	0.10195
+GO:0016579	protein deubiquitination	0.12376
+GO:0015813	L-glutamate transmembrane transport	0.13359
+GO:0007158	neuron cell-cell adhesion	0.13359
+GO:0035999	tetrahydrofolate interconversion	0.13359
+GO:0009143	nucleoside triphosphate catabolic process	0.13359
+GO:0006390	mitochondrial transcription	0.13359
+GO:0046856	phosphatidylinositol dephosphorylation	0.13359
+GO:0097104	postsynaptic membrane assembly	0.13359
+GO:0097105	presynaptic membrane assembly	0.13359
+GO:0071218	cellular response to misfolded protein	0.13359
+GO:0090141	positive regulation of mitochondrial fission	0.13359
+GO:0007029	endoplasmic reticulum organization	0.14268
+GO:0009396	folic acid-containing compound biosynthetic process	0.16411
+GO:0006308	DNA catabolic process	0.16411
+GO:0002084	protein depalmitoylation	0.16411
+GO:0031146	SCF-dependent proteasomal ubiquitin-dependent protein catabolic process	0.18032
+GO:0006013	mannose metabolic process	0.19357
+GO:0048488	synaptic vesicle endocytosis	0.19357
+GO:0018216	peptidyl-arginine methylation	0.19357
+GO:0043248	proteasome assembly	0.19357
+GO:0007265	Ras protein signal transduction	0.22085
+GO:0006405	RNA export from nucleus	0.22163
+GO:0036065	fucosylation	0.22200
+GO:0030155	regulation of cell adhesion	0.22200
+GO:0032366	intracellular sterol transport	0.22200
+GO:0018230	peptidyl-L-cysteine S-palmitoylation	0.22200
+GO:0006415	translational termination	0.22200
+GO:0030154	cell differentiation	0.23192
+GO:0006606	protein import into nucleus	0.23237
+GO:0006508	proteolysis	0.24790
+GO:0034975	protein folding in endoplasmic reticulum	0.24942
+GO:0032465	regulation of cytokinesis	0.24942
+GO:0007602	phototransduction	0.24942
+GO:0008284	positive regulation of cell population proliferation	0.24942
+GO:0007340	acrosome reaction	0.24942
+GO:0006334	nucleosome assembly	0.24942
+GO:0006783	heme biosynthetic process	0.24942
+GO:0007030	Golgi organization	0.25877
+GO:0007041	lysosomal transport	0.27589
+GO:0030150	protein import into mitochondrial matrix	0.27589
+GO:0016567	protein ubiquitination	0.29385
+GO:0016973	poly(A)+ mRNA export from nucleus	0.30143
+GO:0006270	DNA replication initiation	0.30143
+GO:0000054	ribosomal subunit export from nucleus	0.30143
+GO:0000289	nuclear-transcribed mRNA poly(A) tail shortening	0.30143
+GO:0006260	DNA replication	0.32689

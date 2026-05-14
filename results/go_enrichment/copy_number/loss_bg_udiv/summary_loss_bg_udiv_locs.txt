@@ -1,0 +1,6 @@
+Description	Count	p	Ontology
+organic acid metabolic process	9	7.7e-05	bp
+chitin-based extracellular matrix	9	0.00034	cc
+extracellular region	21	0.02768	cc
+structural constituent of chitin-based larval cuticle	9	0.00084	mf
+transcription cis-regulatory region binding	26	0.03640	mf

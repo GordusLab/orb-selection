@@ -1,0 +1,27 @@
+Description	Count	p	Ontology
+positive regulation of voltage-gated potassium channel activity	3	0.0051	bp
+sleep	3	0.0051	bp
+regulation of synaptic transmission, cholinergic	3	0.0066	bp
+dendrite development	2	0.0106	bp
+neuropeptide signaling pathway	2	0.0213	bp
+regulation of microtubule depolymerization	2	0.0213	bp
+regulation of cytosolic calcium ion concentration	2	0.0278	bp
+monoatomic anion transmembrane transport	3	0.0335	bp
+regulation of RNA metabolic process	17	0.0343	bp
+sister chromatid cohesion	2	0.0350	bp
+actin filament organization	4	0.0362	bp
+regulation of dopamine secretion	2	0.0427	bp
+cellular response to calcium ion	2	0.0427	bp
+ubiquitin-dependent protein catabolic process	5	0.0456	bp
+U1 snRNP	2	0.0122	cc
+neuronal cell body	3	0.0155	cc
+dendrite	3	0.0220	cc
+mitochondrial outer membrane	2	0.0318	cc
+nucleosome	2	0.0399	cc
+U2-type prespliceosome	2	0.0399	cc
+structural constituent of chromatin	2	0.022	mf
+actin filament binding	5	0.025	mf
+extracellular matrix structural constituent conferring tensile strength	2	0.036	mf
+actin binding	9	0.043	mf
+mRNA 3'-UTR binding	2	0.043	mf
+phosphatidylserine binding	2	0.043	mf

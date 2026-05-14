@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0008278	cohesin complex	0.0075
+GO:0005685	U1 snRNP	0.0122
+GO:0043025	neuronal cell body	0.0155
+GO:0030425	dendrite	0.0220
+GO:0005741	mitochondrial outer membrane	0.0318
+GO:0034993	meiotic nuclear membrane microtubule tethering complex	0.0363
+GO:0002144	cytosolic tRNA wobble base thiouridylase complex	0.0363
+GO:0005640	nuclear outer membrane	0.0363
+GO:0008290	F-actin capping protein complex	0.0363
+GO:0031429	box H/ACA snoRNP complex	0.0363
+GO:1990923	PET complex	0.0363
+GO:0032797	SMN complex	0.0363
+GO:0000786	nucleosome	0.0399
+GO:0071004	U2-type prespliceosome	0.0399
+GO:0005882	intermediate filament	0.0714
+GO:1990112	RQC complex	0.0714
+GO:0140268	endoplasmic reticulum-plasma membrane contact site	0.0714
+GO:1902711	GABA-A receptor complex	0.0714
+GO:0098553	lumenal side of endoplasmic reticulum membrane	0.0714
+GO:0098554	cytoplasmic side of endoplasmic reticulum membrane	0.0714
+GO:0030056	hemidesmosome	0.0714
+GO:0005774	vacuolar membrane	0.0996
+GO:0045202	synapse	0.0999
+GO:0000243	commitment complex	0.1052
+GO:0016012	sarcoglycan complex	0.1052
+GO:1990130	GATOR1 complex	0.1052
+GO:0005964	phosphorylase kinase complex	0.1052
+GO:0002189	ribose phosphate diphosphokinase complex	0.1052
+GO:0070776	MOZ/MORF histone acetyltransferase complex	0.1052
+GO:0030688	preribosome, small subunit precursor	0.1052
+GO:0030479	actin cortical patch	0.1377
+GO:0031011	Ino80 complex	0.1377
+GO:0005581	collagen trimer	0.1377
+GO:0030667	secretory granule membrane	0.1377
+GO:0030687	preribosome, large subunit precursor	0.1377
+GO:0014069	postsynaptic density	0.1502
+GO:0005777	peroxisome	0.1502
+GO:0005874	microtubule	0.1584
+GO:0005759	mitochondrial matrix	0.1631
+GO:0070822	Sin3-type complex	0.1691
+GO:0017119	Golgi transport complex	0.1691
+GO:0005765	lysosomal membrane	0.1762
+GO:0005783	endoplasmic reticulum	0.1920
+GO:0005615	extracellular space	0.1926
+GO:0000127	transcription factor TFIIIC complex	0.1993
+GO:0005665	RNA polymerase II, core complex	0.1993
+GO:0005875	microtubule associated complex	0.2028
+GO:0005886	plasma membrane	0.2044
+GO:0005730	nucleolus	0.2109
+GO:0043005	neuron projection	0.2244
+GO:0005604	basement membrane	0.2285
+GO:0030660	Golgi-associated vesicle membrane	0.2285
+GO:0071011	precatalytic spliceosome	0.2566
+GO:0070382	exocytic vesicle	0.2708
+GO:0031902	late endosome membrane	0.2837
+GO:0016020	membrane	0.3075
+GO:0005925	focal adhesion	0.3098
+GO:0048786	presynaptic active zone	0.3098
+GO:0005811	lipid droplet	0.3349
+GO:0005814	centriole	0.3349
+GO:0016323	basolateral plasma membrane	0.3592
+GO:0030992	intraciliary transport particle B	0.3592
+GO:0072686	mitotic spindle	0.3825
+GO:0005884	actin filament	0.3825
+GO:0000776	kinetochore	0.3825
+GO:0030686	90S preribosome	0.3825
+GO:0005794	Golgi apparatus	0.3965
+GO:0005829	cytosol	0.3992
+GO:0031201	SNARE complex	0.4051
+GO:0000922	spindle pole	0.4477
+GO:0005739	mitochondrion	0.4900
+GO:0005912	adherens junction	0.5060
+GO:0000151	ubiquitin ligase complex	0.5699
+GO:0090575	RNA polymerase II transcription regulator complex	0.5744
+GO:0045211	postsynaptic membrane	0.6049
+GO:0005789	endoplasmic reticulum membrane	0.6070
+GO:0005694	chromosome	0.6223
+GO:0062129	chitin-based extracellular matrix	0.6333
+GO:0034703	cation channel complex	0.6597
+GO:0022625	cytosolic large ribosomal subunit	0.6721
+GO:1990904	ribonucleoprotein complex	0.6910
+GO:0005929	cilium	0.7375
+GO:0030424	axon	0.7476
+GO:0031012	extracellular matrix	0.7549
+GO:0015629	actin cytoskeleton	0.7629
+GO:0000139	Golgi membrane	0.7744
+GO:0005856	cytoskeleton	0.7826
+GO:0005813	centrosome	0.7907
+GO:0043231	intracellular membrane-bounded organelle	0.8014
+GO:0000785	chromatin	0.8124
+GO:0005737	cytoplasm	0.8907
+GO:0005634	nucleus	0.9601
+GO:0005576	extracellular region	0.9718
+GO:0045178	basal part of cell	1.0000
+GO:0034992	microtubule organizing center attachment site	1.0000
+GO:0030532	small nuclear ribonucleoprotein complex	1.0000
+GO:0099512	supramolecular fiber	1.0000
+GO:0099513	polymeric cytoskeletal fiber	1.0000
+GO:0043226	organelle	1.0000
+GO:0099023	vesicle tethering complex	1.0000

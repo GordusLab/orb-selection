@@ -1,0 +1,28 @@
+Description	Count	p	Ontology
+xenobiotic metabolic process	4	0.0013	bp
+organic acid metabolic process	9	0.0014	bp
+phosphatidylinositol-mediated signaling	4	0.0020	bp
+lipid metabolic process	15	0.0086	bp
+ubiquinone biosynthetic process	3	0.0137	bp
+maturation of LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	3	0.0137	bp
+maturation of 5.8S rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	5	0.0156	bp
+cell projection assembly	3	0.0162	bp
+nuclear mRNA surveillance	2	0.0256	bp
+negative regulation of apoptotic process	3	0.0354	bp
+non-canonical Wnt signaling pathway	2	0.0370	bp
+mitochondrial cytochrome c oxidase assembly	2	0.0370	bp
+exonucleolytic trimming to generate mature 3'-end of 5.8S rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	2	0.0370	bp
+Rho protein signal transduction	4	0.0494	bp
+eukaryotic translation initiation factor 3 complex	3	0.013	cc
+U4/U6 x U5 tri-snRNP complex	3	0.028	cc
+cytoplasmic side of plasma membrane	3	0.036	cc
+septin complex	2	0.036	cc
+septin ring	2	0.036	cc
+microtubule cytoskeleton	9	0.042	cc
+nuclear exosome (RNase complex)	2	0.049	cc
+oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced flavin or flavoprotein as one donor, and incorporation of one atom of oxygen	4	0.00134	mf
+phosphatidylinositol-4,5-bisphosphate phospholipase C activity	3	0.00274	mf
+small GTPase binding	5	0.02664	mf
+phosphatidylinositol binding	5	0.02833	mf
+lipase activity	6	0.04274	mf
+GTPase activity	12	0.04631	mf

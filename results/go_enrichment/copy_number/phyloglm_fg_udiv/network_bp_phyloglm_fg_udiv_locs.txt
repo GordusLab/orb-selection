@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0006805	xenobiotic metabolic process	0.0013
+GO:0006082	organic acid metabolic process	0.0014
+GO:0048015	phosphatidylinositol-mediated signaling	0.0020
+GO:0034473	U1 snRNA 3'-end processing	0.0028
+GO:0034476	U5 snRNA 3'-end processing	0.0028
+GO:0071042	nuclear polyadenylation-dependent mRNA catabolic process	0.0028
+GO:0010634	positive regulation of epithelial cell migration	0.0028
+GO:0000722	telomere maintenance via recombination	0.0028
+GO:0051092	positive regulation of NF-kappaB transcription factor activity	0.0082
+GO:0000056	ribosomal small subunit export from nucleus	0.0082
+GO:0006629	lipid metabolic process	0.0086
+GO:0006744	ubiquinone biosynthetic process	0.0137
+GO:0000463	maturation of LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.0137
+GO:0000466	maturation of 5.8S rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.0156
+GO:0006272	leading strand elongation	0.0159
+GO:0071035	nuclear polyadenylation-dependent rRNA catabolic process	0.0159
+GO:0071038	TRAMP-dependent tRNA surveillance pathway	0.0159
+GO:0030031	cell projection assembly	0.0162
+GO:0071028	nuclear mRNA surveillance	0.0256
+GO:0043066	negative regulation of apoptotic process	0.0354
+GO:0035567	non-canonical Wnt signaling pathway	0.0370
+GO:0033617	mitochondrial cytochrome c oxidase assembly	0.0370
+GO:0000467	exonucleolytic trimming to generate mature 3'-end of 5.8S rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.0370
+GO:0007266	Rho protein signal transduction	0.0494
+GO:0034475	U4 snRNA 3'-end processing	0.0500
+GO:0048499	synaptic vesicle membrane organization	0.0533
+GO:0061025	membrane fusion	0.0533
+GO:0043048	dolichyl monophosphate biosynthetic process	0.0535
+GO:0035020	regulation of Rac protein signal transduction	0.0535
+GO:1903527	positive regulation of membrane tubulation	0.0535
+GO:0036071	N-glycan fucosylation	0.0535
+GO:0048168	regulation of neuronal synaptic plasticity	0.0535
+GO:0071679	commissural neuron axon guidance	0.0535
+GO:2001235	positive regulation of apoptotic signaling pathway	0.0535
+GO:0006225	UDP biosynthetic process	0.0535
+GO:0061172	regulation of establishment of bipolar cell polarity	0.0535
+GO:0070126	mitochondrial translational termination	0.0535
+GO:1903292	protein localization to Golgi membrane	0.0535
+GO:0031468	nuclear membrane reassembly	0.0535
+GO:0051045	negative regulation of membrane protein ectodomain proteolysis	0.0535
+GO:0055129	L-proline biosynthetic process	0.0535
+GO:0035523	protein K29-linked deubiquitination	0.0535
+GO:0048250	iron import into the mitochondrion	0.0535
+GO:0010951	negative regulation of endopeptidase activity	0.0535
+GO:0009443	pyridoxal 5'-phosphate salvage	0.0535
+GO:0042262	DNA protection	0.0535
+GO:0051583	dopamine uptake involved in synaptic transmission	0.0535
+GO:0006478	peptidyl-tyrosine sulfation	0.0535
+GO:0035229	positive regulation of glutamate-cysteine ligase activity	0.0535
+GO:0006430	lysyl-tRNA aminoacylation	0.0535
+GO:0051660	establishment of centrosome localization	0.0535
+GO:0046705	CDP biosynthetic process	0.0535
+GO:0098943	neurotransmitter receptor transport, postsynaptic endosome to lysosome	0.0535
+GO:0015874	norepinephrine transport	0.0535
+GO:0015811	L-cystine transport	0.0535
+GO:0045880	positive regulation of smoothened signaling pathway	0.0535
+GO:0044375	regulation of peroxisome size	0.0535
+GO:1901190	regulation of formation of translation initiation ternary complex	0.0535
+GO:0071140	resolution of mitotic recombination intermediates	0.0535
+GO:0007584	response to nutrient	0.0535
+GO:0071947	protein deubiquitination involved in ubiquitin-dependent protein catabolic process	0.0535
+GO:1990168	protein K33-linked deubiquitination	0.0535
+GO:0007112	male meiosis cytokinesis	0.0535
+GO:0060386	synapse assembly involved in innervation	0.0535
+GO:0016182	synaptic vesicle budding from endosome	0.0535
+GO:1990116	ribosome-associated ubiquitin-dependent protein catabolic process	0.0535
+GO:0000481	maturation of 5S rRNA	0.0535
+GO:0000725	recombinational repair	0.0537
+GO:0007030	Golgi organization	0.0595
+GO:0035023	regulation of Rho protein signal transduction	0.0644
+GO:0034453	microtubule anchoring	0.0644
+GO:0051301	cell division	0.0790
+GO:0007010	cytoskeleton organization	0.0795
+GO:0008299	isoprenoid biosynthetic process	0.0799
+GO:0042147	retrograde transport, endosome to Golgi	0.0879
+GO:0030182	neuron differentiation	0.0881
+GO:0097320	plasma membrane tubulation	0.1037
+GO:0006269	DNA replication, synthesis of primer	0.1041
+GO:0002949	tRNA threonylcarbamoyladenosine modification	0.1041
+GO:0046512	sphingosine biosynthetic process	0.1041
+GO:0031053	primary miRNA processing	0.1041
+GO:0090656	t-circle formation	0.1041
+GO:0006207	'de novo' pyrimidine nucleobase biosynthetic process	0.1041
+GO:0007601	visual perception	0.1041
+GO:0032049	cardiolipin biosynthetic process	0.1041
+GO:0034058	endosomal vesicle fusion	0.1041
+GO:0072344	rescue of stalled ribosome	0.1041
+GO:0032979	protein insertion into mitochondrial inner membrane from matrix	0.1041
+GO:0048490	anterograde synaptic vesicle transport	0.1041
+GO:0002031	G protein-coupled receptor internalization	0.1041
+GO:0070072	vacuolar proton-transporting V-type ATPase complex assembly	0.1041
+GO:0006542	glutamine biosynthetic process	0.1041
+GO:0000480	endonucleolytic cleavage in 5'-ETS of tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.1041
+GO:0006298	mismatch repair	0.1041
+GO:0000472	endonucleolytic cleavage to generate mature 5'-end of SSU-rRNA from (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.1041
+GO:0006120	mitochondrial electron transport, NADH to ubiquinone	0.1139
+GO:0000045	autophagosome assembly	0.1217
+GO:0051923	sulfation	0.1312
+GO:0007264	small GTPase-mediated signal transduction	0.1412
+GO:0051252	regulation of RNA metabolic process	0.1494

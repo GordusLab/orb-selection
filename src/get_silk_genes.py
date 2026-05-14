@@ -8,9 +8,8 @@ import pandas as pd
 from id_converter import make_id_converter
 
 scripts = os.path.dirname(__file__)
-data_dir = os.path.join(scripts, "..", "..", "data")
 
-def get_all_silk_genes(top10=False) -> list:
+def get_all_silk_genes(data_dir, top10=False) -> list:
     """Returns all silk gland genes from the id_converter."""
     
     id_converter = make_id_converter()

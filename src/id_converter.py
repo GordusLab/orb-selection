@@ -103,10 +103,12 @@ def get_udiv_dmel_genes(
     # and assign empty columns for udiv_genes and dmel_orthologs
     try:
         df = read_csv_or_tsv(hogs_of_interest, index_col="HOG")
-        df = df.assign(udiv_genes="", dmel_orthologs="")
+        df = df.assign(udiv_genes=None, dmel_orthologs=None)
     except TypeError:
         df = hogs_of_interest
-        df = df.assign(udiv_genes="", dmel_orthologs="")
+        df = df.assign(udiv_genes=None, dmel_orthologs=None)
+    # Ensure columns are object dtype to allow lists
+    df = df.astype({"udiv_genes": "object", "dmel_orthologs": "object"})
 
     # Iterate through each hog and find corresponding Uloborus diversus genes
     # and their Drosophila melanogaster orthologs
@@ -138,14 +140,14 @@ def get_udiv_dmel_genes(
                     except (IndexError, AttributeError):
                         pass
 
-                df.at[hog, "dmel_orthologs"] = dmel_orthologs
+                df.at[hog, "dmel_orthologs"] = ", ".join(dmel_orthologs)
         except (KeyError, AttributeError):
             pass
 
     return df
 
 
-def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True):
+def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True, one_random_gene=False):
     """Main function to process the results DataFrame and merge it with
     Uloborus diversus genes and their Drosophila melanogaster orthologs."""
 
@@ -156,15 +158,22 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=Tru
         hogs_of_interest,
         f"{data_dir}/Uloborus_diversus__v__Drosophila_melanogaster.tsv",
         show_progress=show_progress,
+        one_random_gene=one_random_gene,
     )
 
-    res_with_udiv_df = res_with_udiv_df.explode("udiv_genes")
+    if not one_random_gene:
+        res_with_udiv_df = res_with_udiv_df.explode("udiv_genes")
+        
     res_with_udiv_df["udiv_genes"] = res_with_udiv_df["udiv_genes"].apply(
         lambda x: str(x).rsplit(".", 1)[0]
     )
     res_with_udiv_df = res_with_udiv_df.reset_index()
 
     merged_df = pd.merge(res_with_udiv_df, id_converter_df, how="left", on="udiv_genes")
+
+    # If one_random_gene is True, ensure only one row per HOG
+    if one_random_gene:
+        merged_df = merged_df.drop_duplicates(subset=["HOG"])
 
     return merged_df
 
@@ -194,6 +203,29 @@ def convert_locs_to_hogs(locs, hog_node_genes_tsv, no_desc=False):
 
     return hogs_df
 
+def get_ptep_description(hogs_of_interest, desc_csv="/Users/calvin/orb-selection/data/N5_blasted.tsv"):
+    """Given a list of HOGs, retrieves the descriptions for the corresponding Parasteatoda tepidariorum genes."""
+
+    desc_df = pd.read_csv(desc_csv, sep="\t", dtype=str)
+    desc_df["HOG"] = desc_df["HOG"].str.strip()
+
+    try:
+        # Map 'Protein' column from desc_df to hogs_of_interest using 'HOG' as key
+        hogs_of_interest["P. tepidariorum best BLAST hit for the HOG"] = hogs_of_interest["HOG"].map(
+            desc_df.set_index("HOG")["Protein"]
+        )
+    except TypeError:
+        try:
+            with open(hogs_of_interest, "r") as f:
+                hogs_of_interest = f.read().splitlines()
+                hogs_df = desc_df[desc_df["HOG"].isin(hogs_of_interest)]
+                hogs_df = hogs_df.dropna().drop_duplicates()
+        except Exception as e:
+            print(f"Error reading HOGs list: {e}")
+            print("Provide HOGs as a list or a file.")
+
+    return hogs_of_interest
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

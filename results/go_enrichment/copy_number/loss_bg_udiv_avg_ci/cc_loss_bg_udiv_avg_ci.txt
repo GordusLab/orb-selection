@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0002189	ribose phosphate diphosphokinase complex	2	2	0.08	0.0016
+2	GO:0000407	phagophore assembly site	5	2	0.2	0.0152
+3	GO:0031982	vesicle	83	6	3.38	0.0217
+4	GO:0005737	cytoplasm	896	53	36.51	0.0226
+5	GO:0005783	endoplasmic reticulum	99	10	4.03	0.0253
+6	GO:0030906	retromer, cargo-selective complex	1	1	0.04	0.0408
+7	GO:0032777	piccolo histone acetyltransferase complex	1	1	0.04	0.0408
+8	GO:0009897	external side of plasma membrane	1	1	0.04	0.0408
+9	GO:0097541	axonemal basal plate	1	1	0.04	0.0408
+10	GO:0005663	DNA replication factor C complex	1	1	0.04	0.0408
+11	GO:0005668	RNA polymerase transcription factor SL1 complex	1	1	0.04	0.0408
+12	GO:0031390	Ctf18 RFC-like complex	1	1	0.04	0.0408
+13	GO:0070860	RNA polymerase I core factor complex	1	1	0.04	0.0408
+14	GO:0071541	eukaryotic translation initiation factor 3 complex, eIF3m	1	1	0.04	0.0408
+15	GO:0000139	Golgi membrane	20	3	0.82	0.0452
+16	GO:0043231	intracellular membrane-bounded organelle	930	49	37.9	0.0482
+17	GO:0005789	endoplasmic reticulum membrane	55	5	2.24	0.0705
+18	GO:0048188	Set1C/COMPASS complex	2	1	0.08	0.0799
+19	GO:0016581	NuRD complex	2	1	0.08	0.0799
+20	GO:1990316	Atg1/ULK1 kinase complex	2	1	0.08	0.0799
+21	GO:0034515	proteasome storage granule	2	1	0.08	0.0799
+22	GO:0034271	phosphatidylinositol 3-kinase complex, class III, type I	2	1	0.08	0.0799
+23	GO:0034272	phosphatidylinositol 3-kinase complex, class III, type II	2	1	0.08	0.0799
+24	GO:0005901	caveola	2	1	0.08	0.0799
+25	GO:0005902	microvillus	2	1	0.08	0.0799
+26	GO:0046695	SLIK (SAGA-like) complex	2	1	0.08	0.0799
+27	GO:0005658	alpha DNA polymerase:primase complex	2	1	0.08	0.0799
+28	GO:0008540	proteasome regulatory particle, base subcomplex	2	1	0.08	0.0799
+29	GO:0005802	trans-Golgi network	13	2	0.53	0.0957
+30	GO:0005838	proteasome regulatory particle	5	2	0.2	0.1163
+31	GO:0035267	NuA4 histone acetyltransferase complex	3	1	0.12	0.1174
+32	GO:0072487	MSL complex	3	1	0.12	0.1174
+33	GO:0000124	SAGA complex	3	1	0.12	0.1174
+34	GO:0030131	clathrin adaptor complex	3	1	0.12	0.1174
+35	GO:0016323	basolateral plasma membrane	3	1	0.12	0.1174
+36	GO:0000151	ubiquitin ligase complex	33	3	1.34	0.1355
+37	GO:0032045	guanyl-nucleotide exchange factor complex	4	1	0.16	0.1534
+38	GO:0031901	early endosome membrane	4	1	0.16	0.1534
+39	GO:0005811	lipid droplet	4	1	0.16	0.1534
+40	GO:0043296	apical junction complex	5	1	0.2	0.1880
+41	GO:0072686	mitotic spindle	5	1	0.2	0.1880
+42	GO:0005669	transcription factor TFIID complex	5	1	0.2	0.1880
+43	GO:0005770	late endosome	6	1	0.24	0.2211
+44	GO:0005925	focal adhesion	6	1	0.24	0.2211
+45	GO:0005576	extracellular region	162	5	6.6	0.2278
+46	GO:0030864	cortical actin cytoskeleton	7	1	0.29	0.2530
+47	GO:0030136	clathrin-coated vesicle	8	1	0.33	0.2835
+48	GO:0005643	nuclear pore	9	1	0.37	0.3128
+49	GO:0016459	myosin complex	9	1	0.37	0.3128
+50	GO:0019005	SCF ubiquitin ligase complex	9	1	0.37	0.3128
+51	GO:0016324	apical plasma membrane	10	1	0.41	0.3409
+52	GO:0019898	extrinsic component of membrane	16	2	0.65	0.3653
+53	GO:0005912	adherens junction	11	1	0.45	0.3679
+54	GO:0005829	cytosol	157	7	6.4	0.4608
+55	GO:0005938	cell cortex	25	2	1.02	0.4631
+56	GO:0005911	cell-cell junction	29	2	1.18	0.4637
+57	GO:0005794	Golgi apparatus	77	6	3.14	0.5012
+58	GO:0005681	spliceosomal complex	18	1	0.73	0.5285
+59	GO:0012505	endomembrane system	232	19	9.45	0.5564
+60	GO:0005634	nucleus	593	25	24.17	0.5764
+61	GO:0005730	nucleolus	22	2	0.9	0.5803
+62	GO:0005768	endosome	42	3	1.71	0.6127
+63	GO:0062129	chitin-based extracellular matrix	27	1	1.1	0.6770
+64	GO:0005856	cytoskeleton	152	5	6.19	0.6818
+65	GO:0005739	mitochondrion	77	2	3.14	0.8315
+66	GO:1990904	ribonucleoprotein complex	78	2	3.18	0.9198
+67	GO:0045202	synapse	62	1	2.53	0.9269
+68	GO:0005886	plasma membrane	285	9	11.61	0.9683
+69	GO:0005615	extracellular space	104	1	4.24	0.9881
+70	GO:0016020	membrane	739	28	30.12	0.9889
+71	GO:0098857	membrane microdomain	3	1	0.12	1.0000
+72	GO:0098796	membrane protein complex	78	3	3.18	1.0000
+73	GO:0030135	coated vesicle	10	1	0.41	1.0000
+74	GO:0098858	actin-based cell projection	4	1	0.16	1.0000
+75	GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	55	5	2.24	1.0000
+76	GO:0030904	retromer complex	2	1	0.08	1.0000
+77	GO:0005819	spindle	17	1	0.69	1.0000
+78	GO:0005942	phosphatidylinositol 3-kinase complex	5	1	0.2	1.0000
+79	GO:0032991	protein-containing complex	492	26	20.05	1.0000
+80	GO:0005622	intracellular anatomical structure	1448	70	59.01	1.0000
+81	GO:0030863	cortical cytoskeleton	10	1	0.41	1.0000
+82	GO:0032993	protein-DNA complex	9	1	0.37	1.0000
+83	GO:0043601	nuclear replisome	2	1	0.08	1.0000
+84	GO:0110165	cellular anatomical structure	2188	86	89.17	1.0000
+85	GO:0009925	basal plasma membrane	5	1	0.2	1.0000
+86	GO:0031410	cytoplasmic vesicle	77	4	3.14	1.0000
+87	GO:0000118	histone deacetylase complex	5	1	0.2	1.0000
+88	GO:0140513	nuclear protein-containing complex	137	8	5.58	1.0000
+89	GO:0031981	nuclear lumen	100	6	4.08	1.0000
+90	GO:0005930	axoneme	9	1	0.37	1.0000
+91	GO:0031984	organelle subcompartment	75	7	3.06	1.0000
+92	GO:0042995	cell projection	130	2	5.3	1.0000
+93	GO:0032838	plasma membrane bounded cell projection cytoplasm	10	1	0.41	1.0000
+94	GO:0098590	plasma membrane region	47	3	1.92	1.0000
+95	GO:0043226	organelle	1151	55	46.91	1.0000
+96	GO:0043227	membrane-bounded organelle	978	51	39.86	1.0000
+97	GO:0043228	membraneless organelle	306	15	12.47	1.0000
+98	GO:0043229	intracellular organelle	1126	55	45.89	1.0000
+99	GO:0035032	phosphatidylinositol 3-kinase complex, class III	2	1	0.08	1.0000
+100	GO:0071944	cell periphery	355	11	14.47	1.0000

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0019185	snRNA-activating protein complex	4	3	0.03	1.5e-06
+2	GO:0005615	extracellular space	138	6	1.03	0.00045
+3	GO:0034245	mitochondrial DNA-directed RNA polymerase complex	1	1	0.01	0.00744
+4	GO:0005901	caveola	2	1	0.01	0.01482
+5	GO:0005777	peroxisome	38	2	0.28	0.03193
+6	GO:0009897	external side of plasma membrane	5	1	0.04	0.03665
+7	GO:0034518	RNA cap binding complex	5	1	0.04	0.03665
+8	GO:0031901	early endosome membrane	6	1	0.04	0.04382
+9	GO:0019773	proteasome core complex, alpha-subunit complex	7	1	0.05	0.05094
+10	GO:0043296	apical junction complex	8	1	0.06	0.05801
+11	GO:0005921	gap junction	10	1	0.07	0.07199
+12	GO:0031012	extracellular matrix	66	2	0.49	0.08572
+13	GO:0016324	apical plasma membrane	13	1	0.1	0.09259
+14	GO:0030864	cortical actin cytoskeleton	13	1	0.1	0.09259
+15	GO:0005912	adherens junction	14	1	0.1	0.09936
+16	GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	14	1	0.1	0.09936
+17	GO:0009986	cell surface	24	2	0.18	0.12895
+18	GO:0045202	synapse	85	2	0.63	0.13091
+19	GO:0030134	COPII-coated ER to Golgi transport vesicle	21	1	0.16	0.14538
+20	GO:0005643	nuclear pore	25	1	0.19	0.17064
+21	GO:0005773	vacuole	72	2	0.54	0.19163
+22	GO:0005739	mitochondrion	374	5	2.78	0.24844
+23	GO:0000139	Golgi membrane	42	1	0.31	0.27015
+24	GO:0005764	lysosome	43	1	0.32	0.27563
+25	GO:0005743	mitochondrial inner membrane	49	1	0.36	0.30767
+26	GO:0015934	large ribosomal subunit	53	1	0.39	0.32826
+27	GO:0012505	endomembrane system	600	4	4.46	0.34308
+28	GO:0005576	extracellular region	213	7	1.58	0.38068
+29	GO:0043005	neuron projection	96	1	0.71	0.51527
+30	GO:0005789	endoplasmic reticulum membrane	149	1	1.11	0.67718
+31	GO:0005829	cytosol	333	2	2.48	0.72050
+32	GO:0005886	plasma membrane	433	4	3.22	0.92981
+33	GO:0005737	cytoplasm	2189	15	16.28	0.95219
+34	GO:0016020	membrane	1336	8	9.94	0.98549
+35	GO:0005634	nucleus	1398	2	10.4	0.99984
+36	GO:0005938	cell cortex	42	1	0.31	1.00000
+37	GO:0031090	organelle membrane	396	3	2.94	1.00000
+38	GO:1990904	ribonucleoprotein complex	284	1	2.11	1.00000
+39	GO:0042995	cell projection	174	1	1.29	1.00000
+40	GO:0045121	membrane raft	6	1	0.04	1.00000
+41	GO:0015629	actin cytoskeleton	64	1	0.48	1.00000
+42	GO:0030312	external encapsulating structure	66	2	0.49	1.00000
+43	GO:0140535	intracellular protein-containing complex	311	3	2.31	1.00000
+44	GO:0044391	ribosomal subunit	87	1	0.65	1.00000
+45	GO:0030054	cell junction	135	4	1	1.00000
+46	GO:0031410	cytoplasmic vesicle	193	2	1.44	1.00000
+47	GO:1905368	peptidase complex	41	1	0.3	1.00000
+48	GO:0005839	proteasome core complex	13	1	0.1	1.00000
+49	GO:1905369	endopeptidase complex	33	1	0.25	1.00000
+50	GO:0005622	intracellular anatomical structure	3442	18	25.6	1.00000
+51	GO:0098552	side of membrane	23	1	0.17	1.00000
+52	GO:0110165	cellular anatomical structure	4456	31	33.14	1.00000
+53	GO:0061695	transferase complex, transferring phosphorus-containing groups	105	1	0.78	1.00000
+54	GO:0030880	RNA polymerase complex	59	1	0.44	1.00000
+55	GO:0030135	coated vesicle	42	1	0.31	1.00000
+56	GO:1902494	catalytic complex	486	2	3.61	1.00000
+57	GO:0005768	endosome	109	1	0.81	1.00000
+58	GO:0098590	plasma membrane region	59	2	0.44	1.00000
+59	GO:0005769	early endosome	22	1	0.16	1.00000
+60	GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	149	1	1.11	1.00000
+61	GO:0012506	vesicle membrane	70	1	0.52	1.00000
+62	GO:0005667	transcription regulator complex	91	3	0.68	1.00000
+63	GO:0043231	intracellular membrane-bounded organelle	2430	11	18.07	1.00000
+64	GO:0043232	intracellular membraneless organelle	705	2	5.24	1.00000
+65	GO:0000323	lytic vacuole	43	1	0.32	1.00000
+66	GO:0098588	bounding membrane of organelle	189	2	1.41	1.00000
+67	GO:0010008	endosome membrane	33	1	0.25	1.00000
+68	GO:0005740	mitochondrial envelope	87	1	0.65	1.00000
+69	GO:0005911	cell-cell junction	42	2	0.31	1.00000
+70	GO:0031966	mitochondrial membrane	80	1	0.59	1.00000
+71	GO:0031967	organelle envelope	126	2	0.94	1.00000
+72	GO:0098827	endoplasmic reticulum subcompartment	152	1	1.13	1.00000
+73	GO:0071944	cell periphery	526	6	3.91	1.00000
+74	GO:0097708	intracellular vesicle	193	2	1.44	1.00000
+75	GO:0070161	anchoring junction	50	2	0.37	1.00000
+76	GO:0120025	plasma membrane bounded cell projection	170	1	1.26	1.00000
+77	GO:0005794	Golgi apparatus	180	1	1.34	1.00000
+78	GO:0005575	cellular_component	4572	34	34	1.00000
+79	GO:0140513	nuclear protein-containing complex	431	1	3.21	1.00000
+80	GO:0005783	endoplasmic reticulum	278	1	2.07	1.00000
+81	GO:0098798	mitochondrial protein-containing complex	66	1	0.49	1.00000
+82	GO:0032991	protein-containing complex	1328	8	9.88	1.00000
+83	GO:0044853	plasma membrane raft	2	1	0.01	1.00000
+84	GO:1990234	transferase complex	281	1	2.09	1.00000
+85	GO:0005840	ribosome	107	1	0.8	1.00000
+86	GO:0005635	nuclear envelope	39	1	0.29	1.00000
+87	GO:0043226	organelle	2805	13	20.86	1.00000
+88	GO:0019866	organelle inner membrane	54	1	0.4	1.00000
+89	GO:0031982	vesicle	200	2	1.49	1.00000
+90	GO:0005856	cytoskeleton	249	1	1.85	1.00000
+91	GO:0043227	membrane-bounded organelle	2495	11	18.55	1.00000
+92	GO:0030863	cortical cytoskeleton	16	1	0.12	1.00000
+93	GO:0098857	membrane microdomain	6	1	0.04	1.00000
+94	GO:0043228	membraneless organelle	705	2	5.24	1.00000
+95	GO:0000428	DNA-directed RNA polymerase complex	56	1	0.42	1.00000
+96	GO:0031984	organelle subcompartment	198	1	1.47	1.00000
+97	GO:0043229	intracellular organelle	2770	13	20.6	1.00000
+98	GO:0042579	microbody	38	2	0.28	1.00000
+99	GO:0030659	cytoplasmic vesicle membrane	70	1	0.52	1.00000
+100	GO:0000502	proteasome complex	27	1	0.2	1.00000

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0043565	sequence-specific DNA binding	312	7	2.63	0.00018
+2	GO:0004096	catalase activity	4	2	0.03	0.00041
+3	GO:0004867	serine-type endopeptidase inhibitor activity	14	2	0.12	0.00591
+4	GO:0016787	hydrolase activity	768	13	6.47	0.00664
+5	GO:0001018	mitochondrial promoter sequence-specific DNA binding	1	1	0.01	0.00842
+6	GO:0004565	beta-galactosidase activity	1	1	0.01	0.00842
+7	GO:0019869	chloride channel inhibitor activity	1	1	0.01	0.00842
+8	GO:0004729	oxygen-dependent protoporphyrinogen oxidase activity	1	1	0.01	0.00842
+9	GO:0019870	potassium channel inhibitor activity	1	1	0.01	0.00842
+10	GO:0004252	serine-type endopeptidase activity	53	3	0.45	0.00973
+11	GO:0003987	acetate-CoA ligase activity	2	1	0.02	0.01678
+12	GO:0016208	AMP binding	2	1	0.02	0.01678
+13	GO:0008190	eukaryotic initiation factor 4E binding	2	1	0.02	0.01678
+14	GO:0005537	D-mannose binding	2	1	0.02	0.01678
+15	GO:0008253	5'-nucleotidase activity	3	1	0.03	0.02506
+16	GO:0004021	L-alanine:2-oxoglutarate aminotransferase activity	4	1	0.03	0.03328
+17	GO:0004535	poly(A)-specific ribonuclease activity	4	1	0.03	0.03328
+18	GO:0042043	neurexin family protein binding	5	1	0.04	0.04143
+19	GO:0008139	nuclear localization sequence binding	6	1	0.05	0.04951
+20	GO:0004000	adenosine deaminase activity	6	1	0.05	0.04951
+21	GO:0004559	alpha-mannosidase activity	9	1	0.08	0.07336
+22	GO:0005243	gap junction channel activity	10	1	0.08	0.08118
+23	GO:0003899	DNA-directed RNA polymerase activity	11	1	0.09	0.08893
+24	GO:0061630	ubiquitin protein ligase activity	63	2	0.53	0.09808
+25	GO:0017056	structural constituent of nuclear pore	13	1	0.11	0.10425
+26	GO:0020037	heme binding	67	2	0.56	0.10876
+27	GO:0004197	cysteine-type endopeptidase activity	17	1	0.14	0.13413
+28	GO:0005254	chloride channel activity	23	1	0.19	0.17714
+29	GO:0030246	carbohydrate binding	37	2	0.31	0.18064
+30	GO:0030594	neurotransmitter receptor activity	25	1	0.21	0.19101
+31	GO:0008028	monocarboxylic acid transmembrane transporter activity	25	1	0.21	0.19101
+32	GO:0003700	DNA-binding transcription factor activity	277	3	2.33	0.19155
+33	GO:0005230	extracellular ligand-gated monoatomic ion channel activity	26	1	0.22	0.19786
+34	GO:0038023	signaling receptor activity	157	2	1.32	0.20508
+35	GO:0030170	pyridoxal phosphate binding	28	1	0.24	0.21139
+36	GO:0003743	translation initiation factor activity	30	1	0.25	0.22469
+37	GO:0050839	cell adhesion molecule binding	31	1	0.26	0.23126
+38	GO:0008061	chitin binding	34	1	0.29	0.25064
+39	GO:0003924	GTPase activity	130	2	1.1	0.29968
+40	GO:0005525	GTP binding	139	2	1.17	0.32786
+41	GO:0051015	actin filament binding	50	1	0.42	0.34622
+42	GO:0000978	RNA polymerase II cis-regulatory region sequence-specific DNA binding	202	2	1.7	0.51250
+43	GO:0003735	structural constituent of ribosome	98	1	0.83	0.56698
+44	GO:0004674	protein serine/threonine kinase activity	112	1	0.94	0.61630
+45	GO:0046872	metal ion binding	544	3	4.58	0.63092
+46	GO:0000981	DNA-binding transcription factor activity, RNA polymerase II-specific	252	2	2.12	0.63457
+47	GO:0004888	transmembrane signaling receptor activity	130	1	1.1	0.67170
+48	GO:0003723	RNA binding	409	3	3.45	0.68142
+49	GO:0060090	molecular adaptor activity	153	1	1.29	0.73124
+50	GO:0008270	zinc ion binding	214	1	1.8	0.84264
+51	GO:0005524	ATP binding	409	1	3.45	0.97285
+52	GO:0005515	protein binding	1631	7	13.74	0.99961
+53	GO:0032561	guanyl ribonucleotide binding	141	2	1.19	1.00000
+54	GO:0003690	double-stranded DNA binding	295	3	2.48	1.00000
+55	GO:0140096	catalytic activity, acting on a protein	677	7	5.7	1.00000
+56	GO:0016810	hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds	35	1	0.29	1.00000
+57	GO:0140098	catalytic activity, acting on RNA	178	2	1.5	1.00000
+58	GO:0099106	ion channel regulator activity	12	1	0.1	1.00000
+59	GO:0047635	alanine-oxo-acid transaminase activity	4	1	0.03	1.00000
+60	GO:0016814	hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds, in cyclic amidines	10	1	0.08	1.00000
+61	GO:0180051	translation factor activity	47	1	0.4	1.00000
+62	GO:0004672	protein kinase activity	172	1	1.45	1.00000
+63	GO:0031369	translation initiation factor binding	8	1	0.07	1.00000
+64	GO:0016755	aminoacyltransferase activity	103	2	0.87	1.00000
+65	GO:0022834	ligand-gated channel activity	36	1	0.3	1.00000
+66	GO:0016817	hydrolase activity, acting on acid anhydrides	252	2	2.12	1.00000
+67	GO:0016818	hydrolase activity, acting on acid anhydrides, in phosphorus-containing anhydrides	252	2	2.12	1.00000
+68	GO:0022836	gated channel activity	55	1	0.46	1.00000
+69	GO:0032553	ribonucleotide binding	562	4	4.73	1.00000
+70	GO:0004175	endopeptidase activity	123	4	1.04	1.00000
+71	GO:0032555	purine ribonucleotide binding	554	4	4.67	1.00000
+72	GO:0035639	purine ribonucleoside triphosphate binding	547	3	4.61	1.00000
+73	GO:0005342	organic acid transmembrane transporter activity	63	1	0.53	1.00000
+74	GO:0032559	adenyl ribonucleotide binding	415	2	3.5	1.00000
+75	GO:0016627	oxidoreductase activity, acting on the CH-CH group of donors	20	1	0.17	1.00000
+76	GO:0046914	transition metal ion binding	303	1	2.55	1.00000
+77	GO:0043167	ion binding	1189	8	10.02	1.00000
+78	GO:0004842	ubiquitin-protein transferase activity	94	2	0.79	1.00000
+79	GO:0043168	anion binding	687	5	5.79	1.00000
+80	GO:0016462	pyrophosphatase activity	250	2	2.11	1.00000
+81	GO:0043169	cation binding	560	4	4.72	1.00000
+82	GO:0016788	hydrolase activity, acting on ester bonds	246	2	2.07	1.00000
+83	GO:0141108	transporter regulator activity	12	1	0.1	1.00000
+84	GO:0016405	CoA-ligase activity	8	1	0.07	1.00000
+85	GO:0060089	molecular transducer activity	157	2	1.32	1.00000
+86	GO:0030414	peptidase inhibitor activity	23	2	0.19	1.00000
+87	GO:0015276	ligand-gated monoatomic ion channel activity	36	1	0.3	1.00000
+88	GO:0016772	transferase activity, transferring phosphorus-containing groups	301	2	2.54	1.00000
+89	GO:0016773	phosphotransferase activity, alcohol group as acceptor	216	1	1.82	1.00000
+90	GO:0046943	carboxylic acid transmembrane transporter activity	63	1	0.53	1.00000
+91	GO:0070818	protoporphyrinogen oxidase activity	1	1	0.01	1.00000
+92	GO:0016896	RNA exonuclease activity, producing 5'-phosphomonoesters	16	1	0.13	1.00000
+93	GO:0004553	hydrolase activity, hydrolyzing O-glycosyl compounds	32	2	0.27	1.00000
+94	GO:0016779	nucleotidyltransferase activity	46	1	0.39	1.00000
+95	GO:0048029	monosaccharide binding	13	1	0.11	1.00000
+96	GO:0015103	inorganic anion transmembrane transporter activity	37	1	0.31	1.00000
+97	GO:0008233	peptidase activity	188	4	1.58	1.00000
+98	GO:0008234	cysteine-type peptidase activity	42	1	0.35	1.00000
+99	GO:0008236	serine-type peptidase activity	59	3	0.5	1.00000
+100	GO:0022803	passive transmembrane transporter activity	115	2	0.97	1.00000

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0000495	box H/ACA sno(s)RNA 3'-end processing	1	1	0.01	0.0087
+2	GO:0006111	regulation of gluconeogenesis	1	1	0.01	0.0087
+3	GO:1990481	mRNA pseudouridine synthesis	1	1	0.01	0.0087
+4	GO:0046498	S-adenosylhomocysteine metabolic process	1	1	0.01	0.0087
+5	GO:0031120	snRNA pseudouridine synthesis	1	1	0.01	0.0087
+6	GO:2000234	positive regulation of rRNA processing	1	1	0.01	0.0087
+7	GO:0051289	protein homotetramerization	2	1	0.02	0.0172
+8	GO:1901052	sarcosine metabolic process	2	1	0.02	0.0172
+9	GO:0034587	piRNA processing	2	1	0.02	0.0172
+10	GO:0010133	L-proline catabolic process to L-glutamate	2	1	0.02	0.0172
+11	GO:0000395	mRNA 5'-splice site recognition	2	1	0.02	0.0172
+12	GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	2	1	0.02	0.0172
+13	GO:0006047	UDP-N-acetylglucosamine metabolic process	2	1	0.02	0.0172
+14	GO:0033540	fatty acid beta-oxidation using acyl-CoA oxidase	2	1	0.02	0.0172
+15	GO:0031118	rRNA pseudouridine synthesis	2	1	0.02	0.0172
+16	GO:0070936	protein K48-linked ubiquitination	3	1	0.03	0.0257
+17	GO:0000387	spliceosomal snRNP assembly	3	1	0.03	0.0257
+18	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	3	1	0.03	0.0257
+19	GO:0045943	positive regulation of transcription by RNA polymerase I	3	1	0.03	0.0257
+20	GO:0051016	barbed-end actin filament capping	3	1	0.03	0.0257
+21	GO:0006002	fructose 6-phosphate metabolic process	3	1	0.03	0.0257
+22	GO:0006511	ubiquitin-dependent protein catabolic process	84	3	0.73	0.0349
+23	GO:0006891	intra-Golgi vesicle-mediated transport	5	1	0.04	0.0425
+24	GO:0032981	mitochondrial respiratory chain complex I assembly	5	1	0.04	0.0425
+25	GO:0046500	S-adenosylmethionine metabolic process	5	1	0.04	0.0425
+26	GO:0055088	lipid homeostasis	6	1	0.05	0.0508
+27	GO:0030968	endoplasmic reticulum unfolded protein response	6	1	0.05	0.0508
+28	GO:0033619	membrane protein proteolysis	6	1	0.05	0.0508
+29	GO:0006730	one-carbon metabolic process	8	1	0.07	0.0672
+30	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	11	2	0.1	0.0731
+31	GO:0001934	positive regulation of protein phosphorylation	10	1	0.09	0.0833
+32	GO:0048015	phosphatidylinositol-mediated signaling	11	1	0.1	0.0913
+33	GO:0007030	Golgi organization	12	1	0.1	0.0991
+34	GO:0046854	phosphatidylinositol phosphate biosynthetic process	12	1	0.1	0.0991
+35	GO:0009156	ribonucleoside monophosphate biosynthetic process	12	1	0.1	0.0991
+36	GO:0042273	ribosomal large subunit biogenesis	16	1	0.14	0.1300
+37	GO:0006487	protein N-linked glycosylation	18	1	0.16	0.1451
+38	GO:0008283	cell population proliferation	19	1	0.16	0.1525
+39	GO:0007052	mitotic spindle organization	20	1	0.17	0.1599
+40	GO:0098656	monoatomic anion transmembrane transport	20	1	0.17	0.1599
+41	GO:0007015	actin filament organization	46	2	0.4	0.1706
+42	GO:0006351	DNA-templated transcription	535	5	4.63	0.1769
+43	GO:0006486	protein glycosylation	24	1	0.21	0.1887
+44	GO:0000122	negative regulation of transcription by RNA polymerase II	31	1	0.27	0.2369
+45	GO:0006164	purine nucleotide biosynthetic process	35	1	0.3	0.2632
+46	GO:0061024	membrane organization	63	1	0.54	0.4241
+47	GO:0007186	G protein-coupled receptor signaling pathway	101	1	0.87	0.5890
+48	GO:0055085	transmembrane transport	373	3	3.23	0.5935
+49	GO:0015031	protein transport	115	1	0.99	0.6374
+50	GO:0006974	DNA damage response	125	1	1.08	0.6685
+51	GO:0006468	protein phosphorylation	208	2	1.8	0.7944
+52	GO:0006357	regulation of transcription by RNA polymerase II	373	3	3.23	0.7996
+53	GO:0008610	lipid biosynthetic process	92	1	0.8	1.0000
+54	GO:0019941	modification-dependent protein catabolic process	86	3	0.74	1.0000
+55	GO:0007051	spindle organization	26	1	0.22	1.0000
+56	GO:0034654	nucleobase-containing compound biosynthetic process	765	12	6.62	1.0000
+57	GO:1902679	negative regulation of RNA biosynthetic process	60	1	0.52	1.0000
+58	GO:0051252	regulation of RNA metabolic process	520	4	4.5	1.0000
+59	GO:0030832	regulation of actin filament length	11	1	0.1	1.0000
+60	GO:0051253	negative regulation of RNA metabolic process	65	1	0.56	1.0000
+61	GO:0030833	regulation of actin filament polymerization	11	1	0.1	1.0000
+62	GO:0051254	positive regulation of RNA metabolic process	104	1	0.9	1.0000
+63	GO:0030834	regulation of actin filament depolymerization	3	1	0.03	1.0000
+64	GO:1901135	carbohydrate derivative metabolic process	181	3	1.57	1.0000
+65	GO:0030835	negative regulation of actin filament depolymerization	3	1	0.03	1.0000
+66	GO:0050896	response to stimulus	764	4	6.61	1.0000
+67	GO:0006996	organelle organization	392	5	3.39	1.0000
+68	GO:0009116	nucleoside metabolic process	11	1	0.1	1.0000
+69	GO:0009117	nucleotide metabolic process	65	1	0.56	1.0000
+70	GO:1901137	carbohydrate derivative biosynthetic process	114	2	0.99	1.0000
+71	GO:0030837	negative regulation of actin filament polymerization	4	1	0.03	1.0000
+72	GO:0051258	protein polymerization	24	1	0.21	1.0000
+73	GO:1902850	microtubule cytoskeleton organization involved in mitosis	25	1	0.22	1.0000
+74	GO:0006360	transcription by RNA polymerase I	8	1	0.07	1.0000
+75	GO:0009119	ribonucleoside metabolic process	7	1	0.06	1.0000
+76	GO:0051259	protein complex oligomerization	13	1	0.11	1.0000
+77	GO:0043242	negative regulation of protein-containing complex disassembly	8	1	0.07	1.0000
+78	GO:0031333	negative regulation of protein-containing complex assembly	4	1	0.03	1.0000
+79	GO:0043244	regulation of protein-containing complex disassembly	12	1	0.1	1.0000
+80	GO:0006364	rRNA processing	33	4	0.29	1.0000
+81	GO:0097435	supramolecular fiber organization	76	2	0.66	1.0000
+82	GO:0006366	transcription by RNA polymerase II	400	3	3.46	1.0000
+83	GO:0032787	monocarboxylic acid metabolic process	76	1	0.66	1.0000
+84	GO:0016070	RNA metabolic process	755	11	6.53	1.0000
+85	GO:0016071	mRNA metabolic process	108	3	0.93	1.0000
+86	GO:0016072	rRNA metabolic process	38	4	0.33	1.0000
+87	GO:0016073	snRNA metabolic process	11	1	0.1	1.0000
+88	GO:0016074	sno(s)RNA metabolic process	2	1	0.02	1.0000
+89	GO:0055086	nucleobase-containing small molecule metabolic process	101	3	0.87	1.0000
+90	GO:0050794	regulation of cellular process	1346	11	11.64	1.0000
+91	GO:0032774	RNA biosynthetic process	697	11	6.03	1.0000
+92	GO:0070085	glycosylation	35	1	0.3	1.0000
+93	GO:0006355	regulation of DNA-templated transcription	486	4	4.2	1.0000
+94	GO:0006356	regulation of transcription by RNA polymerase I	3	1	0.03	1.0000
+95	GO:0006508	proteolysis	285	4	2.47	1.0000
+96	GO:0031401	positive regulation of protein modification process	12	1	0.1	1.0000
+97	GO:1902903	regulation of supramolecular fiber organization	29	1	0.25	1.0000
+98	GO:0045184	establishment of protein localization	133	1	1.15	1.0000
+99	GO:0042254	ribosome biogenesis	55	4	0.48	1.0000
+100	GO:0006094	gluconeogenesis	6	1	0.05	1.0000

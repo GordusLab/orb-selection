@@ -450,22 +450,13 @@ def plot_omega_single_gene(
     plt.xscale('symlog', linthresh=thresh)
     plt.rcParams['font.family'] = 'Verdana'
 
-    if offset_zero:
-        kwargs = {
-            'offset': (2,2),
-            'linewidth': 10, 
-            'foreground': 'salmon', 
-            'alpha': 0.3
-        }  
-    else:
-        kwargs = {
-            'linewidth': 11, 
-            'foreground': 'white'
-        }
-
     # Plot vertical lines for ω1, ω2, and ω3 for the REFERENCE group
+    if offset_zero:
+        ref_path_effects = [pe.SimpleLineShadow(offset=(-2,2), alpha=0.3, foreground='salmon'), pe.Normal()]
+    else:
+        ref_path_effects = [pe.withStroke(linewidth=22, foreground='white'), pe.Normal()]
     ax.axvline(x['ω1_ref'], linewidth=20, color='salmon', ymax=x['ω1_ref_P'], alpha=0.17,
-                    path_effects=[pe.withStroke(**kwargs), pe.Normal()])
+               path_effects=ref_path_effects)
     ax.axvline(x['ω2_ref'], linewidth=20, color='steelblue', ymax=x['ω2_ref_P'], alpha=0.17, 
                     path_effects=[pe.withStroke(linewidth=22, foreground='white'), pe.Normal()])
     ax.axvline(x['ω3_ref'], linewidth=20, color='goldenrod', ymax=x['ω3_ref_P'], alpha=0.17, 
@@ -508,15 +499,15 @@ def plot_omega_single_gene(
             plt.title(subtitle, fontsize=12, fontweight='bold')
 
         if k:
-            plt.text(0.7, 0.9, 
-                    '$\it{k}$='+f'{round(x["k"], 2)}\n'+'$\it{p}$='+f'{'{:.2e}'.format(x["p_value"])}', 
-                fontsize=13, ha='left', va='center', transform=ax.transAxes, 
-                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+            plt.text(0.7, 0.9,
+                f'$\\it{{k}}$={round(x["k"], 2)}\n$\\it{{p}}$={x["p_value"]:.2e}',
+                fontsize=13, ha='left', va='center', transform=ax.transAxes,
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
         else:
-            plt.text(0.65, 0.9, 
-                    '$\it{p_1}$='+f'{'{:.2e}'.format(x["test_pval"])}\n'+'$\it{p_3}$='+f'{'{:.2e}'.format(x["shared_pval"])}', 
-                fontsize=13, ha='left', va='center', transform=ax.transAxes, 
-                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
+            plt.text(0.65, 0.9,
+                f'$\\it{{p_1}}$={x["test_pval"]:.2e}\n$\\it{{p_3}}$={x["shared_pval"]:.2e}',
+                fontsize=13, ha='left', va='center', transform=ax.transAxes,
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
     if filename is not None:
         plt.savefig(filename, dpi=300, transparent=transparent)

@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0042796	snRNA transcription by RNA polymerase III	2.1e-06
+GO:0042795	snRNA transcription by RNA polymerase II	5.1e-06
+GO:0042542	response to hydrogen peroxide	0.00065
+GO:0042744	hydrogen peroxide catabolic process	0.00136
+GO:0010766	negative regulation of sodium ion transport	0.00826
+GO:1901190	regulation of formation of translation initiation ternary complex	0.00826
+GO:1903288	positive regulation of potassium ion import across plasma membrane	0.00826
+GO:0019427	acetyl-CoA biosynthetic process from acetate	0.00826
+GO:2000651	positive regulation of sodium ion transmembrane transporter activity	0.00826
+GO:0006508	proteolysis	0.01586
+GO:0043103	hypoxanthine salvage	0.01645
+GO:0060169	negative regulation of adenosine receptor signaling pathway	0.01645
+GO:0070836	caveola assembly	0.01645
+GO:0006154	adenosine catabolic process	0.02457
+GO:0046103	inosine biosynthetic process	0.02457
+GO:0097104	postsynaptic membrane assembly	0.03263
+GO:0097105	presynaptic membrane assembly	0.03263
+GO:0007158	neuron cell-cell adhesion	0.03263
+GO:0006390	mitochondrial transcription	0.03263
+GO:0048488	synaptic vesicle endocytosis	0.04856
+GO:0043248	proteasome assembly	0.04856
+GO:0006013	mannose metabolic process	0.04856
+GO:0006783	heme biosynthetic process	0.06423
+GO:0007340	acrosome reaction	0.06423
+GO:0007602	phototransduction	0.06423
+GO:0000289	nuclear-transcribed mRNA poly(A) tail shortening	0.07965
+GO:0007264	small GTPase-mediated signal transduction	0.08966
+GO:0030198	extracellular matrix organization	0.10231
+GO:1902476	chloride transmembrane transport	0.10231
+GO:0045727	positive regulation of translation	0.10974
+GO:0007029	endoplasmic reticulum organization	0.14602
+GO:0050877	nervous system process	0.16709
+GO:0006606	protein import into nucleus	0.19440
+GO:0006405	RNA export from nucleus	0.20109
+GO:0007155	cell adhesion	0.20479
+GO:0007030	Golgi organization	0.20773
+GO:0042391	regulation of membrane potential	0.20773
+GO:0007268	chemical synaptic transmission	0.24276
+GO:0009058	biosynthetic process	0.28767
+GO:0006888	endoplasmic reticulum to Golgi vesicle-mediated transport	0.29518
+GO:0050804	modulation of chemical synaptic transmission	0.30105
+GO:0006511	ubiquitin-dependent protein catabolic process	0.32860
+GO:0050801	monoatomic ion homeostasis	0.36260
+GO:0007015	actin filament organization	0.39898
+GO:0016197	endosomal transport	0.42855
+GO:0044782	cilium organization	0.43334
+GO:0005975	carbohydrate metabolic process	0.45004
+GO:0007165	signal transduction	0.51923
+GO:0006412	translation	0.67709
+GO:0035556	intracellular signal transduction	0.74248
+GO:0006355	regulation of DNA-templated transcription	0.75268
+GO:0006468	protein phosphorylation	0.83463
+GO:0006357	regulation of transcription by RNA polymerase II	0.83512
+GO:1901293	nucleoside phosphate biosynthetic process	1.00000
+GO:0051254	positive regulation of RNA metabolic process	1.00000
+GO:0009889	regulation of biosynthetic process	1.00000
+GO:0098655	monoatomic cation transmembrane transport	1.00000
+GO:0098656	monoatomic anion transmembrane transport	1.00000
+GO:0042592	homeostatic process	1.00000
+GO:0098657	import into cell	1.00000
+GO:0007416	synapse assembly	1.00000
+GO:0098659	inorganic cation import across plasma membrane	1.00000
+GO:1901379	regulation of potassium ion transmembrane transport	1.00000
+GO:0036211	protein modification process	1.00000
+GO:0098739	import across plasma membrane	1.00000
+GO:0035588	G protein-coupled purinergic receptor signaling pathway	1.00000
+GO:0050808	synapse organization	1.00000
+GO:0048522	positive regulation of cellular process	1.00000
+GO:0042278	purine nucleoside metabolic process	1.00000
+GO:1904062	regulation of monoatomic cation transmembrane transport	1.00000
+GO:0048523	negative regulation of cellular process	1.00000
+GO:0043266	regulation of potassium ion transport	1.00000
+GO:1904064	positive regulation of cation transmembrane transport	1.00000
+GO:0061024	membrane organization	1.00000
+GO:0043268	positive regulation of potassium ion transport	1.00000
+GO:0097090	presynaptic membrane organization	1.00000
+GO:0043269	regulation of monoatomic ion transport	1.00000
+GO:0006778	porphyrin-containing compound metabolic process	1.00000
+GO:0000956	nuclear-transcribed mRNA catabolic process	1.00000
+GO:0006779	porphyrin-containing compound biosynthetic process	1.00000
+GO:0019318	hexose metabolic process	1.00000
+GO:0001973	G protein-coupled adenosine receptor signaling pathway	1.00000
+GO:0000959	mitochondrial RNA metabolic process	1.00000
+GO:0042221	response to chemical	1.00000
+GO:0046907	intracellular transport	1.00000
+GO:2000649	regulation of sodium ion transmembrane transporter activity	1.00000
+GO:0043254	regulation of protein-containing complex assembly	1.00000
+GO:0006401	RNA catabolic process	1.00000
+GO:0006402	mRNA catabolic process	1.00000
+GO:0032879	regulation of localization	1.00000
+GO:0061013	regulation of mRNA catabolic process	1.00000
+GO:0006403	RNA localization	1.00000
+GO:0009416	response to light stimulus	1.00000
+GO:0061014	positive regulation of mRNA catabolic process	1.00000
+GO:0048518	positive regulation of biological process	1.00000
+GO:0030030	cell projection organization	1.00000
+GO:0048519	negative regulation of biological process	1.00000
+GO:1990573	potassium ion import across plasma membrane	1.00000
+GO:0090407	organophosphate biosynthetic process	1.00000
+GO:0030036	actin cytoskeleton organization	1.00000

@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0001965	G-protein alpha-subunit binding	0.0083
+GO:0016971	flavin-dependent sulfhydryl oxidase activity	0.0083
+GO:0003842	L-glutamate gamma-semialdehyde dehydrogenase activity	0.0083
+GO:0030627	pre-mRNA 5'-splice site binding	0.0083
+GO:0017174	glycine N-methyltransferase activity	0.0083
+GO:1904047	S-adenosyl-L-methionine binding	0.0083
+GO:0004360	glutamine-fructose-6-phosphate transaminase (isomerizing) activity	0.0083
+GO:0043130	ubiquitin binding	0.0094
+GO:0016402	pristanoyl-CoA oxidase activity	0.0165
+GO:0016594	glycine binding	0.0165
+GO:0042500	aspartic endopeptidase activity, intramembrane cleaving	0.0247
+GO:0003785	actin monomer binding	0.0247
+GO:0004749	ribose phosphate diphosphokinase activity	0.0247
+GO:0004430	1-phosphatidylinositol 4-kinase activity	0.0247
+GO:0009982	pseudouridine synthase activity	0.0247
+GO:0032549	ribonucleoside binding	0.0328
+GO:0005504	fatty acid binding	0.0408
+GO:0061631	ubiquitin conjugating enzyme activity	0.0488
+GO:0008308	voltage-gated monoatomic anion channel activity	0.0488
+GO:0030527	structural constituent of chromatin	0.0567
+GO:0061630	ubiquitin protein ligase activity	0.0640
+GO:0042802	identical protein binding	0.0801
+GO:0003730	mRNA 3'-UTR binding	0.0801
+GO:0046982	protein heterodimerization activity	0.0953
+GO:0071949	FAD binding	0.1103
+GO:0003676	nucleic acid binding	0.1147
+GO:0003724	RNA helicase activity	0.1324
+GO:0008408	3'-5' exonuclease activity	0.1609
+GO:0031625	ubiquitin protein ligase binding	0.1749
+GO:0003714	transcription corepressor activity	0.1886
+GO:0000287	magnesium ion binding	0.2021
+GO:0008028	monocarboxylic acid transmembrane transporter activity	0.2153
+GO:0030246	carbohydrate binding	0.2601
+GO:0050660	flavin adenine dinucleotide binding	0.2906
+GO:0051015	actin filament binding	0.3368
+GO:0005085	guanyl-nucleotide exchange factor activity	0.3801
+GO:0097367	carbohydrate derivative binding	0.3881
+GO:0005515	protein binding	0.3979
+GO:0003723	RNA binding	0.4702
+GO:0016491	oxidoreductase activity	0.4857
+GO:0016757	glycosyltransferase activity	0.5393
+GO:0004674	protein serine/threonine kinase activity	0.5876
+GO:0005524	ATP binding	0.6734
+GO:0022857	transmembrane transporter activity	0.6750
+GO:0003677	DNA binding	0.9108
+GO:0046872	metal ion binding	1.0000
+GO:0016597	amino acid binding	1.0000
+GO:0003997	acyl-CoA oxidase activity	1.0000
+GO:0120545	nucleic acid conformation isomerase activity	1.0000
+GO:0005488	binding	1.0000
+GO:0061650	ubiquitin-like protein conjugating enzyme activity	1.0000
+GO:0140640	catalytic activity, acting on a nucleic acid	1.0000
+GO:0070001	aspartic-type peptidase activity	1.0000
+GO:0016301	kinase activity	1.0000
+GO:0004842	ubiquitin-protein transferase activity	1.0000
+GO:0004386	helicase activity	1.0000
+GO:0015267	channel activity	1.0000
+GO:0061659	ubiquitin-like protein ligase activity	1.0000
+GO:0017076	purine nucleotide binding	1.0000
+GO:0016634	oxidoreductase activity, acting on the CH-CH group of donors, oxygen as acceptor	1.0000
+GO:0008233	peptidase activity	1.0000
+GO:0043177	organic acid binding	1.0000
+GO:0005215	transporter activity	1.0000
+GO:0016903	oxidoreductase activity, acting on the aldehyde or oxo group of donors	1.0000
+GO:0005216	monoatomic ion channel activity	1.0000
+GO:0016740	transferase activity	1.0000
+GO:0016741	transferase activity, transferring one-carbon groups	1.0000
+GO:0008509	monoatomic anion transmembrane transporter activity	1.0000
+GO:0033293	monocarboxylic acid binding	1.0000
+GO:0004190	aspartic-type endopeptidase activity	1.0000
+GO:0001727	lipid kinase activity	1.0000
+GO:0016746	acyltransferase activity	1.0000
+GO:0060589	nucleoside-triphosphatase regulator activity	1.0000
+GO:0003824	catalytic activity	1.0000
+GO:0030234	enzyme regulator activity	1.0000
+GO:0016667	oxidoreductase activity, acting on a sulfur group of donors	1.0000
+GO:0003779	actin binding	1.0000
+GO:0019899	enzyme binding	1.0000
+GO:0030554	adenyl nucleotide binding	1.0000
+GO:0005244	voltage-gated monoatomic ion channel activity	1.0000
+GO:0008757	S-adenosylmethionine-dependent methyltransferase activity	1.0000
+GO:0005198	structural molecule activity	1.0000
+GO:0016972	thiol oxidase activity	1.0000
+GO:0032182	ubiquitin-like protein binding	1.0000
+GO:0140110	transcription regulator activity	1.0000
+GO:0008168	methyltransferase activity	1.0000
+GO:0052742	phosphatidylinositol kinase activity	1.0000
+GO:0003729	mRNA binding	1.0000
+GO:0060090	molecular adaptor activity	1.0000
+GO:0015035	protein-disulfide reductase activity	1.0000
+GO:0030674	protein-macromolecule adaptor activity	1.0000
+GO:0008092	cytoskeletal protein binding	1.0000
+GO:0015036	disulfide oxidoreductase activity	1.0000
+GO:0044877	protein-containing complex binding	1.0000
+GO:0046983	protein dimerization activity	1.0000
+GO:0016866	intramolecular transferase activity	1.0000
+GO:0003712	transcription coregulator activity	1.0000
+GO:0036002	pre-mRNA binding	1.0000
+GO:0140657	ATP-dependent activity	1.0000
+GO:0004672	protein kinase activity	1.0000

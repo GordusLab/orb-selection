@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0005730	nucleolus	0.0069
+GO:1990923	PET complex	0.0093
+GO:0008290	F-actin capping protein complex	0.0093
+GO:0032797	SMN complex	0.0093
+GO:0031429	box H/ACA snoRNP complex	0.0093
+GO:0098553	lumenal side of endoplasmic reticulum membrane	0.0185
+GO:0098554	cytoplasmic side of endoplasmic reticulum membrane	0.0185
+GO:0000243	commitment complex	0.0276
+GO:0030688	preribosome, small subunit precursor	0.0276
+GO:0002189	ribose phosphate diphosphokinase complex	0.0276
+GO:0070776	MOZ/MORF histone acetyltransferase complex	0.0276
+GO:0030479	actin cortical patch	0.0366
+GO:0030687	preribosome, large subunit precursor	0.0366
+GO:0070822	Sin3-type complex	0.0456
+GO:0017119	Golgi transport complex	0.0456
+GO:0005685	U1 snRNP	0.0456
+GO:0005665	RNA polymerase II, core complex	0.0545
+GO:0030660	Golgi-associated vesicle membrane	0.0633
+GO:0005741	mitochondrial outer membrane	0.0720
+GO:0071004	U2-type prespliceosome	0.0806
+GO:0000786	nucleosome	0.0806
+GO:0000776	kinetochore	0.1144
+GO:0030686	90S preribosome	0.1144
+GO:0000922	spindle pole	0.1389
+GO:0005777	peroxisome	0.1628
+GO:0005759	mitochondrial matrix	0.1706
+GO:0005765	lysosomal membrane	0.1784
+GO:0005813	centrosome	0.3256
+GO:0000151	ubiquitin ligase complex	0.3864
+GO:0000785	chromatin	0.4359
+GO:0005829	cytosol	0.4559
+GO:0031012	extracellular matrix	0.4925
+GO:0005783	endoplasmic reticulum	0.5498
+GO:0005737	cytoplasm	0.5584
+GO:0043005	neuron projection	0.6700
+GO:0005739	mitochondrion	0.6883
+GO:0005615	extracellular space	0.8157
+GO:0005634	nucleus	0.8398
+GO:0016020	membrane	0.9235
+GO:0031410	cytoplasmic vesicle	1.0000
+GO:0030312	external encapsulating structure	1.0000
+GO:0005789	endoplasmic reticulum membrane	1.0000
+GO:0072588	box H/ACA RNP complex	1.0000
+GO:0098687	chromosomal region	1.0000
+GO:0000775	chromosome, centromeric region	1.0000
+GO:1990904	ribonucleoprotein complex	1.0000
+GO:0070013	intracellular organelle lumen	1.0000
+GO:0000779	condensed chromosome, centromeric region	1.0000
+GO:0031966	mitochondrial membrane	1.0000
+GO:0030880	RNA polymerase complex	1.0000
+GO:0031967	organelle envelope	1.0000
+GO:0031968	organelle outer membrane	1.0000
+GO:0097525	spliceosomal snRNP complex	1.0000
+GO:0005773	vacuole	1.0000
+GO:0043231	intracellular membrane-bounded organelle	1.0000
+GO:0005774	vacuolar membrane	1.0000
+GO:0043232	intracellular membraneless organelle	1.0000
+GO:0043233	organelle lumen	1.0000
+GO:0030532	small nuclear ribonucleoprotein complex	1.0000
+GO:0000793	condensed chromosome	1.0000
+GO:0005856	cytoskeleton	1.0000
+GO:0005622	intracellular anatomical structure	1.0000
+GO:0005694	chromosome	1.0000
+GO:0120025	plasma membrane bounded cell projection	1.0000
+GO:0140535	intracellular protein-containing complex	1.0000
+GO:0055029	nuclear DNA-directed RNA polymerase complex	1.0000
+GO:0098852	lytic vacuole membrane	1.0000
+GO:0005794	Golgi apparatus	1.0000
+GO:0061695	transferase complex, transferring phosphorus-containing groups	1.0000
+GO:0005798	Golgi-associated vesicle	1.0000
+GO:0000428	DNA-directed RNA polymerase complex	1.0000
+GO:0031981	nuclear lumen	1.0000
+GO:0031982	vesicle	1.0000
+GO:0015629	actin cytoskeleton	1.0000
+GO:0031984	organelle subcompartment	1.0000
+GO:0012505	endomembrane system	1.0000
+GO:0012506	vesicle membrane	1.0000
+GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	1.0000
+GO:0097708	intracellular vesicle	1.0000
+GO:0098562	cytoplasmic side of membrane	1.0000
+GO:1990234	transferase complex	1.0000
+GO:0031974	membrane-enclosed lumen	1.0000
+GO:0032991	protein-containing complex	1.0000
+GO:0032993	protein-DNA complex	1.0000
+GO:0019867	outer membrane	1.0000
+GO:0005740	mitochondrial envelope	1.0000
+GO:0098552	side of membrane	1.0000
+GO:0000123	histone acetyltransferase complex	1.0000
+GO:0061645	endocytic patch	1.0000
+GO:0005938	cell cortex	1.0000
+GO:1902493	acetyltransferase complex	1.0000
+GO:1902494	catalytic complex	1.0000
+GO:0099080	supramolecular complex	1.0000
+GO:0031090	organelle membrane	1.0000
+GO:0042579	microbody	1.0000
+GO:0030659	cytoplasmic vesicle membrane	1.0000
+GO:0005732	sno(s)RNA-containing ribonucleoprotein complex	1.0000
+GO:0015630	microtubule cytoskeleton	1.0000
+GO:0005764	lysosome	1.0000
+GO:0034719	SMN-Sm protein complex	1.0000

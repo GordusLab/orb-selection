@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0019185	snRNA-activating protein complex	1.5e-06
+GO:0005615	extracellular space	0.00045
+GO:0034245	mitochondrial DNA-directed RNA polymerase complex	0.00744
+GO:0005901	caveola	0.01482
+GO:0005777	peroxisome	0.03193
+GO:0009897	external side of plasma membrane	0.03665
+GO:0034518	RNA cap binding complex	0.03665
+GO:0031901	early endosome membrane	0.04382
+GO:0019773	proteasome core complex, alpha-subunit complex	0.05094
+GO:0043296	apical junction complex	0.05801
+GO:0005921	gap junction	0.07199
+GO:0031012	extracellular matrix	0.08572
+GO:0016324	apical plasma membrane	0.09259
+GO:0030864	cortical actin cytoskeleton	0.09259
+GO:0005912	adherens junction	0.09936
+GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	0.09936
+GO:0009986	cell surface	0.12895
+GO:0045202	synapse	0.13091
+GO:0030134	COPII-coated ER to Golgi transport vesicle	0.14538
+GO:0005643	nuclear pore	0.17064
+GO:0005773	vacuole	0.19163
+GO:0005739	mitochondrion	0.24844
+GO:0000139	Golgi membrane	0.27015
+GO:0005764	lysosome	0.27563
+GO:0005743	mitochondrial inner membrane	0.30767
+GO:0015934	large ribosomal subunit	0.32826
+GO:0012505	endomembrane system	0.34308
+GO:0005576	extracellular region	0.38068
+GO:0043005	neuron projection	0.51527
+GO:0005789	endoplasmic reticulum membrane	0.67718
+GO:0005829	cytosol	0.72050
+GO:0005886	plasma membrane	0.92981
+GO:0005737	cytoplasm	0.95219
+GO:0016020	membrane	0.98549
+GO:0005634	nucleus	0.99984
+GO:0005938	cell cortex	1.00000
+GO:0031090	organelle membrane	1.00000
+GO:1990904	ribonucleoprotein complex	1.00000
+GO:0042995	cell projection	1.00000
+GO:0045121	membrane raft	1.00000
+GO:0015629	actin cytoskeleton	1.00000
+GO:0030312	external encapsulating structure	1.00000
+GO:0140535	intracellular protein-containing complex	1.00000
+GO:0044391	ribosomal subunit	1.00000
+GO:0030054	cell junction	1.00000
+GO:0031410	cytoplasmic vesicle	1.00000
+GO:1905368	peptidase complex	1.00000
+GO:0005839	proteasome core complex	1.00000
+GO:1905369	endopeptidase complex	1.00000
+GO:0005622	intracellular anatomical structure	1.00000
+GO:0098552	side of membrane	1.00000
+GO:0110165	cellular anatomical structure	1.00000
+GO:0061695	transferase complex, transferring phosphorus-containing groups	1.00000
+GO:0030880	RNA polymerase complex	1.00000
+GO:0030135	coated vesicle	1.00000
+GO:1902494	catalytic complex	1.00000
+GO:0005768	endosome	1.00000
+GO:0098590	plasma membrane region	1.00000
+GO:0005769	early endosome	1.00000
+GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	1.00000
+GO:0012506	vesicle membrane	1.00000
+GO:0005667	transcription regulator complex	1.00000
+GO:0043231	intracellular membrane-bounded organelle	1.00000
+GO:0043232	intracellular membraneless organelle	1.00000
+GO:0000323	lytic vacuole	1.00000
+GO:0098588	bounding membrane of organelle	1.00000
+GO:0010008	endosome membrane	1.00000
+GO:0005740	mitochondrial envelope	1.00000
+GO:0005911	cell-cell junction	1.00000
+GO:0031966	mitochondrial membrane	1.00000
+GO:0031967	organelle envelope	1.00000
+GO:0098827	endoplasmic reticulum subcompartment	1.00000
+GO:0071944	cell periphery	1.00000
+GO:0097708	intracellular vesicle	1.00000
+GO:0070161	anchoring junction	1.00000
+GO:0120025	plasma membrane bounded cell projection	1.00000
+GO:0005794	Golgi apparatus	1.00000
+GO:0005575	cellular_component	1.00000
+GO:0140513	nuclear protein-containing complex	1.00000
+GO:0005783	endoplasmic reticulum	1.00000
+GO:0098798	mitochondrial protein-containing complex	1.00000
+GO:0032991	protein-containing complex	1.00000
+GO:0044853	plasma membrane raft	1.00000
+GO:1990234	transferase complex	1.00000
+GO:0005840	ribosome	1.00000
+GO:0005635	nuclear envelope	1.00000
+GO:0043226	organelle	1.00000
+GO:0019866	organelle inner membrane	1.00000
+GO:0031982	vesicle	1.00000
+GO:0005856	cytoskeleton	1.00000
+GO:0043227	membrane-bounded organelle	1.00000
+GO:0030863	cortical cytoskeleton	1.00000
+GO:0098857	membrane microdomain	1.00000
+GO:0043228	membraneless organelle	1.00000
+GO:0000428	DNA-directed RNA polymerase complex	1.00000
+GO:0031984	organelle subcompartment	1.00000
+GO:0043229	intracellular organelle	1.00000
+GO:0042579	microbody	1.00000
+GO:0030659	cytoplasmic vesicle membrane	1.00000
+GO:0000502	proteasome complex	1.00000

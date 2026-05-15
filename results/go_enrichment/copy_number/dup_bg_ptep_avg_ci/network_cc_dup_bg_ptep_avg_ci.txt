@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:1990923	PET complex	0.0095
+GO:0016533	protein kinase 5 complex	0.0095
+GO:0017146	NMDA selective glutamate receptor complex	0.0095
+GO:0043005	neuron projection	0.0115
+GO:0031463	Cul3-RING ubiquitin ligase complex	0.0188
+GO:0008290	F-actin capping protein complex	0.0188
+GO:0005741	mitochondrial outer membrane	0.0266
+GO:0048179	activin receptor complex	0.0281
+GO:0030479	actin cortical patch	0.0464
+GO:0031080	nuclear pore outer ring	0.0464
+GO:0042765	GPI-anchor transamidase complex	0.0464
+GO:0030426	growth cone	0.0555
+GO:0070822	Sin3-type complex	0.0555
+GO:0032797	SMN complex	0.0555
+GO:0016514	SWI/SNF complex	0.0733
+GO:0031901	early endosome membrane	0.0821
+GO:0008076	voltage-gated potassium channel complex	0.0821
+GO:0035102	PRC1 complex	0.0908
+GO:0000786	nucleosome	0.0908
+GO:0048471	perinuclear region of cytoplasm	0.1164
+GO:0033176	proton-transporting V-type ATPase complex	0.1164
+GO:0016020	membrane	0.1200
+GO:0030687	preribosome, large subunit precursor	0.1413
+GO:0000118	histone deacetylase complex	0.1709
+GO:0005793	endoplasmic reticulum-Golgi intermediate compartment	0.1734
+GO:0005778	peroxisomal membrane	0.1813
+GO:0005777	peroxisome	0.2019
+GO:0005759	mitochondrial matrix	0.2127
+GO:0016592	mediator complex	0.2268
+GO:0030134	COPII-coated ER to Golgi transport vesicle	0.2342
+GO:0030424	axon	0.2596
+GO:0043235	receptor complex	0.2894
+GO:0045202	synapse	0.3251
+GO:0043231	intracellular membrane-bounded organelle	0.3791
+GO:0005829	cytosol	0.4081
+GO:0031966	mitochondrial membrane	0.5242
+GO:0005634	nucleus	0.6256
+GO:0005730	nucleolus	0.7497
+GO:0005886	plasma membrane	0.7558
+GO:0005739	mitochondrion	0.7967
+GO:0005783	endoplasmic reticulum	0.7992
+GO:0005794	Golgi apparatus	0.9116
+GO:0005576	extracellular region	0.9625
+GO:0005737	cytoplasm	0.9962
+GO:0031410	cytoplasmic vesicle	1.0000
+GO:0005789	endoplasmic reticulum membrane	1.0000
+GO:0010008	endosome membrane	1.0000
+GO:1990904	ribonucleoprotein complex	1.0000
+GO:0070013	intracellular organelle lumen	1.0000
+GO:0031967	organelle envelope	1.0000
+GO:0031968	organelle outer membrane	1.0000
+GO:0000151	ubiquitin ligase complex	1.0000
+GO:0000152	nuclear ubiquitin ligase complex	1.0000
+GO:0043232	intracellular membraneless organelle	1.0000
+GO:0043233	organelle lumen	1.0000
+GO:0005856	cytoskeleton	1.0000
+GO:0005622	intracellular anatomical structure	1.0000
+GO:0150034	distal axon	1.0000
+GO:0005694	chromosome	1.0000
+GO:0120025	plasma membrane bounded cell projection	1.0000
+GO:0140534	endoplasmic reticulum protein-containing complex	1.0000
+GO:0140535	intracellular protein-containing complex	1.0000
+GO:0030427	site of polarized growth	1.0000
+GO:1905368	peptidase complex	1.0000
+GO:1905369	endopeptidase complex	1.0000
+GO:0061695	transferase complex, transferring phosphorus-containing groups	1.0000
+GO:0031461	cullin-RING ubiquitin ligase complex	1.0000
+GO:0031981	nuclear lumen	1.0000
+GO:0031982	vesicle	1.0000
+GO:0015629	actin cytoskeleton	1.0000
+GO:0034702	monoatomic ion channel complex	1.0000
+GO:0031984	organelle subcompartment	1.0000
+GO:0012505	endomembrane system	1.0000
+GO:0034703	cation channel complex	1.0000
+GO:0012506	vesicle membrane	1.0000
+GO:0042175	nuclear outer membrane-endoplasmic reticulum membrane network	1.0000
+GO:0034705	potassium channel complex	1.0000
+GO:0097708	intracellular vesicle	1.0000
+GO:0098796	membrane protein complex	1.0000
+GO:0098797	plasma membrane protein complex	1.0000
+GO:0098533	ATPase dependent transmembrane transport complex	1.0000
+GO:0005643	nuclear pore	1.0000
+GO:1990234	transferase complex	1.0000
+GO:0031974	membrane-enclosed lumen	1.0000
+GO:1902911	protein kinase complex	1.0000
+GO:0031903	microbody membrane	1.0000
+GO:0032991	protein-containing complex	1.0000
+GO:1904949	ATPase complex	1.0000
+GO:0032993	protein-DNA complex	1.0000
+GO:0019867	outer membrane	1.0000
+GO:0005740	mitochondrial envelope	1.0000
+GO:0030054	cell junction	1.0000
+GO:0098802	plasma membrane signaling receptor complex	1.0000
+GO:0061645	endocytic patch	1.0000
+GO:0005938	cell cortex	1.0000
+GO:0098878	neurotransmitter receptor complex	1.0000
+GO:0008303	caspase complex	1.0000
+GO:0031519	PcG protein complex	1.0000
+GO:1902494	catalytic complex	1.0000
+GO:0031090	organelle membrane	1.0000

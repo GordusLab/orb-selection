@@ -1,0 +1,18 @@
+Description	Count	p	Ontology
+protein glycosylation	2	0.0290	bp
+axon guidance	2	0.0385	bp
+tetrahydrobiopterin biosynthetic process	1	0.0438	bp
+positive regulation of canonical Wnt signaling pathway	1	0.0438	bp
+ribosomal large subunit export from nucleus	1	0.0438	bp
+fucosylation	1	0.0438	bp
+attachment of GPI anchor to protein	1	0.0438	bp
+endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	1	0.0438	bp
+positive regulation of transcription by RNA polymerase II	3	0.0445	bp
+neuron projection	6	0.0115	cc
+mitochondrial outer membrane	2	0.0266	cc
+actin cortical patch	1	0.0464	cc
+nuclear pore outer ring	1	0.0464	cc
+GPI-anchor transamidase complex	1	0.0464	cc
+ABC-type transporter activity	2	0.0230	mf
+cyclin-dependent protein serine/threonine kinase activator activity	1	0.0447	mf
+actin monomer binding	1	0.0447	mf

@@ -1,0 +1,20 @@
+Description	Count	p	Ontology
+snRNA transcription by RNA polymerase II	3	5.1e-06	bp
+response to hydrogen peroxide	2	0.00065	bp
+hydrogen peroxide catabolic process	2	0.00136	bp
+proteolysis	6	0.01586	bp
+synaptic vesicle endocytosis	1	0.04856	bp
+proteasome assembly	1	0.04856	bp
+mannose metabolic process	1	0.04856	bp
+extracellular space	6	0.00045	cc
+peroxisome	2	0.03193	cc
+external side of plasma membrane	1	0.03665	cc
+RNA cap binding complex	1	0.03665	cc
+early endosome membrane	1	0.04382	cc
+sequence-specific DNA binding	7	0.00018	mf
+serine-type endopeptidase inhibitor activity	2	0.00591	mf
+hydrolase activity	13	0.00664	mf
+serine-type endopeptidase activity	3	0.00973	mf
+neurexin family protein binding	1	0.04143	mf
+nuclear localization sequence binding	1	0.04951	mf
+adenosine deaminase activity	1	0.04951	mf

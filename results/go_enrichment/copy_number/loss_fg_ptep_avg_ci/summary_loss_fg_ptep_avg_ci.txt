@@ -1,0 +1,13 @@
+Description	Count	p	Ontology
+ubiquitin-dependent protein catabolic process	3	0.0349	bp
+intra-Golgi vesicle-mediated transport	1	0.0425	bp
+mitochondrial respiratory chain complex I assembly	1	0.0425	bp
+S-adenosylmethionine metabolic process	1	0.0425	bp
+nucleolus	4	0.0069	cc
+Sin3-type complex	1	0.0456	cc
+Golgi transport complex	1	0.0456	cc
+U1 snRNP	1	0.0456	cc
+ubiquitin binding	2	0.0094	mf
+fatty acid binding	1	0.0408	mf
+ubiquitin conjugating enzyme activity	1	0.0488	mf
+voltage-gated monoatomic anion channel activity	1	0.0488	mf

@@ -15,6 +15,7 @@ def plot_omega_distributions(
         numeral="",
         suptitle=None,
         filename=None,
+        xlim_max=100000,
         shift_top_title=False,
         transparent=True
         ):
@@ -87,7 +88,7 @@ def plot_omega_distributions(
         fig, axs = plt.subplots(6,1, sharex=True, height_ratios=[hra,0.2,hrb,hrc,0.2,hrd], figsize=(6,5))
 
         plt.subplots_adjust(hspace=0)
-        plt.xlim(0.001, 100000)
+        plt.xlim(0.001, xlim_max)
         plt.xscale('log')
         plt.rcParams['font.family'] = 'Verdana'
 
@@ -275,7 +276,7 @@ def plot_omega_distributions(
         fig, axs = plt.subplots(2,1, sharex=True, figsize=(6,5))
 
         plt.subplots_adjust(hspace=0)
-        plt.xlim(0.001, 100000)
+        plt.xlim(0.001, xlim_max)
         plt.xscale('log')
         plt.rcParams['font.family'] = 'Verdana'
 

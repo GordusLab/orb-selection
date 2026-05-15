@@ -471,23 +471,6 @@ class PermulationTestResults:
             f"{locs_dir}/dup_universe_locs.txt",
         )
 
-    @staticmethod
-    def _fmt_stat(value: float, ndigits: int = 2) -> str:
-        """Format a float while normalizing negative zero to positive zero."""
-        rounded = round(float(value), ndigits)
-        if rounded == 0.0:
-            rounded = 0.0
-        return f"{rounded:.{ndigits}f}"
-
-    @staticmethod
-    def _fmt_ci(ci_values, ndigits: int = 3) -> str:
-        """Format CI vectors like [lower, upper] with fixed precision."""
-        ci_arr = np.asarray(ci_values, dtype=float).flatten()
-        if ci_arr.size == 0:
-            return "[]"
-        formatted = ", ".join(f"{x:.{ndigits}f}" for x in ci_arr)
-        return f"[{formatted}]"
-
     def _count_species_of_interest_hits(self, species_name):
         return {
             key: filter_for_sp_of_interest(

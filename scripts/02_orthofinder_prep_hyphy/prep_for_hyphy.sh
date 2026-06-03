@@ -7,24 +7,24 @@
 #SBATCH --output=reports/%x/%A_%a.out
 
 module load anaconda
-CONDA_ENV_PATH=${CONDA_ENV_PATH:-selection}
+CONDA_ENV_PATH=PATH_TO_CONDA_ENV
 conda activate "$CONDA_ENV_PATH"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 #make directory to store slurm reports
-REPORT_DIR=${REPORT_DIR:-$REPO_ROOT/results/slurm_reports}
+REPORT_DIR=PATH_TO_REPORT_DIR
 mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
 
-WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
+WD=PATH_TO_EXTERNAL_WORK_DIR
 
 #directory containing fasta files of cds to be analyzed
-HOG_CDS_DIR=${WD}/HOG_CDS
+HOG_CDS_DIR=PATH_TO_HOG_CDS_DIR
 
 #list of HOG IDs from directory of fasta files
-HOG_LIST=${HOG_LIST:-${HOG_CDS_DIR}/redo_hogs_max_rsc.txt}
-MACSE_JAR=${MACSE_JAR:-PATH_TO_MACSE_JAR}
+HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
+MACSE_JAR=PATH_TO_MACSE_JARFILE
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 mkdir -p ${WD}/${CURRENT_HOG}/

@@ -6,21 +6,23 @@
 #SBATCH --output=reports/%x/%A_%a.out
 
 module load anaconda
-CONDA_ENV_PATH=${CONDA_ENV_PATH:-selection}
+CONDA_ENV_PATH=PATH_TO_CONDA_ENV
 conda activate "$CONDA_ENV_PATH"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 #make directory to store slurm reports
-REPORT_DIR=${REPORT_DIR:-$REPO_ROOT/results/slurm_reports}
+REPORT_DIR=PATH_TO_REPORT_DIR
 mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
 
-WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
-HOG_LIST=${HOG_LIST:-${WD}/HOG_CDS/N5.udiv.o75_list.txt}
-FG_LIST=${FG_LIST:-$REPO_ROOT/assets/non-orbweavers-list.txt}
+WD=PATH_TO_EXTERNAL_WORK_DIR
+HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
+FG_LIST=${FG_LIST:-$REPO_ROOT/data/non-orbweavers-list.txt}
 FG_NAME=nonorb_fg
-HYPHY_ANALYSES_DIR=${HYPHY_ANALYSES_DIR:-PATH_TO_HYPHY_ANALYSES_DIR}
+
+#path to hyphy analyses repo clone: https://github.com/veg/hyphy-analyses/
+HYPHY_ANALYSES_DIR=PATH_TO_HYPHY_ANALYSES_DIR_CLONE
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 

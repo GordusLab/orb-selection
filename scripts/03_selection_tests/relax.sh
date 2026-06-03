@@ -6,18 +6,19 @@
 #SBATCH -n 12
 #SBATCH --output=reports/%x/%A_%a.out
 
-#make directory to store slurm reports
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-REPORT_DIR=${REPORT_DIR:-$REPO_ROOT/results/slurm_reports}
+
+#make directory to store slurm reports
+REPORT_DIR=PATH_TO_REPORT_DIR
 mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
 
 module load anaconda
-CONDA_ENV_PATH=${CONDA_ENV_PATH:-selection}
+CONDA_ENV_PATH=PATH_TO_CONDA_ENV
 conda activate "$CONDA_ENV_PATH"
 
 WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
-HOG_LIST=${HOG_LIST:-${WD}/HOG_CDS/N5.udiv.o75_list.txt}
+HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
 FG_NAME=ow_fg_cons
 
 if [ -n "${SLURM_ARRAY_TASK_ID:-}" ]; then

@@ -5,16 +5,17 @@ library(phylolm)
 library(ape)
 library(foreach)
 library(doParallel)
+library(here)
 
 # Read in species tree
-treefile = "/home/crunnel2/orb-selection/data/SpeciesTree_full_brlen.nwk"
+treefile = here("data", "SpeciesTree_full_brlen.nwk")
 speciesTree <- read.tree(treefile)
 
 # Read gene count table
-gene_counts <- read_tsv("/home/crunnel2/orb-selection/data/N5.GeneCount.tsv")
+gene_counts <- read_tsv(here("data", "N5.GeneCount.tsv"))
 
 # Read orb-weaver species list
-orb_weavers <- read_lines("/home/crunnel2/orb-selection/data/orbweavers-list.txt")
+orb_weavers <- read_lines(here("data", "orbweavers-list.txt"))
 
 # Drop species columns with all zeros
 species_cols <- gene_counts %>%
@@ -57,7 +58,7 @@ speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, 
 # Parallelized phyloglm regressions for gene duplication
 
 # Create temp directory for results
-tmp_dir <- "/scratch4/agordus1/crunnel2/tmp_continuous"
+tmp_dir # <- PATH_TO_TEMP_DIR
 if (!dir.exists(tmp_dir)) dir.create(tmp_dir, recursive = TRUE)
 
 # Helper to combine temp files into a CSV
@@ -82,7 +83,7 @@ registerDoParallel(cl)
 unique_genes <- unique(long_df$HOG)
 
 # Progress file setup
-progress_file <- "/scratch4/agordus1/crunnel2/phyloglm_progress_continuous.txt"
+progress_file <- here("data", "phyloglm_progress_continuous.txt")
 if (file.exists(progress_file)) file.remove(progress_file)
 file.create(progress_file)
 
@@ -155,16 +156,16 @@ stopCluster(cl)
 cat("Finished parallelized phyloglm regressions for gene count (continuous).\n")
 
 # Combine temp files into final CSV
-combine_tmp_results(tmp_dir, "/home/crunnel2/orb-selection/results/phyloglm_continuous.csv")
+combine_tmp_results(tmp_dir, here("results", "phyloglm_continuous.csv"))
 
 # Calculate Storey FDR (q-values) and save updated CSV
 library(qvalue)
-results <- read.csv("/home/crunnel2/orb-selection/results/phyloglm_continuous.csv")
+results <- read.csv(here("results", "phyloglm_continuous.csv"))
 if ("coef_orb_weavingTRUE_p.value" %in% colnames(results)) {
   pvals <- results$coef_orb_weavingTRUE_p.value
   qobj <- qvalue(p = pvals)
   results$qvalue <- qobj$qvalues
-  write.csv(results, "/home/crunnel2/orb-selection/results/phyloglm_continuous_qvals.csv", row.names = FALSE)
+  write.csv(results, here("results", "phyloglm_continuous_qvals.csv"), row.names = FALSE)
 } else {
   warning("Could not find p-value column 'coef_orb_weavingTRUE_p.value' in results. Please update the column name in the script.")
 }

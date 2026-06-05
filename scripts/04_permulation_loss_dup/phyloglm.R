@@ -83,7 +83,7 @@ registerDoParallel(cl)
 unique_genes <- unique(long_df$HOG)
 
 # Progress file setup
-progress_file <- here("data", "phyloglm_progress_continuous.txt")
+progress_file <- here("data", "phyloglm_progress.txt")
 if (file.exists(progress_file)) file.remove(progress_file)
 file.create(progress_file)
 
@@ -153,19 +153,19 @@ print(dup_time)
 
 stopCluster(cl)
 
-cat("Finished parallelized phyloglm regressions for gene count (continuous).\n")
+cat("Finished parallelized phyloglm regressions for gene count (discrete).\n")
 
 # Combine temp files into final CSV
-combine_tmp_results(tmp_dir, here("results", "phyloglm_continuous.csv"))
+combine_tmp_results(tmp_dir, here("results", "phyloglm.csv"))
 
 # Calculate Storey FDR (q-values) and save updated CSV
 library(qvalue)
-results <- read.csv(here("results", "phyloglm_continuous.csv"))
+results <- read.csv(here("results", "phyloglm.csv"))
 if ("coef_orb_weavingTRUE_p.value" %in% colnames(results)) {
   pvals <- results$coef_orb_weavingTRUE_p.value
   qobj <- qvalue(p = pvals)
   results$qvalue <- qobj$qvalues
-  write.csv(results, here("results", "phyloglm_continuous_qvals.csv"), row.names = FALSE)
+  write.csv(results, here("results", "phyloglm_qvals.csv"), row.names = FALSE)
 } else {
   warning("Could not find p-value column 'coef_orb_weavingTRUE_p.value' in results. Please update the column name in the script.")
 }

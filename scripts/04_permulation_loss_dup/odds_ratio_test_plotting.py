@@ -3,7 +3,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-import plot_split_helpers as psh
 from matplotlib.lines import Line2D
 from scipy.stats import norm
 
@@ -369,39 +368,6 @@ def plot_permulation_hist_overlay(
     fig.tight_layout()
     return fig, ax
 
-
-def _draw_y_axis_break_marks(ax_top, ax_bottom, dx=0.012, angle_deg=55.0):
-    """Compatibility wrapper around shared split-axis break mark helper."""
-    psh.draw_y_axis_break_marks(ax_top, ax_bottom, dx=dx, angle_deg=angle_deg)
-
-
-def _compute_shared_split_tick_step(lower_ylim, upper_ylim, tick_count=4):
-    """Compatibility wrapper around shared split-axis tick-step helper."""
-    return psh.compute_shared_split_tick_step(
-        lower_ylim,
-        upper_ylim,
-        tick_count=tick_count,
-    )
-
-
-def _split_axis_ticks(lower_ylim, upper_ylim, tick_count=4):
-    """Compatibility wrapper around shared split-axis tick generator."""
-    return psh.split_axis_ticks(
-        lower_ylim,
-        upper_ylim,
-        tick_count=tick_count,
-    )
-
-
-def _resolve_split_height_ratios(lower_ylim, upper_ylim, split_y_height_ratios):
-    """Compatibility wrapper around shared split-axis panel-height helper."""
-    return psh.resolve_split_height_ratios(
-        lower_ylim,
-        upper_ylim,
-        split_y_height_ratios,
-    )
-
-
 def plot_permulation_stats(
     results,
     test,
@@ -419,10 +385,6 @@ def plot_permulation_stats(
     ylim=None,
     binwidth=None,
     show_legend=True,
-    split_y_axis=False,
-    split_y_lims=None,
-    split_y_height_ratios="auto",
-    split_y_tick_count=4,
 ):
     # Normalize test parameter: allow "loss", "dup", or "duplication"
     if test == "duplication":
@@ -436,41 +398,9 @@ def plot_permulation_stats(
     ncols = 2 if include_stddev else 1
     fig_width = 12 if include_stddev else 6.5
 
-    if split_y_axis:
-        if split_y_lims is None:
-            raise ValueError(
-                "split_y_lims is required when split_y_axis=True. "
-                "Pass ((lower_min, lower_max), (upper_min, upper_max))."
-            )
-        if len(split_y_lims) != 2:
-            raise ValueError(
-                "split_y_lims must contain two ranges: "
-                "((lower_min, lower_max), (upper_min, upper_max))."
-            )
 
-        resolved_height_ratios = _resolve_split_height_ratios(
-            split_y_lims[0], split_y_lims[1], split_y_height_ratios
-        )
-
-        fig = plt.figure(figsize=(fig_width, 6.5))
-        gs = fig.add_gridspec(
-            2,
-            ncols,
-            height_ratios=resolved_height_ratios,
-            hspace=0.05,
-            wspace=0.25,
-        )
-        top_axes = []
-        bottom_axes = []
-        for col in range(ncols):
-            ax_top = fig.add_subplot(gs[0, col])
-            ax_bottom = fig.add_subplot(gs[1, col], sharex=ax_top)
-            top_axes.append(ax_top)
-            bottom_axes.append(ax_bottom)
-        axs = np.atleast_1d(bottom_axes)
-    else:
-        fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
-        axs = np.atleast_1d(axs)
+    fig, axs = plt.subplots(1, ncols, figsize=(fig_width, 5))
+    axs = np.atleast_1d(axs)
     means = getattr(results, f"means_{test}")
     stddevs = getattr(results, f"stddevs_{test}")
     true_mean = getattr(results, f"true_mean_{test}")
@@ -492,68 +422,53 @@ def plot_permulation_stats(
             fontsize=16,
         )
 
-    if split_y_axis:
-        means_axes = (top_axes[0], bottom_axes[0])
-        for ax in means_axes:
-            plot_stat_histogram(ax, means, binwidth, hist_color, hist_alpha, edgecolor)
-            ax.axvline(
-                x=getattr(results, f"{test}_mean_av"),
-                linestyle="dotted",
-                color="black",
-                label="Avg. permulated mean",
-            )
-            ax.axvline(
-                x=true_mean,
-                linestyle="--",
-                color="salmon",
-                label="True mean",
-            )
+    plot_stat_histogram(axs[0], means, binwidth, hist_color, hist_alpha, edgecolor)
 
-        ax_top, ax_bottom = means_axes
-        if subplot_titles:
-            ax_top.set_title("permulated means")
-        ax_bottom.set_xlabel("Means", fontsize=axis_label_fontsize, fontweight="bold")
-        ax_bottom.set_ylabel("Count", fontsize=axis_label_fontsize, fontweight="bold")
-        if xlim is not None:
-            ax_top.set_xlim(xlim)
-            ax_bottom.set_xlim(xlim)
-        ax_bottom.set_ylim(split_y_lims[0])
-        ax_top.set_ylim(split_y_lims[1])
+    if subplot_titles:
+        axs[0].set_title("permulated means")
+    axs[0].axvline(
+        x=getattr(results, f"{test}_mean_av"),
+        linestyle="dotted",
+        color="black",
+        label="Avg. permulated mean",
+    )
+    axs[0].axvline(
+        x=true_mean,
+        linestyle="--",
+        color="salmon",
+        label="True mean",
+    )
+    style_stat_axes(
+        axs[0],
+        xlabel="Means",
+        axis_label_fontsize=axis_label_fontsize,
+        legend_fontsize=legend_fontsize,
+        xlim=xlim,
+        ylim=ylim,
+        show_legend=show_legend,
+    )
 
-        lower_ticks, upper_ticks = _split_axis_ticks(
-            split_y_lims[0], split_y_lims[1], tick_count=split_y_tick_count
-        )
-        ax_bottom.set_yticks(lower_ticks)
-        ax_top.set_yticks(upper_ticks)
-
-        ax_top.set_ylabel("")
-        if show_legend:
-            ax_top.legend(fontsize=legend_fontsize)
-        ax_top.spines["bottom"].set_visible(False)
-        ax_bottom.spines["top"].set_visible(False)
-        ax_top.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
-        ax_bottom.tick_params(axis="x", which="both", top=False)
-        _draw_y_axis_break_marks(ax_top, ax_bottom)
-    else:
-        plot_stat_histogram(axs[0], means, binwidth, hist_color, hist_alpha, edgecolor)
+    if include_stddev:
+        plot_stat_histogram(axs[1], stddevs, binwidth, hist_color, hist_alpha, edgecolor)
 
         if subplot_titles:
-            axs[0].set_title("permulated means")
-        axs[0].axvline(
-            x=getattr(results, f"{test}_mean_av"),
+            axs[1].set_title("Standard deviations")
+
+        axs[1].axvline(
+            x=getattr(results, f"{test}_stddev_av"),
             linestyle="dotted",
             color="black",
-            label="Avg. permulated mean",
+            label="Avg. permulated stddev",
         )
-        axs[0].axvline(
-            x=true_mean,
+        axs[1].axvline(
+            x=true_stddev,
             linestyle="--",
             color="salmon",
-            label="True mean",
+            label="True stddev",
         )
         style_stat_axes(
-            axs[0],
-            xlabel="Means",
+            axs[1],
+            xlabel="Standard deviations",
             axis_label_fontsize=axis_label_fontsize,
             legend_fontsize=legend_fontsize,
             xlim=xlim,
@@ -561,83 +476,7 @@ def plot_permulation_stats(
             show_legend=show_legend,
         )
 
-    if include_stddev:
-        if split_y_axis:
-            std_axes = (top_axes[1], bottom_axes[1])
-            for ax in std_axes:
-                plot_stat_histogram(ax, stddevs, binwidth, hist_color, hist_alpha, edgecolor)
-                ax.axvline(
-                    x=getattr(results, f"{test}_stddev_av"),
-                    linestyle="dotted",
-                    color="black",
-                    label="Avg. permulated stddev",
-                )
-                ax.axvline(
-                    x=true_stddev,
-                    linestyle="--",
-                    color="salmon",
-                    label="True stddev",
-                )
-
-            ax_top, ax_bottom = std_axes
-            if subplot_titles:
-                ax_top.set_title("Standard deviations")
-            ax_bottom.set_xlabel(
-                "Standard deviations", fontsize=axis_label_fontsize, fontweight="bold"
-            )
-            ax_bottom.set_ylabel("Count", fontsize=axis_label_fontsize, fontweight="bold")
-            if xlim is not None:
-                ax_top.set_xlim(xlim)
-                ax_bottom.set_xlim(xlim)
-            ax_bottom.set_ylim(split_y_lims[0])
-            ax_top.set_ylim(split_y_lims[1])
-
-            lower_ticks, upper_ticks = _split_axis_ticks(
-                split_y_lims[0], split_y_lims[1], tick_count=split_y_tick_count
-            )
-            ax_bottom.set_yticks(lower_ticks)
-            ax_top.set_yticks(upper_ticks)
-
-            ax_top.set_ylabel("")
-            if show_legend:
-                ax_top.legend(fontsize=legend_fontsize)
-            ax_top.spines["bottom"].set_visible(False)
-            ax_bottom.spines["top"].set_visible(False)
-            ax_top.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
-            ax_bottom.tick_params(axis="x", which="both", top=False)
-            _draw_y_axis_break_marks(ax_top, ax_bottom)
-        else:
-            plot_stat_histogram(axs[1], stddevs, binwidth, hist_color, hist_alpha, edgecolor)
-
-            if subplot_titles:
-                axs[1].set_title("Standard deviations")
-
-            axs[1].axvline(
-                x=getattr(results, f"{test}_stddev_av"),
-                linestyle="dotted",
-                color="black",
-                label="Avg. permulated stddev",
-            )
-            axs[1].axvline(
-                x=true_stddev,
-                linestyle="--",
-                color="salmon",
-                label="True stddev",
-            )
-            style_stat_axes(
-                axs[1],
-                xlabel="Standard deviations",
-                axis_label_fontsize=axis_label_fontsize,
-                legend_fontsize=legend_fontsize,
-                xlim=xlim,
-                ylim=ylim,
-                show_legend=show_legend,
-            )
-
-    if split_y_axis:
-        fig.subplots_adjust(top=0.92, bottom=0.12)
-    else:
-        plt.tight_layout()
+    plt.tight_layout()
     return fig, axs
 
 

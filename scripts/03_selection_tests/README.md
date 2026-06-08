@@ -174,22 +174,6 @@ results_with_locs = convert_hyphy_results_to_locs(filtered.results_df)
 results_with_locs.to_csv('results/relax_significant_with_locs.csv', index=False)
 ```
 
-## Running Tests
-
-Test the module with sample data:
-
-```bash
-cd orb-selection/tests
-python test_hyphy_module.py
-```
-
-Run the project parsing script on real data (update paths as needed):
-
-```bash
-cd orb-selection/scripts/03_selection_tests
-python parse_hyphy_results.py
-```
-
 ## Dependencies
 
 The module requires:

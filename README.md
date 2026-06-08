@@ -8,11 +8,11 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |Directory / Filename|Description|
 |---|---|
 |`data/`| Raw and intermediate data files used in the pipeline, _e.g._ OrthoFinder outputs, BUSCO scores, lists of species belonging to different categories, lists of HOGs tested in the HyPhy analyses, permulation-generated phenotype designations, and resources used to annotate results.|
-|`figures/`| PDFs and Adobe Illustrator files of all figures and figure elements output by the figure-generating notebooks in [`scripts/06_figures_tables`](scripts/06_figures_tables).|
-|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/05_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)). |
+|`figures/`| PDF files of all figures and figure elements output by the figure-generating notebooks in [`scripts/06_figures_tables`](scripts/07_figures_tables).|
+|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/05_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM. |
 |`scripts/`| Full analysis pipeline divided into stages following the paper's methods section. See below for a complete description of the steps required for each stage of the analysis.|
 |`src/` | Contains helper modules used in various stages of the analysis. |
-|`README.md`|Top-level project overview, pipeline stage documentation, and usage notes.|
+|`README.md`| Top-level project overview, pipeline stage documentation, and usage notes.|
 |`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
 |`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
 |`.Rprofile`|Project-level R startup settings.|
@@ -76,26 +76,33 @@ The scripts and notebooks in [`scripts/04_permulation_loss_dup`](scripts/04_perm
 ### Steps:
 1. Generate and export permulation tip assignments: [`permulations.R`](scripts/04_permulation_loss_dup/permulations.R)
 2. Run loss/duplication odds-ratio test module [`odds_ratio_test.py`](scripts/04_permulation_loss_dup/odds_ratio_test.py) using the workflow in the [`Odds Ratio Permulation Test.ipynb`](scripts/04_permulation_loss_dup/Odds%20Ratio%20Permulation%20Test.ipynb) notebook
-3. Test whether the log odds ratio distributions are better modeled as double, triple or quadruple Gaussian: [`Multimodal Test.ipynb`](scripts/04_permulation_loss_dup/Multimodal%20Test.ipynb)
-
-`TODO_ADD_REMOVED_CLADES_VERSIONS`
 
 Data note: Stage 04 uses some cached pickle inputs/outputs that are external to this repository due to size.
 
-## Stage 05: Ontology enrichment analysis
+## Stage 05: Phylogenetic regression
 
-The scripts in [`scripts/05_enrichment`](scripts/05_enrichment) create significant gene ID lists from HyPhy and `odds_ratio_test.py` results and run GO enrichment summaries.
+The script and notebook in [`scripts/05_phyloglm`](scripts/05_phyloglm) fit a phylogenetic generalized linear model to each gene and evaluate the results. 
+
+### Steps: 
+1. Run phyloglm analysis in parallel on ~12000 genes: [`phyloglm.R`](scripts/05_phyloglm/phyloglm.R)
+2. Inspect significant results: [`PhyloGLM Analysis.ipynb`](scripts/05_phyloglm/PhyloGLM%20Analysis.R)
+
+## Stage 06: Ontology enrichment analysis
+
+The scripts in [`scripts/06_enrichment`](scripts/06_enrichment) create significant gene ID lists from HyPhy and `odds_ratio_test.py` results and run GO enrichment summaries.
 
 ### Steps:
-1. Generate significant ID list files for downstream enrichment: [`generate_significant_gene_id_lists.sh`](scripts/05_enrichment/generate_significant_gene_id_lists.sh)
-2. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/05_enrichment/go_enrichment.R)
-3. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/05_enrichment/summarise_topgo_output.sh)
+1. Make BLAST db from the [_P. tepidariorum_ genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_043381705.1/)
+2. Run [`annotate_ogroups_vs_ref.py`](scripts/06_enrichment/annotate_ogroups_vs_ref.py) to determine best BLAST hit for each orthogroup from the _P. tepidariorum_ for enrichment of significant gene sets for orthogroups more commonly found in non-orb-weavers
+3. Helper functions to generate significant ID list files for downstream enrichment: [`get_gene_id_lists.py`](scripts/05_enrichment/get_gene_id_lists.py)
+3. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/05_enrichment/go_enrichment.R)
+4. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/05_enrichment/summarise_topgo_output.sh)
 
-Data note: Stage 05 depends on cached HyPhy and odds ratio test result objects for hit-list generation.
+Data note: Stage 06 depends on cached HyPhy and odds ratio test result objects for hit-list generation.
 
-## Stage 06: Figures and tables
+## Stage 07: Figures and tables
 
-The scripts and notebooks in [`scripts/06_figures_tables`](scripts/06_figures_tables) generate manuscript figures, significant results intersections, and supplementary data tables.
+The scripts and notebooks in [`scripts/07_figures_tables`](scripts/07_figures_tables) generate manuscript figures, significant results intersections, and supplementary data tables.
 
 ### Steps:
 
@@ -104,4 +111,4 @@ The scripts and notebooks in [`scripts/06_figures_tables`](scripts/06_figures_ta
 3. Generate UpSet plots and intersections of significant results: [`UpSet Plots.ipynb`](scripts/06_figures_tables/UpSet%20Plots.ipynb)
 4. Compile supplementary result tables for export: [`Supplementary Data Tables.ipynb`](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)
 
-Data note: Stage 06 expects completed outputs from stages 03-05 and writes figure/table artifacts to `figures/` and `results/`.
+Data note: Stage 07 expects completed outputs from stages 03-05 and writes figure/table artifacts to `figures/` and `results/`.

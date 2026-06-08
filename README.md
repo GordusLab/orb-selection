@@ -8,7 +8,7 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |Directory / Filename|Description|
 |---|---|
 |`data/`| Raw and intermediate data files used in the pipeline, _e.g._ OrthoFinder outputs, BUSCO scores, lists of species belonging to different categories, lists of HOGs tested in the HyPhy analyses, permulation-generated phenotype designations, and resources used to annotate results.|
-|`figures/`| PDF files of all figures and figure elements output by the figure-generating notebooks in [`scripts/06_figures_tables`](scripts/07_figures_tables).|
+|`figures/`| PDF files of all figures and figure elements output by the figure-generating notebooks in [`scripts/07_figures_tables`](scripts/07_figures_tables).|
 |`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/05_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM. |
 |`scripts/`| Full analysis pipeline divided into stages following the paper's methods section. See below for a complete description of the steps required for each stage of the analysis.|
 |`src/` | Contains helper modules used in various stages of the analysis. |

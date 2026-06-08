@@ -12,13 +12,15 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/06_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM. |
 |`scripts/`| Full analysis pipeline divided into stages following the paper's methods section. See below for a complete description of the steps required for each stage of the analysis.|
 |`src/` | Contains helper modules used in various stages of the analysis. |
-|`README.md`| Top-level project overview, pipeline stage documentation, and usage notes.|
-|`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
-|`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
 |`.Rprofile`|Project-level R startup settings.|
 |`.gitignore`|Version control exclusion rules.|
+|`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
+|`README.md`| Top-level project overview, pipeline stage documentation, and usage notes.|
 |`environment.yml`|Python dependencies.|
+|`hyphy_environment.yml`|Conda environment used to run the HyPhy selection tests (see [scripts/03_selection_tests](scripts/03_selection_tests)) on high performance computing cluster.|
+|`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
 |`renv.lock`|R dependencies.|
+|`upset_env.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet Plots.ipynb).
 
 ## Important Data Availability Notes
 

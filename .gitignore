@@ -168,6 +168,9 @@ cython_debug/
 .Rhistory
 */.DS_Store
 .lintr
+orb-selection.Rproj
+
+
 # Keep raw large JSON-result directories ignored, but allow other data files to be tracked.
 data/absrel_rerun/
 data/busted_ph/

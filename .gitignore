@@ -164,6 +164,8 @@ cython_debug/
 #.idea/
 .DS_Store
 .Rproj.user
+.RData
+.Rhistory
 */.DS_Store
 .lintr
 # Keep raw large JSON-result directories ignored, but allow other data files to be tracked.

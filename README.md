@@ -20,7 +20,7 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |`hyphy_environment.yml`|Conda environment used to run the HyPhy selection tests (see [scripts/03_selection_tests](scripts/03_selection_tests)) on high performance computing cluster.|
 |`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
 |`renv.lock`|R dependencies.|
-|`upset_env.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet Plots.ipynb).
+|`upset_env.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).
 
 ## Important Data Availability Notes
 

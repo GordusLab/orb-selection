@@ -26,9 +26,9 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 
 Some required inputs and outputs are not available in this repository.
 
-- Raw and processed transcriptome FASTA inputs for OrthoFinder and the HyPhy pipeline are external. `TODO_ADD_TXTOME_DATA_ARCHIVE_LOCATION`
-- HyPhy per-gene JSON outputs are external. `TODO_ADD_HYPHY_JSON_ARCHIVE_LOCATION`
-- Some cache pickle files for HyPhy and Log Odds Ratio test results used by downstream scripts are external. `TODO_ADD_PKL_ARCHIVE_LOCATION`
+- Raw and processed transcriptome FASTA inputs for OrthoFinder and the HyPhy pipeline are external. 
+- HyPhy per-gene JSON outputs are external. 
+- Some cache pickle files for HyPhy and Log Odds Ratio test results used by downstream scripts are external. 
 
 ## Stage 01: Transcriptome data collection and pre-processing
 

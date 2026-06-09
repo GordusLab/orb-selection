@@ -22,7 +22,7 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |`renv.lock`|R dependencies.|
 |`upset_env.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).
 
-## Important Data Availability Notes
+## Data Availability
 
 Some required inputs and outputs are not available in this repository.
 

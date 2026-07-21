@@ -9,9 +9,6 @@ Tetragnatha_vermiformis
 Tetragnatha_maxillosa
 Tetragnatha_mandibulata
 Tetragnatha_extensa
-Tetragnatha_quasimodo
-Tetragnatha_brevignatha
-Tetragnatha_waikamoi
 Tetragnatha_filiciphilia
 Tetragnatha_stelarobusta
 Tetragnatha_paludicola

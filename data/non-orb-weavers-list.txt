@@ -52,3 +52,6 @@ Zelotes_iriomotensis
 Ordgarius_hobsoni
 Ordgarius_sexspinosus
 Cyrtarachne_bufo
+Tetragnatha_quasimodo
+Tetragnatha_brevignatha
+Tetragnatha_waikamoi

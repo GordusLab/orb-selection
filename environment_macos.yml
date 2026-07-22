@@ -12,6 +12,7 @@ dependencies:
   - pandas
   - scipy
   - matplotlib
+  - seaborn
   - tqdm
   - pip
   - pip:

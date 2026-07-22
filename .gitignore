@@ -177,7 +177,9 @@ data/busted_ph/
 data/busted_ph_rev/
 data/relax/
 *.pkl
-renv
+# Keep renv bootstrap files and the lockfile tracked.
+renv/library/
+renv/staging/
 
 # Conda environments and system files
 .conda/

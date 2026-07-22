@@ -7,6 +7,16 @@ library(foreach)
 library(doParallel)
 library(here)
 
+# Command line argument: tmp_dir
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) != 1) {
+  stop("Usage: Rscript phyloglm.R <tmp_dir>")
+}
+
+# Create temp directory for results
+tmp_dir <- args[1]
+if (!dir.exists(tmp_dir)) dir.create(tmp_dir, recursive = TRUE)
+
 # Read in species tree
 treefile = here("data", "SpeciesTree_full_brlen.nwk")
 speciesTree <- read.tree(treefile)
@@ -56,10 +66,6 @@ common_species <- intersect(speciesTree$tip.label, long_df$species)
 speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, common_species))
 
 # Parallelized phyloglm regressions for gene duplication
-
-# Create temp directory for results
-tmp_dir <- "/home/crunnel2/scratch/phyloglm_tmp"
-if (!dir.exists(tmp_dir)) dir.create(tmp_dir, recursive = TRUE)
 
 # Helper to combine temp files into a CSV
 combine_tmp_results <- function(tmp_dir, out_csv) {
@@ -157,16 +163,16 @@ stopCluster(cl)
 cat("Finished parallelized phyloglm regressions for gene count (discrete).\n")
 
 # Combine temp files into final CSV
-combine_tmp_results(tmp_dir, here("results", "phyloglm.csv"))
+combine_tmp_results(tmp_dir, here("results", "phyloglm", "phyloglm.csv"))
 
 # Calculate Storey FDR (q-values) and save updated CSV
 library(qvalue)
-results <- read.csv(here("results", "phyloglm.csv"))
+results <- read.csv(here("results", "phyloglm", "phyloglm.csv"))
 if ("coef_orb_weavingTRUE_p.value" %in% colnames(results)) {
   pvals <- results$coef_orb_weavingTRUE_p.value
   qobj <- qvalue(p = pvals)
   results$qvalue <- qobj$qvalues
-  write.csv(results, here("results", "phyloglm_qvals.csv"), row.names = FALSE)
+  write.csv(results, here("results", "phyloglm", "phyloglm_qvals.csv"), row.names = FALSE)
 } else {
   warning("Could not find p-value column 'coef_orb_weavingTRUE_p.value' in results. Please update the column name in the script.")
 }

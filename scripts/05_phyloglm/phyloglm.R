@@ -58,7 +58,7 @@ speciesTree_pruned <- ape::drop.tip(speciesTree, setdiff(speciesTree$tip.label, 
 # Parallelized phyloglm regressions for gene duplication
 
 # Create temp directory for results
-tmp_dir # <- PATH_TO_TEMP_DIR
+tmp_dir <- "/home/crunnel2/scratch/phyloglm_tmp"
 if (!dir.exists(tmp_dir)) dir.create(tmp_dir, recursive = TRUE)
 
 # Helper to combine temp files into a CSV
@@ -79,11 +79,12 @@ combine_tmp_results <- function(tmp_dir, out_csv) {
 n_cores <- parallel::detectCores()
 cl <- makeCluster(n_cores)
 registerDoParallel(cl)
+cat("Using", n_cores, "cores for parallel processing\n")
 
 unique_genes <- unique(long_df$HOG)
 
 # Progress file setup
-progress_file <- here("data", "phyloglm_progress.txt")
+progress_file <- file.path(tmp_dir, "phyloglm_progress.txt")
 if (file.exists(progress_file)) file.remove(progress_file)
 file.create(progress_file)
 

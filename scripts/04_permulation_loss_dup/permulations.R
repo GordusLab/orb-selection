@@ -1,3 +1,6 @@
+# Follow the instructions at https://github.com/nclark-lab/RERconverge/wiki/Install
+# to set up RERconverge
+
 library(RERconverge)
 library(here)
 

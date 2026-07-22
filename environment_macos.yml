@@ -5,6 +5,8 @@ channels:
   - defaults
 dependencies:
   - python=3.10
+  - libgit2
+  - cmake
   - biopython
   - numpy
   - pandas

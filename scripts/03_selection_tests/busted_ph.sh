@@ -3,18 +3,16 @@
 # Runs BUSTED-PH for one HOG per SLURM array task.
 # Argument: foreground assignment name (e.g., "orb_fg" or "nonorb_fg")
 
-#SBATCH --job-name=260722_busted_ph_test
+#SBATCH --job-name=260722_busted_ph_rev_test
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
-#SBATCH --time=3-00:00:00
+#SBATCH --time=00:10:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --array=4746-4756
 #SBATCH -n 12
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
-
-SCRIPT_DIR=/home/crunnel2/orb-selection/scripts
-REPO_ROOT=/home/crunnel2/orb-selection
+#SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 
 #make directory to store slurm reports
 mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
@@ -33,7 +31,7 @@ CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 # check if BUSTED-PH has already completed for this HOG 
 BUSTEDPH_OUT=${WD}/${CURRENT_HOG}_BUSTED-PH_${FG_NAME}.json
 
-if [$FG_NAME == "orb_fg"]; then
+if [ $FG_NAME == "orb_fg" ]; then
 	BRANCHES="Foreground"
 else
 	BRANCHES="Unlabeled branches"

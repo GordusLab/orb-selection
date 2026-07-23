@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=260722_label_trees
+#SBATCH --job-name=260722_label_trees_nonorb
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=01:00:00
@@ -17,8 +17,8 @@ mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
 
 WD=/scratch4/agordus1/crunnel2/hyphy_wd
 HOG_LIST=/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt
-FG_LIST=/home/crunnel2/orb-selection/data/orbweavers-list.txt
-FG_NAME=orb_fg
+FG_LIST=/home/crunnel2/orb-selection/data/non-orb-weavers-list.txt
+FG_NAME=non_orb_fg
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
@@ -44,6 +44,7 @@ else
 
 	mv ${LBLD_TREE} ${LBLD_TREE}.tmp
 
+	# LabelTrees is adding 1E-10 branch lengths to every branch for some reason
 	gotree brlen clear -i ${LBLD_TREE}.tmp -o ${LBLD_TREE} && rm ${LBLD_TREE}.tmp
 
 fi

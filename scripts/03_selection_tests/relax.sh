@@ -2,14 +2,14 @@
 
 # Runs RELAX for one HOG per SLURM array task.
 
-#SBATCH --job-name=260722_relax_full
+#SBATCH --job-name=260723_relax
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=3-00:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-4756
-#SBATCH -n 12
+#SBATCH -n 3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 

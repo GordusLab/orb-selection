@@ -33,6 +33,12 @@ CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 # check if BUSTED-PH has already completed for this HOG 
 BUSTEDPH_OUT=${WD}/${CURRENT_HOG}_BUSTED-PH_${FG_NAME}.json
 
+if [$FG_NAME == "orb_fg"]; then
+	BRANCHES="Foreground"
+else
+	BRANCHES="Unlabeled branches"
+fi
+
 if grep -q "p-value" ${BUSTEDPH_OUT}; then
 	echo "BUSTED-PH already complete."
 else
@@ -40,8 +46,8 @@ else
 	hyphy "$HYPHY_ANALYSES_DIR/BUSTED-PH/BUSTED-PH.bf" \
 	 CPU=${SLURM_NTASKS} \
 	 --alignment ${WD}/${CURRENT_HOG}.fltrd.fasta \
-	 --tree ${WD}/${CURRENT_HOG}.${FG_NAME}.tree \
-	 --branches Foreground \
+	 --tree ${WD}/${CURRENT_HOG}.orb_fg.tree \
+	 --branches ${BRANCHES} \
 	 --output ${BUSTEDPH_OUT} \
 	 ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi

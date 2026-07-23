@@ -15,10 +15,10 @@ conda activate /home/crunnel2/anaconda3/envs/selection
 #make directory to store slurm reports
 mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
 
-WD=/data/agordus1/crunnel2/hyphy_wd
+WD=/scratch4/agordus1/crunnel2/hyphy_wd
 HOG_LIST=/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt
-FG_LIST=/home/crunnel2/orb-selection/data/non-orb-weavers-list.txt
-FG_NAME=non_orb_fg
+FG_LIST=/home/crunnel2/orb-selection/data/orbweavers-list.txt
+FG_NAME=orb_fg
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
@@ -41,6 +41,10 @@ else
 
 	#Add a semicolon to the end of the last line of the tree file to avoid errors in HyPhy
 	sed -i '$s/$/;/' ${LBLD_TREE}
+
+	mv ${LBLD_TREE} ${LBLD_TREE}.tmp
+
+	gotree brlen clear -i ${LBLD_TREE}.tmp -o ${LBLD_TREE} && rm ${LBLD_TREE}.tmp
 
 fi
 

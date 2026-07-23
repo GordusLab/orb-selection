@@ -23,7 +23,6 @@ conda activate /home/crunnel2/anaconda3/envs/selection
 
 WD=/scratch4/agordus1/crunnel2/hyphy_wd
 HOG_LIST=/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt
-FG_NAME=$1
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
@@ -37,8 +36,8 @@ else
 	hyphy relax \
 	 CPU=${SLURM_NTASKS} \
 	 --alignment ${WD}/${CURRENT_HOG}.fltrd.fasta \
-	 --tree ${WD}/${CURRENT_HOG}.${FG_NAME}.tree \
-	 --test "Foreground" \
+	 --tree ${WD}/${CURRENT_HOG}.orb_fg.tree \
+	 --test "Unlabeled branches" \
 	 --multiple-hits Double+Triple \
 	 --models Minimal \
 	 --srv Yes \

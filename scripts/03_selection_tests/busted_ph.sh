@@ -1,33 +1,37 @@
 #!/bin/bash
 
 # Runs BUSTED-PH for one HOG per SLURM array task.
+# Argument: foreground assignment name (e.g., "orb_fg" or "nonorb_fg")
 
-#SBATCH --array=1-4756
+#SBATCH --job-name=260722_busted_ph_test
+#SBATCH --partition=parallel
+#SBATCH --account=agordus1
+#SBATCH --time=3-00:00:00
+#SBATCH --mail-user=crunnel2@jhu.edu
+#SBATCH --mail-type=ALL
+#SBATCH --array=4746-4756
 #SBATCH -n 12
-#SBATCH --output=reports/%x/%A_%a.out
+#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+SCRIPT_DIR=/home/crunnel2/orb-selection/scripts
+REPO_ROOT=/home/crunnel2/orb-selection
 
 #make directory to store slurm reports
-REPORT_DIR=PATH_TO_REPORT_DIR
-mkdir -p "$REPORT_DIR/${SBATCH_JOB_NAME}/"
+mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
 
 module load anaconda
-CONDA_ENV_PATH=PATH_TO_CONDA_ENV
-conda activate "$CONDA_ENV_PATH"
+conda activate /home/crunnel2/anaconda3/envs/selection
 
-WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
-HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
-FG_NAME=ow_fg_cons	
+WD=/scratch4/agordus1/crunnel2/hyphy_wd
+HOG_LIST=/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt
+FG_NAME=$1
 
-#make directory to store slurm reports
-HYPHY_ANALYSES_DIR=PATH_TO_HYPHY_ANALYSES_DIR_CLONE
+HYPHY_ANALYSES_DIR=/home/crunnel2/bin/hyphy-analyses/
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
-#check if BUSTED-PH has already completed for this HOG 
-BUSTEDPH_OUT=${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH.json
+# check if BUSTED-PH has already completed for this HOG 
+BUSTEDPH_OUT=${WD}/${CURRENT_HOG}_BUSTED-PH_${FG_NAME}.json
 
 if grep -q "p-value" ${BUSTEDPH_OUT}; then
 	echo "BUSTED-PH already complete."
@@ -35,8 +39,8 @@ else
 	#run busted-ph
 	hyphy "$HYPHY_ANALYSES_DIR/BUSTED-PH/BUSTED-PH.bf" \
 	 CPU=${SLURM_NTASKS} \
-	 --alignment ${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.fasta \
-	 --tree ${WD}/${CURRENT_HOG}/${CURRENT_HOG}.${FG_NAME}.tree \
+	 --alignment ${WD}/${CURRENT_HOG}.fltrd.fasta \
+	 --tree ${WD}/${CURRENT_HOG}.${FG_NAME}.tree \
 	 --branches Foreground \
 	 --output ${BUSTEDPH_OUT} \
 	 ENV="TOLERATE_NUMERICAL_ERRORS=1;"

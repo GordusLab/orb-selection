@@ -2,33 +2,33 @@
 
 # Runs RELAX for one HOG per SLURM array task.
 
-#SBATCH --array=1-4756
+#SBATCH --job-name=260722_relax_test
+#SBATCH --partition=parallel
+#SBATCH --account=agordus1
+#SBATCH --time=3-00:00:00
+#SBATCH --mail-user=crunnel2@jhu.edu
+#SBATCH --mail-type=ALL
+#SBATCH --array=4746-4756
 #SBATCH -n 12
-#SBATCH --output=reports/%x/%A_%a.out
+#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+SCRIPT_DIR=/home/crunnel2/orb-selection/scripts
+REPO_ROOT=/home/crunnel2/orb-selection
 
 #make directory to store slurm reports
-REPORT_DIR=PATH_TO_REPORT_DIR
-mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
+mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
 
 module load anaconda
-CONDA_ENV_PATH=PATH_TO_CONDA_ENV
-conda activate "$CONDA_ENV_PATH"
+conda activate /home/crunnel2/anaconda3/envs/selection
 
-WD=${WORK_DIR:-PATH_TO_EXTERNAL_WORK_DIR}
-HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
-FG_NAME=ow_fg_cons
+WD=/scratch4/agordus1/crunnel2/hyphy_wd
+HOG_LIST=/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt
+FG_NAME=$1
 
-if [ -n "${SLURM_ARRAY_TASK_ID:-}" ]; then
-	CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" "$HOG_LIST")
-else
-	CURRENT_HOG=${CURRENT_HOG:-PATH_TO_HOG_ID}
-fi
+CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
 #check if RELAX has already completed for this HOG 
-RELAX_OUT=${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX.json
+RELAX_OUT=${WD}/${CURRENT_HOG}_RELAX.json
 
 if grep -q "p-value" ${RELAX_OUT}; then
 	echo "RELAX already complete."
@@ -36,9 +36,9 @@ else
 	#run relax
 	hyphy relax \
 	 CPU=${SLURM_NTASKS} \
-	 --alignment ${WD}/${CURRENT_HOG}/${CURRENT_HOG}.fltrd.fasta \
-	 --tree ${WD}/${CURRENT_HOG}/${CURRENT_HOG}.${FG_NAME}.tree \
-	 --test "Unlabeled branches" \
+	 --alignment ${WD}/${CURRENT_HOG}.fltrd.fasta \
+	 --tree ${WD}/${CURRENT_HOG}.${FG_NAME}.tree \
+	 --test "Foreground" \
 	 --multiple-hits Double+Triple \
 	 --models Minimal \
 	 --srv Yes \

@@ -8,11 +8,13 @@ for filtering by omega values and extracting LOC IDs.
 import os
 import sys
 from typing import Tuple, List, Union
+from pathlib import Path
 import pandas as pd
 import numpy as np
 
 # Add the src directory to the path for imports
-src_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = Path(__file__).parent.parent.parent
+src_dir = repo_root / "src"
 sys.path.insert(0, src_dir)
 
 try:
@@ -216,8 +218,8 @@ def convert_hyphy_results_to_locs(results_df: pd.DataFrame,
     try:
         # Use default N5.tsv path if not provided
         if hog_node_genes_tsv is None:
-            data_dir = os.path.join(src_dir, '..', 'data')
-            hog_node_genes_tsv = os.path.join(data_dir, 'N5.tsv')
+            data_dir = repo_root / "data"
+            hog_node_genes_tsv = data_dir / "N5.tsv"
         
         # Check if the required files exist
         if not os.path.exists(hog_node_genes_tsv):

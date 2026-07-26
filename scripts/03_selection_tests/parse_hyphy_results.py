@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+# Run using the orb-selection conda environment:
+# conda run -n orb-selection python scripts/03_selection_tests/parse_hyphy_results.py
 
 """Parse and summarize HyPhy JSON outputs for downstream analyses.
 
@@ -29,6 +30,7 @@ def _load_module(module_name: str, module_path: Path):
     if spec is None or spec.loader is None:
         raise ImportError(f"Could not load module {module_name} from {module_path}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -245,7 +247,7 @@ def main():
     # Demonstrate saving/loading functionality
     if results_loaded:
         # Save in the orb-selection results directory
-        save_dir = str(Path(__file__).parent.parent / "results" / "hyphy_results_cache")
+        save_dir = str(repo_root / "results" / "hyphy_results_cache")
         print(f"=== Saving Results to {save_dir} ===")
         try:
             manager.save_all_results(save_dir)

@@ -8,7 +8,7 @@
 #SBATCH --time=3-00:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=2440-4756
+#SBATCH --array=656,2440-4756
 #SBATCH -n 3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err

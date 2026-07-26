@@ -2,7 +2,7 @@
 
 # Runs RELAX and BUSTED-PH (fw and rev) for one HOG per SLURM array task.
 
-#SBATCH --job-name=260723_run_selection_tests_2
+#SBATCH --job-name=260726_run_selection_tests_656_2440-4756
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=3-00:00:00

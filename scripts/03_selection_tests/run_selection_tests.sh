@@ -2,14 +2,14 @@
 
 # Runs RELAX and BUSTED-PH (fw and rev) for one HOG per SLURM array task.
 
-#SBATCH --job-name=260804_run_selection_tests_timeout_threaded_6cpus
+#SBATCH --job-name=260810_run_selection_tests_12cpus
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=3-00:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=21,33,35,43,48,82,162,266,357,377,482,656,708,800,828,860,909,953,958,1011,1104,1190,1316,1533,1634,2106,2460,2493,2495,2530,2532,2542,2558,2674,2723,2823,2825,2849,2945,2988,2997,3042,3049,3075,3105,3142,3191,3365,3382,3397,3424,3447,3478,3822,3837,3838,3839,3840,3855,3871,3936,3947,4130,4286,4441,4500,4519,4529
-#SBATCH -n 6
+#SBATCH --array=33,482,958,113,1011,1190,1316,3205,1354,2456,860
+#SBATCH -n 12
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 

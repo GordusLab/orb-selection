@@ -1,3 +1,7 @@
+# This is the environment file for the orb-selection project on macOS.
+# To create the environment, run:
+# conda env create -f environment_macos.yml
+
 name: orb-selection
 channels:
   - conda-forge

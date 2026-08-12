@@ -1,3 +1,6 @@
+# This is the environment file used for running the HyPhy selection tests on the JHU HPC cluster.
+# To create the environment, run:
+# conda env create -f hyphy_environment.yml
 name: selection
 channels:
   - conda-forge

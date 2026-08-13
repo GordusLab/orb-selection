@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0004096	catalase activity	0.00024
+GO:0004867	serine-type endopeptidase inhibitor activity	0.00350
+GO:0004252	serine-type endopeptidase activity	0.00460
+GO:0001018	mitochondrial promoter sequence-specific DNA binding	0.00645
+GO:0004565	beta-galactosidase activity	0.00645
+GO:0008241	peptidyl-dipeptidase activity	0.00645
+GO:0004630	phospholipase D activity	0.00645
+GO:0020037	heme binding	0.00885
+GO:0005113	patched binding	0.01286
+GO:0042030	ATPase inhibitor activity	0.01286
+GO:0003987	acetate-CoA ligase activity	0.01286
+GO:0016208	AMP binding	0.01286
+GO:0008190	eukaryotic initiation factor 4E binding	0.01286
+GO:0004000	adenosine deaminase activity	0.01923
+GO:0008253	5'-nucleotidase activity	0.01923
+GO:0042043	neurexin family protein binding	0.03185
+GO:0008139	nuclear localization sequence binding	0.03810
+GO:0005243	gap junction channel activity	0.06272
+GO:0031490	chromatin DNA binding	0.08078
+GO:0003899	DNA-directed 5'-3' RNA polymerase activity	0.08078
+GO:0017056	structural constituent of nuclear pore	0.08078
+GO:0004197	cysteine-type endopeptidase activity	0.11013
+GO:0051087	protein-folding chaperone binding	0.14415
+GO:0008028	monocarboxylic acid transmembrane transporter activity	0.14970
+GO:0038023	signaling receptor activity	0.15996
+GO:0008010	structural constituent of chitin-based larval cuticle	0.17691
+GO:0003743	translation initiation factor activity	0.17691
+GO:0050839	cell adhesion molecule binding	0.18225
+GO:0051015	actin filament binding	0.27756
+GO:0004497	monooxygenase activity	0.32331
+GO:0035091	phosphatidylinositol binding	0.33211
+GO:0005506	iron ion binding	0.34081
+GO:0008237	metallopeptidase activity	0.38266
+GO:0016705	oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen	0.40652
+GO:0003735	structural constituent of ribosome	0.47286
+GO:0003723	RNA binding	0.49820
+GO:0004888	transmembrane signaling receptor activity	0.57348
+GO:0022857	transmembrane transporter activity	0.68316
+GO:0000978	RNA polymerase II cis-regulatory region sequence-specific DNA binding	0.73649
+GO:0016787	hydrolase activity	0.75584
+GO:0008270	zinc ion binding	0.75698
+GO:0000981	DNA-binding transcription factor activity, RNA polymerase II-specific	0.81218
+GO:0005515	protein binding	0.96240
+GO:0016810	hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds	1.00000
+GO:0046872	metal ion binding	1.00000
+GO:0005543	phospholipid binding	1.00000
+GO:0005488	binding	1.00000
+GO:0008081	phosphoric diester hydrolase activity	1.00000
+GO:0097159	organic cyclic compound binding	1.00000
+GO:0016814	hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds, in cyclic amidines	1.00000
+GO:0140640	catalytic activity, acting on a nucleic acid	1.00000
+GO:0003700	DNA-binding transcription factor activity	1.00000
+GO:0097367	carbohydrate derivative binding	1.00000
+GO:0015267	channel activity	1.00000
+GO:0060089	molecular transducer activity	1.00000
+GO:0017076	purine nucleotide binding	1.00000
+GO:0008233	peptidase activity	1.00000
+GO:0008234	cysteine-type peptidase activity	1.00000
+GO:0008236	serine-type peptidase activity	1.00000
+GO:0008238	exopeptidase activity	1.00000
+GO:0016791	phosphatase activity	1.00000
+GO:0005214	structural constituent of chitin-based cuticle	1.00000
+GO:0005215	transporter activity	1.00000
+GO:0016798	hydrolase activity, acting on glycosyl bonds	1.00000
+GO:0008135	translation factor activity, RNA binding	1.00000
+GO:0016740	transferase activity	1.00000
+GO:0030414	peptidase inhibitor activity	1.00000
+GO:0061134	peptidase regulator activity	1.00000
+GO:0061135	endopeptidase regulator activity	1.00000
+GO:0042578	phosphoric ester hydrolase activity	1.00000
+GO:0003690	double-stranded DNA binding	1.00000
+GO:0003824	catalytic activity	1.00000
+GO:0030234	enzyme regulator activity	1.00000
+GO:0003779	actin binding	1.00000
+GO:0030554	adenyl nucleotide binding	1.00000
+GO:0016298	lipase activity	1.00000
+GO:0022829	wide pore channel activity	1.00000
+GO:0005198	structural molecule activity	1.00000
+GO:0004601	peroxidase activity	1.00000
+GO:0140110	transcription regulator activity	1.00000
+GO:0004866	endopeptidase inhibitor activity	1.00000
+GO:0008252	nucleotidase activity	1.00000
+GO:0004553	hydrolase activity, hydrolyzing O-glycosyl compounds	1.00000
+GO:0001067	transcription regulatory region nucleic acid binding	1.00000
+GO:0016491	oxidoreductase activity	1.00000
+GO:1990837	sequence-specific double-stranded DNA binding	1.00000
+GO:0043565	sequence-specific DNA binding	1.00000
+GO:0046906	tetrapyrrole binding	1.00000
+GO:0097747	RNA polymerase activity	1.00000
+GO:0008092	cytoskeletal protein binding	1.00000
+GO:0000987	cis-regulatory region sequence-specific DNA binding	1.00000
+GO:0044877	protein-containing complex binding	1.00000
+GO:0042277	peptide binding	1.00000
+GO:0016684	oxidoreductase activity, acting on peroxide as acceptor	1.00000
+GO:0004857	enzyme inhibitor activity	1.00000
+GO:0005342	organic acid transmembrane transporter activity	1.00000
+GO:0008289	lipid binding	1.00000
+GO:0000976	transcription cis-regulatory region binding	1.00000
+GO:0042302	structural constituent of cuticle	1.00000
+GO:0000977	RNA polymerase II transcription regulatory region sequence-specific DNA binding	1.00000

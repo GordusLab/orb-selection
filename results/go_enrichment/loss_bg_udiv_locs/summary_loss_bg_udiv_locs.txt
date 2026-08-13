@@ -1,0 +1,15 @@
+Description	Count	p	Ontology
+organic acid metabolic process	8	2.1e-05	bp
+protein import into nucleus	3	0.0135	bp
+dephosphorylation	8	0.0192	bp
+chitin-based extracellular matrix	5	0.0287	cc
+intracellular membrane-bounded organelle	68	0.0322	cc
+cytoplasm	74	0.0333	cc
+apical junction complex	2	0.0377	cc
+transcription factor TFIID complex	2	0.0377	cc
+diuretic hormone receptor activity	3	0.0031	mf
+cysteine-type endopeptidase activity	4	0.0035	mf
+peptide hormone binding	3	0.0146	mf
+metallopeptidase activity	7	0.0262	mf
+structural constituent of chitin-based larval cuticle	5	0.0366	mf
+structural constituent of nuclear pore	2	0.0425	mf

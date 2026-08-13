@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0042542	response to hydrogen peroxide	0.00030
+GO:0006508	proteolysis	0.00052
+GO:0042744	hydrogen peroxide catabolic process	0.00063
+GO:1901190	regulation of formation of translation initiation ternary complex	0.00562
+GO:0006654	phosphatidic acid biosynthetic process	0.00562
+GO:0019427	acetyl-CoA biosynthetic process from acetate	0.00562
+GO:0045880	positive regulation of smoothened signaling pathway	0.00562
+GO:0071679	commissural neuron axon guidance	0.00562
+GO:0043103	hypoxanthine salvage	0.01120
+GO:0060169	negative regulation of adenosine receptor signaling pathway	0.01120
+GO:0046103	inosine biosynthetic process	0.01676
+GO:0006154	adenosine catabolic process	0.01676
+GO:0097104	postsynaptic membrane assembly	0.02229
+GO:0097105	presynaptic membrane assembly	0.02229
+GO:0007158	neuron cell-cell adhesion	0.02229
+GO:0006390	mitochondrial transcription	0.02229
+GO:0043248	proteasome assembly	0.03325
+GO:0048488	synaptic vesicle endocytosis	0.03325
+GO:0007340	acrosome reaction	0.04409
+GO:0007602	phototransduction	0.04409
+GO:0030198	extracellular matrix organization	0.07070
+GO:0045727	positive regulation of translation	0.07593
+GO:0007417	central nervous system development	0.08631
+GO:0006606	protein import into nucleus	0.13657
+GO:0006405	RNA export from nucleus	0.14145
+GO:0007155	cell adhesion	0.14248
+GO:0050804	modulation of chemical synaptic transmission	0.21597
+GO:0048870	cell motility	0.24658
+GO:0007015	actin filament organization	0.30041
+GO:0005975	carbohydrate metabolic process	0.45019
+GO:0006412	translation	0.53146
+GO:0006511	ubiquitin-dependent protein catabolic process	0.55616
+GO:0006355	regulation of DNA-templated transcription	0.60306
+GO:0006357	regulation of transcription by RNA polymerase II	0.64365
+GO:0035556	intracellular signal transduction	0.81266
+GO:0055085	transmembrane transport	0.85461
+GO:0008610	lipid biosynthetic process	1.00000
+GO:0019941	modification-dependent protein catabolic process	1.00000
+GO:0051649	establishment of localization in cell	1.00000
+GO:0030182	neuron differentiation	1.00000
+GO:0034654	nucleobase-containing compound biosynthetic process	1.00000
+GO:0034655	nucleobase-containing compound catabolic process	1.00000
+GO:0034656	nucleobase-containing small molecule catabolic process	1.00000
+GO:0048468	cell development	1.00000
+GO:1901700	response to oxygen-containing compound	1.00000
+GO:0009112	nucleobase metabolic process	1.00000
+GO:0051252	regulation of RNA metabolic process	1.00000
+GO:0009113	purine nucleobase biosynthetic process	1.00000
+GO:0099504	synaptic vesicle cycle	1.00000
+GO:0034404	nucleobase-containing small molecule biosynthetic process	1.00000
+GO:1901135	carbohydrate derivative metabolic process	1.00000
+GO:0050896	response to stimulus	1.00000
+GO:0006996	organelle organization	1.00000
+GO:0071616	acyl-CoA biosynthetic process	1.00000
+GO:0009116	nucleoside metabolic process	1.00000
+GO:1901136	carbohydrate derivative catabolic process	1.00000
+GO:1901137	carbohydrate derivative biosynthetic process	1.00000
+GO:0046130	purine ribonucleoside catabolic process	1.00000
+GO:0009119	ribonucleoside metabolic process	1.00000
+GO:0000902	cell morphogenesis	1.00000
+GO:0043094	cellular metabolic compound salvage	1.00000
+GO:0097435	supramolecular fiber organization	1.00000
+GO:0043096	purine nucleobase salvage	1.00000
+GO:0009966	regulation of signal transduction	1.00000
+GO:0006366	transcription by RNA polymerase II	1.00000
+GO:0032787	monocarboxylic acid metabolic process	1.00000
+GO:0009967	positive regulation of signal transduction	1.00000
+GO:0051168	nuclear export	1.00000
+GO:0009968	negative regulation of signal transduction	1.00000
+GO:0022008	neurogenesis	1.00000
+GO:0016070	RNA metabolic process	1.00000
+GO:0051169	nuclear transport	1.00000
+GO:0055086	nucleobase-containing small molecule metabolic process	1.00000
+GO:0050657	nucleic acid transport	1.00000
+GO:0007338	single fertilization	1.00000
+GO:0050658	RNA transport	1.00000
+GO:0006351	DNA-templated transcription	1.00000
+GO:0032774	RNA biosynthetic process	1.00000
+GO:0050794	regulation of cellular process	1.00000
+GO:0009416	response to light stimulus	1.00000
+GO:0048731	system development	1.00000
+GO:0045184	establishment of protein localization	1.00000
+GO:0071826	protein-RNA complex organization	1.00000
+GO:0023051	regulation of signaling	1.00000
+GO:0023052	signaling	1.00000
+GO:0051716	cellular response to stimulus	1.00000
+GO:0023056	positive regulation of signaling	1.00000
+GO:0009987	cellular process	1.00000
+GO:0023057	negative regulation of signaling	1.00000
+GO:0008150	biological_process	1.00000
+GO:0140238	presynaptic endocytosis	1.00000
+GO:0007409	axonogenesis	1.00000
+GO:0045229	external encapsulating structure organization	1.00000
+GO:0008152	metabolic process	1.00000
+GO:0051603	proteolysis involved in protein catabolic process	1.00000
+GO:0009314	response to radiation	1.00000
+GO:0045744	negative regulation of G protein-coupled receptor signaling pathway	1.00000
+GO:0046085	adenosine metabolic process	1.00000
+GO:0051606	detection of stimulus	1.00000
+GO:0022607	cellular component assembly	1.00000

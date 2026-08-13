@@ -1,0 +1,21 @@
+Description	Count	p	Ontology
+response to hydrogen peroxide	2	0.00030	bp
+proteolysis	6	0.00052	bp
+hydrogen peroxide catabolic process	2	0.00063	bp
+proteasome assembly	1	0.03325	bp
+synaptic vesicle endocytosis	1	0.03325	bp
+acrosome reaction	1	0.04409	bp
+phototransduction	1	0.04409	bp
+extracellular space	5	0.0013	cc
+peroxisome	2	0.0222	cc
+extracellular matrix	3	0.0276	cc
+external side of plasma membrane	1	0.0303	cc
+RNA cap binding complex	1	0.0303	cc
+proteasome core complex, alpha-subunit complex	1	0.0421	cc
+PRC1 complex	1	0.0480	cc
+apical junction complex	1	0.0480	cc
+serine-type endopeptidase inhibitor activity	2	0.00350	mf
+serine-type endopeptidase activity	3	0.00460	mf
+heme binding	3	0.00885	mf
+neurexin family protein binding	1	0.03185	mf
+nuclear localization sequence binding	1	0.03810	mf

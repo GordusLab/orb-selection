@@ -1,0 +1,27 @@
+Description	Count	p	Ontology
+positive regulation of voltage-gated potassium channel activity	8	0.00020	bp
+sleep	8	0.00020	bp
+regulation of synaptic transmission, cholinergic	8	0.00034	bp
+cell fate specification	6	0.00132	bp
+mitochondrial translation	11	0.00613	bp
+methylation	13	0.01355	bp
+fibroblast growth factor receptor signaling pathway	4	0.01369	bp
+inositol phosphate biosynthetic process	3	0.01372	bp
+regulation of phosphorylation	15	0.01380	bp
+double-strand break repair	19	0.01774	bp
+protein localization to plasma membrane	9	0.01861	bp
+protein import into mitochondrial matrix	4	0.02271	bp
+interstrand cross-link repair	4	0.04419	bp
+protein transport	33	0.04640	bp
+mitochondrial large ribosomal subunit	11	0.00078	cc
+Smc5-Smc6 complex	3	0.01404	cc
+Golgi stack	5	0.02557	cc
+mitochondrion	84	0.03242	cc
+RNA polymerase III complex	5	0.04335	cc
+structural constituent of ribosome	22	0.012	mf
+fibroblast growth factor receptor binding	3	0.021	mf
+nucleosome binding	5	0.025	mf
+protein-disulfide reductase activity	5	0.034	mf
+AMP binding	3	0.034	mf
+growth factor activity	7	0.035	mf
+structural constituent of cytoskeleton	4	0.047	mf

@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0008284	positive regulation of cell population proliferation	0.0086
+GO:0010766	negative regulation of sodium ion transport	0.0159
+GO:0008219	cell death	0.0160
+GO:0070183	mitochondrial tryptophanyl-tRNA aminoacylation	0.0161
+GO:1903288	positive regulation of potassium ion import across plasma membrane	0.0161
+GO:0019543	propionate catabolic process	0.0161
+GO:0035965	cardiolipin acyl-chain remodeling	0.0161
+GO:0019481	L-alanine catabolic process, by transamination	0.0161
+GO:1990845	adaptive thermogenesis	0.0161
+GO:0070836	caveola assembly	0.0161
+GO:0046168	glycerol-3-phosphate catabolic process	0.0161
+GO:0001654	eye development	0.0161
+GO:0001680	tRNA 3'-terminal CCA addition	0.0161
+GO:0071333	cellular response to glucose stimulus	0.0161
+GO:0046327	glycerol biosynthetic process from pyruvate	0.0161
+GO:0034462	small-subunit processome assembly	0.0161
+GO:0009436	glyoxylate catabolic process	0.0161
+GO:0050801	monoatomic ion homeostasis	0.0162
+GO:0043516	regulation of DNA damage response, signal transduction by p53 class mediator	0.0319
+GO:0010133	proline catabolic process to glutamate	0.0319
+GO:0043653	mitochondrial fragmentation involved in apoptotic process	0.0319
+GO:0006116	NADH oxidation	0.0319
+GO:0006011	UDP-glucose metabolic process	0.0319
+GO:2000650	negative regulation of sodium ion transmembrane transporter activity	0.0319
+GO:0110031	negative regulation of G2/MI transition of meiotic cell cycle	0.0319
+GO:0044208	'de novo' AMP biosynthetic process	0.0319
+GO:0009409	response to cold	0.0319
+GO:0000387	spliceosomal snRNP assembly	0.0367
+GO:0001678	intracellular glucose homeostasis	0.0471
+GO:1990180	mitochondrial tRNA 3'-end processing	0.0475
+GO:0000480	endonucleolytic cleavage in 5'-ETS of tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.0475
+GO:0000472	endonucleolytic cleavage to generate mature 5'-end of SSU-rRNA from (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.0475
+GO:0051256	mitotic spindle midzone assembly	0.0475
+GO:0009880	embryonic pattern specification	0.0475
+GO:0006048	UDP-N-acetylglucosamine biosynthetic process	0.0475
+GO:0097037	heme export	0.0475
+GO:0045944	positive regulation of transcription by RNA polymerase II	0.0546
+GO:0000122	negative regulation of transcription by RNA polymerase II	0.0608
+GO:0016559	peroxisome fission	0.0629
+GO:0000972	transcription-dependent tethering of RNA polymerase II gene DNA at nuclear periphery	0.0629
+GO:0043153	entrainment of circadian clock by photoperiod	0.0629
+GO:0033540	fatty acid beta-oxidation using acyl-CoA oxidase	0.0629
+GO:0006072	glycerol-3-phosphate metabolic process	0.0772
+GO:0016255	attachment of GPI anchor to protein	0.0780
+GO:0006729	tetrahydrobiopterin biosynthetic process	0.0780
+GO:0048814	regulation of dendrite morphogenesis	0.0780
+GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	0.0780
+GO:0060537	muscle tissue development	0.0780
+GO:0000055	ribosomal large subunit export from nucleus	0.0780
+GO:0030036	actin cytoskeleton organization	0.0830
+GO:0033993	response to lipid	0.0928
+GO:0051016	barbed-end actin filament capping	0.0928
+GO:0070593	dendrite self-avoidance	0.0928
+GO:0034315	regulation of Arp2/3 complex-mediated actin nucleation	0.0928
+GO:2000779	regulation of double-strand break repair	0.0928
+GO:0045214	sarcomere organization	0.0928
+GO:0006812	monoatomic cation transport	0.1058
+GO:0061061	muscle structure development	0.1066
+GO:0035721	intraciliary retrograde transport	0.1074
+GO:0032922	circadian regulation of gene expression	0.1074
+GO:0006384	transcription initiation at RNA polymerase III promoter	0.1074
+GO:0046835	carbohydrate phosphorylation	0.1074
+GO:0046040	IMP metabolic process	0.1074
+GO:0007411	axon guidance	0.1084
+GO:0043687	post-translational protein modification	0.1089
+GO:0043484	regulation of RNA splicing	0.1136
+GO:0036065	fucosylation	0.1218
+GO:0034587	piRNA processing	0.1218
+GO:0017121	plasma membrane phospholipid scrambling	0.1218
+GO:0007420	brain development	0.1218
+GO:0019432	triglyceride biosynthetic process	0.1347
+GO:0007218	neuropeptide signaling pathway	0.1360
+GO:0016973	poly(A)+ mRNA export from nucleus	0.1360
+GO:0007507	heart development	0.1360
+GO:0000266	mitochondrial fission	0.1360
+GO:0006508	proteolysis	0.1478
+GO:0035194	regulatory ncRNA-mediated post-transcriptional gene silencing	0.1499
+GO:0006094	gluconeogenesis	0.1499
+GO:0006446	regulation of translational initiation	0.1499
+GO:0097120	receptor localization to synapse	0.1636
+GO:0043113	receptor clustering	0.1636
+GO:0006082	organic acid metabolic process	0.1732
+GO:0051017	actin filament bundle assembly	0.1771
+GO:0006096	glycolytic process	0.1903
+GO:0045197	establishment or maintenance of epithelial cell apical/basal polarity	0.1903
+GO:0006805	xenobiotic metabolic process	0.1903
+GO:0018279	protein N-linked glycosylation via asparagine	0.1903
+GO:0000027	ribosomal large subunit assembly	0.1903
+GO:0051156	glucose 6-phosphate metabolic process	0.1903
+GO:0006006	glucose metabolic process	0.2019
+GO:0007007	inner mitochondrial membrane organization	0.2034
+GO:0061512	protein localization to cilium	0.2034
+GO:0055088	lipid homeostasis	0.2034
+GO:0008654	phospholipid biosynthetic process	0.2035
+GO:0006888	endoplasmic reticulum to Golgi vesicle-mediated transport	0.2275
+GO:0006820	monoatomic anion transport	0.2402
+GO:0005977	glycogen metabolic process	0.2413
+GO:0009887	animal organ morphogenesis	0.2536
+GO:0000723	telomere maintenance	0.2536
+GO:0055085	transmembrane transport	0.2625

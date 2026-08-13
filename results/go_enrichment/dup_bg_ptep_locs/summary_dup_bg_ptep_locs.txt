@@ -1,0 +1,21 @@
+Description	Count	p	Ontology
+positive regulation of cell population proliferation	3	0.0101	bp
+protein glycosylation	10	0.0199	bp
+methylation	9	0.0251	bp
+fucosylation	3	0.0256	bp
+positive regulation of canonical Wnt signaling pathway	2	0.0257	bp
+regulation of dendrite morphogenesis	2	0.0257	bp
+L-methionine salvage from methylthioadenosine	2	0.0257	bp
+NAD biosynthetic process	2	0.0372	bp
+L-glutamate transmembrane transport	2	0.0372	bp
+spliceosomal snRNP assembly	4	0.0427	bp
+proteolysis	32	0.0479	bp
+SMN complex	3	0.0028	cc
+clathrin-coated vesicle	5	0.0046	cc
+mitochondrial matrix	11	0.0149	cc
+cytoplasm	184	0.0248	cc
+intraciliary transport particle A	2	0.0380	cc
+manganese ion binding	4	0.0041	mf
+translation initiation factor binding	3	0.0189	mf
+metalloaminopeptidase activity	3	0.0370	mf
+L-glutamate transmembrane transporter activity	2	0.0382	mf

@@ -9,8 +9,8 @@
 library(here)
 library(topGO)
 
-folders <- dir(here("results/significant_gene_id_lists/copy_number/udiv"), full.names = TRUE)
-annot_filename <- here("data/udiv_go_annots.all.tsv")
+folders <- dir(here("results/significant_gene_id_lists/copy_number/ptep"), full.names = TRUE)
+annot_filename <- here("data/ptep_go_annots.all.tsv")
 
 for (folder in folders) {
   # hit files are all files without "universe" in the name

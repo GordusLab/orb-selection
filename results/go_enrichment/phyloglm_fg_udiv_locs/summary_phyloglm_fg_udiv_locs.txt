@@ -1,0 +1,42 @@
+Description	Count	p	Ontology
+canonical Wnt signaling pathway	11	0.00064	bp
+phosphatidylinositol phosphate biosynthetic process	8	0.00144	bp
+DNA strand invasion	4	0.00170	bp
+neuron differentiation	20	0.00360	bp
+cytoskeleton-dependent cytokinesis	6	0.00942	bp
+autophagy	11	0.00985	bp
+phosphatidylinositol-mediated signaling	5	0.01187	bp
+cell-cell adhesion	15	0.01477	bp
+phototransduction	4	0.01678	bp
+axon guidance	10	0.01712	bp
+negative regulation of cell differentiation	3	0.01961	bp
+inflammatory response	3	0.02202	bp
+protein polyglutamylation	3	0.02202	bp
+microtubule cytoskeleton organization	18	0.02778	bp
+adenylate cyclase-modulating G protein-coupled receptor signaling pathway	9	0.03549	bp
+non-canonical Wnt signaling pathway	3	0.03950	bp
+neuropeptide signaling pathway	3	0.03950	bp
+actin crosslink formation	3	0.03950	bp
+organic acid metabolic process	26	0.03968	bp
+xenobiotic metabolic process	4	0.03998	bp
+plasma membrane	82	0.0084	cc
+nuclear envelope	8	0.0206	cc
+COP9 signalosome	4	0.0248	cc
+gap junction	4	0.0370	cc
+septin ring	3	0.0371	cc
+septin complex	3	0.0371	cc
+extracellular region	37	0.0428	cc
+microtubule cytoskeleton	26	0.0430	cc
+diuretic hormone receptor activity	4	0.0015	mf
+small GTPase binding	10	0.0075	mf
+peptide hormone binding	4	0.0148	mf
+four-way junction DNA binding	3	0.0199	mf
+tau-protein kinase activity	3	0.0199	mf
+G protein-coupled peptide receptor activity	6	0.0225	mf
+oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced flavin or flavoprotein as one donor, and incorporation of one atom of oxygen	4	0.0355	mf
+gap junction channel activity	4	0.0355	mf
+1-phosphatidylinositol-3-kinase regulator activity	3	0.0359	mf
+phosphatidylinositol phospholipase C activity	3	0.0359	mf
+iron ion binding	14	0.0426	mf
+signaling receptor activity	29	0.0488	mf
+P-type transmembrane transporter activity	3	0.0498	mf

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0006082	organic acid metabolic process	59	7	1.76	6.6e-07
+2	GO:0006805	xenobiotic metabolic process	4	4	0.12	7.2e-07
+3	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	2	2	0.06	0.00088
+4	GO:0006646	phosphatidylethanolamine biosynthetic process	2	2	0.06	0.00088
+5	GO:0019693	ribose phosphate metabolic process	23	4	0.69	0.02878
+6	GO:0050801	monoatomic ion homeostasis	34	2	1.01	0.02980
+7	GO:0001654	eye development	1	1	0.03	0.02981
+8	GO:0032781	positive regulation of ATP-dependent activity	1	1	0.03	0.02981
+9	GO:1903457	lactate catabolic process	1	1	0.03	0.02981
+10	GO:1903288	positive regulation of potassium ion import across plasma membrane	1	1	0.03	0.02981
+11	GO:2000651	positive regulation of sodium ion transmembrane transporter activity	1	1	0.03	0.02981
+12	GO:0019563	glycerol catabolic process	1	1	0.03	0.02981
+13	GO:0043103	hypoxanthine salvage	1	1	0.03	0.02981
+14	GO:0071586	CAAX-box protein processing	1	1	0.03	0.02981
+15	GO:0006269	DNA replication, synthesis of primer	1	1	0.03	0.02981
+16	GO:0060169	negative regulation of adenosine receptor signaling pathway	1	1	0.03	0.02981
+17	GO:0006488	dolichol-linked oligosaccharide biosynthetic process	1	1	0.03	0.02981
+18	GO:0009880	embryonic pattern specification	1	1	0.03	0.02981
+19	GO:0006420	arginyl-tRNA aminoacylation	1	1	0.03	0.02981
+20	GO:0046166	glyceraldehyde-3-phosphate biosynthetic process	1	1	0.03	0.02981
+21	GO:0051443	positive regulation of ubiquitin-protein transferase activity	1	1	0.03	0.02981
+22	GO:0006753	nucleoside phosphate metabolic process	43	4	1.28	0.05722
+23	GO:0070836	caveola assembly	2	1	0.06	0.05874
+24	GO:0009156	ribonucleoside monophosphate biosynthetic process	2	1	0.06	0.05874
+25	GO:0034497	protein localization to phagophore assembly site	2	1	0.06	0.05874
+26	GO:0006154	adenosine catabolic process	2	1	0.06	0.05874
+27	GO:0046103	inosine biosynthetic process	2	1	0.06	0.05874
+28	GO:0048026	positive regulation of mRNA splicing, via spliceosome	2	1	0.06	0.05874
+29	GO:0010766	negative regulation of sodium ion transport	2	1	0.06	0.05874
+30	GO:0090263	positive regulation of canonical Wnt signaling pathway	2	1	0.06	0.05874
+31	GO:0051123	RNA polymerase II preinitiation complex assembly	2	1	0.06	0.05874
+32	GO:0070989	oxidative demethylation	2	1	0.06	0.05874
+33	GO:0045116	protein neddylation	2	1	0.06	0.05874
+34	GO:0007172	signal complex assembly	2	1	0.06	0.05874
+35	GO:0032237	activation of store-operated calcium channel activity	2	1	0.06	0.05874
+36	GO:0097037	heme export	2	1	0.06	0.05874
+37	GO:0000423	mitophagy	2	1	0.06	0.05874
+38	GO:0006164	purine nucleotide biosynthetic process	16	2	0.48	0.08031
+39	GO:0016311	dephosphorylation	51	3	1.52	0.08039
+40	GO:0042176	regulation of protein catabolic process	7	2	0.21	0.08574
+41	GO:0006636	unsaturated fatty acid biosynthetic process	3	1	0.09	0.08681
+42	GO:0006094	gluconeogenesis	3	1	0.09	0.08681
+43	GO:0042790	nucleolar large rRNA transcription by RNA polymerase I	3	1	0.09	0.08681
+44	GO:0001188	RNA polymerase I preinitiation complex assembly	3	1	0.09	0.08681
+45	GO:0030050	vesicle transport along actin filament	3	1	0.09	0.08681
+46	GO:0034727	piecemeal microautophagy of the nucleus	3	1	0.09	0.08681
+47	GO:0002115	store-operated calcium entry	3	1	0.09	0.08681
+48	GO:0006139	nucleobase-containing compound metabolic process	602	15	17.94	0.09316
+49	GO:0006886	intracellular protein transport	47	4	1.4	0.10549
+50	GO:0006457	protein folding	19	2	0.57	0.10815
+51	GO:0043161	proteasome-mediated ubiquitin-dependent protein catabolic process	39	3	1.16	0.10819
+52	GO:0007420	brain development	4	1	0.12	0.11407
+53	GO:0032543	mitochondrial translation	4	1	0.12	0.11407
+54	GO:0045732	positive regulation of protein catabolic process	4	1	0.12	0.11407
+55	GO:0006334	nucleosome assembly	5	1	0.15	0.14052
+56	GO:0006096	glycolytic process	5	1	0.15	0.14052
+57	GO:0045184	establishment of protein localization	70	5	2.09	0.16139
+58	GO:0008284	positive regulation of cell population proliferation	6	1	0.18	0.16619
+59	GO:0007052	mitotic spindle organization	6	1	0.18	0.16619
+60	GO:0030036	actin cytoskeleton organization	62	4	1.85	0.18718
+61	GO:0016197	endosomal transport	23	3	0.69	0.21091
+62	GO:0006606	protein import into nucleus	8	1	0.24	0.21529
+63	GO:0090630	activation of GTPase activity	8	1	0.24	0.21529
+64	GO:0016192	vesicle-mediated transport	106	7	3.16	0.22297
+65	GO:0003333	amino acid transmembrane transport	9	1	0.27	0.23876
+66	GO:0032456	endocytic recycling	9	1	0.27	0.23876
+67	GO:0046854	phosphatidylinositol phosphate biosynthetic process	9	1	0.27	0.23876
+68	GO:0042147	retrograde transport, endosome to Golgi	9	1	0.27	0.23876
+69	GO:0009887	animal organ morphogenesis	9	1	0.27	0.23876
+70	GO:0042981	regulation of apoptotic process	9	1	0.27	0.23876
+71	GO:0006405	RNA export from nucleus	9	1	0.27	0.23876
+72	GO:0006468	protein phosphorylation	129	6	3.84	0.26153
+73	GO:0007015	actin filament organization	35	2	1.04	0.28037
+74	GO:0072659	protein localization to plasma membrane	11	1	0.33	0.28364
+75	GO:0006511	ubiquitin-dependent protein catabolic process	51	4	1.52	0.29812
+76	GO:0006397	mRNA processing	43	2	1.28	0.30482
+77	GO:0018105	peptidyl-serine phosphorylation	12	1	0.36	0.30510
+78	GO:0006508	proteolysis	146	9	4.35	0.30709
+79	GO:0035556	intracellular signal transduction	142	4	4.23	0.30795
+80	GO:0051056	regulation of small GTPase mediated signal transduction	14	1	0.42	0.34612
+81	GO:0006874	intracellular calcium ion homeostasis	14	1	0.42	0.34612
+82	GO:0035269	protein O-linked mannosylation	15	1	0.45	0.36573
+83	GO:0016485	protein processing	18	2	0.54	0.39881
+84	GO:0016579	protein deubiquitination	17	1	0.51	0.40322
+85	GO:0006261	DNA-templated DNA replication	23	2	0.69	0.48275
+86	GO:0006897	endocytosis	26	1	0.77	0.54664
+87	GO:0006470	protein dephosphorylation	35	1	1.04	0.65597
+88	GO:0045944	positive regulation of transcription by RNA polymerase II	35	1	1.04	0.65597
+89	GO:0016567	protein ubiquitination	41	2	1.22	0.67172
+90	GO:0000226	microtubule cytoskeleton organization	57	2	1.7	0.73605
+91	GO:0044782	cilium organization	47	1	1.4	0.76229
+92	GO:0006281	DNA repair	61	1	1.82	0.84596
+93	GO:0006355	regulation of DNA-templated transcription	323	2	9.63	0.89502
+94	GO:0007399	nervous system development	93	2	2.77	0.91554
+95	GO:0055085	transmembrane transport	218	4	6.5	0.97449
+96	GO:0008152	metabolic process	1358	52	40.48	1.00000
+97	GO:0006631	fatty acid metabolic process	17	1	0.51	1.00000
+98	GO:0006396	RNA processing	92	2	2.74	1.00000
+99	GO:0006633	fatty acid biosynthetic process	13	1	0.39	1.00000
+100	GO:0046128	purine ribonucleoside metabolic process	5	1	0.15	1.00000

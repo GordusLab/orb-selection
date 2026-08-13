@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0016358	dendrite development	5	2	0.17	0.011
+2	GO:0007409	axonogenesis	38	3	1.33	0.017
+3	GO:0000122	negative regulation of transcription by RNA polymerase II	31	4	1.08	0.021
+4	GO:0031114	regulation of microtubule depolymerization	7	2	0.24	0.023
+5	GO:0051480	regulation of cytosolic calcium ion concentration	8	2	0.28	0.029
+6	GO:0098656	monoatomic anion transmembrane transport	20	3	0.7	0.035
+7	GO:0042732	D-xylose metabolic process	1	1	0.03	0.035
+8	GO:0003254	regulation of membrane depolarization	1	1	0.03	0.035
+9	GO:1990481	mRNA pseudouridine synthesis	1	1	0.03	0.035
+10	GO:0070935	3'-UTR-mediated mRNA stabilization	1	1	0.03	0.035
+11	GO:0071932	replication fork reversal	1	1	0.03	0.035
+12	GO:0003356	regulation of cilium beat frequency	1	1	0.03	0.035
+13	GO:0010737	protein kinase A signaling	1	1	0.03	0.035
+14	GO:1904812	rRNA acetylation involved in maturation of SSU-rRNA	1	1	0.03	0.035
+15	GO:0007173	epidermal growth factor receptor signaling pathway	1	1	0.03	0.035
+16	GO:1990116	ribosome-associated ubiquitin-dependent protein catabolic process	1	1	0.03	0.035
+17	GO:0044341	sodium-dependent phosphate transport	1	1	0.03	0.035
+18	GO:0046498	S-adenosylhomocysteine metabolic process	1	1	0.03	0.035
+19	GO:0006111	regulation of gluconeogenesis	1	1	0.03	0.035
+20	GO:0045948	positive regulation of translational initiation	1	1	0.03	0.035
+21	GO:0000012	single strand break repair	1	1	0.03	0.035
+22	GO:1900407	regulation of cellular response to oxidative stress	1	1	0.03	0.035
+23	GO:0000495	box H/ACA sno(s)RNA 3'-end processing	1	1	0.03	0.035
+24	GO:0036085	GDP-fucose import into Golgi lumen	1	1	0.03	0.035
+25	GO:0031120	snRNA pseudouridine synthesis	1	1	0.03	0.035
+26	GO:2000234	positive regulation of rRNA processing	1	1	0.03	0.035
+27	GO:0006695	cholesterol biosynthetic process	1	1	0.03	0.035
+28	GO:0072344	rescue of stalled ribosome	1	1	0.03	0.035
+29	GO:0043419	urea catabolic process	1	1	0.03	0.035
+30	GO:0051252	regulation of RNA metabolic process	522	16	18.22	0.036
+31	GO:0014059	regulation of dopamine secretion	10	2	0.35	0.045
+32	GO:0007062	sister chromatid cohesion	10	2	0.35	0.045
+33	GO:0071277	cellular response to calcium ion	10	2	0.35	0.045
+34	GO:0006511	ubiquitin-dependent protein catabolic process	84	6	2.93	0.048
+35	GO:0017158	regulation of calcium ion-dependent exocytosis	11	2	0.38	0.054
+36	GO:0051460	negative regulation of corticotropin secretion	2	1	0.07	0.069
+37	GO:0033209	tumor necrosis factor-mediated signaling pathway	2	1	0.07	0.069
+38	GO:0019287	isopentenyl diphosphate biosynthetic process, mevalonate pathway	2	1	0.07	0.069
+39	GO:0006688	glycosphingolipid biosynthetic process	2	1	0.07	0.069
+40	GO:0030513	positive regulation of BMP signaling pathway	2	1	0.07	0.069
+41	GO:0006047	UDP-N-acetylglucosamine metabolic process	2	1	0.07	0.069
+42	GO:0045104	intermediate filament cytoskeleton organization	2	1	0.07	0.069
+43	GO:0006420	arginyl-tRNA aminoacylation	2	1	0.07	0.069
+44	GO:1901052	sarcosine metabolic process	2	1	0.07	0.069
+45	GO:1900011	negative regulation of corticotropin-releasing hormone receptor activity	2	1	0.07	0.069
+46	GO:0000395	mRNA 5'-splice site recognition	2	1	0.07	0.069
+47	GO:0001655	urogenital system development	2	1	0.07	0.069
+48	GO:0007589	body fluid secretion	2	1	0.07	0.069
+49	GO:0034587	piRNA processing	2	1	0.07	0.069
+50	GO:0051289	protein homotetramerization	2	1	0.07	0.069
+51	GO:0051092	positive regulation of NF-kappaB transcription factor activity	2	1	0.07	0.069
+52	GO:0051966	regulation of synaptic transmission, glutamatergic	2	1	0.07	0.069
+53	GO:0007216	G protein-coupled glutamate receptor signaling pathway	2	1	0.07	0.069
+54	GO:0033540	fatty acid beta-oxidation using acyl-CoA oxidase	2	1	0.07	0.069
+55	GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	2	1	0.07	0.069
+56	GO:0031118	rRNA pseudouridine synthesis	2	1	0.07	0.069
+57	GO:0035269	protein O-linked mannosylation	14	2	0.49	0.084
+58	GO:0006811	monoatomic ion transport	224	11	7.82	0.092
+59	GO:0055085	transmembrane transport	374	21	13.05	0.099
+60	GO:0005997	xylulose metabolic process	3	1	0.1	0.101
+61	GO:0002143	tRNA wobble position uridine thiolation	3	1	0.1	0.101
+62	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	3	1	0.1	0.101
+63	GO:0070936	protein K48-linked ubiquitination	3	1	0.1	0.101
+64	GO:0071076	RNA 3' uridylation	3	1	0.1	0.101
+65	GO:0006002	fructose 6-phosphate metabolic process	3	1	0.1	0.101
+66	GO:0000387	spliceosomal snRNP assembly	3	1	0.1	0.101
+67	GO:0045053	protein retention in Golgi apparatus	3	1	0.1	0.101
+68	GO:0045943	positive regulation of transcription by RNA polymerase I	3	1	0.1	0.101
+69	GO:0097037	heme export	3	1	0.1	0.101
+70	GO:0036066	protein O-linked fucosylation	3	1	0.1	0.101
+71	GO:0015749	monosaccharide transmembrane transport	3	1	0.1	0.101
+72	GO:0051016	barbed-end actin filament capping	3	1	0.1	0.101
+73	GO:0035336	long-chain fatty-acyl-CoA metabolic process	3	1	0.1	0.101
+74	GO:0006384	transcription initiation at RNA polymerase III promoter	3	1	0.1	0.101
+75	GO:0035025	positive regulation of Rho protein signal transduction	3	1	0.1	0.101
+76	GO:0042073	intraciliary transport	18	2	0.63	0.129
+77	GO:0008283	cell population proliferation	19	2	0.66	0.132
+78	GO:0042420	dopamine catabolic process	4	1	0.14	0.133
+79	GO:0042421	norepinephrine biosynthetic process	4	1	0.14	0.133
+80	GO:0032922	circadian regulation of gene expression	4	1	0.14	0.133
+81	GO:0043153	entrainment of circadian clock by photoperiod	4	1	0.14	0.133
+82	GO:1990414	replication-born double-strand break repair via sister chromatid exchange	4	1	0.14	0.133
+83	GO:0055064	chloride ion homeostasis	4	1	0.14	0.133
+84	GO:0006884	cell volume homeostasis	4	1	0.14	0.133
+85	GO:0006564	L-serine biosynthetic process	4	1	0.14	0.133
+86	GO:0006589	octopamine biosynthetic process	4	1	0.14	0.133
+87	GO:0007097	nuclear migration	4	1	0.14	0.133
+88	GO:0042060	wound healing	4	1	0.14	0.133
+89	GO:1902476	chloride transmembrane transport	19	2	0.66	0.141
+90	GO:0007052	mitotic spindle organization	20	2	0.7	0.153
+91	GO:0030001	metal ion transport	146	7	5.1	0.162
+92	GO:0006646	phosphatidylethanolamine biosynthetic process	5	1	0.17	0.163
+93	GO:0046500	S-adenosylmethionine metabolic process	5	1	0.17	0.163
+94	GO:0006891	intra-Golgi vesicle-mediated transport	5	1	0.17	0.163
+95	GO:0045214	sarcomere organization	5	1	0.17	0.163
+96	GO:0010821	regulation of mitochondrion organization	5	1	0.17	0.163
+97	GO:0008285	negative regulation of cell population proliferation	5	1	0.17	0.163
+98	GO:0007528	neuromuscular junction development	5	1	0.17	0.163
+99	GO:0006629	lipid metabolic process	214	9	7.47	0.190
+100	GO:0006013	mannose metabolic process	6	1	0.21	0.192

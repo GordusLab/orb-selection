@@ -208,7 +208,7 @@ def convert_locs_to_hogs(locs, hog_node_genes_tsv, no_desc=False):
 
     return hogs_df
 
-def get_ptep_description(hogs_of_interest, desc_csv="/Users/calvin/orb-selection/data/N5_blasted.tsv"):
+def get_ptep_description(hogs_of_interest, desc_csv=os.path.join(data_dir, "N5_blasted.tsv")):
     """Given a list of HOGs, retrieves the descriptions for the corresponding Parasteatoda tepidariorum genes."""
 
     desc_df = pd.read_csv(desc_csv, sep="\t", dtype=str)

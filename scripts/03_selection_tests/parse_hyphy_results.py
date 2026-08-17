@@ -58,8 +58,8 @@ def main():
     # Point to the actual data directory in orb-selection
     data_dir = repo_root / "data"
     relax_path = str(data_dir / "relax")
-    busted_ph_path = str(data_dir / "busted_ph") 
-    busted_ph_rev_path = str(data_dir / "busted_ph_rev")
+    busted_ph_path = str(data_dir / "busted_ph_orb") 
+    busted_ph_rev_path = str(data_dir / "busted_ph_non_orb")
     absrel_path = str(data_dir / "absrel_rerun")
     
     # Check if directories exist

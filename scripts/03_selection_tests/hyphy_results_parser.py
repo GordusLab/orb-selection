@@ -371,6 +371,14 @@ class HyphyResultsManager:
     def get_result(self, name: str) -> Optional[HyphyResult]:
         """Get a specific result by name."""
         return self.results.get(name)
+
+    @staticmethod
+    def _first_present(mapping: Dict, *keys: str):
+        """Return the first matching key from a mapping."""
+        for key in keys:
+            if key in mapping:
+                return mapping[key]
+        raise KeyError(f"None of the expected keys were found: {', '.join(keys)}")
     
     def list_results(self) -> List[str]:
         """List all available result names."""
@@ -449,8 +457,19 @@ class HyphyResultsManager:
             with open(os.path.join(json_directory, json_file), 'r') as f:
                 data = json.load(f)
                 test_pval = data['test results']['p-value']
-                background_pval = data['test results background']['p-value']
-                shared_pval = data['test results shared distributions']['p-value']
+                background_results = self._first_present(
+                    data,
+                    'test results background',
+                    'Background selection test results',
+                )
+                shared_results = self._first_present(
+                    data,
+                    'test results shared distributions',
+                    'Comparative selection test results',
+                )
+
+                background_pval = background_results['p-value']
+                shared_pval = shared_results['p-value']
                 
                 # Determine result classification
                 if (float(test_pval) <= 0.05) & (float(background_pval) > 0.05) & (float(shared_pval) <= 0.05):
@@ -463,9 +482,9 @@ class HyphyResultsManager:
                     'test_pval': test_pval,
                     'test_LRT': data['test results']['LRT'],
                     'background_pval': background_pval,
-                    'background_LRT': data['test results background']['LRT'],
+                    'background_LRT': background_results['LRT'],
                     'shared_pval': shared_pval,
-                    'shared_LRT': data['test results shared distributions']['LRT'],
+                    'shared_LRT': shared_results['LRT'],
                     'MG94xREV_ω_test': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *test*"][0][0],
                     'MG94xREV_ω_ref': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *background*"][0][0],
                     'ω1_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["0"]["omega"],

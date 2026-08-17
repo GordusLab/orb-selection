@@ -25,13 +25,11 @@ def _load_module(module_name, module_path):
     if spec is None or spec.loader is None:
         raise ImportError(f"Could not load module {module_name} from {module_path}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
 
-odds_ratio_test = _load_module(
-    "odds_ratio_test", os.path.join(stage04_path, "odds_ratio_test.py")
-)
 hyphy_results_helpers = _load_module(
     "hyphy_results_helpers", os.path.join(stage03_path, "hyphy_results_helpers.py")
 )
@@ -46,6 +44,14 @@ HyphyResult = hyphy_results_parser.HyphyResult
 warnings.filterwarnings("ignore", category=SyntaxWarning)
 
 data_dir = os.path.join(repo_root, "data")
+
+
+def is_permulation_results(obj):
+    return hasattr(obj, "true_odds") and hasattr(obj, "results_fltrd_df")
+
+
+def is_hyphy_results(obj):
+    return hasattr(obj, "analysis_type") and hasattr(obj, "results_df")
 
 
 def load_pickle_file(fname):
@@ -197,11 +203,11 @@ Examples:
     print(f"Loading results from {pickle_file_path}...")
     loaded_results = load_pickle_file(pickle_file_path)
 
-    if isinstance(loaded_results, odds_ratio_test.PermutationTestResults):
+    if is_permulation_results(loaded_results):
         if universe_file:
             universe_locs = get_universe_permulation(loaded_results)
         hit_locs = main_permulation(loaded_results, tail=tail_arg)
-    elif isinstance(loaded_results, HyphyResult):
+    elif is_hyphy_results(loaded_results):
         hit_locs, universe_locs = main_hyphy(
             loaded_results, omega=omega_arg, relax_result=relax_result_arg
         )

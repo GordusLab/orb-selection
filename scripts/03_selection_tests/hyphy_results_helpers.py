@@ -7,7 +7,7 @@ for filtering by omega values and extracting LOC IDs.
 
 import os
 import sys
-from typing import Tuple, List, Union
+from typing import Tuple, List, Optional, Union
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -52,7 +52,7 @@ def filter_omega_rev(df: pd.DataFrame, omega_threshold: float) -> pd.DataFrame:
     return df[(df['ω_mean_test'] >= omega_threshold) | (df['ω_mean_ref'] >= omega_threshold)]
 
 
-def get_fltrd_LOCs(LOCs_df: pd.DataFrame, omega: float, test: str, relax_result: str|None) -> Union[Tuple, None]:
+def get_fltrd_LOCs(LOCs_df: pd.DataFrame, omega: float, test: str, relax_result: Optional[str]) -> Union[Tuple, None]:
     """
     Get filtered LOC lists based on omega filtering and test type.
     

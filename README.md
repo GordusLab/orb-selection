@@ -96,9 +96,9 @@ The scripts in [`scripts/06_enrichment`](scripts/06_enrichment) create significa
 ### Steps:
 1. Make BLAST db from the [_P. tepidariorum_ genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_043381705.1/)
 2. Run [`annotate_ogroups_vs_ref.py`](scripts/06_enrichment/annotate_ogroups_vs_ref.py) to determine best BLAST hit for each orthogroup from the _P. tepidariorum_ for enrichment of significant gene sets for orthogroups more commonly found in non-orb-weavers
-3. Helper functions to generate significant ID list files for downstream enrichment: [`get_gene_id_lists.py`](scripts/05_enrichment/get_gene_id_lists.py)
-3. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/05_enrichment/go_enrichment.R)
-4. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/05_enrichment/summarise_topgo_output.sh)
+3. Helper functions to generate significant ID list files for downstream enrichment: [`get_gene_id_lists.py`](scripts/06_enrichment/get_gene_id_lists.py)
+3. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/06_enrichment/go_enrichment.R)
+4. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/06_enrichment/summarise_topgo_output.sh)
 
 Data note: Stage 06 depends on cached HyPhy and odds ratio test result objects for hit-list generation.
 

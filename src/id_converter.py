@@ -9,7 +9,12 @@ import argparse
 import random
 import os
 import pandas as pd
-from tqdm.auto import tqdm
+
+try:
+    from tqdm.auto import tqdm
+except ImportError:
+    def tqdm(iterable, **kwargs):
+        return iterable
 
 
 src_path = os.path.dirname(__file__)

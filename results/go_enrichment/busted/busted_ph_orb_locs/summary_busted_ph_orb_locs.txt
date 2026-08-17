@@ -1,0 +1,13 @@
+Description	Count	p	Ontology
+negative regulation of cell population proliferation	2	0.0071	bp
+glucose metabolic process	2	0.0128	bp
+monoatomic ion transport	4	0.0239	bp
+protein dephosphorylation	3	0.0397	bp
+negative regulation of mitotic cell cycle	2	0.0441	bp
+adherens junction	2	0.00813	cc
+apical part of cell	2	0.01358	cc
+cytoskeleton	5	0.02747	cc
+phagophore assembly site	2	0.04619	cc
+actin binding	5	0.00569	mf
+NADP binding	3	0.01600	mf
+cell adhesion molecule binding	2	0.02439	mf

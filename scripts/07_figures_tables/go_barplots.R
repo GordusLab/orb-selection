@@ -146,24 +146,23 @@ go.barplot <- function(
 
 }
 
+# Hyphy analysis
+go.barplot(
+  sumfile = here("results/go_enrichment/relax_relaxed/summary_relax_relaxed_hits.txt"),
+  colors = c("#F5EFF9", "#926AB0"),
+  figsize = c(25, 24),
+  wrap_desc = 45,
+  rev = FALSE,
+  output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
+)
 
-# # Hyphy analysis
-# go.barplot(
-#   sumfile = here("results/go_enrichment/relax_relaxed/summary_relax_relaxed_hits.txt"),
-#   colors = c("#F5EFF9", "#926AB0"),
-#   figsize = c(25, 24),
-#   wrap_desc = 45,
-#   rev = FALSE,
-#   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
-# )
-
-# go.barplot(
-#   sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
-#   colors = c("#F5EFF9", "#926AB0"),
-#   figsize = c(25, 21),
-#   rev = FALSE,
-#   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/relax_intensified/summary_relax_intensified_hits.txt"),
+  colors = c("#F5EFF9", "#926AB0"),
+  figsize = c(25, 21),
+  rev = FALSE,
+  output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
+)
 
 go.barplot(
   sumfile = here("results/go_enrichment/busted/busted_ph_orb_locs/summary_busted_ph_orb_locs.txt"),
@@ -189,71 +188,71 @@ go.barplot(
   strip_text_size = 26
 )
 
-# # Log odds ratio analysis
-# go.barplot(
-#   sumfile = here("results/go_enrichment/dup_bg_ptep_locs_avg_ci/summary_dup_bg_ptep_locs_avg_ci.txt"),
-#   colors = c("#FEE9E7", "#FA8072"),
-#   figsize = c(25, 20),
-#   title = "Genes more likely to be duplicated in non-orbweavers",
-#   rev = FALSE,
-#   output_filename = here("figures/supplementary/duplication_nonorb_go_barplot.png"),
-#   truncate_desc = 50
-# )
+# Log odds ratio analysis
+go.barplot(
+  sumfile = here("results/go_enrichment/dup_bg_ptep_locs_avg_ci/summary_dup_bg_ptep_locs_avg_ci.txt"),
+  colors = c("#FEE9E7", "#FA8072"),
+  figsize = c(25, 20),
+  title = "Genes more likely to be duplicated in non-orbweavers",
+  rev = FALSE,
+  output_filename = here("figures/supplementary/duplication_nonorb_go_barplot.png"),
+  truncate_desc = 50
+)
 
-# go.barplot(
-#   sumfile = here("results/go_enrichment/dup_fg_udiv_locs_avg_ci/summary_dup_fg_udiv_locs_avg_ci.txt"),
-#   colors = c("#E0F2DB", "#639B51"),
-#   figsize = c(30, 25),
-#   title = "Genes more likely to be duplicated in orbweavers",
-#   rev = FALSE,
-#   output_filename = here("figures/supplementary/duplication_orb_go_barplot.png"),
-#   truncate_desc = 50
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/dup_fg_udiv_locs_avg_ci/summary_dup_fg_udiv_locs_avg_ci.txt"),
+  colors = c("#E0F2DB", "#639B51"),
+  figsize = c(30, 25),
+  title = "Genes more likely to be duplicated in orbweavers",
+  rev = FALSE,
+  output_filename = here("figures/supplementary/duplication_orb_go_barplot.png"),
+  truncate_desc = 50
+)
 
-# go.barplot(
-#   sumfile = here("results/go_enrichment/loss_bg_udiv_locs_avg_ci/summary_loss_bg_udiv_locs_avg_ci.txt"),
-#   colors = c("#DFE9F2", "#4682B4"),
-#   figsize = c(25, 15),
-#   title = "Genes more likely to be missing in non-orbweavers",
-#   rev = FALSE,
-#   output_filename = here("figures/supplementary/loss_nonorb_go_barplot.png"),
-#   truncate_desc = 50
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/loss_bg_udiv_locs_avg_ci/summary_loss_bg_udiv_locs_avg_ci.txt"),
+  colors = c("#DFE9F2", "#4682B4"),
+  figsize = c(25, 15),
+  title = "Genes more likely to be missing in non-orbweavers",
+  rev = FALSE,
+  output_filename = here("figures/supplementary/loss_nonorb_go_barplot.png"),
+  truncate_desc = 50
+)
 
-# go.barplot(
-#   sumfile = here("results/go_enrichment/loss_fg_ptep_locs_avg_ci/summary_loss_fg_ptep_locs_avg_ci.txt"),
-#   colors = c("#F9F0D9", "#DAA520"),
-#   figsize = c(25, 20),
-#   title = "Genes more likely to be missing in orbweavers",
-#   rev = FALSE,
-#   output_filename = here("figures/supplementary/loss_orb_go_barplot.png"),
-#   truncate_desc = 50
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/loss_fg_ptep_locs_avg_ci/summary_loss_fg_ptep_locs_avg_ci.txt"),
+  colors = c("#F9F0D9", "#DAA520"),
+  figsize = c(25, 20),
+  title = "Genes more likely to be missing in orbweavers",
+  rev = FALSE,
+  output_filename = here("figures/supplementary/loss_orb_go_barplot.png"),
+  truncate_desc = 50
+)
 
-# # PhyloGLM
+# PhyloGLM
 
-# go.barplot(
-#   sumfile = here("results/go_enrichment/phyloglm_bg_ptep_locs/summary_phyloglm_bg_ptep_locs.txt"),
-#   colors = c("#F5EFF9", "#926AB0"),
-#   rev = FALSE,
-#   output_filename = here("figures/supplementary/phyloglm_bg_ptep_go_barplot.png"),
-#   truncate_desc = 50,
-#   figsize = c(25, 24),
-#   title = "PhyloGLM genes, copy number ~ non-orb-weaving",
-#   # axis_text_size = 26,
-#   # axis_title_size = 30,
-#   # strip_text_size = 26
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/phyloglm_bg_ptep_locs/summary_phyloglm_bg_ptep_locs.txt"),
+  colors = c("#F5EFF9", "#926AB0"),
+  rev = FALSE,
+  output_filename = here("figures/supplementary/phyloglm_bg_ptep_go_barplot.png"),
+  truncate_desc = 50,
+  figsize = c(25, 24),
+  title = "PhyloGLM genes, copy number ~ non-orb-weaving",
+  # axis_text_size = 26,
+  # axis_title_size = 30,
+  # strip_text_size = 26
+)
 
-# go.barplot(
-#   sumfile = here("results/go_enrichment/phyloglm_fg_udiv_locs/summary_phyloglm_fg_udiv_locs.txt"),
-#   colors = c("#F5EFF9", "#926AB0"),
-#   rev = FALSE,
-#   output_filename = here("figures/supplementary/phyloglm_fg_udiv_go_barplot.png"),
-#   truncate_desc = 50,
-#   figsize = c(25, 24),
-#   title = "PhyloGLM genes, copy number ~ orb-weaving",
-#   # axis_text_size = 26,
-#   # axis_title_size = 30,
-#   # strip_text_size = 26
-# )
+go.barplot(
+  sumfile = here("results/go_enrichment/phyloglm_fg_udiv_locs/summary_phyloglm_fg_udiv_locs.txt"),
+  colors = c("#F5EFF9", "#926AB0"),
+  rev = FALSE,
+  output_filename = here("figures/supplementary/phyloglm_fg_udiv_go_barplot.png"),
+  truncate_desc = 50,
+  figsize = c(25, 24),
+  title = "PhyloGLM genes, copy number ~ orb-weaving",
+  # axis_text_size = 26,
+  # axis_title_size = 30,
+  # strip_text_size = 26
+)

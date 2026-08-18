@@ -9,10 +9,15 @@
 library(here)
 library(topGO)
 
-folders <- dir(here("results/significant_gene_id_lists/busted"), full.names = TRUE)
-annot_filename <- here("data/udiv_go_annots.all.tsv")
+folders <- dir(here("results/significant_gene_id_lists"), full.names = TRUE)
 
 for (folder in folders) {
+
+  if (grepl("ptep", folder)) {
+    annot_filename <- here("data/ptep_go_annots.all.tsv")
+  } else {
+    annot_filename <- here("data/udiv_go_annots.all.tsv")
+  }
   # hit files are all files without "universe" in the name
   hit_files <- grep(
     list.files(folder),

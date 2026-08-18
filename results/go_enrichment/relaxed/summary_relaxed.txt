@@ -1,0 +1,21 @@
+Description	Count	p	Ontology
+cell differentiation	17	0.00033	bp
+developmental process	31	0.00491	bp
+innate immune response	6	0.00504	bp
+regulation of gene expression	53	0.00919	bp
+regulation of apoptotic process	5	0.01167	bp
+positive regulation of transcription by RNA polymerase II	8	0.01764	bp
+microtubule-based movement	6	0.01773	bp
+fatty acid elongation	3	0.02165	bp
+central nervous system development	3	0.04070	bp
+signal transduction	50	0.04890	bp
+synapse	8	0.0057	cc
+axon	5	0.0058	cc
+translation regulator activity	4	0.0028	mf
+DNA-binding transcription factor binding	3	0.0065	mf
+transcription coactivator activity	6	0.0145	mf
+molecular adaptor activity	20	0.0170	mf
+transmembrane signaling receptor activity	9	0.0179	mf
+poly(A) RNA polymerase activity	3	0.0416	mf
+mRNA 3'-UTR binding	3	0.0416	mf
+protein homodimerization activity	3	0.0416	mf

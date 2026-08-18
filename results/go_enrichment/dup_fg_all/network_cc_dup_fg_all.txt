@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0005902	microvillus	0.001
+GO:1990316	Atg1/ULK1 kinase complex	0.003
+GO:0019773	proteasome core complex, alpha-subunit complex	0.019
+GO:0031982	vesicle	0.020
+GO:0005615	extracellular space	0.031
+GO:0010494	cytoplasmic stress granule	0.031
+GO:0001726	ruffle	0.032
+GO:0034245	mitochondrial DNA-directed RNA polymerase complex	0.032
+GO:0030425	dendrite	0.039
+GO:0016324	apical plasma membrane	0.063
+GO:0030864	cortical actin cytoskeleton	0.063
+GO:0016459	myosin complex	0.063
+GO:0031616	spindle pole centrosome	0.063
+GO:0000938	GARP complex	0.063
+GO:0001405	PAM complex, Tim23 associated import motor	0.063
+GO:1990745	EARP complex	0.063
+GO:0005886	plasma membrane	0.070
+GO:0005739	mitochondrion	0.088
+GO:0071007	U2-type catalytic step 2 spliceosome	0.093
+GO:0071797	LUBAC complex	0.093
+GO:0030496	midbody	0.093
+GO:0005952	cAMP-dependent protein kinase complex	0.093
+GO:0005777	peroxisome	0.100
+GO:0031012	extracellular matrix	0.104
+GO:0000407	phagophore assembly site	0.122
+GO:0032133	chromosome passenger complex	0.122
+GO:0000164	protein phosphatase type 1 complex	0.122
+GO:0044545	NSL complex	0.122
+GO:0140268	endoplasmic reticulum-plasma membrane contact site	0.122
+GO:0031298	replication fork protection complex	0.122
+GO:0030014	CCR4-NOT complex	0.149
+GO:0005876	spindle microtubule	0.150
+GO:0009897	external side of plasma membrane	0.150
+GO:0051233	spindle midzone	0.150
+GO:0034518	RNA cap binding complex	0.150
+GO:0005758	mitochondrial intermembrane space	0.150
+GO:0005839	proteasome core complex	0.175
+GO:0019005	SCF ubiquitin ligase complex	0.178
+GO:0005643	nuclear pore	0.189
+GO:0072546	EMC complex	0.203
+GO:0000794	condensed nuclear chromosome	0.203
+GO:0005685	U1 snRNP	0.203
+GO:0030015	CCR4-NOT core complex	0.203
+GO:0043296	apical junction complex	0.229
+GO:0035102	PRC1 complex	0.229
+GO:0062129	chitin-based extracellular matrix	0.248
+GO:0005773	vacuole	0.255
+GO:0005852	eukaryotic translation initiation factor 3 complex	0.277
+GO:0005921	gap junction	0.277
+GO:0031519	PcG protein complex	0.299
+GO:0005829	cytosol	0.343
+GO:0046540	U4/U6 x U5 tri-snRNP complex	0.345
+GO:0005811	lipid droplet	0.366
+GO:0032045	guanyl-nucleotide exchange factor complex	0.366
+GO:0005912	adherens junction	0.366
+GO:0000118	histone deacetylase complex	0.386
+GO:0019898	extrinsic component of membrane	0.390
+GO:0005765	lysosomal membrane	0.443
+GO:0009986	cell surface	0.459
+GO:0005840	ribosome	0.480
+GO:0045211	postsynaptic membrane	0.495
+GO:0005778	peroxisomal membrane	0.495
+GO:0000932	P-body	0.511
+GO:0022625	cytosolic large ribosomal subunit	0.527
+GO:0032040	small-subunit processome	0.585
+GO:0015934	large ribosomal subunit	0.623
+GO:0005694	chromosome	0.624
+GO:0005743	mitochondrial inner membrane	0.657
+GO:0005576	extracellular region	0.680
+GO:0043235	receptor complex	0.691
+GO:0005681	spliceosomal complex	0.711
+GO:0005856	cytoskeleton	0.712
+GO:0005634	nucleus	0.714
+GO:0005783	endoplasmic reticulum	0.749
+GO:0005813	centrosome	0.752
+GO:0045202	synapse	0.823
+GO:0005789	endoplasmic reticulum membrane	0.836
+GO:0000785	chromatin	0.844
+GO:0012505	endomembrane system	0.846
+GO:0005929	cilium	0.902
+GO:0005654	nucleoplasm	0.942
+GO:0005667	transcription regulator complex	0.949
+GO:0016020	membrane	0.978
+GO:0005737	cytoplasm	0.983
+GO:0005794	Golgi apparatus	0.997
+GO:0045177	apical part of cell	1.000
+GO:0030532	small nuclear ribonucleoprotein complex	1.000
+GO:0099512	supramolecular fiber	1.000
+GO:0099513	polymeric cytoskeletal fiber	1.000
+GO:0031461	cullin-RING ubiquitin ligase complex	1.000
+GO:0055037	recycling endosome	1.000
+GO:0043226	organelle	1.000
+GO:0099023	vesicle tethering complex	1.000
+GO:0043227	membrane-bounded organelle	1.000
+GO:0031981	nuclear lumen	1.000
+GO:0043228	membraneless organelle	1.000
+GO:0043229	intracellular organelle	1.000
+GO:0031984	organelle subcompartment	1.000
+GO:0005740	mitochondrial envelope	1.000
+GO:0000922	spindle pole	1.000

@@ -1,0 +1,101 @@
+GO.ID	Description	p.Val
+GO:0031429	box H/ACA snoRNP complex	0.008
+GO:0008290	F-actin capping protein complex	0.008
+GO:0032797	SMN complex	0.008
+GO:1990923	PET complex	0.008
+GO:0000243	commitment complex	0.024
+GO:0002189	ribose phosphate diphosphokinase complex	0.024
+GO:0030687	preribosome, large subunit precursor	0.031
+GO:0030479	actin cortical patch	0.031
+GO:0005685	U1 snRNP	0.039
+GO:0017119	Golgi transport complex	0.039
+GO:0070822	Sin3-type complex	0.039
+GO:0005665	RNA polymerase II, core complex	0.047
+GO:0005730	nucleolus	0.048
+GO:0005741	mitochondrial outer membrane	0.062
+GO:0071004	U2-type prespliceosome	0.069
+GO:0000786	nucleosome	0.069
+GO:0000776	kinetochore	0.099
+GO:0000922	spindle pole	0.120
+GO:0005777	peroxisome	0.141
+GO:0000139	Golgi membrane	0.275
+GO:0005813	centrosome	0.286
+GO:0000151	ubiquitin ligase complex	0.342
+GO:0005829	cytosol	0.358
+GO:0031012	extracellular matrix	0.441
+GO:0000785	chromatin	0.470
+GO:0005737	cytoplasm	0.509
+GO:0005634	nucleus	0.539
+GO:0043005	neuron projection	0.613
+GO:0005739	mitochondrion	0.686
+GO:0005783	endoplasmic reticulum	0.759
+GO:0005615	extracellular space	0.765
+GO:0016020	membrane	0.973
+GO:1990234	transferase complex	1.000
+GO:1990904	ribonucleoprotein complex	1.000
+GO:0005681	spliceosomal complex	1.000
+GO:0005815	microtubule organizing center	1.000
+GO:0015629	actin cytoskeleton	1.000
+GO:0097525	spliceosomal snRNP complex	1.000
+GO:0043226	organelle	1.000
+GO:0043227	membrane-bounded organelle	1.000
+GO:0043228	membraneless organelle	1.000
+GO:0005684	U2-type spliceosomal complex	1.000
+GO:0000228	nuclear chromosome	1.000
+GO:0030684	preribosome	1.000
+GO:0043229	intracellular organelle	1.000
+GO:0005819	spindle	1.000
+GO:0140535	intracellular protein-containing complex	1.000
+GO:0030312	external encapsulating structure	1.000
+GO:0030532	small nuclear ribonucleoprotein complex	1.000
+GO:0030863	cortical cytoskeleton	1.000
+GO:0030864	cortical actin cytoskeleton	1.000
+GO:0005694	chromosome	1.000
+GO:0034719	SMN-Sm protein complex	1.000
+GO:0071010	prespliceosome	1.000
+GO:0098588	bounding membrane of organelle	1.000
+GO:1902494	catalytic complex	1.000
+GO:0005938	cell cortex	1.000
+GO:0005856	cytoskeleton	1.000
+GO:0005740	mitochondrial envelope	1.000
+GO:0072588	box H/ACA RNP complex	1.000
+GO:0032991	protein-containing complex	1.000
+GO:0061695	transferase complex, transferring phosphorus-containing groups	1.000
+GO:0055029	nuclear DNA-directed RNA polymerase complex	1.000
+GO:0005622	intracellular anatomical structure	1.000
+GO:0032993	protein-DNA complex	1.000
+GO:0031966	mitochondrial membrane	1.000
+GO:0031967	organelle envelope	1.000
+GO:0099080	supramolecular complex	1.000
+GO:0015630	microtubule cytoskeleton	1.000
+GO:0031968	organelle outer membrane	1.000
+GO:0000118	histone deacetylase complex	1.000
+GO:0030880	RNA polymerase complex	1.000
+GO:0005575	cellular_component	1.000
+GO:0016591	RNA polymerase II, holoenzyme	1.000
+GO:0005576	extracellular region	1.000
+GO:0000428	DNA-directed RNA polymerase complex	1.000
+GO:0043231	intracellular membrane-bounded organelle	1.000
+GO:0043232	intracellular membraneless organelle	1.000
+GO:0043233	organelle lumen	1.000
+GO:0005732	sno(s)RNA-containing ribonucleoprotein complex	1.000
+GO:0000793	condensed chromosome	1.000
+GO:0071944	cell periphery	1.000
+GO:0000775	chromosome, centromeric region	1.000
+GO:0019867	outer membrane	1.000
+GO:0031090	organelle membrane	1.000
+GO:0110165	cellular anatomical structure	1.000
+GO:0000779	condensed chromosome, centromeric region	1.000
+GO:0140513	nuclear protein-containing complex	1.000
+GO:0042579	microbody	1.000
+GO:0031981	nuclear lumen	1.000
+GO:0042995	cell projection	1.000
+GO:0120025	plasma membrane bounded cell projection	1.000
+GO:0099023	vesicle tethering complex	1.000
+GO:0005794	Golgi apparatus	1.000
+GO:0012505	endomembrane system	1.000
+GO:0120114	Sm-like protein family complex	1.000
+GO:0005654	nucleoplasm	1.000
+GO:0070013	intracellular organelle lumen	1.000
+GO:0031974	membrane-enclosed lumen	1.000
+GO:0061645	endocytic patch	1.000

@@ -1,0 +1,13 @@
+Description	Count	p	Ontology
+organic acid metabolic process	7	7.1e-07	bp
+ribose phosphate metabolic process	4	0.02931	bp
+monoatomic ion homeostasis	2	0.03033	bp
+cytoplasm	48	0.00101	cc
+endoplasmic reticulum	10	0.00814	cc
+vesicle	6	0.01279	cc
+intracellular membrane-bounded organelle	41	0.01608	cc
+endoplasmic reticulum membrane	5	0.02704	cc
+iron ion binding	5	0.00724	mf
+heme binding	5	0.01084	mf
+metal ion binding	14	0.02238	mf
+cysteine-type endopeptidase activity	2	0.03661	mf

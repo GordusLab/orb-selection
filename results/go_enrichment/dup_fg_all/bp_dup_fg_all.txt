@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:2000304	positive regulation of ceramide biosynthetic process	2	2	0.07	0.0013
+2	GO:0016311	dephosphorylation	80	8	2.9	0.0016
+3	GO:0007160	cell-matrix adhesion	9	3	0.33	0.0033
+4	GO:0006166	purine ribonucleoside salvage	3	2	0.11	0.0038
+5	GO:0030050	vesicle transport along actin filament	3	2	0.11	0.0038
+6	GO:0030182	neuron differentiation	82	6	2.97	0.0051
+7	GO:0000423	mitophagy	4	2	0.14	0.0075
+8	GO:0042542	response to hydrogen peroxide	5	2	0.18	0.0121
+9	GO:0034727	piecemeal microautophagy of the nucleus	5	2	0.18	0.0121
+10	GO:0006357	regulation of transcription by RNA polymerase II	381	21	13.8	0.0157
+11	GO:0018216	peptidyl-arginine methylation	6	2	0.22	0.0178
+12	GO:0043652	engulfment of apoptotic cell	7	2	0.25	0.0243
+13	GO:0042744	hydrogen peroxide catabolic process	7	2	0.25	0.0243
+14	GO:1902742	apoptotic process involved in development	7	2	0.25	0.0243
+15	GO:0070782	phosphatidylserine exposure on apoptotic cell surface	7	2	0.25	0.0243
+16	GO:0032465	regulation of cytokinesis	8	2	0.29	0.0316
+17	GO:0034497	protein localization to phagophore assembly site	8	2	0.29	0.0316
+18	GO:0050801	monoatomic ion homeostasis	53	3	1.92	0.0362
+19	GO:0006772	thiamine metabolic process	1	1	0.04	0.0362
+20	GO:0006654	phosphatidic acid biosynthetic process	1	1	0.04	0.0362
+21	GO:0032480	negative regulation of type I interferon production	1	1	0.04	0.0362
+22	GO:1903288	positive regulation of potassium ion import across plasma membrane	1	1	0.04	0.0362
+23	GO:0071679	commissural neuron axon guidance	1	1	0.04	0.0362
+24	GO:0042531	positive regulation of tyrosine phosphorylation of STAT protein	1	1	0.04	0.0362
+25	GO:0019427	acetyl-CoA biosynthetic process from acetate	1	1	0.04	0.0362
+26	GO:0000730	DNA recombinase assembly	1	1	0.04	0.0362
+27	GO:0051457	maintenance of protein location in nucleus	1	1	0.04	0.0362
+28	GO:0009229	thiamine diphosphate biosynthetic process	1	1	0.04	0.0362
+29	GO:0045947	negative regulation of translational initiation	1	1	0.04	0.0362
+30	GO:0039536	negative regulation of RIG-I signaling pathway	1	1	0.04	0.0362
+31	GO:0045880	positive regulation of smoothened signaling pathway	1	1	0.04	0.0362
+32	GO:0010766	negative regulation of sodium ion transport	1	1	0.04	0.0362
+33	GO:2000651	positive regulation of sodium ion transmembrane transporter activity	1	1	0.04	0.0362
+34	GO:1990426	mitotic recombination-dependent replication fork processing	1	1	0.04	0.0362
+35	GO:1901190	regulation of formation of translation initiation ternary complex	1	1	0.04	0.0362
+36	GO:0048168	regulation of neuronal synaptic plasticity	1	1	0.04	0.0362
+37	GO:0042264	peptidyl-aspartic acid hydroxylation	1	1	0.04	0.0362
+38	GO:0023052	signaling	685	21	24.81	0.0375
+39	GO:0000054	ribosomal subunit export from nucleus	10	2	0.36	0.0485
+40	GO:0030154	cell differentiation	193	11	6.99	0.0596
+41	GO:0006909	phagocytosis	10	3	0.36	0.0704
+42	GO:0015886	heme transport	4	2	0.14	0.0708
+43	GO:0030001	metal ion transport	96	5	3.48	0.0709
+44	GO:0010042	response to manganese ion	2	1	0.07	0.0711
+45	GO:0048332	mesoderm morphogenesis	2	1	0.07	0.0711
+46	GO:0009312	oligosaccharide biosynthetic process	2	1	0.07	0.0711
+47	GO:0006809	nitric oxide biosynthetic process	2	1	0.07	0.0711
+48	GO:0032878	regulation of establishment or maintenance of cell polarity	2	1	0.07	0.0711
+49	GO:0097037	heme export	2	1	0.07	0.0711
+50	GO:0043103	hypoxanthine salvage	2	1	0.07	0.0711
+51	GO:0055071	manganese ion homeostasis	2	1	0.07	0.0711
+52	GO:0045046	protein import into peroxisome membrane	2	1	0.07	0.0711
+53	GO:0060169	negative regulation of adenosine receptor signaling pathway	2	1	0.07	0.0711
+54	GO:0032237	activation of store-operated calcium channel activity	2	1	0.07	0.0711
+55	GO:0030198	extracellular matrix organization	13	2	0.47	0.0783
+56	GO:0045727	positive regulation of translation	14	2	0.51	0.0893
+57	GO:0046839	phospholipid dephosphorylation	7	2	0.25	0.1043
+58	GO:0006670	sphingosine metabolic process	3	1	0.11	0.1048
+59	GO:0032781	positive regulation of ATP-dependent activity	3	1	0.11	0.1048
+60	GO:0006154	adenosine catabolic process	3	1	0.11	0.1048
+61	GO:0048026	positive regulation of mRNA splicing, via spliceosome	3	1	0.11	0.1048
+62	GO:0035025	positive regulation of Rho protein signal transduction	3	1	0.11	0.1048
+63	GO:0046103	inosine biosynthetic process	3	1	0.11	0.1048
+64	GO:0050708	regulation of protein secretion	3	1	0.11	0.1048
+65	GO:0006312	mitotic recombination	3	1	0.11	0.1048
+66	GO:0097039	protein linear polyubiquitination	3	1	0.11	0.1048
+67	GO:0002115	store-operated calcium entry	3	1	0.11	0.1048
+68	GO:0032218	riboflavin transport	3	1	0.11	0.1048
+69	GO:0006488	dolichol-linked oligosaccharide biosynthetic process	3	1	0.11	0.1048
+70	GO:0007417	central nervous system development	16	2	0.58	0.1124
+71	GO:0016579	protein deubiquitination	35	3	1.27	0.1318
+72	GO:0015813	L-glutamate transmembrane transport	4	1	0.14	0.1373
+73	GO:0007158	neuron cell-cell adhesion	4	1	0.14	0.1373
+74	GO:0035999	tetrahydrofolate interconversion	4	1	0.14	0.1373
+75	GO:0034063	stress granule assembly	4	1	0.14	0.1373
+76	GO:0008593	regulation of Notch signaling pathway	4	1	0.14	0.1373
+77	GO:0005979	regulation of glycogen biosynthetic process	4	1	0.14	0.1373
+78	GO:0006390	mitochondrial transcription	4	1	0.14	0.1373
+79	GO:0046856	phosphatidylinositol dephosphorylation	4	1	0.14	0.1373
+80	GO:0097104	postsynaptic membrane assembly	4	1	0.14	0.1373
+81	GO:0097105	presynaptic membrane assembly	4	1	0.14	0.1373
+82	GO:0046294	formaldehyde catabolic process	4	1	0.14	0.1373
+83	GO:0071218	cellular response to misfolded protein	4	1	0.14	0.1373
+84	GO:0090141	positive regulation of mitochondrial fission	4	1	0.14	0.1373
+85	GO:0009653	anatomical structure morphogenesis	106	6	3.84	0.1563
+86	GO:0051294	establishment of spindle orientation	5	1	0.18	0.1685
+87	GO:0009396	folic acid-containing compound biosynthetic process	5	1	0.18	0.1685
+88	GO:0008543	fibroblast growth factor receptor signaling pathway	5	1	0.18	0.1685
+89	GO:0042148	DNA strand invasion	5	1	0.18	0.1685
+90	GO:0031146	SCF-dependent proteasomal ubiquitin-dependent protein catabolic process	22	2	0.8	0.1885
+91	GO:0048488	synaptic vesicle endocytosis	6	1	0.22	0.1987
+92	GO:0043248	proteasome assembly	6	1	0.22	0.1987
+93	GO:0006413	translational initiation	34	5	1.23	0.2101
+94	GO:0006405	RNA export from nucleus	27	2	0.98	0.2274
+95	GO:0016226	iron-sulfur cluster assembly	7	1	0.25	0.2278
+96	GO:0032366	intracellular sterol transport	7	1	0.25	0.2278
+97	GO:0018230	peptidyl-L-cysteine S-palmitoylation	7	1	0.25	0.2278
+98	GO:0006415	translational termination	7	1	0.25	0.2278
+99	GO:0070192	chromosome organization involved in meiotic cell cycle	7	1	0.25	0.2278
+100	GO:0006606	protein import into nucleus	26	2	0.94	0.2423

@@ -150,9 +150,9 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-    python scripts/05_enrichment/get_gene_id_lists.py results.pkl
-    python scripts/05_enrichment/get_gene_id_lists.py results.pkl --tail left
-    python scripts/05_enrichment/get_gene_id_lists.py results.pkl --tail right --hits-file locs.txt
+    python scripts/06_enrichment/get_gene_id_lists.py results.pkl
+    python scripts/06_enrichment/get_gene_id_lists.py results.pkl --tail left
+    python scripts/06_enrichment/get_gene_id_lists.py results.pkl --tail right --hits-file locs.txt
         """,
     )
 

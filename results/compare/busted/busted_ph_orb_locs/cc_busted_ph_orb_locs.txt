@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0030175	filopodium	2	2	0.04	0.00041
+2	GO:0005912	adherens junction	7	2	0.14	0.00813
+3	GO:0045177	apical part of cell	9	2	0.18	0.01358
+4	GO:0098837	postsynaptic recycling endosome	1	1	0.02	0.02051
+5	GO:0098978	glutamatergic synapse	1	1	0.02	0.02051
+6	GO:0098998	extrinsic component of postsynaptic early endosome membrane	1	1	0.02	0.02051
+7	GO:0032593	insulin-responsive compartment	1	1	0.02	0.02051
+8	GO:0005856	cytoskeleton	136	5	2.79	0.02747
+9	GO:0001401	SAM complex	2	1	0.04	0.04061
+10	GO:0000408	EKC/KEOPS complex	2	1	0.04	0.04061
+11	GO:0001405	PAM complex, Tim23 associated import motor	2	1	0.04	0.04061
+12	GO:0034271	phosphatidylinositol 3-kinase complex, class III, type I	2	1	0.04	0.04061
+13	GO:0034272	phosphatidylinositol 3-kinase complex, class III, type II	2	1	0.04	0.04061
+14	GO:0031941	filamentous actin	2	1	0.04	0.04061
+15	GO:1990316	Atg1/ULK1 kinase complex	2	1	0.04	0.04061
+16	GO:0000145	exocyst	2	1	0.04	0.04061
+17	GO:0033186	CAF-1 complex	2	1	0.04	0.04061
+18	GO:0000407	phagophore assembly site	17	2	0.35	0.04619
+19	GO:0070552	BRISC complex	3	1	0.06	0.06030
+20	GO:0001725	stress fiber	3	1	0.06	0.06030
+21	GO:0031417	NatC complex	3	1	0.06	0.06030
+22	GO:0070531	BRCA1-A complex	3	1	0.06	0.06030
+23	GO:0005665	RNA polymerase II, core complex	4	1	0.08	0.07960
+24	GO:0005758	mitochondrial intermembrane space	4	1	0.08	0.07960
+25	GO:0030132	clathrin coat of coated pit	5	1	0.1	0.09851
+26	GO:0005925	focal adhesion	5	1	0.1	0.09851
+27	GO:0035371	microtubule plus-end	5	1	0.1	0.09851
+28	GO:0005743	mitochondrial inner membrane	43	3	0.88	0.10277
+29	GO:0005777	peroxisome	29	2	0.59	0.11811
+30	GO:0005884	actin filament	9	2	0.18	0.13315
+31	GO:0005736	RNA polymerase I complex	8	1	0.16	0.15296
+32	GO:0005666	RNA polymerase III complex	9	1	0.18	0.17038
+33	GO:0030688	preribosome, small subunit precursor	9	1	0.18	0.17038
+34	GO:0005886	plasma membrane	216	7	4.43	0.17791
+35	GO:0055037	recycling endosome	11	2	0.23	0.18467
+36	GO:0080008	Cul4-RING E3 ubiquitin ligase complex	10	1	0.21	0.18746
+37	GO:0016604	nuclear body	12	1	0.25	0.22057
+38	GO:0005739	mitochondrion	324	10	6.65	0.30770
+39	GO:0005643	nuclear pore	18	1	0.37	0.31214
+40	GO:0019898	extrinsic component of membrane	34	3	0.7	0.31868
+41	GO:0016020	membrane	781	22	16.02	0.33548
+42	GO:0005874	microtubule	25	2	0.51	0.33608
+43	GO:0005615	extracellular space	64	2	1.31	0.38000
+44	GO:0010008	endosome membrane	27	2	0.55	0.40065
+45	GO:0005768	endosome	82	4	1.68	0.54356
+46	GO:0005576	extracellular region	104	3	2.13	0.56174
+47	GO:0005815	microtubule organizing center	42	1	0.86	0.58386
+48	GO:0005829	cytosol	207	4	4.25	0.62377
+49	GO:0005789	endoplasmic reticulum membrane	110	2	2.26	0.66769
+50	GO:0005737	cytoplasm	1529	35	31.36	0.69535
+51	GO:0005794	Golgi apparatus	118	2	2.42	0.70540
+52	GO:0005667	transcription regulator complex	69	1	1.42	0.76476
+53	GO:0005654	nucleoplasm	113	3	2.32	0.77265
+54	GO:0043231	intracellular membrane-bounded organelle	1747	30	35.84	0.81000
+55	GO:0005783	endoplasmic reticulum	206	3	4.23	0.86356
+56	GO:0005730	nucleolus	104	2	2.13	0.86394
+57	GO:0005634	nucleus	965	10	19.79	0.99438
+58	GO:0031901	early endosome membrane	2	1	0.04	1.00000
+59	GO:0032991	protein-containing complex	969	16	19.88	1.00000
+60	GO:0140513	nuclear protein-containing complex	348	3	7.14	1.00000
+61	GO:0032432	actin filament bundle	3	1	0.06	1.00000
+62	GO:0005635	nuclear envelope	30	1	0.62	1.00000
+63	GO:0031981	nuclear lumen	236	4	4.84	1.00000
+64	GO:0031982	vesicle	138	4	2.83	1.00000
+65	GO:1902493	acetyltransferase complex	29	1	0.59	1.00000
+66	GO:1902494	catalytic complex	375	6	7.69	1.00000
+67	GO:0031984	organelle subcompartment	143	2	2.93	1.00000
+68	GO:0030054	cell junction	61	4	1.25	1.00000
+69	GO:0030055	cell-substrate junction	5	1	0.1	1.00000
+70	GO:1902554	serine/threonine protein kinase complex	14	1	0.29	1.00000
+71	GO:0099080	supramolecular complex	87	3	1.78	1.00000
+72	GO:0042995	cell projection	74	2	1.52	1.00000
+73	GO:0099081	supramolecular polymer	40	3	0.82	1.00000
+74	GO:0097517	contractile actin filament bundle	3	1	0.06	1.00000
+75	GO:0030117	membrane coat	27	1	0.55	1.00000
+76	GO:0005905	clathrin-coated pit	7	1	0.14	1.00000
+77	GO:0030118	clathrin coat	12	1	0.25	1.00000
+78	GO:0043226	organelle	1952	35	40.04	1.00000
+79	GO:0005740	mitochondrial envelope	73	5	1.5	1.00000
+80	GO:0031970	organelle envelope lumen	4	1	0.08	1.00000
+81	GO:0043227	membrane-bounded organelle	1781	30	36.53	1.00000
+82	GO:0005741	mitochondrial outer membrane	18	1	0.37	1.00000
+83	GO:0043228	membraneless organelle	471	8	9.66	1.00000
+84	GO:0005742	mitochondrial outer membrane translocase complex	3	1	0.06	1.00000
+85	GO:0043229	intracellular organelle	1934	35	39.67	1.00000
+86	GO:0031974	membrane-enclosed lumen	309	6	6.34	1.00000
+87	GO:0005744	TIM23 mitochondrial import inner membrane translocase complex	7	1	0.14	1.00000
+88	GO:1902911	protein kinase complex	15	1	0.31	1.00000
+89	GO:0015629	actin cytoskeleton	35	2	0.72	1.00000
+90	GO:0031248	protein acetyltransferase complex	28	1	0.57	1.00000
+91	GO:0031410	cytoplasmic vesicle	135	4	2.77	1.00000
+92	GO:0030141	secretory granule	6	1	0.12	1.00000
+93	GO:0030659	cytoplasmic vesicle membrane	49	2	1.01	1.00000
+94	GO:0042579	microbody	29	2	0.59	1.00000
+95	GO:0031414	N-terminal protein acetyltransferase complex	7	1	0.14	1.00000
+96	GO:0140535	intracellular protein-containing complex	247	3	5.07	1.00000
+97	GO:0099503	secretory vesicle	20	1	0.41	1.00000
+98	GO:1990904	ribonucleoprotein complex	212	1	4.35	1.00000
+99	GO:0030684	preribosome	51	1	1.05	1.00000
+100	GO:0031312	extrinsic component of organelle membrane	6	1	0.12	1.00000

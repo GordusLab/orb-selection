@@ -1,9 +1,0 @@
-Description	Count	p	Ontology
-positive regulation of cell population proliferation	2	0.0086	bp
-cell death	3	0.0160	bp
-monoatomic ion homeostasis	2	0.0162	bp
-spliceosomal snRNP assembly	2	0.0367	bp
-SMN complex	2	0.0038	cc
-Z disc	2	0.0070	cc
-basal plasma membrane	2	0.0322	cc
-histone acetyltransferase activity	2	0.022	mf

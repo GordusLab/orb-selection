@@ -1,0 +1,9 @@
+GO.ID	Description	p.Val
+GO:0005615	extracellular space	0.0013
+GO:0031012	extracellular matrix	0.0189
+GO:0005777	peroxisome	0.0222
+GO:0009897	external side of plasma membrane	0.0303
+GO:0034518	RNA cap binding complex	0.0303
+GO:0019773	proteasome core complex, alpha-subunit complex	0.0421
+GO:0035102	PRC1 complex	0.0480
+GO:0043296	apical junction complex	0.0480

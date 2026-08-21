@@ -39,7 +39,7 @@ for test in "$repo_root"/results/go_enrichment/*/; do
           awk -F $'\t' '
             BEGIN{OFS="\t"}
             {
-              if ($1 ~ /[0-9]/)
+              if ($1 ~ /[0-9]/ && $4 >= 5 && ($7 < 0.05 || $7 ~ /^</))
               print $2, $3, $7
           }
           ' $b >> network_${b}

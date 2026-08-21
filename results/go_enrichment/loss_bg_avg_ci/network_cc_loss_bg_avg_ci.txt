@@ -1,0 +1,6 @@
+GO.ID	Description	p.Val
+GO:0005737	cytoplasm	0.00101
+GO:0005783	endoplasmic reticulum	0.00814
+GO:0031982	vesicle	0.01279
+GO:0043231	intracellular membrane-bounded organelle	0.01608
+GO:0005789	endoplasmic reticulum membrane	0.02704

@@ -1,0 +1,9 @@
+GO.ID	Description	p.Val
+GO:0006511	ubiquitin-dependent protein catabolic process	0.00057
+GO:0008285	negative regulation of cell population proliferation	0.03541
+GO:0006891	intra-Golgi vesicle-mediated transport	0.03541
+GO:0046500	S-adenosylmethionine metabolic process	0.03541
+GO:0055088	lipid homeostasis	0.04235
+GO:0030968	endoplasmic reticulum unfolded protein response	0.04235
+GO:0006013	mannose metabolic process	0.04235
+GO:0006491	N-glycan processing	0.04923

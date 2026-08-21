@@ -1,0 +1,8 @@
+GO.ID	Description	p.Val
+GO:0042542	response to hydrogen peroxide	0.00031
+GO:0006508	proteolysis	0.00059
+GO:0042744	hydrogen peroxide catabolic process	0.00065
+GO:0043248	proteasome assembly	0.03378
+GO:0048488	synaptic vesicle endocytosis	0.03378
+GO:0007340	acrosome reaction	0.04480
+GO:0007602	phototransduction	0.04480

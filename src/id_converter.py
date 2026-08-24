@@ -152,7 +152,7 @@ def get_udiv_dmel_genes(
     return df
 
 
-def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True, one_random_gene=False):
+def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True, one_random_gene=True):
     """Main function to process the results DataFrame and merge it with
     Uloborus diversus genes and their Drosophila melanogaster orthologs."""
 

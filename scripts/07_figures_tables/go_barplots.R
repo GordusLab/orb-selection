@@ -151,9 +151,9 @@ go.barplot <- function(
 go.barplot(
   sumfile = here("results/go_enrichment/relaxed/summary_relaxed.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(25, 23),
+  figsize = c(25,25),
   wrap_desc = 35,
-  desc_text_size = 14,
+  desc_text_size = 16,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
@@ -161,9 +161,9 @@ go.barplot(
 go.barplot(
   sumfile = here("results/go_enrichment/intensified/summary_intensified.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(25, 23),
+  figsize = c(25,25),
   wrap_desc = 35,
-  desc_text_size = 14,
+  desc_text_size = 16,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
 )
@@ -184,6 +184,7 @@ go.barplot(
   sumfile = here("results/go_enrichment/busted_ph_non_orb/summary_busted_ph_non_orb.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
   figsize = c(20, 16),
+  desc_text_size = 20,
   wrap_desc = 30,
   rev = FALSE,
   output_filename = here("figures/figure_4/busted_ph_non_orb_go_barplot.png"),

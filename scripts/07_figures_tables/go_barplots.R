@@ -50,6 +50,7 @@ go.barplot <- function(
   axis_text_size = 18,
   axis_title_size = 20,
   strip_text_size = 20,
+  desc_text_size = 16,
   wrap_desc = NULL, 
   truncate_desc = NULL, 
   transparent = FALSE
@@ -86,7 +87,7 @@ go.barplot <- function(
   theme_elements <- list(
     text = element_text(family = "Verdana"),
     axis.text.x = element_text(color = "black", size = axis_text_size),
-    axis.text.y = element_text(color = "black", size = axis_text_size),
+    axis.text.y = element_text(color = "black", size = desc_text_size),
     legend.position = "none",
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
@@ -148,26 +149,29 @@ go.barplot <- function(
 
 # Hyphy analysis
 go.barplot(
-  sumfile = here("results/go_enrichment/relaxed/summary_relaxed.txt"),
+  sumfile = here("results/go_enrichment/relaxed/summary_relaxed.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(25, 24),
-  wrap_desc = 45,
+  figsize = c(25, 23),
+  wrap_desc = 35,
+  desc_text_size = 14,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/intensified/summary_intensified.txt"),
+  sumfile = here("results/go_enrichment/intensified/summary_intensified.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(25, 21),
+  figsize = c(25, 23),
+  wrap_desc = 35,
+  desc_text_size = 14,
   rev = FALSE,
   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/busted_ph_orb/summary_busted_ph_orb.txt"),
+  sumfile = here("results/go_enrichment/busted_ph_orb/summary_busted_ph_orb.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(30, 30),
+  figsize = c(20, 16),
   rev = FALSE,
   output_filename = here("figures/figure_4/busted_ph_orb_go_barplot.png"),
   wrap_desc = 30,
@@ -177,9 +181,9 @@ go.barplot(
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/busted_ph_non_orb/summary_busted_ph_non_orb.txt"),
+  sumfile = here("results/go_enrichment/busted_ph_non_orb/summary_busted_ph_non_orb.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(30, 36),
+  figsize = c(20, 16),
   wrap_desc = 30,
   rev = FALSE,
   output_filename = here("figures/figure_4/busted_ph_non_orb_go_barplot.png"),
@@ -190,49 +194,49 @@ go.barplot(
 
 # Log odds ratio analysis
 go.barplot(
-  sumfile = here("results/go_enrichment/dup_bg_avg_ci/summary_dup_bg_avg_ci.txt"),
+  sumfile = here("results/go_enrichment/dup_bg/summary_dup_bg.tsv"),
   colors = c("#FEE9E7", "#FA8072"),
-  figsize = c(25, 20),
+  figsize = c(28,28),
   title = "Genes more likely to be duplicated in non-orbweavers",
   rev = FALSE,
   output_filename = here("figures/supplementary/duplication_nonorb_go_barplot.png"),
-  truncate_desc = 50
+  wrap_desc = 35
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/dup_fg_avg_ci/summary_dup_fg_avg_ci.txt"),
+  sumfile = here("results/go_enrichment/dup_fg/summary_dup_fg.tsv"),
   colors = c("#E0F2DB", "#639B51"),
   figsize = c(30, 25),
   title = "Genes more likely to be duplicated in orbweavers",
   rev = FALSE,
   output_filename = here("figures/supplementary/duplication_orb_go_barplot.png"),
-  truncate_desc = 50
+  wrap_desc = 35
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/loss_bg_avg_ci/summary_loss_bg_avg_ci.txt"),
+  sumfile = here("results/go_enrichment/loss_bg/summary_loss_bg.tsv"),
   colors = c("#DFE9F2", "#4682B4"),
   figsize = c(25, 15),
   title = "Genes more likely to be missing in non-orbweavers",
   rev = FALSE,
   output_filename = here("figures/supplementary/loss_nonorb_go_barplot.png"),
-  truncate_desc = 50
+  wrap_desc = 35
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/loss_fg_avg_ci/summary_loss_fg_avg_ci.txt"),
+  sumfile = here("results/go_enrichment/loss_fg/summary_loss_fg.tsv"),
   colors = c("#F9F0D9", "#DAA520"),
-  figsize = c(25, 20),
+  figsize = c(28, 30),
   title = "Genes more likely to be missing in orbweavers",
   rev = FALSE,
   output_filename = here("figures/supplementary/loss_orb_go_barplot.png"),
-  truncate_desc = 50
+  wrap_desc = 35
 )
 
 # PhyloGLM
 
 go.barplot(
-  sumfile = here("results/go_enrichment/phyloglm_bg/summary_phyloglm_bg.txt"),
+  sumfile = here("results/go_enrichment/pglm_non_orb/summary_pglm_non_orb.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
   rev = FALSE,
   output_filename = here("figures/supplementary/phyloglm_bg_ptep_go_barplot.png"),
@@ -245,7 +249,7 @@ go.barplot(
 )
 
 go.barplot(
-  sumfile = here("results/go_enrichment/phyloglm_fg/summary_phyloglm_fg.txt"),
+  sumfile = here("results/go_enrichment/pglm_orb/summary_pglm_orb.tsv"),
   colors = c("#F5EFF9", "#926AB0"),
   rev = FALSE,
   output_filename = here("figures/supplementary/phyloglm_fg_udiv_go_barplot.png"),

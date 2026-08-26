@@ -1,0 +1,4 @@
+GO.ID	Description	p.Val
+GO:0005096	GTPase activator activity	0.032
+GO:0051787	misfolded protein binding	0.040
+GO:0031625	ubiquitin protein ligase binding	0.048

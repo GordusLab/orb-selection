@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0031167	rRNA methylation	15	3	0.28	0.0090
+2	GO:0034587	piRNA processing	8	2	0.15	0.0091
+3	GO:0045454	cell redox homeostasis	9	2	0.17	0.0116
+4	GO:0018160	peptidyl-pyrromethane cofactor linkage	1	1	0.02	0.0188
+5	GO:0006011	UDP-alpha-D-glucose metabolic process	1	1	0.02	0.0188
+6	GO:0036316	SREBP-SCAP complex retention in endoplasmic reticulum	1	1	0.02	0.0188
+7	GO:0140570	extraction of mislocalized protein from mitochondrial outer membrane	1	1	0.02	0.0188
+8	GO:0006386	termination of RNA polymerase III transcription	1	1	0.02	0.0188
+9	GO:0048854	brain morphogenesis	1	1	0.02	0.0188
+10	GO:0001680	tRNA 3'-terminal CCA addition	1	1	0.02	0.0188
+11	GO:2000632	negative regulation of pre-miRNA processing	1	1	0.02	0.0188
+12	GO:0000301	retrograde transport, vesicle recycling within Golgi	1	1	0.02	0.0188
+13	GO:0070682	proteasome regulatory particle assembly	1	1	0.02	0.0188
+14	GO:0097484	dendrite extension	1	1	0.02	0.0188
+15	GO:0008090	retrograde axonal transport	1	1	0.02	0.0188
+16	GO:0070212	protein poly-ADP-ribosylation	2	1	0.04	0.0372
+17	GO:0070973	protein localization to endoplasmic reticulum exit site	2	1	0.04	0.0372
+18	GO:1900011	negative regulation of corticotropin-releasing hormone receptor activity	2	1	0.04	0.0372
+19	GO:0006024	glycosaminoglycan biosynthetic process	2	1	0.04	0.0372
+20	GO:0070072	vacuolar proton-transporting V-type ATPase complex assembly	2	1	0.04	0.0372
+21	GO:0008612	peptidyl-hypusine biosynthetic process	2	1	0.04	0.0372
+22	GO:0019464	glycine decarboxylation via glycine cleavage system	2	1	0.04	0.0372
+23	GO:0051460	negative regulation of corticotropin secretion	2	1	0.04	0.0372
+24	GO:0002939	tRNA N1-guanine methylation	2	1	0.04	0.0372
+25	GO:0009098	L-leucine biosynthetic process	2	1	0.04	0.0372
+26	GO:1990180	mitochondrial tRNA 3'-end processing	3	1	0.06	0.0553
+27	GO:0009312	oligosaccharide biosynthetic process	3	1	0.06	0.0553
+28	GO:0098869	cellular oxidant detoxification	3	1	0.06	0.0553
+29	GO:0097250	mitochondrial respirasome assembly	3	1	0.06	0.0553
+30	GO:0006450	regulation of translational fidelity	3	1	0.06	0.0553
+31	GO:0009249	protein lipoylation	3	1	0.06	0.0553
+32	GO:0009235	cobalamin metabolic process	3	1	0.06	0.0553
+33	GO:0009099	L-valine biosynthetic process	3	1	0.06	0.0553
+34	GO:0030031	cell projection assembly	77	4	1.45	0.0720
+35	GO:0006751	glutathione catabolic process	4	1	0.08	0.0731
+36	GO:0035735	intraciliary transport involved in cilium assembly	4	1	0.08	0.0731
+37	GO:0006695	cholesterol biosynthetic process	4	1	0.08	0.0731
+38	GO:0006369	termination of RNA polymerase II transcription	4	1	0.08	0.0731
+39	GO:0006370	7-methylguanosine mRNA capping	4	1	0.08	0.0731
+40	GO:0070131	positive regulation of mitochondrial translation	4	1	0.08	0.0731
+41	GO:0031591	wybutosine biosynthetic process	4	1	0.08	0.0731
+42	GO:0000244	spliceosomal tri-snRNP complex assembly	4	1	0.08	0.0731
+43	GO:0042325	regulation of phosphorylation	73	2	1.37	0.0733
+44	GO:0032259	methylation	62	6	1.16	0.0875
+45	GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	5	1	0.09	0.0905
+46	GO:0017183	protein histidyl modification to diphthamide	5	1	0.09	0.0905
+47	GO:0032958	inositol phosphate biosynthetic process	5	1	0.09	0.0905
+48	GO:0018095	protein polyglutamylation	5	1	0.09	0.0905
+49	GO:0044782	cilium organization	84	4	1.58	0.1062
+50	GO:0009435	NAD+ biosynthetic process	6	1	0.11	0.1076
+51	GO:0047496	vesicle transport along microtubule	6	1	0.11	0.1076
+52	GO:0042276	error-prone translesion synthesis	6	1	0.11	0.1076
+53	GO:0007097	nuclear migration	6	1	0.11	0.1076
+54	GO:0035721	intraciliary retrograde transport	7	1	0.13	0.1244
+55	GO:0070475	rRNA base methylation	7	1	0.13	0.1244
+56	GO:0051131	chaperone-mediated protein complex assembly	7	1	0.13	0.1244
+57	GO:0019216	regulation of lipid metabolic process	7	1	0.13	0.1244
+58	GO:0032543	mitochondrial translation	38	3	0.71	0.1253
+59	GO:0032869	cellular response to insulin stimulus	8	1	0.15	0.1409
+60	GO:0000132	establishment of mitotic spindle orientation	8	1	0.15	0.1409
+61	GO:0034975	protein folding in endoplasmic reticulum	8	1	0.15	0.1409
+62	GO:0007281	germ cell development	8	1	0.15	0.1409
+63	GO:0000467	exonucleolytic trimming to generate mature 3'-end of 5.8S rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	8	1	0.15	0.1409
+64	GO:0006415	translational termination	8	1	0.15	0.1409
+65	GO:0006783	heme biosynthetic process	9	1	0.17	0.1570
+66	GO:0006879	intracellular iron ion homeostasis	9	1	0.17	0.1570
+67	GO:0030150	protein import into mitochondrial matrix	10	1	0.19	0.1729
+68	GO:0030490	maturation of SSU-rRNA	36	3	0.68	0.1861
+69	GO:0006904	vesicle docking involved in exocytosis	11	1	0.21	0.1884
+70	GO:0018345	protein palmitoylation	11	1	0.21	0.1884
+71	GO:0030866	cortical actin cytoskeleton organization	11	1	0.21	0.1884
+72	GO:0001708	cell fate specification	12	1	0.23	0.2037
+73	GO:0036297	interstrand cross-link repair	12	1	0.23	0.2037
+74	GO:0006826	iron ion transport	12	1	0.23	0.2037
+75	GO:0043409	negative regulation of MAPK cascade	13	1	0.24	0.2187
+76	GO:0002098	tRNA wobble uridine modification	13	1	0.24	0.2187
+77	GO:0009755	hormone-mediated signaling pathway	13	1	0.24	0.2187
+78	GO:0000289	nuclear-transcribed mRNA poly(A) tail shortening	13	1	0.24	0.2187
+79	GO:0036503	ERAD pathway	14	1	0.26	0.2334
+80	GO:0006518	peptide metabolic process	15	1	0.28	0.2478
+81	GO:0051260	protein homooligomerization	15	1	0.28	0.2478
+82	GO:0006888	endoplasmic reticulum to Golgi vesicle-mediated transport	52	2	0.98	0.2556
+83	GO:0006400	tRNA modification	49	4	0.92	0.2573
+84	GO:1903818	positive regulation of voltage-gated potassium channel activity	16	1	0.3	0.2620
+85	GO:0005977	glycogen metabolic process	16	1	0.3	0.2620
+86	GO:0030431	sleep	16	1	0.3	0.2620
+87	GO:0030488	tRNA methylation	19	2	0.36	0.2739
+88	GO:0006890	retrograde vesicle-mediated transport, Golgi to endoplasmic reticulum	17	1	0.32	0.2759
+89	GO:0032222	regulation of synaptic transmission, cholinergic	17	1	0.32	0.2759
+90	GO:0006469	negative regulation of protein kinase activity	17	1	0.32	0.2759
+91	GO:0006887	exocytosis	57	2	1.07	0.3023
+92	GO:0032509	endosome transport via multivesicular body sorting pathway	19	1	0.36	0.3029
+93	GO:0009306	protein secretion	19	1	0.36	0.3029
+94	GO:0000245	spliceosomal complex assembly	19	1	0.36	0.3029
+95	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	25	2	0.47	0.3140
+96	GO:0006511	ubiquitin-dependent protein catabolic process	172	3	3.23	0.3226
+97	GO:0031032	actomyosin structure organization	21	1	0.39	0.3290
+98	GO:0045324	late endosome to vacuole transport	21	1	0.39	0.3290
+99	GO:0046854	phosphatidylinositol phosphate biosynthetic process	21	1	0.39	0.3290
+100	GO:0008033	tRNA processing	78	6	1.47	0.3318

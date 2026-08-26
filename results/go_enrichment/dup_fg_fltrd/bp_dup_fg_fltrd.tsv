@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0042276	error-prone translesion synthesis	5	2	0.07	0.0017
+2	GO:0006508	proteolysis	206	8	2.76	0.0133
+3	GO:1901190	regulation of formation of translation initiation ternary complex	1	1	0.01	0.0134
+4	GO:0071679	commissural neuron axon guidance	1	1	0.01	0.0134
+5	GO:0046359	butyrate catabolic process	1	1	0.01	0.0134
+6	GO:0045880	positive regulation of smoothened signaling pathway	1	1	0.01	0.0134
+7	GO:0016579	protein deubiquitination	47	3	0.63	0.0246
+8	GO:0042542	response to hydrogen peroxide	2	1	0.03	0.0266
+9	GO:0070987	error-free translesion synthesis	2	1	0.03	0.0266
+10	GO:0060169	negative regulation of adenosine receptor signaling pathway	2	1	0.03	0.0266
+11	GO:0097037	heme export	2	1	0.03	0.0266
+12	GO:0010526	transposable element silencing	2	1	0.03	0.0266
+13	GO:0042078	germ-line stem cell division	2	1	0.03	0.0266
+14	GO:0046900	tetrahydrofolylpolyglutamate metabolic process	2	1	0.03	0.0266
+15	GO:0006654	phosphatidic acid biosynthetic process	2	1	0.03	0.0266
+16	GO:0019427	acetyl-CoA biosynthetic process from acetate	2	1	0.03	0.0266
+17	GO:0043103	hypoxanthine salvage	2	1	0.03	0.0266
+18	GO:0015886	heme transport	5	2	0.07	0.0392
+19	GO:0070989	oxidative demethylation	3	1	0.04	0.0396
+20	GO:0006154	adenosine catabolic process	3	1	0.04	0.0396
+21	GO:0046103	inosine biosynthetic process	3	1	0.04	0.0396
+22	GO:0006000	fructose metabolic process	3	1	0.04	0.0396
+23	GO:0006003	fructose 2,6-bisphosphate metabolic process	3	1	0.04	0.0396
+24	GO:0033539	fatty acid beta-oxidation using acyl-CoA dehydrogenase	3	1	0.04	0.0396
+25	GO:0033387	putrescine biosynthetic process from arginine, via ornithine	3	1	0.04	0.0396
+26	GO:0090385	phagosome-lysosome fusion	3	1	0.04	0.0396
+27	GO:0008286	insulin receptor signaling pathway	4	1	0.05	0.0525
+28	GO:0007158	neuron cell-cell adhesion	4	1	0.05	0.0525
+29	GO:0097104	postsynaptic membrane assembly	4	1	0.05	0.0525
+30	GO:0097105	presynaptic membrane assembly	4	1	0.05	0.0525
+31	GO:0017183	protein histidyl modification to diphthamide	4	1	0.05	0.0525
+32	GO:0098703	calcium ion import across plasma membrane	4	1	0.05	0.0525
+33	GO:0046512	sphingosine biosynthetic process	5	1	0.07	0.0652
+34	GO:0006390	mitochondrial transcription	5	1	0.07	0.0652
+35	GO:0042744	hydrogen peroxide catabolic process	5	1	0.07	0.0652
+36	GO:0034982	mitochondrial protein processing	5	1	0.07	0.0652
+37	GO:0045944	positive regulation of transcription by RNA polymerase II	70	3	0.94	0.0668
+38	GO:0009314	response to radiation	24	2	0.32	0.0770
+39	GO:0043248	proteasome assembly	6	1	0.08	0.0777
+40	GO:0008333	endosome to lysosome transport	7	1	0.09	0.0901
+41	GO:0032012	regulation of ARF protein signal transduction	7	1	0.09	0.0901
+42	GO:0007340	acrosome reaction	9	1	0.12	0.1143
+43	GO:0048488	synaptic vesicle endocytosis	9	1	0.12	0.1143
+44	GO:0051123	RNA polymerase II preinitiation complex assembly	9	1	0.12	0.1143
+45	GO:0007602	phototransduction	9	1	0.12	0.1143
+46	GO:0006515	protein quality control for misfolded or incompletely synthesized proteins	9	1	0.12	0.1143
+47	GO:0055085	transmembrane transport	449	9	6.01	0.1359
+48	GO:0009887	animal organ morphogenesis	11	1	0.15	0.1379
+49	GO:0007160	cell-matrix adhesion	13	1	0.17	0.1609
+50	GO:0000209	protein polyubiquitination	54	2	0.72	0.1627
+51	GO:0006511	ubiquitin-dependent protein catabolic process	182	3	2.44	0.1940
+52	GO:0051260	protein homooligomerization	16	1	0.21	0.1943
+53	GO:0009408	response to heat	16	1	0.21	0.1943
+54	GO:0045727	positive regulation of translation	18	1	0.24	0.2158
+55	GO:0006270	DNA replication initiation	18	1	0.24	0.2158
+56	GO:0042026	protein refolding	19	1	0.25	0.2263
+57	GO:0030488	tRNA methylation	20	1	0.27	0.2367
+58	GO:0030198	extracellular matrix organization	21	1	0.28	0.2469
+59	GO:0007417	central nervous system development	21	1	0.28	0.2469
+60	GO:0007189	adenylate cyclase-activating G protein-coupled receptor signaling pathway	22	1	0.29	0.2571
+61	GO:0030162	regulation of proteolysis	24	1	0.32	0.2769
+62	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	26	1	0.35	0.2962
+63	GO:0007033	vacuole organization	37	2	0.5	0.3211
+64	GO:0042157	lipoprotein metabolic process	30	1	0.4	0.3333
+65	GO:0007155	cell adhesion	113	3	1.51	0.3478
+66	GO:0006606	protein import into nucleus	32	1	0.43	0.3512
+67	GO:0006405	RNA export from nucleus	32	1	0.43	0.3512
+68	GO:1902600	proton transmembrane transport	34	1	0.46	0.3685
+69	GO:0071805	potassium ion transmembrane transport	34	1	0.46	0.3685
+70	GO:0042981	regulation of apoptotic process	38	1	0.51	0.4019
+71	GO:0006357	regulation of transcription by RNA polymerase II	473	9	6.33	0.4297
+72	GO:0007169	cell surface receptor protein tyrosine kinase signaling pathway	49	2	0.66	0.4520
+73	GO:0007411	axon guidance	47	2	0.63	0.4591
+74	GO:0045893	positive regulation of DNA-templated transcription	118	4	1.58	0.4685
+75	GO:0006338	chromatin remodeling	49	1	0.66	0.4849
+76	GO:0006820	monoatomic anion transport	50	1	0.67	0.4919
+77	GO:0050804	modulation of chemical synaptic transmission	51	1	0.68	0.4987
+78	GO:0010468	regulation of gene expression	833	14	11.15	0.5052
+79	GO:0006355	regulation of DNA-templated transcription	648	11	8.68	0.5429
+80	GO:0006869	lipid transport	58	1	0.78	0.5443
+81	GO:0048870	cell motility	58	1	0.78	0.5443
+82	GO:0006457	protein folding	84	2	1.12	0.5822
+83	GO:0007015	actin filament organization	72	1	0.96	0.6235
+84	GO:0016197	endosomal transport	78	1	1.04	0.6531
+85	GO:0006468	protein phosphorylation	273	3	3.66	0.7159
+86	GO:0005975	carbohydrate metabolic process	143	2	1.91	0.7582
+87	GO:0043161	proteasome-mediated ubiquitin-dependent protein catabolic process	122	1	1.63	0.8103
+88	GO:0007166	cell surface receptor signaling pathway	237	5	3.17	0.8496
+89	GO:0006412	translation	235	2	3.15	0.8909
+90	GO:0035556	intracellular signal transduction	351	2	4.7	0.9080
+91	GO:0008589	regulation of smoothened signaling pathway	2	1	0.03	1.0000
+92	GO:0046173	polyol biosynthetic process	17	1	0.23	1.0000
+93	GO:0071897	DNA biosynthetic process	14	2	0.19	1.0000
+94	GO:0019985	translesion synthesis	7	2	0.09	1.0000
+95	GO:0072521	purine-containing compound metabolic process	119	2	1.59	1.0000
+96	GO:0009725	response to hormone	20	1	0.27	1.0000
+97	GO:0042254	ribosome biogenesis	161	1	2.16	1.0000
+98	GO:0072522	purine-containing compound biosynthetic process	70	2	0.94	1.0000
+99	GO:0043412	macromolecule modification	734	10	9.83	1.0000
+100	GO:0072523	purine-containing compound catabolic process	20	1	0.27	1.0000

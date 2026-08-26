@@ -13,11 +13,6 @@ folders <- dir(here("results/significant_gene_id_lists"), full.names = TRUE)
 
 for (folder in folders) {
 
-  if (grepl("ptep", folder)) {
-    annot_filename <- here("data/ptep_go_annots.all.tsv")
-  } else {
-    annot_filename <- here("data/udiv_go_annots.all.tsv")
-  }
   # hit files are all files without "universe" in the name
   hit_files <- grep(
     list.files(folder),
@@ -32,6 +27,12 @@ for (folder in folders) {
     pattern = "*universe*",
     value = TRUE
   )
+
+  if (grepl("ptep", universe_file)) {
+    annot_filename <- here("data/ptep_go_annots.all.tsv")
+  } else {
+    annot_filename <- here("data/udiv_go_annots.all.tsv")
+  }
 
   universe_genes <- scan(
     paste0(folder, "/", universe_file),
@@ -98,7 +99,11 @@ for (folder in folders) {
 
       # write it out into a file for python post-processing
       # Remove _locs.txt from the filename to get clean base name
-      base_name <- sub("\\.txt$", "", basename(hits))
+      if (grepl("ptep", hits)) {
+        base_name <- sub("\\_ptep_locs.txt$", "", basename(hits))
+      } else {
+        base_name <- sub("\\_udiv_locs.txt$", "", basename(hits))
+      }
 
       output_dir <- here(
         "results/go_enrichment", base_name
@@ -107,7 +112,7 @@ for (folder in folders) {
         dir.create(output_dir, recursive = TRUE)
       }
 
-      output_filename <- file.path(output_dir, paste0(go_category, "_", hits))
+      output_filename <- file.path(output_dir, paste0(go_category, "_", base_name, ".tsv"))
 
       write.table(
         results_table,

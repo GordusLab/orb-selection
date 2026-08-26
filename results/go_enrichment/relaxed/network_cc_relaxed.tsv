@@ -1,0 +1,6 @@
+GO.ID	Description	p.Val
+GO:0031234	extrinsic component of cytoplasmic side of plasma membrane	0.0084
+GO:0045202	synapse	0.0086
+GO:0030424	axon	0.0089
+GO:0005886	plasma membrane	0.0209
+GO:0009986	cell surface	0.0300

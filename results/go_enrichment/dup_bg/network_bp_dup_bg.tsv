@@ -1,0 +1,9 @@
+GO.ID	Description	p.Val
+GO:0008284	positive regulation of cell population proliferation	0.0100
+GO:0032259	methylation	0.0251
+GO:0090263	positive regulation of canonical Wnt signaling pathway	0.0257
+GO:0048814	regulation of dendrite morphogenesis	0.0257
+GO:0019509	L-methionine salvage from methylthioadenosine	0.0257
+GO:0009435	NAD+ biosynthetic process	0.0372
+GO:0015813	L-glutamate transmembrane transport	0.0372
+GO:0000387	spliceosomal snRNP assembly	0.0426

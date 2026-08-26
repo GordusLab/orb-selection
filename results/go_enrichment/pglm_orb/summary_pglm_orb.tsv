@@ -1,0 +1,10 @@
+Description	Count	p	Ontology
+membrane fusion	4	0.015	bp
+Golgi organization	3	0.018	bp
+protein homooligomerization	2	0.025	bp
+TRAPP complex	2	0.011	cc
+endoplasmic reticulum-Golgi intermediate compartment	2	0.034	cc
+nucleus	36	0.044	cc
+ubiquitin binding	3	0.018	mf
+GTPase activity	6	0.024	mf
+NADP binding	2	0.045	mf

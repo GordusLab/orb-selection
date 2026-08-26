@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0005739	mitochondrion	530	23	10.24	0.0001
+2	GO:0005730	nucleolus	149	12	2.88	0.0011
+3	GO:0032937	SREBP-SCAP-Insig complex	1	1	0.02	0.0193
+4	GO:0071546	pi-body	1	1	0.02	0.0193
+5	GO:0032040	small-subunit processome	35	3	0.68	0.0294
+6	GO:0031466	Cul5-RING ubiquitin ligase complex	2	1	0.04	0.0383
+7	GO:0016513	core-binding factor complex	2	1	0.04	0.0383
+8	GO:0005960	glycine cleavage complex	2	1	0.04	0.0383
+9	GO:0005666	RNA polymerase III complex	17	2	0.33	0.0416
+10	GO:0005655	nucleolar ribonuclease P complex	3	1	0.06	0.0568
+11	GO:0016602	CCAAT-binding factor complex	3	1	0.06	0.0568
+12	GO:0031499	TRAMP complex	3	1	0.06	0.0568
+13	GO:0036038	MKS complex	4	1	0.08	0.0751
+14	GO:0071339	MLL1 complex	4	1	0.08	0.0751
+15	GO:0031209	SCAR complex	4	1	0.08	0.0751
+16	GO:0043240	Fanconi anaemia nuclear complex	5	1	0.1	0.0929
+17	GO:0044545	NSL complex	5	1	0.1	0.0929
+18	GO:0031428	box C/D methylation guide snoRNP complex	5	1	0.1	0.0929
+19	GO:0005795	Golgi stack	20	2	0.39	0.1098
+20	GO:0033588	elongator holoenzyme complex	6	1	0.12	0.1105
+21	GO:0035098	ESC/E(Z) complex	6	1	0.12	0.1105
+22	GO:0005744	TIM23 mitochondrial import inner membrane translocase complex	6	1	0.12	0.1105
+23	GO:0016581	NuRD complex	6	1	0.12	0.1105
+24	GO:0016272	prefoldin complex	6	1	0.12	0.1105
+25	GO:0030015	CCR4-NOT core complex	6	1	0.12	0.1105
+26	GO:0036064	ciliary basal body	30	2	0.58	0.1135
+27	GO:0005667	transcription regulator complex	123	6	2.38	0.1175
+28	GO:0005762	mitochondrial large ribosomal subunit	32	2	0.62	0.1263
+29	GO:0000139	Golgi membrane	65	3	1.26	0.1302
+30	GO:0000815	ESCRT III complex	8	1	0.15	0.1445
+31	GO:0005868	cytoplasmic dynein complex	8	1	0.15	0.1445
+32	GO:0031011	Ino80 complex	9	1	0.17	0.1611
+33	GO:0071014	post-mRNA release spliceosomal complex	9	1	0.17	0.1611
+34	GO:0005771	multivesicular body	10	1	0.19	0.1773
+35	GO:0030688	preribosome, small subunit precursor	11	1	0.21	0.1932
+36	GO:0005881	cytoplasmic microtubule	12	1	0.23	0.2088
+37	GO:0005685	U1 snRNP	12	1	0.23	0.2088
+38	GO:0005942	phosphatidylinositol 3-kinase complex	13	1	0.25	0.2241
+39	GO:0005930	axoneme	13	1	0.25	0.2241
+40	GO:0012505	endomembrane system	795	18	15.35	0.2389
+41	GO:0031985	Golgi cisterna	14	1	0.27	0.2392
+42	GO:0071004	U2-type prespliceosome	14	1	0.27	0.2392
+43	GO:0005849	mRNA cleavage factor complex	14	1	0.27	0.2392
+44	GO:0005789	endoplasmic reticulum membrane	182	6	3.52	0.2658
+45	GO:0005684	U2-type spliceosomal complex	31	2	0.6	0.2810
+46	GO:0005737	cytoplasm	2986	71	57.67	0.2817
+47	GO:0030119	AP-type membrane coat adaptor complex	18	1	0.35	0.2964
+48	GO:0031519	PcG protein complex	26	2	0.5	0.3214
+49	GO:0000118	histone deacetylase complex	26	2	0.5	0.3214
+50	GO:0005761	mitochondrial ribosome	53	3	1.02	0.3333
+51	GO:0043025	neuronal cell body	21	1	0.41	0.3365
+52	GO:0005768	endosome	141	3	2.72	0.3949
+53	GO:0005741	mitochondrial outer membrane	27	1	0.52	0.4100
+54	GO:0000776	kinetochore	27	1	0.52	0.4100
+55	GO:0008021	synaptic vesicle	28	1	0.54	0.4215
+56	GO:0071011	precatalytic spliceosome	28	1	0.54	0.4215
+57	GO:0030686	90S preribosome	29	1	0.56	0.4327
+58	GO:0000932	P-body	30	1	0.58	0.4437
+59	GO:0005875	microtubule associated complex	44	2	0.85	0.4524
+60	GO:0005765	lysosomal membrane	31	1	0.6	0.4545
+61	GO:0031201	SNARE complex	35	1	0.68	0.4957
+62	GO:0005802	trans-Golgi network	40	1	0.77	0.5428
+63	GO:0000151	ubiquitin ligase complex	103	2	1.99	0.6095
+64	GO:0005635	nuclear envelope	50	1	0.97	0.6243
+65	GO:0005743	mitochondrial inner membrane	70	2	1.35	0.6297
+66	GO:0016020	membrane	1821	28	35.17	0.6951
+67	GO:0005794	Golgi apparatus	243	6	4.69	0.7092
+68	GO:0045202	synapse	123	2	2.38	0.7747
+69	GO:0000785	chromatin	151	3	2.92	0.7943
+70	GO:0015629	actin cytoskeleton	94	1	1.82	0.8423
+71	GO:0005829	cytosol	442	6	8.54	0.8652
+72	GO:0005576	extracellular region	336	3	6.49	0.9046
+73	GO:0005615	extracellular space	219	2	4.23	0.9293
+74	GO:0043005	neuron projection	142	1	2.74	0.9393
+75	GO:0005634	nucleus	1875	39	36.21	0.9582
+76	GO:0005654	nucleoplasm	216	4	4.17	0.9618
+77	GO:0005886	plasma membrane	762	2	14.72	1.0000
+78	GO:0000313	organellar ribosome	53	3	1.02	1.0000
+79	GO:0048475	coated membrane	36	1	0.7	1.0000
+80	GO:0030532	small nuclear ribonucleoprotein complex	38	1	0.73	1.0000
+81	GO:0000315	organellar large ribosomal subunit	32	2	0.62	1.0000
+82	GO:0030677	ribonuclease P complex	7	1	0.14	1.0000
+83	GO:0099512	supramolecular fiber	100	1	1.93	1.0000
+84	GO:0099513	polymeric cytoskeletal fiber	76	1	1.47	1.0000
+85	GO:0031461	cullin-RING ubiquitin ligase complex	55	1	1.06	1.0000
+86	GO:0005856	cytoskeleton	333	4	6.43	1.0000
+87	GO:0043226	organelle	3792	82	73.24	1.0000
+88	GO:0043227	membrane-bounded organelle	3362	80	64.93	1.0000
+89	GO:0031981	nuclear lumen	413	16	7.98	1.0000
+90	GO:0043228	membraneless organelle	970	24	18.73	1.0000
+91	GO:0031982	vesicle	266	3	5.14	1.0000
+92	GO:0035097	histone methyltransferase complex	23	2	0.44	1.0000
+93	GO:0043229	intracellular organelle	3732	81	72.08	1.0000
+94	GO:0031984	organelle subcompartment	241	9	4.65	1.0000
+95	GO:0005740	mitochondrial envelope	119	3	2.3	1.0000
+96	GO:0120025	plasma membrane bounded cell projection	236	4	4.56	1.0000
+97	GO:0044665	MLL1/2 complex	4	1	0.08	1.0000
+98	GO:0000775	chromosome, centromeric region	33	1	0.64	1.0000
+99	GO:0000779	condensed chromosome, centromeric region	28	1	0.54	1.0000
+100	GO:0045495	pole plasm	11	1	0.21	1.0000

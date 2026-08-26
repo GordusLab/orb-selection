@@ -1,0 +1,12 @@
+GO.ID	Description	p.Val
+GO:0030154	cell differentiation	0.00026
+GO:0045087	innate immune response	0.00569
+GO:0010468	regulation of gene expression	0.01045
+GO:0007165	signal transduction	0.01687
+GO:0042981	regulation of apoptotic process	0.01811
+GO:0007018	microtubule-based movement	0.01922
+GO:0018105	peptidyl-serine phosphorylation	0.02434
+GO:0006468	protein phosphorylation	0.03473
+GO:0032502	developmental process	0.03831
+GO:0097192	extrinsic apoptotic signaling pathway in absence of ligand	0.04303
+GO:0007417	central nervous system development	0.04309

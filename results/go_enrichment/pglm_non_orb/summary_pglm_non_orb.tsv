@@ -1,0 +1,11 @@
+Description	Count	p	Ontology
+rRNA methylation	3	0.0090	bp
+piRNA processing	2	0.0091	bp
+cell redox homeostasis	2	0.0116	bp
+mitochondrion	23	0.0001	cc
+nucleolus	12	0.0011	cc
+small-subunit processome	3	0.0294	cc
+RNA polymerase III complex	2	0.0416	cc
+nucleotidyltransferase activity	7	0.020	mf
+double-stranded RNA binding	2	0.024	mf
+FAD binding	2	0.037	mf

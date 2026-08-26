@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0008284	positive regulation of cell population proliferation	9	2	0.15	0.0086
+2	GO:0008219	cell death	85	3	1.37	0.0160
+3	GO:0009436	glyoxylate catabolic process	1	1	0.02	0.0162
+4	GO:0046168	glycerol-3-phosphate catabolic process	1	1	0.02	0.0162
+5	GO:0006011	UDP-alpha-D-glucose metabolic process	1	1	0.02	0.0162
+6	GO:0046327	glycerol biosynthetic process from pyruvate	1	1	0.02	0.0162
+7	GO:0001654	eye development	1	1	0.02	0.0162
+8	GO:0001680	tRNA 3'-terminal CCA addition	1	1	0.02	0.0162
+9	GO:0070183	mitochondrial tryptophanyl-tRNA aminoacylation	1	1	0.02	0.0162
+10	GO:0035965	cardiolipin acyl-chain remodeling	1	1	0.02	0.0162
+11	GO:0034462	small-subunit processome assembly	1	1	0.02	0.0162
+12	GO:1903288	positive regulation of potassium ion import across plasma membrane	1	1	0.02	0.0162
+13	GO:1990845	adaptive thermogenesis	1	1	0.02	0.0162
+14	GO:0071333	cellular response to glucose stimulus	1	1	0.02	0.0162
+15	GO:0010766	negative regulation of sodium ion transport	1	1	0.02	0.0162
+16	GO:0019543	propionate catabolic process	1	1	0.02	0.0162
+17	GO:0070836	caveola assembly	1	1	0.02	0.0162
+18	GO:0050801	monoatomic ion homeostasis	76	2	1.23	0.0162
+19	GO:0043516	regulation of DNA damage response, signal transduction by p53 class mediator	2	1	0.03	0.0320
+20	GO:0009409	response to cold	2	1	0.03	0.0320
+21	GO:0043653	mitochondrial fragmentation involved in apoptotic process	2	1	0.03	0.0320
+22	GO:0110031	negative regulation of G2/MI transition of meiotic cell cycle	2	1	0.03	0.0320
+23	GO:0044208	'de novo' AMP biosynthetic process	2	1	0.03	0.0320
+24	GO:0000387	spliceosomal snRNP assembly	19	2	0.31	0.0369
+25	GO:0001678	intracellular glucose homeostasis	4	2	0.06	0.0472
+26	GO:0006048	UDP-N-acetylglucosamine biosynthetic process	3	1	0.05	0.0477
+27	GO:1990180	mitochondrial tRNA 3'-end processing	3	1	0.05	0.0477
+28	GO:0097037	heme export	3	1	0.05	0.0477
+29	GO:0009880	embryonic pattern specification	3	1	0.05	0.0477
+30	GO:0051256	mitotic spindle midzone assembly	3	1	0.05	0.0477
+31	GO:0000480	endonucleolytic cleavage in 5'-ETS of tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	3	1	0.05	0.0477
+32	GO:0000472	endonucleolytic cleavage to generate mature 5'-end of SSU-rRNA from (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	3	1	0.05	0.0477
+33	GO:0045944	positive regulation of transcription by RNA polymerase II	89	4	1.44	0.0552
+34	GO:0000122	negative regulation of transcription by RNA polymerase II	56	3	0.9	0.0613
+35	GO:0033540	fatty acid beta-oxidation using acyl-CoA oxidase	4	1	0.06	0.0631
+36	GO:0043153	entrainment of circadian clock by photoperiod	4	1	0.06	0.0631
+37	GO:0016559	peroxisome fission	4	1	0.06	0.0631
+38	GO:0000972	transcription-dependent tethering of RNA polymerase II gene DNA at nuclear periphery	4	1	0.06	0.0631
+39	GO:0006072	glycerol-3-phosphate metabolic process	6	2	0.1	0.0774
+40	GO:0000447	endonucleolytic cleavage in ITS1 to separate SSU-rRNA from 5.8S rRNA and LSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	5	1	0.08	0.0782
+41	GO:0000055	ribosomal large subunit export from nucleus	5	1	0.08	0.0782
+42	GO:0006729	tetrahydrobiopterin biosynthetic process	5	1	0.08	0.0782
+43	GO:0060537	muscle tissue development	5	1	0.08	0.0782
+44	GO:0016255	attachment of GPI anchor to protein	5	1	0.08	0.0782
+45	GO:0048814	regulation of dendrite morphogenesis	5	1	0.08	0.0782
+46	GO:0030036	actin cytoskeleton organization	124	7	2	0.0833
+47	GO:0070593	dendrite self-avoidance	6	1	0.1	0.0931
+48	GO:2000779	regulation of double-strand break repair	6	1	0.1	0.0931
+49	GO:0051016	barbed-end actin filament capping	6	1	0.1	0.0931
+50	GO:0034315	regulation of Arp2/3 complex-mediated actin nucleation	6	1	0.1	0.0931
+51	GO:0033993	response to lipid	6	1	0.1	0.0931
+52	GO:0045214	sarcomere organization	6	1	0.1	0.0931
+53	GO:0007411	axon guidance	34	2	0.55	0.1038
+54	GO:0061061	muscle structure development	19	2	0.31	0.1069
+55	GO:0006812	monoatomic cation transport	218	5	3.52	0.1071
+56	GO:0035721	intraciliary retrograde transport	7	1	0.11	0.1078
+57	GO:0046040	IMP metabolic process	7	1	0.11	0.1078
+58	GO:0006384	transcription initiation at RNA polymerase III promoter	7	1	0.11	0.1078
+59	GO:0046835	carbohydrate phosphorylation	7	1	0.11	0.1078
+60	GO:0032922	circadian regulation of gene expression	7	1	0.11	0.1078
+61	GO:0043687	post-translational protein modification	216	3	3.49	0.1093
+62	GO:0043484	regulation of RNA splicing	36	2	0.58	0.1143
+63	GO:0017121	plasma membrane phospholipid scrambling	8	1	0.13	0.1222
+64	GO:0007420	brain development	8	1	0.13	0.1222
+65	GO:0034587	piRNA processing	8	1	0.13	0.1222
+66	GO:0019432	triglyceride biosynthetic process	10	2	0.16	0.1351
+67	GO:1990542	mitochondrial transmembrane transport	9	1	0.15	0.1364
+68	GO:0007507	heart development	9	1	0.15	0.1364
+69	GO:0016973	poly(A)+ mRNA export from nucleus	9	1	0.15	0.1364
+70	GO:0000266	mitochondrial fission	9	1	0.15	0.1364
+71	GO:0007218	neuropeptide signaling pathway	9	1	0.15	0.1364
+72	GO:0035194	regulatory ncRNA-mediated post-transcriptional gene silencing	10	1	0.16	0.1504
+73	GO:0006446	regulation of translational initiation	10	1	0.16	0.1504
+74	GO:0006094	gluconeogenesis	10	1	0.16	0.1504
+75	GO:0006508	proteolysis	223	6	3.6	0.1508
+76	GO:0043113	receptor clustering	11	1	0.18	0.1641
+77	GO:0097120	receptor localization to synapse	11	1	0.18	0.1641
+78	GO:0006082	organic acid metabolic process	219	6	3.54	0.1748
+79	GO:0051017	actin filament bundle assembly	12	1	0.19	0.1776
+80	GO:0072657	protein localization to membrane	54	3	0.87	0.1886
+81	GO:0045197	establishment or maintenance of epithelial cell apical/basal polarity	13	1	0.21	0.1909
+82	GO:0000027	ribosomal large subunit assembly	13	1	0.21	0.1909
+83	GO:0051156	glucose 6-phosphate metabolic process	13	1	0.21	0.1909
+84	GO:0006805	xenobiotic metabolic process	13	1	0.21	0.1909
+85	GO:0006096	glycolytic process	13	1	0.21	0.1909
+86	GO:0006006	glucose metabolic process	24	2	0.39	0.2025
+87	GO:0055088	lipid homeostasis	14	1	0.23	0.2040
+88	GO:0061512	protein localization to cilium	14	1	0.23	0.2040
+89	GO:0007007	inner mitochondrial membrane organization	14	1	0.23	0.2040
+90	GO:0008654	phospholipid biosynthetic process	78	2	1.26	0.2041
+91	GO:0006888	endoplasmic reticulum to Golgi vesicle-mediated transport	52	2	0.84	0.2048
+92	GO:0005977	glycogen metabolic process	16	1	0.26	0.2296
+93	GO:0006820	monoatomic anion transport	47	2	0.76	0.2410
+94	GO:0006890	retrograde vesicle-mediated transport, Golgi to endoplasmic reticulum	17	1	0.27	0.2421
+95	GO:0009887	animal organ morphogenesis	17	1	0.27	0.2421
+96	GO:0000723	telomere maintenance	18	1	0.29	0.2543
+97	GO:0022008	neurogenesis	113	4	1.82	0.2629
+98	GO:0030488	tRNA methylation	19	1	0.31	0.2664
+99	GO:0006270	DNA replication initiation	19	1	0.31	0.2664
+100	GO:0000245	spliceosomal complex assembly	19	1	0.31	0.2664

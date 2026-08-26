@@ -1,0 +1,22 @@
+Description	Count	p	Ontology
+heme transport	4	0.0063	bp
+error-prone translesion synthesis	2	0.0199	bp
+fibroblast growth factor receptor signaling pathway	2	0.0199	bp
+cell-matrix adhesion	3	0.0204	bp
+protein deubiquitination	6	0.0212	bp
+phagocytosis	3	0.0465	bp
+sphingosine metabolic process	2	0.0466	bp
+monoatomic ion homeostasis	4	0.0469	bp
+phosphorylation	19	0.0492	bp
+extracellular space	15	0.0045	cc
+cytosol	28	0.0216	cc
+proteasome core complex, alpha-subunit complex	2	0.0353	cc
+early endosome membrane	2	0.0457	cc
+vesicle	7	0.0476	cc
+heme transmembrane transporter activity	4	2.9e-05	mf
+heme binding	11	0.00047	mf
+chromatin insulator sequence binding	2	0.02234	mf
+NADP binding	4	0.02519	mf
+serine-type endopeptidase inhibitor activity	3	0.04224	mf
+Hsp70 protein binding	2	0.04392	mf
+heparin binding	2	0.04392	mf

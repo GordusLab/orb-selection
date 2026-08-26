@@ -1,0 +1,6 @@
+GO.ID	Description	p.Val
+GO:0005615	extracellular space	0.0045
+GO:0005829	cytosol	0.0216
+GO:0019773	proteasome core complex, alpha-subunit complex	0.0353
+GO:0031901	early endosome membrane	0.0457
+GO:0031982	vesicle	0.0476

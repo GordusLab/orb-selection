@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0090630	activation of GTPase activity	8	3	0.4	0.0057
+2	GO:0006370	7-methylguanosine mRNA capping	3	2	0.15	0.0072
+3	GO:0031398	positive regulation of protein ubiquitination	4	2	0.2	0.0140
+4	GO:0006020	inositol metabolic process	2	2	0.1	0.0497
+5	GO:0030330	DNA damage response, signal transduction by p53 class mediator	3	2	0.15	0.0497
+6	GO:0010142	farnesyl diphosphate biosynthetic process, mevalonate pathway	1	1	0.05	0.0500
+7	GO:0046426	negative regulation of receptor signaling pathway via JAK-STAT	1	1	0.05	0.0500
+8	GO:0042276	error-prone translesion synthesis	1	1	0.05	0.0500
+9	GO:0006685	sphingomyelin catabolic process	1	1	0.05	0.0500
+10	GO:0033148	positive regulation of intracellular estrogen receptor signaling pathway	1	1	0.05	0.0500
+11	GO:0070373	negative regulation of ERK1 and ERK2 cascade	1	1	0.05	0.0500
+12	GO:0006021	inositol biosynthetic process	1	1	0.05	0.0500
+13	GO:0015793	glycerol transmembrane transport	1	1	0.05	0.0500
+14	GO:0036498	IRE1-mediated unfolded protein response	1	1	0.05	0.0500
+15	GO:0097345	mitochondrial outer membrane permeabilization	1	1	0.05	0.0500
+16	GO:0019878	L-lysine biosynthetic process via aminoadipic acid	1	1	0.05	0.0500
+17	GO:0018343	protein farnesylation	1	1	0.05	0.0500
+18	GO:0033209	tumor necrosis factor-mediated signaling pathway	1	1	0.05	0.0500
+19	GO:0043252	sodium-independent organic anion transport	1	1	0.05	0.0500
+20	GO:0006798	polyphosphate catabolic process	1	1	0.05	0.0500
+21	GO:0000301	retrograde transport, vesicle recycling within Golgi	1	1	0.05	0.0500
+22	GO:0043065	positive regulation of apoptotic process	8	2	0.4	0.0571
+23	GO:0031124	mRNA 3'-end processing	10	2	0.5	0.0860
+24	GO:0007091	metaphase/anaphase transition of mitotic cell cycle	11	2	0.55	0.0972
+25	GO:0008283	cell population proliferation	20	2	1	0.0975
+26	GO:0043516	regulation of DNA damage response, signal transduction by p53 class mediator	2	1	0.1	0.0976
+27	GO:0070979	protein K11-linked ubiquitination	2	1	0.1	0.0976
+28	GO:0006657	CDP-choline pathway	2	1	0.1	0.0976
+29	GO:0120009	intermembrane lipid transfer	2	1	0.1	0.0976
+30	GO:1902808	positive regulation of cell cycle G1/S phase transition	2	1	0.1	0.0976
+31	GO:0051231	spindle elongation	2	1	0.1	0.0976
+32	GO:0005979	regulation of glycogen biosynthetic process	2	1	0.1	0.0976
+33	GO:0030155	regulation of cell adhesion	2	1	0.1	0.0976
+34	GO:0032924	activin receptor signaling pathway	2	1	0.1	0.0976
+35	GO:0007254	JNK cascade	2	1	0.1	0.0976
+36	GO:0006833	water transport	2	1	0.1	0.0976
+37	GO:0009253	peptidoglycan catabolic process	2	1	0.1	0.0976
+38	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	2	1	0.1	0.0976
+39	GO:0045943	positive regulation of transcription by RNA polymerase I	2	1	0.1	0.0976
+40	GO:0000012	single strand break repair	2	1	0.1	0.0976
+41	GO:0061668	mitochondrial ribosome assembly	2	1	0.1	0.0976
+42	GO:1904263	positive regulation of TORC1 signaling	2	1	0.1	0.0976
+43	GO:0098719	sodium ion import across plasma membrane	2	1	0.1	0.0976
+44	GO:0034614	cellular response to reactive oxygen species	2	1	0.1	0.0976
+45	GO:0034198	cellular response to amino acid starvation	2	1	0.1	0.0976
+46	GO:0006468	protein phosphorylation	110	8	5.5	0.0990
+47	GO:0006511	ubiquitin-dependent protein catabolic process	98	9	4.9	0.1230
+48	GO:0051225	spindle assembly	13	2	0.65	0.1353
+49	GO:0016266	protein O-linked glycosylation via N-acetyl-galactosamine	3	1	0.15	0.1428
+50	GO:0045494	photoreceptor cell maintenance	3	1	0.15	0.1428
+51	GO:0008053	mitochondrial fusion	3	1	0.15	0.1428
+52	GO:0070125	mitochondrial translational elongation	3	1	0.15	0.1428
+53	GO:0035735	intraciliary transport involved in cilium assembly	3	1	0.15	0.1428
+54	GO:0030162	regulation of proteolysis	3	1	0.15	0.1428
+55	GO:0018095	protein polyglutamylation	3	1	0.15	0.1428
+56	GO:0006084	acetyl-CoA metabolic process	3	1	0.15	0.1428
+57	GO:0006384	transcription initiation at RNA polymerase III promoter	3	1	0.15	0.1428
+58	GO:0010507	negative regulation of autophagy	3	1	0.15	0.1428
+59	GO:0035335	peptidyl-tyrosine dephosphorylation	3	1	0.15	0.1428
+60	GO:0034501	protein localization to kinetochore	3	1	0.15	0.1428
+61	GO:1904294	positive regulation of ERAD pathway	3	1	0.15	0.1428
+62	GO:0090090	negative regulation of canonical Wnt signaling pathway	3	1	0.15	0.1428
+63	GO:0016139	glycoside catabolic process	3	1	0.15	0.1428
+64	GO:0015936	coenzyme A metabolic process	3	1	0.15	0.1428
+65	GO:0006488	dolichol-linked oligosaccharide biosynthetic process	3	1	0.15	0.1428
+66	GO:0006397	mRNA processing	104	10	5.2	0.1466
+67	GO:0007052	mitotic spindle organization	14	2	0.7	0.1529
+68	GO:0035556	intracellular signal transduction	172	17	8.61	0.1823
+69	GO:0043409	negative regulation of MAPK cascade	5	2	0.25	0.1846
+70	GO:0006164	purine nucleotide biosynthetic process	19	2	0.95	0.1854
+71	GO:0070988	demethylation	4	1	0.2	0.1857
+72	GO:0042593	glucose homeostasis	4	1	0.2	0.1857
+73	GO:0009887	animal organ morphogenesis	4	1	0.2	0.1857
+74	GO:0007020	microtubule nucleation	4	1	0.2	0.1857
+75	GO:0035023	regulation of Rho protein signal transduction	4	1	0.2	0.1857
+76	GO:0006376	mRNA splice site recognition	4	1	0.2	0.1857
+77	GO:0006303	double-strand break repair via nonhomologous end joining	4	1	0.2	0.1857
+78	GO:0018344	protein geranylgeranylation	4	1	0.2	0.1857
+79	GO:0007507	heart development	4	1	0.2	0.1857
+80	GO:0061709	reticulophagy	4	1	0.2	0.1857
+81	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	16	2	0.8	0.1892
+82	GO:0045087	innate immune response	16	2	0.8	0.1892
+83	GO:0043547	positive regulation of GTPase activity	13	4	0.65	0.2228
+84	GO:0008202	steroid metabolic process	13	2	0.65	0.2256
+85	GO:0002098	tRNA wobble uridine modification	5	1	0.25	0.2265
+86	GO:0016925	protein sumoylation	5	1	0.25	0.2265
+87	GO:0016126	sterol biosynthetic process	5	1	0.25	0.2265
+88	GO:0000338	protein deneddylation	5	1	0.25	0.2265
+89	GO:0007264	small GTPase-mediated signal transduction	38	4	1.9	0.2427
+90	GO:0008299	isoprenoid biosynthetic process	8	2	0.4	0.2638
+91	GO:0010506	regulation of autophagy	9	2	0.45	0.2639
+92	GO:0006633	fatty acid biosynthetic process	15	2	0.75	0.2644
+93	GO:0034975	protein folding in endoplasmic reticulum	6	1	0.3	0.2653
+94	GO:0007099	centriole replication	6	1	0.3	0.2653
+95	GO:0008284	positive regulation of cell population proliferation	6	1	0.3	0.2653
+96	GO:0006904	vesicle docking involved in exocytosis	6	1	0.3	0.2653
+97	GO:0008543	fibroblast growth factor receptor signaling pathway	6	1	0.3	0.2653
+98	GO:0009311	oligosaccharide metabolic process	6	1	0.3	0.2653
+99	GO:0051453	regulation of intracellular pH	6	1	0.3	0.2653
+100	GO:0030010	establishment of cell polarity	6	1	0.3	0.2653

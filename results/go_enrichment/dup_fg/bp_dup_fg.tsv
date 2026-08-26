@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0097037	heme export	2	2	0.09	0.0022
+2	GO:0015886	heme transport	5	4	0.23	0.0063
+3	GO:0006000	fructose metabolic process	3	2	0.14	0.0063
+4	GO:0006003	fructose 2,6-bisphosphate metabolic process	3	2	0.14	0.0063
+5	GO:0030050	vesicle transport along actin filament	4	2	0.19	0.0123
+6	GO:0042276	error-prone translesion synthesis	5	2	0.23	0.0199
+7	GO:0008543	fibroblast growth factor receptor signaling pathway	5	2	0.23	0.0199
+8	GO:0007160	cell-matrix adhesion	13	3	0.61	0.0204
+9	GO:0016579	protein deubiquitination	47	6	2.2	0.0212
+10	GO:0006909	phagocytosis	12	3	0.56	0.0465
+11	GO:0006670	sphingosine metabolic process	6	2	0.28	0.0466
+12	GO:0045947	negative regulation of translational initiation	1	1	0.05	0.0468
+13	GO:0048168	regulation of neuronal synaptic plasticity	1	1	0.05	0.0468
+14	GO:0071679	commissural neuron axon guidance	1	1	0.05	0.0468
+15	GO:0051457	maintenance of protein location in nucleus	1	1	0.05	0.0468
+16	GO:0051083	'de novo' cotranslational protein folding	1	1	0.05	0.0468
+17	GO:0039536	negative regulation of RIG-I signaling pathway	1	1	0.05	0.0468
+18	GO:0032480	negative regulation of type I interferon production	1	1	0.05	0.0468
+19	GO:1903288	positive regulation of potassium ion import across plasma membrane	1	1	0.05	0.0468
+20	GO:0042531	positive regulation of tyrosine phosphorylation of STAT protein	1	1	0.05	0.0468
+21	GO:2000651	positive regulation of sodium ion transmembrane transporter activity	1	1	0.05	0.0468
+22	GO:0006772	thiamine metabolic process	1	1	0.05	0.0468
+23	GO:0042264	peptidyl-aspartic acid hydroxylation	1	1	0.05	0.0468
+24	GO:0045761	regulation of adenylate cyclase activity	1	1	0.05	0.0468
+25	GO:0046359	butyrate catabolic process	1	1	0.05	0.0468
+26	GO:0034164	negative regulation of toll-like receptor 9 signaling pathway	1	1	0.05	0.0468
+27	GO:2000304	positive regulation of ceramide biosynthetic process	1	1	0.05	0.0468
+28	GO:1990426	mitotic recombination-dependent replication fork processing	1	1	0.05	0.0468
+29	GO:0045880	positive regulation of smoothened signaling pathway	1	1	0.05	0.0468
+30	GO:0030512	negative regulation of transforming growth factor beta receptor signaling pathway	1	1	0.05	0.0468
+31	GO:1901190	regulation of formation of translation initiation ternary complex	1	1	0.05	0.0468
+32	GO:0010766	negative regulation of sodium ion transport	1	1	0.05	0.0468
+33	GO:0009229	thiamine diphosphate biosynthetic process	1	1	0.05	0.0468
+34	GO:0006107	oxaloacetate metabolic process	1	1	0.05	0.0468
+35	GO:0050801	monoatomic ion homeostasis	75	4	3.51	0.0469
+36	GO:0016310	phosphorylation	287	19	13.43	0.0492
+37	GO:0018216	peptidyl-arginine methylation	8	2	0.37	0.0507
+38	GO:0042157	lipoprotein metabolic process	30	3	1.4	0.0507
+39	GO:0008284	positive regulation of cell population proliferation	9	2	0.42	0.0632
+40	GO:0032465	regulation of cytokinesis	9	2	0.42	0.0632
+41	GO:0007602	phototransduction	9	2	0.42	0.0632
+42	GO:0030182	neuron differentiation	97	7	4.54	0.0638
+43	GO:0006357	regulation of transcription by RNA polymerase II	473	29	22.13	0.0783
+44	GO:0009887	animal organ morphogenesis	11	2	0.51	0.0908
+45	GO:0000054	ribosomal subunit export from nucleus	11	2	0.51	0.0908
+46	GO:0006816	calcium ion transport	31	3	1.45	0.0912
+47	GO:0002926	tRNA wobble base 5-methoxycarbonylmethyl-2-thiouridinylation	2	1	0.09	0.0914
+48	GO:0035020	regulation of Rac protein signal transduction	2	1	0.09	0.0914
+49	GO:0006654	phosphatidic acid biosynthetic process	2	1	0.09	0.0914
+50	GO:0009312	oligosaccharide biosynthetic process	2	1	0.09	0.0914
+51	GO:0070987	error-free translesion synthesis	2	1	0.09	0.0914
+52	GO:0046900	tetrahydrofolylpolyglutamate metabolic process	2	1	0.09	0.0914
+53	GO:0010042	response to manganese ion	2	1	0.09	0.0914
+54	GO:0051014	actin filament severing	2	1	0.09	0.0914
+55	GO:0046294	formaldehyde catabolic process	2	1	0.09	0.0914
+56	GO:0042542	response to hydrogen peroxide	2	1	0.09	0.0914
+57	GO:0015760	glucose-6-phosphate transport	2	1	0.09	0.0914
+58	GO:0043103	hypoxanthine salvage	2	1	0.09	0.0914
+59	GO:0060169	negative regulation of adenosine receptor signaling pathway	2	1	0.09	0.0914
+60	GO:0010526	transposable element silencing	2	1	0.09	0.0914
+61	GO:0019427	acetyl-CoA biosynthetic process from acetate	2	1	0.09	0.0914
+62	GO:0044208	'de novo' AMP biosynthetic process	2	1	0.09	0.0914
+63	GO:0048332	mesoderm morphogenesis	2	1	0.09	0.0914
+64	GO:0006809	nitric oxide biosynthetic process	2	1	0.09	0.0914
+65	GO:0030951	establishment or maintenance of microtubule cytoskeleton polarity	2	1	0.09	0.0914
+66	GO:0097250	mitochondrial respirasome assembly	2	1	0.09	0.0914
+67	GO:0045046	protein import into peroxisome membrane	2	1	0.09	0.0914
+68	GO:0032218	riboflavin transport	2	1	0.09	0.0914
+69	GO:0000730	DNA recombinase assembly	2	1	0.09	0.0914
+70	GO:0032237	activation of store-operated calcium channel activity	2	1	0.09	0.0914
+71	GO:0042078	germ-line stem cell division	2	1	0.09	0.0914
+72	GO:0055071	manganese ion homeostasis	2	1	0.09	0.0914
+73	GO:0090141	positive regulation of mitochondrial fission	2	1	0.09	0.0914
+74	GO:0023052	signaling	842	35	39.39	0.0934
+75	GO:0006457	protein folding	84	9	3.93	0.1159
+76	GO:0030001	metal ion transport	144	10	6.74	0.1327
+77	GO:0046785	microtubule polymerization	13	2	0.61	0.1337
+78	GO:0007033	vacuole organization	37	3	1.73	0.1337
+79	GO:0009653	anatomical structure morphogenesis	120	11	5.61	0.1338
+80	GO:0033387	putrescine biosynthetic process from arginine, via ornithine	3	1	0.14	0.1339
+81	GO:0070989	oxidative demethylation	3	1	0.14	0.1339
+82	GO:0046103	inosine biosynthetic process	3	1	0.14	0.1339
+83	GO:0090385	phagosome-lysosome fusion	3	1	0.14	0.1339
+84	GO:0006309	apoptotic DNA fragmentation	3	1	0.14	0.1339
+85	GO:0033539	fatty acid beta-oxidation using acyl-CoA dehydrogenase	3	1	0.14	0.1339
+86	GO:0006166	purine ribonucleoside salvage	3	1	0.14	0.1339
+87	GO:0006154	adenosine catabolic process	3	1	0.14	0.1339
+88	GO:0006556	S-adenosylmethionine biosynthetic process	3	1	0.14	0.1339
+89	GO:0046835	carbohydrate phosphorylation	3	1	0.14	0.1339
+90	GO:0006108	malate metabolic process	3	1	0.14	0.1339
+91	GO:0032781	positive regulation of ATP-dependent activity	3	1	0.14	0.1339
+92	GO:0055085	transmembrane transport	449	23	21.01	0.1474
+93	GO:0042981	regulation of apoptotic process	38	4	1.78	0.1528
+94	GO:0009408	response to heat	16	2	0.75	0.1704
+95	GO:0051260	protein homooligomerization	16	2	0.75	0.1704
+96	GO:0019941	modification-dependent protein catabolic process	186	11	8.7	0.1735
+97	GO:0046839	phospholipid dephosphorylation	11	2	0.51	0.1740
+98	GO:0033260	nuclear DNA replication	15	2	0.7	0.1742
+99	GO:0000423	mitophagy	4	1	0.19	0.1744
+100	GO:0002115	store-operated calcium entry	4	1	0.19	0.1744

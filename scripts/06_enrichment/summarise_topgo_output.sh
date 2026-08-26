@@ -16,10 +16,10 @@ for test in "$repo_root"/results/go_enrichment/*/; do
   
   cd "$test"
   # remove previous summary files
-  rm -f summary_*.txt
-  rm -f network_*.txt
+  rm -f summary_*.tsv
+  rm -f network_*.tsv
 
-    for a in bp*.txt; do
+    for a in bp*.tsv; do
       [ -e "$a" ] || continue
       echo -e 'Description\tCount\tp\tOntology' >> ${a/bp_/summary_}
       

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0000049	tRNA binding	12	3	0.41	0.007
+2	GO:0009039	urease activity	1	1	0.03	0.034
+3	GO:0008384	IkappaB kinase activity	1	1	0.03	0.034
+4	GO:0005154	epidermal growth factor receptor binding	1	1	0.03	0.034
+5	GO:1990883	18S rRNA cytidine N-acetyltransferase activity	1	1	0.03	0.034
+6	GO:0016971	flavin-dependent sulfhydryl oxidase activity	1	1	0.03	0.034
+7	GO:1904047	S-adenosyl-L-methionine binding	1	1	0.03	0.034
+8	GO:0033842	N-acetyl-beta-glucosaminyl-derivative 4-beta-N-acetylgalactosaminyltransferase activity	1	1	0.03	0.034
+9	GO:0002020	protease binding	1	1	0.03	0.034
+10	GO:0017174	glycine N-methyltransferase activity	1	1	0.03	0.034
+11	GO:0004496	mevalonate kinase activity	1	1	0.03	0.034
+12	GO:0005457	GDP-fucose transmembrane transporter activity	1	1	0.03	0.034
+13	GO:0030627	pre-mRNA 5'-splice site binding	1	1	0.03	0.034
+14	GO:0004856	D-xylulokinase activity	1	1	0.03	0.034
+15	GO:0043023	ribosomal large subunit binding	1	1	0.03	0.034
+16	GO:0004360	glutamine-fructose-6-phosphate transaminase (isomerizing) activity	1	1	0.03	0.034
+17	GO:0001222	transcription corepressor binding	1	1	0.03	0.034
+18	GO:0005436	sodium:phosphate symporter activity	1	1	0.03	0.034
+19	GO:0120053	ribitol beta-1,4-xylosyltransferase activity	1	1	0.03	0.034
+20	GO:0001965	G-protein alpha-subunit binding	1	1	0.03	0.034
+21	GO:0003730	mRNA 3'-UTR binding	10	2	0.34	0.044
+22	GO:0001786	phosphatidylserine binding	10	2	0.34	0.044
+23	GO:0003779	actin binding	76	7	2.61	0.046
+24	GO:0008028	monocarboxylic acid transmembrane transporter activity	29	4	1	0.052
+25	GO:0015108	chloride transmembrane transporter activity	40	5	1.37	0.066
+26	GO:0016594	glycine binding	2	1	0.07	0.068
+27	GO:0019003	GDP binding	2	1	0.07	0.068
+28	GO:0005332	gamma-aminobutyric acid:sodium:chloride symporter activity	2	1	0.07	0.068
+29	GO:0036424	L-phosphoserine phosphatase activity	2	1	0.07	0.068
+30	GO:0004142	diacylglycerol cholinephosphotransferase activity	2	1	0.07	0.068
+31	GO:0051424	corticotropin-releasing hormone binding	2	1	0.07	0.068
+32	GO:0030619	U1 snRNA binding	2	1	0.07	0.068
+33	GO:0008301	DNA binding, bending	2	1	0.07	0.068
+34	GO:0019531	oxalate transmembrane transporter activity	2	1	0.07	0.068
+35	GO:0008613	diuretic hormone activity	2	1	0.07	0.068
+36	GO:0008494	translation activator activity	2	1	0.07	0.068
+37	GO:0016402	pristanoyl-CoA oxidase activity	2	1	0.07	0.068
+38	GO:0004814	arginine-tRNA ligase activity	2	1	0.07	0.068
+39	GO:0031489	myosin V binding	2	1	0.07	0.068
+40	GO:0090433	palmitoyl-CoA ligase activity	2	1	0.07	0.068
+41	GO:0005230	extracellular ligand-gated monoatomic ion channel activity	28	2	0.96	0.099
+42	GO:0050265	RNA uridylyltransferase activity	3	1	0.1	0.100
+43	GO:0004749	ribose phosphate diphosphokinase activity	3	1	0.1	0.100
+44	GO:0016151	nickel cation binding	3	1	0.1	0.100
+45	GO:0008036	diuretic hormone receptor activity	3	1	0.1	0.100
+46	GO:0015149	hexose transmembrane transporter activity	3	1	0.1	0.100
+47	GO:0004307	ethanolaminephosphotransferase activity	3	1	0.1	0.100
+48	GO:0015421	ABC-type oligopeptide transporter activity	3	1	0.1	0.100
+49	GO:0004890	GABA-A receptor activity	3	1	0.1	0.100
+50	GO:0017124	SH3 domain binding	3	1	0.1	0.100
+51	GO:0003785	actin monomer binding	3	1	0.1	0.100
+52	GO:0009982	pseudouridine synthase activity	3	1	0.1	0.100
+53	GO:0045503	dynein light chain binding	3	1	0.1	0.100
+54	GO:0004430	1-phosphatidylinositol 4-kinase activity	3	1	0.1	0.100
+55	GO:0005544	calcium-dependent phospholipid binding	16	2	0.55	0.103
+56	GO:0043130	ubiquitin binding	18	2	0.62	0.125
+57	GO:0017046	peptide hormone binding	6	2	0.21	0.130
+58	GO:0030594	neurotransmitter receptor activity	29	2	1	0.130
+59	GO:0032549	ribonucleoside binding	4	1	0.14	0.131
+60	GO:0015232	heme transmembrane transporter activity	4	1	0.14	0.131
+61	GO:0015106	bicarbonate transmembrane transporter activity	4	1	0.14	0.131
+62	GO:1990817	poly(A) RNA polymerase activity	4	1	0.14	0.131
+63	GO:0015379	potassium:chloride symporter activity	4	1	0.14	0.131
+64	GO:0042043	neurexin family protein binding	4	1	0.14	0.131
+65	GO:0004500	dopamine beta-monooxygenase activity	4	1	0.14	0.131
+66	GO:0045504	dynein heavy chain binding	4	1	0.14	0.131
+67	GO:0001640	adenylate cyclase inhibiting G protein-coupled glutamate receptor activity	4	1	0.14	0.131
+68	GO:0030276	clathrin binding	19	2	0.65	0.137
+69	GO:0005509	calcium ion binding	154	8	5.29	0.158
+70	GO:0015116	sulfate transmembrane transporter activity	5	1	0.17	0.160
+71	GO:0042826	histone deacetylase binding	5	1	0.17	0.160
+72	GO:0017108	5'-flap endonuclease activity	5	1	0.17	0.160
+73	GO:0005504	fatty acid binding	5	1	0.17	0.160
+74	GO:0070679	inositol 1,4,5 trisphosphate binding	6	1	0.21	0.189
+75	GO:0008378	galactosyltransferase activity	6	1	0.21	0.189
+76	GO:0140664	ATP-dependent DNA damage sensor activity	6	1	0.21	0.189
+77	GO:0005112	Notch binding	6	1	0.21	0.189
+78	GO:0017116	single-stranded DNA helicase activity	6	1	0.21	0.189
+79	GO:0004089	carbonate dehydratase activity	6	1	0.21	0.189
+80	GO:0008308	voltage-gated monoatomic anion channel activity	6	1	0.21	0.189
+81	GO:0004029	aldehyde dehydrogenase (NAD+) activity	6	1	0.21	0.189
+82	GO:0030983	mismatched DNA binding	6	1	0.21	0.189
+83	GO:0061631	ubiquitin conjugating enzyme activity	6	1	0.21	0.189
+84	GO:0003714	transcription corepressor activity	25	2	0.86	0.211
+85	GO:0048018	receptor ligand activity	48	4	1.65	0.215
+86	GO:0030527	structural constituent of chromatin	7	1	0.24	0.217
+87	GO:0015279	store-operated calcium channel activity	7	1	0.24	0.217
+88	GO:0051015	actin filament binding	49	3	1.68	0.236
+89	GO:0000287	magnesium ion binding	27	2	0.93	0.237
+90	GO:0008528	G protein-coupled peptide receptor activity	27	2	0.93	0.237
+91	GO:0005216	monoatomic ion channel activity	124	8	4.26	0.240
+92	GO:0000146	microfilament motor activity	8	1	0.27	0.244
+93	GO:0004559	alpha-mannosidase activity	8	1	0.27	0.244
+94	GO:0031624	ubiquitin conjugating enzyme binding	8	1	0.27	0.244
+95	GO:0061630	ubiquitin protein ligase activity	50	3	1.72	0.246
+96	GO:0005254	chloride channel activity	28	2	0.96	0.250
+97	GO:0005179	hormone activity	11	2	0.38	0.269
+98	GO:0030020	extracellular matrix structural constituent conferring tensile strength	9	1	0.31	0.270
+99	GO:0008017	microtubule binding	53	3	1.82	0.274
+100	GO:0005515	protein binding	1415	60	48.61	0.278

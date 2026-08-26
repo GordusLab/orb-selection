@@ -1,0 +1,8 @@
+GO.ID	Description	p.Val
+GO:0055085	transmembrane transport	0.0024
+GO:0030001	metal ion transport	0.0039
+GO:0032465	regulation of cytokinesis	0.0135
+GO:0006820	monoatomic anion transport	0.0135
+GO:0006139	nucleobase-containing compound metabolic process	0.0141
+GO:0000289	nuclear-transcribed mRNA poly(A) tail shortening	0.0248
+GO:0006646	phosphatidylethanolamine biosynthetic process	0.0301

@@ -1,0 +1,101 @@
+GO.ID	Term	Annotated	Significant	Expected	P_value
+1	GO:0008285	negative regulation of cell population proliferation	6	2	0.14	0.0079
+2	GO:0014013	regulation of gliogenesis	1	1	0.02	0.0239
+3	GO:0071218	cellular response to misfolded protein	1	1	0.02	0.0239
+4	GO:0070973	protein localization to endoplasmic reticulum exit site	1	1	0.02	0.0239
+5	GO:0071929	alpha-tubulin acetylation	1	1	0.02	0.0239
+6	GO:0042531	positive regulation of tyrosine phosphorylation of STAT protein	1	1	0.02	0.0239
+7	GO:0007529	establishment of synaptic specificity at neuromuscular junction	1	1	0.02	0.0239
+8	GO:0006533	L-aspartate catabolic process	1	1	0.02	0.0239
+9	GO:0007168	receptor guanylyl cyclase signaling pathway	1	1	0.02	0.0239
+10	GO:0072579	glycine receptor clustering	1	1	0.02	0.0239
+11	GO:0099152	regulation of neurotransmitter receptor transport, endosome to postsynaptic membrane	1	1	0.02	0.0239
+12	GO:0006182	cGMP biosynthetic process	1	1	0.02	0.0239
+13	GO:0099158	regulation of recycling endosome localization within postsynapse	1	1	0.02	0.0239
+14	GO:0070525	tRNA threonylcarbamoyladenosine metabolic process	1	1	0.02	0.0239
+15	GO:0018315	molybdenum incorporation into molybdenum-molybdopterin complex	1	1	0.02	0.0239
+16	GO:1902115	regulation of organelle assembly	1	1	0.02	0.0239
+17	GO:1905706	regulation of mitochondrial ATP synthesis coupled proton transport	1	1	0.02	0.0239
+18	GO:0097112	gamma-aminobutyric acid receptor clustering	1	1	0.02	0.0239
+19	GO:0009107	lipoate biosynthetic process	1	1	0.02	0.0239
+20	GO:0043252	sodium-independent organic anion transport	1	1	0.02	0.0239
+21	GO:2000643	positive regulation of early endosome to late endosome transport	1	1	0.02	0.0239
+22	GO:1902966	positive regulation of protein localization to early endosome	1	1	0.02	0.0239
+23	GO:1905273	positive regulation of proton-transporting ATP synthase activity, rotational mechanism	1	1	0.02	0.0239
+24	GO:0030242	autophagy of peroxisome	1	1	0.02	0.0239
+25	GO:0098970	postsynaptic neurotransmitter receptor diffusion trapping	1	1	0.02	0.0239
+26	GO:0051457	maintenance of protein location in nucleus	1	1	0.02	0.0239
+27	GO:0140300	serine import into mitochondrion	1	1	0.02	0.0239
+28	GO:0006470	protein dephosphorylation	31	3	0.74	0.0363
+29	GO:0045930	negative regulation of mitotic cell cycle	17	2	0.41	0.0467
+30	GO:0006559	L-phenylalanine catabolic process	2	1	0.05	0.0472
+31	GO:0009051	pentose-phosphate shunt, oxidative branch	2	1	0.05	0.0472
+32	GO:0001578	microtubule bundle formation	2	1	0.05	0.0472
+33	GO:0048015	phosphatidylinositol-mediated signaling	2	1	0.05	0.0472
+34	GO:0006777	Mo-molybdopterin cofactor biosynthetic process	2	1	0.05	0.0472
+35	GO:0051764	actin crosslink formation	2	1	0.05	0.0472
+36	GO:0006747	FAD biosynthetic process	2	1	0.05	0.0472
+37	GO:0008360	regulation of cell shape	2	1	0.05	0.0472
+38	GO:0016266	protein O-linked glycosylation via N-acetyl-galactosamine	2	1	0.05	0.0472
+39	GO:1904825	protein localization to microtubule plus-end	2	1	0.05	0.0472
+40	GO:1905244	regulation of modification of synaptic structure	2	1	0.05	0.0472
+41	GO:0036092	phosphatidylinositol-3-phosphate biosynthetic process	2	1	0.05	0.0472
+42	GO:0018023	peptidyl-lysine trimethylation	2	1	0.05	0.0472
+43	GO:0005975	carbohydrate metabolic process	53	4	1.27	0.0629
+44	GO:0006098	pentose-phosphate shunt	5	2	0.12	0.0690
+45	GO:0032007	negative regulation of TOR signaling	3	1	0.07	0.0700
+46	GO:0031110	regulation of microtubule polymerization or depolymerization	3	1	0.07	0.0700
+47	GO:0070536	protein K63-linked deubiquitination	3	1	0.07	0.0700
+48	GO:0035336	long-chain fatty-acyl-CoA metabolic process	3	1	0.07	0.0700
+49	GO:0006285	base-excision repair, AP site formation	3	1	0.07	0.0700
+50	GO:0035567	non-canonical Wnt signaling pathway	3	1	0.07	0.0700
+51	GO:0048568	embryonic organ development	3	1	0.07	0.0700
+52	GO:0007095	mitotic G2 DNA damage checkpoint signaling	3	1	0.07	0.0700
+53	GO:0034727	piecemeal microautophagy of the nucleus	4	1	0.1	0.0922
+54	GO:0045739	positive regulation of DNA repair	4	1	0.1	0.0922
+55	GO:0006729	tetrahydrobiopterin biosynthetic process	4	1	0.1	0.0922
+56	GO:0000423	mitophagy	4	1	0.1	0.0922
+57	GO:0032456	endocytic recycling	9	2	0.21	0.1124
+58	GO:0090090	negative regulation of canonical Wnt signaling pathway	5	1	0.12	0.1139
+59	GO:0035023	regulation of Rho protein signal transduction	5	1	0.12	0.1139
+60	GO:0000184	nuclear-transcribed mRNA catabolic process, nonsense-mediated decay	5	1	0.12	0.1139
+61	GO:0035329	hippo signaling	5	1	0.12	0.1139
+62	GO:0032869	cellular response to insulin stimulus	5	1	0.12	0.1139
+63	GO:0006334	nucleosome assembly	5	1	0.12	0.1139
+64	GO:0017196	N-terminal peptidyl-methionine acetylation	5	1	0.12	0.1139
+65	GO:0060395	SMAD protein signal transduction	6	1	0.14	0.1351
+66	GO:0034497	protein localization to phagophore assembly site	6	1	0.14	0.1351
+67	GO:0006446	regulation of translational initiation	6	1	0.14	0.1351
+68	GO:0035556	intracellular signal transduction	170	9	4.06	0.1417
+69	GO:0006811	monoatomic ion transport	83	3	1.98	0.1554
+70	GO:0006006	glucose metabolic process	7	1	0.17	0.1558
+71	GO:0006893	Golgi to plasma membrane transport	7	1	0.17	0.1558
+72	GO:0016226	iron-sulfur cluster assembly	7	1	0.17	0.1558
+73	GO:0000289	nuclear-transcribed mRNA poly(A) tail shortening	7	1	0.17	0.1558
+74	GO:0030150	protein import into mitochondrial matrix	8	1	0.19	0.1760
+75	GO:0006897	endocytosis	33	2	0.79	0.1854
+76	GO:0071577	zinc ion transmembrane transport	10	1	0.24	0.2150
+77	GO:0006289	nucleotide-excision repair	10	1	0.24	0.2150
+78	GO:0030509	BMP signaling pathway	11	1	0.26	0.2338
+79	GO:0030036	actin cytoskeleton organization	44	3	1.05	0.2480
+80	GO:0030833	regulation of actin filament polymerization	12	1	0.29	0.2522
+81	GO:0007052	mitotic spindle organization	13	1	0.31	0.2701
+82	GO:0009058	biosynthetic process	1049	18	25.05	0.2732
+83	GO:0006468	protein phosphorylation	108	4	2.58	0.2828
+84	GO:0000045	autophagosome assembly	21	2	0.5	0.3014
+85	GO:0031146	SCF-dependent proteasomal ubiquitin-dependent protein catabolic process	15	1	0.36	0.3048
+86	GO:0055085	transmembrane transport	151	6	3.61	0.3423
+87	GO:0016579	protein deubiquitination	22	2	0.53	0.3650
+88	GO:0006887	exocytosis	21	1	0.5	0.3992
+89	GO:0006351	DNA-templated transcription	336	3	8.02	0.4130
+90	GO:0016567	protein ubiquitination	61	2	1.46	0.4311
+91	GO:0007018	microtubule-based movement	26	1	0.62	0.4681
+92	GO:0016192	vesicle-mediated transport	192	8	4.58	0.5634
+93	GO:0016197	endosomal transport	49	4	1.17	0.5777
+94	GO:0006888	endoplasmic reticulum to Golgi vesicle-mediated transport	37	1	0.88	0.5936
+95	GO:0006302	double-strand break repair	41	1	0.98	0.6315
+96	GO:0006511	ubiquitin-dependent protein catabolic process	106	2	2.53	0.6606
+97	GO:0007005	mitochondrion organization	45	1	1.07	0.6660
+98	GO:0006457	protein folding	51	1	1.22	0.7118
+99	GO:0006886	intracellular protein transport	111	3	2.65	0.7218
+100	GO:0006364	rRNA processing	77	1	1.84	0.8486

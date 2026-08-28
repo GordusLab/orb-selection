@@ -8,6 +8,26 @@ from matplotlib import (
 
 OMEGA_COLORS = ('salmon', 'steelblue', 'goldenrod')
 OMEGA_STROKE_COLORS = ('darkred', 'darkblue', 'brown')
+MIN_VISIBLE_PROPORTION = 0.005
+
+
+def _visible_proportion(proportion):
+    return max(proportion, MIN_VISIBLE_PROPORTION) if proportion > 0 else 0
+
+
+def _plot_tiny_proportion_marker(ax, omega, proportion, color, alpha):
+    if 0 < proportion < MIN_VISIBLE_PROPORTION:
+        ax.plot(
+            omega,
+            MIN_VISIBLE_PROPORTION,
+            marker='_',
+            markersize=20,
+            markeredgewidth=2,
+            color=color,
+            alpha=alpha,
+            zorder=10
+        )
+        print(f"plotting marker: omega={omega}, proportion={proportion}")
 
 
 def _plot_distributions(ax, x, group, logbins, labels=False):
@@ -290,6 +310,8 @@ def plot_omega_single_gene(
     if xlim_min is not None:
         if xlim_max is not None:
             ax.set_xlim(left=xlim_min, right=xlim_max)
+
+    ax.set_ylim(0, 1)
     plt.rcParams['font.family'] = 'Verdana'
 
     # Plot vertical lines for ω1, ω2, and ω3 for the REFERENCE group
@@ -297,22 +319,56 @@ def plot_omega_single_gene(
     ref_path_effects_w2_offset = [pe.SimpleLineShadow(offset=(-2,2), alpha=0.3, foreground='steelblue'), pe.Normal()]
     ref_path_effects = [pe.withStroke(linewidth=22, foreground='white'), pe.Normal()]
 
-    ax.axvline(x['ω1_ref'], linewidth=20, color='salmon', ymax=x['ω1_ref_P'], alpha=0.17, zorder=1,
-               path_effects=ref_path_effects if not offset_zero_w1 else ref_path_effects_w1_offset)
-    ax.axvline(x['ω2_ref'], linewidth=20, color='steelblue', ymax=x['ω2_ref_P'], alpha=0.17, zorder=1,
-                    path_effects=ref_path_effects if not offset_zero_w2 else ref_path_effects_w2_offset)
-    ax.axvline(x['ω3_ref'], linewidth=20, color='goldenrod', ymax=x['ω3_ref_P'], alpha=0.17, zorder=1,
-                    path_effects=[pe.withStroke(linewidth=22, foreground='white'), pe.Normal()])
+    ax.vlines(
+        x['ω1_ref'],
+        0,
+        _visible_proportion(x['ω1_ref_P']),
+        linewidth=20,
+        color='salmon',
+        alpha=0.17,
+        zorder=1,
+        path_effects=ref_path_effects if not offset_zero_w1 else ref_path_effects_w1_offset
+    )
+    _plot_tiny_proportion_marker(ax, x['ω1_ref'], x['ω1_ref_P'], 'salmon', alpha=0.17)
+    ax.vlines(
+        x['ω2_ref'],
+        0,
+        _visible_proportion(x['ω2_ref_P']),
+        linewidth=20,
+        color='steelblue',
+        alpha=0.17,
+        zorder=1,
+        path_effects=ref_path_effects if not offset_zero_w1 else ref_path_effects_w2_offset
+    )    
+    _plot_tiny_proportion_marker(ax, x['ω2_ref'], x['ω2_ref_P'], 'steelblue', alpha=0.17)
+    ax.vlines(
+        x['ω3_ref'],
+        0,
+        _visible_proportion(x['ω3_ref_P']),
+        linewidth=20,
+        color='goldenrod',
+        alpha=0.17,
+        zorder=1,
+        path_effects=[
+            pe.withStroke(linewidth=22, foreground='white'),
+            pe.Normal()
+        ]
+    )
+    _plot_tiny_proportion_marker(ax, x['ω3_ref'], x['ω3_ref_P'], 'goldenrod', alpha=0.3)
 
-    test_alpha = 0 if build_in else 1
+    test_alpha = 1
     test_effects = [] if build_in else [pe.withStroke(linewidth=22, foreground='white'), pe.Normal()]
 
-    ax.axvline(x['ω1_test'], linewidth=20, color='salmon', ymax=x['ω1_test_P'], alpha=test_alpha, zorder=1,
+
+    ax.vlines(x['ω1_test'], 0, _visible_proportion(x['ω1_test_P']), linewidth=20, color='salmon', alpha=test_alpha, zorder=1,
                     path_effects=test_effects)
-    ax.axvline(x['ω2_test'], linewidth=20, color='steelblue', ymax=x['ω2_test_P'], alpha=test_alpha, zorder=1,
+    _plot_tiny_proportion_marker(ax, x['ω1_test'], x['ω1_test_P'], 'salmon', alpha=1)
+    ax.vlines(x['ω2_test'], 0, _visible_proportion(x['ω2_test_P']), linewidth=20, color='steelblue', alpha=test_alpha, zorder=1,
                     path_effects=test_effects)
-    ax.axvline(x['ω3_test'], linewidth=20, color='goldenrod', ymax=x['ω3_test_P'], alpha=test_alpha, zorder=1,
+    _plot_tiny_proportion_marker(ax, x['ω2_test'], x['ω2_test_P'], 'steelblue', alpha=1)
+    ax.vlines(x['ω3_test'], 0, _visible_proportion(x['ω3_test_P']), linewidth=20, color='goldenrod', alpha=test_alpha, zorder=1,
                     path_effects=test_effects)
+    _plot_tiny_proportion_marker(ax, x['ω3_test'], x['ω3_test_P'], 'goldenrod', alpha=1)
 
     ax.axvline(1, linewidth=1, linestyle='dashed', color='k', alpha=0.5)
     ax.tick_params(axis='x', which='both', zorder=3)
@@ -352,5 +408,10 @@ def plot_omega_single_gene(
 
     if filename is not None:
         plt.savefig(filename, dpi=300, transparent=transparent)
+
+    print(f"ω values for {gene}: ω1_test={x['ω1_test']:.4f}, ω2_test={x['ω2_test']:.4f}, ω3_test={x['ω3_test']:.4f},\n"
+          f"ω1_ref={x['ω1_ref']:.4f}, ω2_ref={x['ω2_ref']:.4f}, ω3_ref={x['ω3_ref']:.4f};\n"
+          f"Proportions: ω1_test_P={x['ω1_test_P']:.4f}, ω2_test_P={x['ω2_test_P']:.4f}, ω3_test_P={x['ω3_test_P']:.4f},\n"
+          f"ω1_ref_P={x['ω1_ref_P']:.4f}, ω2_ref_P={x['ω2_ref_P']:.4f}, ω3_ref_P={x['ω3_ref_P']:.4f}")
 
     return fig, ax

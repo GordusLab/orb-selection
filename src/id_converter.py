@@ -119,19 +119,19 @@ def get_udiv_dmel_genes(
     # and their Drosophila melanogaster orthologs
     # If one_random_gene is True, select one random gene per orthogroup
     # Otherwise, list all genes and their orthologs
-    for hog in tqdm(
+    for row_position, hog in enumerate(tqdm(
         df.index.to_list(),
         desc="Processing HOGs",
         disable=not show_progress,
-    ):
+    )):
         try:
             ud_genes = hog_node_df.at[hog, "Uloborus_diversus"].split(", ")
 
             # use if i just want to find 1 U.div gene per OG
             if one_random_gene:
-                df.at[hog, "udiv_genes"] = random.choice(ud_genes)
+                df.iat[row_position, df.columns.get_loc("udiv_genes")] = random.choice(ud_genes)
             else:
-                df.at[hog, "udiv_genes"] = ud_genes
+                df.iat[row_position, df.columns.get_loc("udiv_genes")] = ud_genes
                 # print(ud_genes)
                 dmel_orthologs = []
                 for gene in ud_genes:
@@ -145,14 +145,14 @@ def get_udiv_dmel_genes(
                     except (IndexError, AttributeError):
                         pass
 
-                df.at[hog, "dmel_orthologs"] = ", ".join(dmel_orthologs)
+                df.iat[row_position, df.columns.get_loc("dmel_orthologs")] = ", ".join(dmel_orthologs)
         except (KeyError, AttributeError):
             pass
 
     return df
 
 
-def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True, one_random_gene=True):
+def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=True, one_random_gene=False, one_gene_rep=True):
     """Main function to process the results DataFrame and merge it with
     Uloborus diversus genes and their Drosophila melanogaster orthologs."""
 
@@ -179,6 +179,23 @@ def convert_hogs_to_locs(hogs_of_interest, hog_node_genes_tsv, show_progress=Tru
     # If one_random_gene is True, ensure only one row per HOG
     if one_random_gene:
         merged_df = merged_df.drop_duplicates(subset=["HOG"])
+    elif one_gene_rep:
+        gene_col = "LOC"  # or "udiv_genes"
+
+        merged_df["_has_gene_id"] = (
+            merged_df[gene_col]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+            .ne("")
+        )
+        
+        merged_df = (
+            merged_df
+            .sort_values("_has_gene_id", ascending=False, kind="stable")
+            .drop_duplicates(subset=["HOG"], keep="first")
+            .drop(columns="_has_gene_id")
+        )
 
     return merged_df
 
@@ -208,7 +225,7 @@ def convert_locs_to_hogs(locs, hog_node_genes_tsv, no_desc=False):
 
     return hogs_df
 
-def get_ptep_description(hogs_of_interest, desc_csv=os.path.join(data_dir, "N5_blasted.tsv")):
+def get_ptep_description(hogs_of_interest, desc_csv=os.path.join(data_dir, "N5_occ_30_blasted_ptep.tsv")):
     """Given a list of HOGs, retrieves the descriptions for the corresponding Parasteatoda tepidariorum genes."""
 
     desc_df = pd.read_csv(desc_csv, sep="\t", dtype=str)
@@ -216,9 +233,40 @@ def get_ptep_description(hogs_of_interest, desc_csv=os.path.join(data_dir, "N5_b
 
     try:
         # Map 'Protein' column from desc_df to hogs_of_interest using 'HOG' as key
-        hogs_of_interest["P. tepidariorum best BLAST hit for the HOG"] = hogs_of_interest["HOG"].map(
+        hogs_of_interest["P. tepidariorum best BLAST hit LOC"] = hogs_of_interest["HOG"].map(
+                    desc_df.set_index("HOG")["Gene"]
+                )
+        hogs_of_interest["P. tepidariorum best BLAST hit description"] = hogs_of_interest["HOG"].map(
             desc_df.set_index("HOG")["Protein"]
         )
+    except TypeError:
+        try:
+            with open(hogs_of_interest, "r") as f:
+                hogs_of_interest = f.read().splitlines()
+                hogs_df = desc_df[desc_df["HOG"].isin(hogs_of_interest)]
+                hogs_df = hogs_df.dropna().drop_duplicates()
+        except Exception as e:
+            print(f"Error reading HOGs list: {e}")
+            print("Provide HOGs as a list or a file.")
+
+    return hogs_of_interest
+
+
+def get_udiv_best_blast(hogs_of_interest, desc_csv=os.path.join(data_dir, "N5_occ_30_blasted_udiv.tsv")):
+    """Given a list of HOGs, retrieves the descriptions for the single best BLAST hit in the U. diversus genome."""
+
+    desc_df = pd.read_csv(desc_csv, sep="\t", dtype=str)
+    desc_df["HOG"] = desc_df["HOG"].str.strip()
+
+    try:
+        hogs_of_interest["U. diversus best BLAST hit LOC"] = hogs_of_interest["HOG"].map(
+            desc_df.set_index("HOG")["Gene"]
+        )
+        # Map 'Protein' column from desc_df to hogs_of_interest using 'HOG' as key
+        hogs_of_interest["U. diversus best BLAST hit description"] = hogs_of_interest["HOG"].map(
+            desc_df.set_index("HOG")["Protein"]
+        )
+        
     except TypeError:
         try:
             with open(hogs_of_interest, "r") as f:

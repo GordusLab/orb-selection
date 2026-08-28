@@ -308,8 +308,10 @@ def plot_omega_single_gene(
     plt.subplots_adjust(hspace=0)
     plt.xscale('symlog', linthresh=thresh)
     if xlim_min is not None:
-        if xlim_max is not None:
-            ax.set_xlim(left=xlim_min, right=xlim_max)
+        ax.set_xlim(left=xlim_min)
+
+    if xlim_max is not None:
+        ax.set_xlim(right=xlim_max)
 
     ax.set_ylim(0, 1)
     plt.rcParams['font.family'] = 'Verdana'
@@ -317,7 +319,7 @@ def plot_omega_single_gene(
     # Plot vertical lines for ω1, ω2, and ω3 for the REFERENCE group
     ref_path_effects_w1_offset = [pe.SimpleLineShadow(offset=(-2,2), alpha=0.3, foreground='salmon'), pe.Normal()]
     ref_path_effects_w2_offset = [pe.SimpleLineShadow(offset=(-2,2), alpha=0.3, foreground='steelblue'), pe.Normal()]
-    ref_path_effects = [pe.withStroke(linewidth=22, foreground='white'), pe.Normal()]
+    ref_path_effects = [pe.withStroke(linewidth=22, foreground='white', offset=(-1,1)), pe.Normal()]
 
     ax.vlines(
         x['ω1_ref'],
@@ -338,7 +340,7 @@ def plot_omega_single_gene(
         color='steelblue',
         alpha=0.17,
         zorder=1,
-        path_effects=ref_path_effects if not offset_zero_w1 else ref_path_effects_w2_offset
+        path_effects=ref_path_effects if not offset_zero_w2 else ref_path_effects_w2_offset
     )    
     _plot_tiny_proportion_marker(ax, x['ω2_ref'], x['ω2_ref_P'], 'steelblue', alpha=0.17)
     ax.vlines(
@@ -350,14 +352,14 @@ def plot_omega_single_gene(
         alpha=0.17,
         zorder=1,
         path_effects=[
-            pe.withStroke(linewidth=22, foreground='white'),
-            pe.Normal()
+            pe.withStroke(linewidth=22, foreground='white', offset=(-1, 1)),
+            pe.Normal(),
         ]
     )
     _plot_tiny_proportion_marker(ax, x['ω3_ref'], x['ω3_ref_P'], 'goldenrod', alpha=0.3)
 
     test_alpha = 1
-    test_effects = [] if build_in else [pe.withStroke(linewidth=22, foreground='white'), pe.Normal()]
+    test_effects = [] if build_in else [pe.withStroke(linewidth=22, foreground='white', offset=(-1, 1)), pe.Normal()]
 
 
     ax.vlines(x['ω1_test'], 0, _visible_proportion(x['ω1_test_P']), linewidth=20, color='salmon', alpha=test_alpha, zorder=1,

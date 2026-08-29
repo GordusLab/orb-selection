@@ -284,6 +284,13 @@ def plot_omega_single_gene(
     - ax: The axes object.
     """
 
+    # If the df is busted_ph_orb_df_fltrd, set the omega ref values to match the 
+    # headers
+    if df.equals(busted_ph_orb_df_fltrd):
+        x['ω1_ref'] = df.columns[1]
+        x['ω2_ref'] = df.columns[2]
+        x['ω3_ref'] = df.columns[3]
+
     x = df.loc[gene]
 
     fig, ax = plt.subplots(figsize=(5.5,5))
@@ -328,7 +335,7 @@ def plot_omega_single_gene(
         linewidth=20,
         color='salmon',
         alpha=0.17,
-        zorder=1,
+        zorder=2,
         path_effects=ref_path_effects if not offset_zero_w1 else ref_path_effects_w1_offset
     )
     _plot_tiny_proportion_marker(ax, x['ω1_ref'], x['ω1_ref_P'], 'salmon', alpha=0.17)
@@ -362,7 +369,7 @@ def plot_omega_single_gene(
     test_effects = [] if build_in else [pe.withStroke(linewidth=22, foreground='white', offset=(-1, 1)), pe.Normal()]
 
 
-    ax.vlines(x['ω1_test'], 0, _visible_proportion(x['ω1_test_P']), linewidth=20, color='salmon', alpha=test_alpha, zorder=1,
+    ax.vlines(x['ω1_test'], 0, _visible_proportion(x['ω1_test_P']), linewidth=20, color='salmon', alpha=test_alpha, zorder=2,
                     path_effects=test_effects)
     _plot_tiny_proportion_marker(ax, x['ω1_test'], x['ω1_test_P'], 'salmon', alpha=1)
     ax.vlines(x['ω2_test'], 0, _visible_proportion(x['ω2_test_P']), linewidth=20, color='steelblue', alpha=test_alpha, zorder=1,

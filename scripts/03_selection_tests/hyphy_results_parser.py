@@ -308,8 +308,26 @@ class BustedPhResult(HyphyResult):
         """Calculate mean omega values from rate distributions."""
         omega_cols_test = ['ω1_test', 'ω2_test', 'ω3_test']
         prop_cols_test = ['ω1_test_P', 'ω2_test_P', 'ω3_test_P']
-        omega_cols_ref = ['ω1_ref', 'ω2_ref', 'ω3_ref']
-        prop_cols_ref = ['ω1_ref_P', 'ω2_ref_P', 'ω3_ref_P']
+        omega_cols_ref_unconstrained = [
+            'ω1_ref_unconstrained',
+            'ω2_ref_unconstrained',
+            'ω3_ref_unconstrained',
+        ]
+        prop_cols_ref_unconstrained = [
+            'ω1_ref_unconstrained_P',
+            'ω2_ref_unconstrained_P',
+            'ω3_ref_unconstrained_P',
+        ]
+        omega_cols_ref_constrained = [
+            'ω1_ref_constrained',
+            'ω2_ref_constrained',
+            'ω3_ref_constrained',
+        ]
+        prop_cols_ref_constrained = [
+            'ω1_ref_constrained_P',
+            'ω2_ref_constrained_P',
+            'ω3_ref_constrained_P',
+        ]
         
         if all(col in self.results_df.columns for col in omega_cols_test + prop_cols_test):
             self.results_df['ω_mean_test'] = (
@@ -318,11 +336,25 @@ class BustedPhResult(HyphyResult):
                 self.results_df['ω3_test'] * self.results_df['ω3_test_P']
             )
             
-        if all(col in self.results_df.columns for col in omega_cols_ref + prop_cols_ref):
-            self.results_df['ω_mean_ref'] = (
-                self.results_df['ω1_ref'] * self.results_df['ω1_ref_P'] +
-                self.results_df['ω2_ref'] * self.results_df['ω2_ref_P'] +
-                self.results_df['ω3_ref'] * self.results_df['ω3_ref_P']
+        if all(
+            col in self.results_df.columns
+            for col in omega_cols_ref_unconstrained + prop_cols_ref_unconstrained
+        ):
+            self.results_df['ω_mean_ref_unconstrained'] = (
+                self.results_df['ω1_ref_unconstrained'] * self.results_df['ω1_ref_unconstrained_P'] +
+                self.results_df['ω2_ref_unconstrained'] * self.results_df['ω2_ref_unconstrained_P'] +
+                self.results_df['ω3_ref_unconstrained'] * self.results_df['ω3_ref_unconstrained_P']
+            )
+            self.results_df['ω_mean_ref'] = self.results_df['ω_mean_ref_unconstrained']
+
+        if all(
+            col in self.results_df.columns
+            for col in omega_cols_ref_constrained + prop_cols_ref_constrained
+        ):
+            self.results_df['ω_mean_ref_constrained'] = (
+                self.results_df['ω1_ref_constrained'] * self.results_df['ω1_ref_constrained_P'] +
+                self.results_df['ω2_ref_constrained'] * self.results_df['ω2_ref_constrained_P'] +
+                self.results_df['ω3_ref_constrained'] * self.results_df['ω3_ref_constrained_P']
             )
     
     def get_significant_results(self, alpha: float = 0.05) -> pd.DataFrame:
@@ -470,13 +502,24 @@ class HyphyResultsManager:
 
                 background_pval = background_results['p-value']
                 shared_pval = shared_results['p-value']
-                
+                unconstrained_model = data["fits"].get('Unconstrained model')
+                constrained_model = data["fits"].get('Constrained model')
+                if constrained_model is None:
+                    constrained_model = data["fits"].get('Constrained model (background branches)')
+
+                if unconstrained_model is None:
+                    raise KeyError("None of the expected keys were found: Unconstrained model")
+
+                test_dist = unconstrained_model["Rate Distributions"]["Test"]
+                ref_unconstrained_dist = unconstrained_model["Rate Distributions"].get("Background", {})
+                ref_constrained_dist = constrained_model["Rate Distributions"]["Background"] if constrained_model is not None else {}
+
                 # Determine result classification
                 if (float(test_pval) <= 0.05) & (float(background_pval) > 0.05) & (float(shared_pval) <= 0.05):
                     result = 'hit'
                 else:
                     result = 'not significant'
-                
+
                 busted_ph_results.append({
                     'HOG': json_file.split('_')[0],
                     'test_pval': test_pval,
@@ -487,18 +530,24 @@ class HyphyResultsManager:
                     'shared_LRT': shared_results['LRT'],
                     'MG94xREV_ω_test': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *test*"][0][0],
                     'MG94xREV_ω_ref': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *background*"][0][0],
-                    'ω1_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["0"]["omega"],
-                    'ω1_test_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["0"]["proportion"],
-                    'ω2_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["1"]["omega"],
-                    'ω2_test_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["1"]["proportion"],
-                    'ω3_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["2"]["omega"],
-                    'ω3_test_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["2"]["proportion"],
-                    'ω1_ref': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["0"]["omega"],
-                    'ω1_ref_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["0"]["proportion"],
-                    'ω2_ref': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["1"]["omega"],
-                    'ω2_ref_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["1"]["proportion"],
-                    'ω3_ref': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["2"]["omega"],
-                    'ω3_ref_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["2"]["proportion"],
+                    'ω1_test': test_dist["0"]["omega"],
+                    'ω1_test_P': test_dist["0"]["proportion"],
+                    'ω2_test': test_dist["1"]["omega"],
+                    'ω2_test_P': test_dist["1"]["proportion"],
+                    'ω3_test': test_dist["2"]["omega"],
+                    'ω3_test_P': test_dist["2"]["proportion"],
+                    'ω1_ref_unconstrained': ref_unconstrained_dist.get("0", {}).get("omega", np.nan),
+                    'ω1_ref_unconstrained_P': ref_unconstrained_dist.get("0", {}).get("proportion", np.nan),
+                    'ω2_ref_unconstrained': ref_unconstrained_dist.get("1", {}).get("omega", np.nan),
+                    'ω2_ref_unconstrained_P': ref_unconstrained_dist.get("1", {}).get("proportion", np.nan),
+                    'ω3_ref_unconstrained': ref_unconstrained_dist.get("2", {}).get("omega", np.nan),
+                    'ω3_ref_unconstrained_P': ref_unconstrained_dist.get("2", {}).get("proportion", np.nan),
+                    'ω1_ref_constrained': ref_constrained_dist.get("0", {}).get("omega", np.nan),
+                    'ω1_ref_constrained_P': ref_constrained_dist.get("0", {}).get("proportion", np.nan),
+                    'ω2_ref_constrained': ref_constrained_dist.get("1", {}).get("omega", np.nan),
+                    'ω2_ref_constrained_P': ref_constrained_dist.get("1", {}).get("proportion", np.nan),
+                    'ω3_ref_constrained': ref_constrained_dist.get("2", {}).get("omega", np.nan),
+                    'ω3_ref_constrained_P': ref_constrained_dist.get("2", {}).get("proportion", np.nan),
                     'result': result
                 })
         

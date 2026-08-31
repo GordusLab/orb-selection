@@ -122,14 +122,14 @@ go.barplot <- function(
   max_count <- suppressWarnings(max(as.numeric(df$Count), na.rm = TRUE))
 
   if (rev) {
-    if (is.finite(max_count) && max_count <= 10) {
-      p <- p + scale_y_reverse(breaks = c(10, 5, 0), limits = c(10, 0)) + scale_x_discrete(position = "bottom")
-    } else {
+    # if (is.finite(max_count) && max_count <= 10) {
+    #   p <- p + scale_y_reverse(breaks = c(10, 5, 0), limits = c(10, 0)) + scale_x_discrete(position = "bottom")
+    # } else {
       p <- p + scale_y_reverse() + scale_x_discrete(position = "bottom")
     }
-  } else if (is.finite(max_count) && max_count <= 10) {
-    p <- p + scale_y_continuous(breaks = c(0, 5, 10), limits = c(0, 10))
-  }
+  # } else if (is.finite(max_count) && max_count <= 10) {
+  #   p <- p + scale_y_continuous(breaks = c(0, 5, 10), limits = c(0, 10))
+  # }
 
   if (!is.null(title)) {
     p <- p + ggtitle(title)

@@ -174,7 +174,7 @@ go.barplot(
   figsize = c(20, 16),
   rev = FALSE,
   output_filename = here("figures/figure_4/busted_ph_orb_go_barplot.png"),
-  wrap_desc = 30,
+  wrap_desc = 35,
   desc_text_size = 20,
   axis_text_size = 26,
   axis_title_size = 30,

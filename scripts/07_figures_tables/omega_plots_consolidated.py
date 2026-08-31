@@ -50,6 +50,13 @@ def _plot_mean_lines(ax, x, group, inverted=False, stroke_width=7.5):
     means = [x[f'ω{index}_{group}'].mean() for index in range(1, 4)]
     weights = [x[f'ω{index}_{group}_P'].mean() for index in range(1, 4)]
 
+    print(
+        f"mean ω values for {group}: "
+        f"ω1={means[0]:.4f}, ω2={means[1]:.4f}, ω3={means[2]:.4f}\n"
+        f"mean site proportions for {group}: "
+        f"ω1={weights[0]:.4f}, ω2={weights[1]:.4f}, ω3={weights[2]:.4f}"
+    )
+
     for index, (mean, weight, color) in enumerate(
         zip(means, weights, OMEGA_COLORS), start=1
         ):

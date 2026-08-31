@@ -177,7 +177,7 @@ def plot_omega_distributions(
             weight='bold', backgroundcolor='lightgray',
         )
         ax_avgs2.set_title(
-            bottom_title, x=bottom_title_x, y=0.02, fontsize=13, alpha=0.8,
+            bottom_title, x=bottom_title_x, y=0.05, fontsize=13, alpha=0.8,
             color='silver', weight='bold', backgroundcolor='white',
         )
 

@@ -189,3 +189,4 @@ miniconda3/
 
 # VS Code settings
 .vscode/
+/data/hyphy_results_old

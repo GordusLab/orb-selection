@@ -1,8 +1,8 @@
 # This is the environment file used for running the UpSet Plots.ipynb notebook specifically.
 # The python version needed for the upsetplot package is 3.13, which is not compatible with other analyses.
 # To create the environment, run:
-# conda env create -f upset_env.yml
-name: jupyter
+# conda env create -f upset.yml
+name: upset
 channels:
   - defaults
   - https://repo.anaconda.com/pkgs/main

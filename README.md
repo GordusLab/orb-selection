@@ -17,10 +17,9 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
 |`README.md`| Top-level project overview, pipeline stage documentation, and usage notes.|
 |`environment.yml`|Python dependencies.|
-|`hyphy_environment.yml`|Conda environment used to run the HyPhy selection tests (see [scripts/03_selection_tests](scripts/03_selection_tests)) on high performance computing cluster.|
-|`pyproject.toml`| Python packaging and project metadata configuration (build system, dependencies, package discovery).|
+|`selection.yml`|Conda environment used to run the HyPhy selection tests (see [scripts/03_selection_tests](scripts/03_selection_tests)) on high performance computing cluster.|
 |`renv.lock`|R dependencies.|
-|`upset_env.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).
+|`upset.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).
 
 ## Environment setup
 

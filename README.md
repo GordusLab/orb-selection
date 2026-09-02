@@ -22,6 +22,21 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |`renv.lock`|R dependencies.|
 |`upset_env.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).
 
+## Environment setup
+
+The R lockfile was generated with R 4.6.1 and Bioconductor 3.23. Install that R version before restoring the project environment.
+
+From the repository root, install `renv` if it is not already available, then restore the packages recorded in [`renv.lock`](renv.lock):
+
+```bash
+R --vanilla -s -e 'install.packages("renv", repos = "https://cloud.r-project.org")'
+Rscript -e 'renv::restore(prompt = FALSE)'
+```
+
+The restore installs the managed R dependencies, including `phylolm`, `ape`, `dplyr`, `tidyr`, `topGO`, and the plotting packages. `RERconverge` is not installed by `renv`; install it separately using the [RERconverge installation instructions](https://github.com/nclark-lab/RERconverge/wiki/Install). On macOS, install [XQuartz](https://www.xquartz.org/) first if the `gdtools` dependency reports a missing X11 library.
+
+The Python and HyPhy workflows use separate environments. Create the relevant Conda environments with [`environment.yml`](environment.yml), [`hyphy_environment.yml`](hyphy_environment.yml), or [`upset_env.yml`](upset_env.yml) as described by the corresponding pipeline stage.
+
 ## Data Availability
 
 Some required inputs and outputs are not available in this repository.

@@ -1,6 +1,6 @@
 # HyPhy Results Analysis Module
 
-This module provides classes to store and manage results from HyPhy selection analyses (RELAX, aBSREL, BUSTED-PH).
+This module provides classes to store and manage results from HyPhy selection analyses (RELAX and BUSTED-PH).
 
 ## Files
 
@@ -11,8 +11,9 @@ This module provides classes to store and manage results from HyPhy selection an
 
 ## Quick Start
 
+Run the following examples from `scripts/03_selection_tests/`.
+
 ```python
-# Add repo src + stage directory to sys.path, then import modules
 from hyphy_results_parser import HyphyResultsManager
 from hyphy_results_helpers import convert_hyphy_results_to_locs
 
@@ -27,7 +28,7 @@ significant_results = relax_result.get_significant_results()
 results_with_locs = convert_hyphy_results_to_locs(significant_results)
 
 # Save in orb-selection results directory
-manager.save_all_results('results/hyphy_cache/')
+manager.save_all_results('../../results/hyphy_results_cache/')
 ```
 
 ## Integration Features
@@ -52,12 +53,12 @@ Automatically accesses data files from `orb-selection/data/`:
 Results are saved in the `orb-selection/results/` directory:
 ```python
 # Cache results for future use
-manager.save_all_results('results/hyphy_cache/')
+manager.save_all_results('../../results/hyphy_results_cache/')
 
 # Results are saved as:
-# results/hyphy_cache/relax_results.pkl
-# results/hyphy_cache/busted_ph_results.pkl
-# results/hyphy_cache/absrel_results.pkl
+# results/hyphy_results_cache/relax_results.pkl
+# results/hyphy_results_cache/busted_ph_orb_results.pkl
+# results/hyphy_results_cache/busted_ph_non_orb_results.pkl
 ```
 
 ## Classes
@@ -68,12 +69,11 @@ Central manager for handling multiple analysis results.
 **Key Methods:**
 - `load_relax_from_json(directory)` - Load RELAX results
 - `load_busted_ph_from_json(directory)` - Load BUSTED-PH results  
-- `load_absrel_from_json(directory)` - Load aBSREL results
 - `compare_significant_genes(analyses)` - Compare gene sets
 - `get_overlap_stats(analyses)` - Get overlap statistics
 - `save_all_results(directory)` - Save all results to cache
 
-### RelaxResult, BustedPhResult, AbsrelResult
+### RelaxResult, BustedPhResult
 Individual result classes with analysis-specific methods:
 
 ```python
@@ -87,10 +87,6 @@ selection_counts = relax_result.count_selection_types()
 busted_result = BustedPhResult(busted_df)
 hits = busted_result.get_hits()
 
-# aBSREL-specific
-absrel_result = AbsrelResult(absrel_df)
-gene_specific = absrel_result.get_gene_specific_results()
-species_results = absrel_result.get_results_by_species('Uloborus_diversus')
 ```
 
 ## Common Operations
@@ -120,7 +116,7 @@ from hyphy_results_helpers import filter_omega, omega_filter_summary
 filtered = relax_result.filter_omega(10000)
 
 # Show filtering summary
-omega_filter_summary(relax_result.results_df, [10, 100, 1000, 10000])
+omega_filter_summary(relax_result.results_df, [10, 100, 1000, 10000], 'result', 'relaxed')
 
 # Get specific result types
 relaxed = relax_result.get_relaxed_results()
@@ -131,15 +127,16 @@ intensified = relax_result.get_intensified_results()
 ```python
 # Load multiple analyses
 manager.load_relax_from_json('/path/to/relax/')
-manager.load_busted_ph_from_json('/path/to/busted_ph/')
+manager.load_busted_ph_from_json('/path/to/busted_ph_orb/', name='busted_ph_orb')
+manager.load_busted_ph_from_json('/path/to/busted_ph_non_orb/', name='busted_ph_non_orb')
 
 # Compare significant genes
-overlap_stats = manager.get_overlap_stats(['relax', 'busted_ph'])
-gene_sets = manager.compare_significant_genes(['relax', 'busted_ph'])
+overlap_stats = manager.get_overlap_stats(['relax', 'busted_ph_orb', 'busted_ph_non_orb'])
+gene_sets = manager.compare_significant_genes(['relax', 'busted_ph_orb', 'busted_ph_non_orb'])
 
 print(f"RELAX hits: {len(gene_sets['relax'])}")
-print(f"BUSTED-PH hits: {len(gene_sets['busted_ph'])}")
-print(f"Overlap: {len(gene_sets['relax'] & gene_sets['busted_ph'])}")
+print(f"BUSTED-PH orb hits: {len(gene_sets['busted_ph_orb'])}")
+print(f"BUSTED-PH non-orb hits: {len(gene_sets['busted_ph_non_orb'])}")
 ```
 
 ## Example Workflow
@@ -153,14 +150,19 @@ from hyphy_results_helpers import convert_hyphy_results_to_locs, filter_omega
 # 1. Initial setup (run once)
 manager = HyphyResultsManager()
 relax_result = manager.load_relax_from_json('/path/to/relax/jsons/')
-busted_ph_result = manager.load_busted_ph_from_json('/path/to/busted_ph/jsons/')
+busted_ph_orb_result = manager.load_busted_ph_from_json(
+	'/path/to/busted_ph_orb/jsons/', name='busted_ph_orb'
+)
+busted_ph_non_orb_result = manager.load_busted_ph_from_json(
+	'/path/to/busted_ph_non_orb/jsons/', name='busted_ph_non_orb'
+)
 
 # 2. Cache results for future use
-manager.save_all_results('results/hyphy_cache/')
+manager.save_all_results('../../results/hyphy_results_cache/')
 
 # 3. Analysis sessions (load from cache)
 manager = HyphyResultsManager()
-manager.load_all_results_from_directory('results/hyphy_cache/')
+manager.load_all_results_from_directory('../../results/hyphy_results_cache/')
 relax_result = manager.get_result('relax')
 
 # 4. Filter and analyze
@@ -171,7 +173,7 @@ filtered = relax_result.filter_omega(10000)
 results_with_locs = convert_hyphy_results_to_locs(filtered.results_df)
 
 # 6. Save final results
-results_with_locs.to_csv('results/relax_significant_with_locs.csv', index=False)
+results_with_locs.to_csv('../../results/relax_significant_with_locs.csv', index=False)
 ```
 
 ## Dependencies

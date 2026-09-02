@@ -4,12 +4,11 @@
 Phylogenetic Analysis Results Module
 
 This module provides classes to store and manage results from phylogenetic selection analyses
-(RELAX, aBSREL, BUSTED-PH) to avoid re-parsing JSON files repeatedly.
+(RELAX and BUSTED-PH) to avoid re-parsing JSON files repeatedly.
 
 Classes:
     - HyphyResult: Base class for all analysis results
     - RelaxResult: Storage and analysis of RELAX results
-    - AbsrelResult: Storage and analysis of aBSREL results  
     - BustedPhResult: Storage and analysis of BUSTED-PH results
     - HyphyResultsManager: Manager class to handle multiple analysis types
 """
@@ -36,7 +35,7 @@ class HyphyResult(ABC):
         Initialize the analysis result.
         
         Args:
-            analysis_type: Type of analysis ('relax', 'absrel', 'busted-ph')
+            analysis_type: Type of analysis ('relax' or 'busted-ph')
             results_df: DataFrame containing the parsed results
         """
         self.analysis_type = analysis_type
@@ -236,50 +235,6 @@ class RelaxResult(HyphyResult):
         }
         
         return counts
-
-
-class AbsrelResult(HyphyResult):
-    """
-    Storage and analysis class for aBSREL results.
-    
-    aBSREL detects lineage-specific episodic diversifying selection.
-    """
-    
-    def __init__(self, results_df: pd.DataFrame):
-        """
-        Initialize aBSREL results.
-        
-        Args:
-            results_df: DataFrame with aBSREL results
-        """
-        super().__init__('absrel', results_df)
-        self._has_omega_columns = False
-    
-    def get_significant_results(self, alpha: float = 0.05) -> pd.DataFrame:
-        """
-        Get statistically significant aBSREL results.
-        
-        Args:
-            alpha: Significance threshold (default: 0.05)
-            
-        Returns:
-            DataFrame with significant results
-        """
-        return self.results_df[self.results_df['corrected_p_value'] <= alpha]
-    
-    def get_results_by_species(self, species_name: str) -> pd.DataFrame:
-        """Get results for a specific species."""
-        return self.results_df[
-            self.results_df['node/species'].str.contains(species_name, na=False)
-        ]
-    
-    def get_gene_specific_results(self) -> pd.DataFrame:
-        """Get results that are gene-specific (not node-specific)."""
-        return self.results_df[self.results_df['gene'] != 'NA']
-    
-    def get_node_specific_results(self) -> pd.DataFrame:
-        """Get results that are node-specific."""
-        return self.results_df[self.results_df['gene'] == 'NA']
 
 
 class BustedPhResult(HyphyResult):
@@ -507,58 +462,6 @@ class HyphyResultsManager:
         self.add_result(name, result_obj)
         return result_obj
     
-    def load_absrel_from_json(self, json_directory: str, name: str = 'absrel') -> AbsrelResult:
-        """
-        Load aBSREL results from JSON files.
-        
-        Args:
-            json_directory: Directory containing aBSREL JSON files
-            name: Name to store the result under
-            
-        Returns:
-            AbsrelResult instance
-        """
-        json_files = [f for f in os.listdir(json_directory) if f.endswith('.json')]
-        absrel_hits = []
-        
-        for json_file in json_files:
-            with open(os.path.join(json_directory, json_file), 'r') as f:
-                data = json.load(f)
-                
-                for gene in data['branch attributes']['0']:
-                    if str(data['branch attributes']['0'][gene]['Corrected P-value']) != 'None':
-                        pval = data['branch attributes']['0'][gene]['Corrected P-value']
-                        rate_classes = int(data['branch attributes']['0'][gene]['Rate classes'])
-                        
-                        if float(pval) <= 0.05:
-                            if "Node" not in gene:
-                                absrel_hits.append({
-                                    'HOG': json_file.split('_')[0],
-                                    'node/species': gene.rsplit('_', 3)[0],
-                                    'gene': gene.rsplit('_', 3)[1],
-                                    'corrected_p_value': pval,
-                                    'non-synonymous_subs/site': data['branch attributes']['0'][gene]['Full adaptive model (non-synonymous subs/site)'],
-                                    'synonymous subs/site': data['branch attributes']['0'][gene]['Full adaptive model (synonymous subs/site)'],
-                                    'LRT': data['branch attributes']['0'][gene]['LRT'],
-                                    'rate_classes': rate_classes,
-                                    'rate_distributions': data['branch attributes']['0'][gene]['Rate Distributions']
-                                })
-                            else:
-                                absrel_hits.append({
-                                    'HOG': json_file.split('_')[0],
-                                    'node/species': gene,
-                                    'gene': 'NA',
-                                    'corrected_p_value': pval,
-                                    'LRT': data['branch attributes']['0'][gene]['LRT'],
-                                    'rate_classes': rate_classes,
-                                    'rate_distributions': data['branch attributes']['0'][gene]['Rate Distributions']
-                                })
-        
-        absrel_df = pd.DataFrame(absrel_hits)
-        result_obj = AbsrelResult(absrel_df)
-        self.add_result(name, result_obj)
-        return result_obj
-    
     def save_all_results(self, directory: str) -> None:
         """Save all results to pickle files in the specified directory."""
         Path(directory).mkdir(parents=True, exist_ok=True)
@@ -649,7 +552,6 @@ def example_usage():
     # Load results from JSON directories
     # relax_result = manager.load_relax_from_json('/path/to/relax/jsons/')
     # busted_ph_result = manager.load_busted_ph_from_json('/path/to/busted_ph/jsons/')
-    # absrel_result = manager.load_absrel_from_json('/path/to/absrel/jsons/')
     
     # Filter results by omega values
     # filtered_relax = relax_result.filter_omega(10000)

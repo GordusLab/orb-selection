@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-09-02 - aBSREL Removal
+
+### Removed
+
+- Removed aBSREL parsing, workflow, and documentation content after the aBSREL tests were omitted from the final analysis.
+
+## 2026-09-02 - README Documentation Audit and Alignment
+
+### Added
+
+- Added Table of Contents to `README.md` for navigation across pipeline stages and main sections.
+- Added missing repository contents entries to `README.md` table for `renv/` and `environment_macos.yml`.
+
+### Fixed
+
+- Fixed broken links in `README.md` Stage 07 pointing to non-existent `scripts/06_figures_tables/` path, updating them to `scripts/07_figures_tables/`.
+- Fixed extension link for `PhyloGLM Analysis.ipynb` in Stage 05 (previously linked to `.R`).
+- Corrected environment file names in Environment Setup section (`selection.yml` and `upset.yml` instead of `hyphy_environment.yml` and `upset_env.yml`) and added macOS environment configuration note.
+- Fixed duplicate step numbering in Stage 06 and added missing workflow notebook reference (`Write Significant LOC Lists.ipynb`).
+- Fixed missing trailing table border on `upset.yml` row in the repository contents table.
+
+### Changed
+
+- Reordered Repository contents table in `README.md` into logical groups: directories, core documentation, environment configurations, and configuration settings.
+
 ## 2026-04-08 - Documentation, Script Placeholders, and Packaging Modernization
 
 ### Changed
@@ -48,9 +73,9 @@
 - Added/retained explicit placeholders in `README.md` for future raw-data, HyPhy JSON archive, and PKL archive locations.
 - Flattened figure/table notebook layout by moving notebooks from `scripts/06_figures_tables/notebooks/` to `scripts/06_figures_tables/`.
 - Updated `.gitignore` to stop ignoring all of `data/` and instead ignore only:
-  - `data/absrel_rerun/`
   - `data/busted_ph/`
   - `data/busted_ph_rev/`
+  - `data/absrel_rerun/`
   - `data/relax/`
 - Kept `*.pkl` ignored repository-wide.
 

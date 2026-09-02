@@ -23,7 +23,7 @@ for orb-weaving behavior in spiders," Runnels et al. 2026
 |`data/`| Raw and intermediate data files used in the pipeline, _e.g._ OrthoFinder outputs, BUSCO scores, lists of species belonging to different categories, lists of HOGs tested in the HyPhy analyses, permulation-generated phenotype designations, and resources used to annotate results.|
 |`figures/`| PDF files of all figures and figure elements output by the figure-generating notebooks in [`scripts/07_figures_tables`](scripts/07_figures_tables).|
 |`renv/`| Project-level R environment activation scripts and settings for dependency management.|
-|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/06_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM.|
+|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/06_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM ([source code](scripts/05_phyloglm)).|
 |`scripts/`| Full analysis pipeline divided into stages following the paper's methods section. See below for a complete description of the steps required for each stage of the analysis.|
 |`src/`| Contains helper modules used in various stages of the analysis.|
 |`README.md`| Top-level project overview, pipeline stage documentation, and usage notes.|
@@ -84,6 +84,7 @@ The scripts in [`scripts/02_orthofinder_prep_hyphy`](scripts/02_orthofinder_prep
    - Gene tree generation with IQ-TREE 
    - Error-filtering alignments and trees with BUSTED + hyphy error-filter
 4. Foreground branch labeling: [`label_trees.sh`](scripts/02_orthofinder_prep_hyphy/label_trees.sh)
+5. Remove duplicate sequences: [`remove_dups.sh`](scripts/02_orthofinder_prep_hyphy/remove_dups.sh)
 
 Data note: Stage 02 uses processed FASTA files not tracked in GitHub due to size.
 
@@ -93,10 +94,8 @@ The scripts/modules in [`scripts/03_selection_tests`](scripts/03_selection_tests
 
 ### Steps: 
 
-1. Run RELAX: [`relax.sh`](scripts/03_selection_tests/relax.sh)
-2. Run BUSTED-PH with orb-weavers as foreground: [`busted_ph.sh`](scripts/03_selection_tests/busted_ph.sh)
-3. Run BUSTED-PH with non-orb-weavers as foreground: [`busted_ph_switch_fg.sh`](scripts/03_selection_tests/busted_ph_switch_fg.sh)
-4. Parse the results: [`parse_hyphy_results.py`](scripts/03_selection_tests/parse_hyphy_results.py)
+1. Run selection tests: [`run_selection_tests.sh`](scripts/03_selection_tests/run_selection_tests.sh)
+2. Parse the results: [`parse_hyphy_results.py`](scripts/03_selection_tests/parse_hyphy_results.py)
 
 Data note: Stage 03 uses thousands of JSON result files not tracked in GitHub due to size.
 
@@ -123,9 +122,9 @@ The script and notebook in [`scripts/05_phyloglm`](scripts/05_phyloglm) fit a ph
 The scripts in [`scripts/06_enrichment`](scripts/06_enrichment) create significant gene ID lists from HyPhy and `odds_ratio_test.py` results and run GO enrichment summaries.
 
 ### Steps:
-1. Make BLAST db from the [_P. tepidariorum_ genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_043381705.1/)
-2. Run [`annotate_ogroups_vs_ref.py`](scripts/06_enrichment/annotate_ogroups_vs_ref.py) to determine best BLAST hit for each orthogroup from _P. tepidariorum_ for enrichment of significant gene sets
-3. Generate significant gene ID lists using helper module [`get_gene_id_lists.py`](scripts/06_enrichment/get_gene_id_lists.py) and workflow notebook [`Write Significant LOC Lists.ipynb`](scripts/06_enrichment/Write%20Significant%20LOC%20Lists.ipynb)
+1. Make BLAST dbs from the [_P. tepidariorum_ genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_043381705.1/) and the [_U. diversus_ genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_026930045.1/)
+2. Run [`annotate_ogroups_vs_ref.py`](scripts/06_enrichment/annotate_ogroups_vs_ref.py) to determine best BLAST hit for each orthogroup from _P. tepidariorum_ and from _U. diversus_ for enrichment of significant gene sets
+3. Generate significant gene ID lists using notebook [`Write Significant LOC Lists.ipynb`](scripts/06_enrichment/Write%20Significant%20LOC%20Lists.ipynb)
 4. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/06_enrichment/go_enrichment.R)
 5. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/06_enrichment/summarise_topgo_output.sh)
 
@@ -141,5 +140,6 @@ The scripts and notebooks in [`scripts/07_figures_tables`](scripts/07_figures_ta
 2. Plot odds ratio test results: [`Odds Ratio Test Plots.ipynb`](scripts/07_figures_tables/Odds%20Ratio%20Test%20Plots.ipynb)
 3. Generate UpSet plots and intersections of significant results: [`UpSet Plots.ipynb`](scripts/07_figures_tables/UpSet%20Plots.ipynb)
 4. Compile supplementary result tables for export: [`Supplementary Data Tables.ipynb`](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)
+5. Generate GMT file for Cytoscape network plot ([Figure 5](/Users/calvin/orb-selection/figures/figure_5)) using [`create_gmt.sh`](scripts/06_enrichment/create_gmt.sh): run for _U. diversus_ and _P. tepidariorum_ separately and combine results 
 
 Data note: Stage 07 expects completed outputs from stages 03-05 and writes figure/table artifacts to `figures/` and `results/`.

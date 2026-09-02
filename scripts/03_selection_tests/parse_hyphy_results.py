@@ -59,14 +59,12 @@ def main():
     relax_path = os.path.join(data_dir, "relax")
     busted_ph_orb_path = os.path.join(data_dir, "busted_ph_orb")
     busted_ph_non_orb_path = os.path.join(data_dir, "busted_ph_non_orb")
-    absrel_path = os.path.join(data_dir, "absrel_rerun")
     
     # Check if directories exist
     paths_exist = {
         'relax': os.path.exists(relax_path),
         'busted_ph_orb': os.path.exists(busted_ph_orb_path),
         'busted_ph_non_orb': os.path.exists(busted_ph_non_orb_path),
-        'absrel': os.path.exists(absrel_path)
     }
     
     print("Available data paths:")
@@ -188,38 +186,6 @@ def main():
             
         except Exception as e:
             print(f"  ✗ Error loading BUSTED-PH non-orb results: {e}")
-        print()
-    
-    if paths_exist['absrel']:
-        try:
-            print("Loading aBSREL results...")
-            absrel_result = manager.load_absrel_from_json(absrel_path)
-            results_loaded.append('absrel')
-            print(f"  ✓ Loaded {len(absrel_result)} aBSREL results")
-            
-            # Demonstrate aBSREL-specific functionality
-            significant = absrel_result.get_significant_results()
-            print(f"    - Significant results: {len(significant)}")
-            
-            gene_specific = absrel_result.get_gene_specific_results()
-            node_specific = absrel_result.get_node_specific_results()
-            print(f"    - Gene-specific: {len(gene_specific)}, Node-specific: {len(node_specific)}")
-            
-            # Convert significant results to LOCs if any exist
-            if len(significant) > 0:
-                print("    - Converting significant aBSREL results to LOCs...")
-                try:
-                    # For aBSREL, we need to create a DataFrame with HOG index from the HOG column
-                    hog_df = significant.set_index('HOG') if 'HOG' in significant.columns else significant
-                    absrel_with_locs = convert_hyphy_results_to_locs(hog_df)
-                    if 'LOC' in absrel_with_locs.columns:
-                        unique_locs = absrel_with_locs['LOC'].dropna().nunique()
-                        print(f"      ✓ Converted to {unique_locs} unique LOCs")
-                except Exception as e:
-                    print(f"      ✗ Error converting to LOCs: {e}")
-            
-        except Exception as e:
-            print(f"  ✗ Error loading aBSREL results: {e}")
         print()
     
     # Demonstrate cross-analysis comparisons if multiple results loaded

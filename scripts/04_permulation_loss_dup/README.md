@@ -8,17 +8,13 @@ This module runs the odds-ratio permulation workflow used for loss/duplication a
 
 ```python
 odds_ratio_test(
-    test,
     foreground_list_filename="data/orbweavers-list.txt",
     hog_node_genes_tsv="data/N5.tsv",
     genecount_csv="data/N5.GeneCount.tsv",
-    occupancy_threshold=0,
+    min_occ=0,
     max_occ=None,
-    alternative="less",
     alpha=0.05,
-    permutation_reps=10000,
-    test_triple_gaussian_params=True,
-    permulation_tip_values=None,
+    permulation_reps=10000,
     permulations_tip_values_csv="data/perms_tip_values.csv",
     background_list_filename=None,
     species_of_interest=None,
@@ -28,24 +24,24 @@ odds_ratio_test(
     buscos_filename="data/buscos.csv",
     correct_for_buscos=True,
     save_pickle=True,
-    save_two_tailed_hits=False,
+    dir_suffix=None,
 )
 ```
 
 ## Key Options
 
-- `test`: analysis type, typically `"loss"` or `"duplication"`.
-- `alternative`: tail direction, typically `"less"` (loss) or `"greater"` (duplication).
-- `occupancy_threshold` and `max_occ`: occupancy filter bounds.
-- `permutation_reps`: number of permulation/permutation replicates.
-- `permulation_tip_values`: in-memory tip-value assignments (optional).
+- `min_occ` and `max_occ`: occupancy filter bounds.
+- `permulation_reps`: maximum number of permulation replicates to use from the CSV.
 - `permulations_tip_values_csv`: CSV of precomputed tip-value assignments.
 - `species_of_interest`: focal species for annotation/filtering.
 - `results_dir`: output root directory for test results.
 - `fg_name` and `bg_name`: labels used in output naming.
 - `correct_for_buscos`: apply BUSCO correction when available.
 - `save_pickle`: write result objects to `.pkl` for later reuse.
-- `save_two_tailed_hits`: optionally save two-tailed hit lists.
+- `dir_suffix`: optional suffix appended to the generated results directory name.
+
+The function returns a `PermulationTestResults` object. When `results_dir` is set,
+`fg_name` is required and output files are written to a uniquely named subdirectory.
 
 ## Inputs and Large Data Notes
 

@@ -6,7 +6,7 @@ from matplotlib import ticker
 OMEGA_COLORS = ('salmon', 'steelblue', 'goldenrod')
 OMEGA_STROKE_COLORS = ('darkred', 'darkblue', 'brown')
 MIN_VISIBLE_PROPORTION = 0.006
-TICK_EDGE_PADDING = 10 ** 0.12
+TICK_EDGE_PADDING = 10 ** 0.25
 
 
 def _visible_proportion(proportion):

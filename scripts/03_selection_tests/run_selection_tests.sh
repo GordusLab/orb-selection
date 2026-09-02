@@ -1,17 +1,10 @@
 #!/bin/bash
 
-# Runs RELAX and BUSTED-PH (fw and rev) for one HOG per SLURM array task.
+# Runs RELAX and BUSTED-PH (orb fg and non orb fg) for one HOG per SLURM array task.
 
-#SBATCH --job-name=260820_relax_fix_fg
-#SBATCH --partition=parallel
-#SBATCH --account=agordus1
-#SBATCH --time=1-00:00:00
-#SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
-#SBATCH --array=1-6
-#SBATCH -n 2
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
-#SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
+#SBATCH --array=1-4756
+#SBATCH -n 3
+#SBATCH --output=reports/%x/%A_%a.out
 
 #make directory to store slurm reports
 mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/

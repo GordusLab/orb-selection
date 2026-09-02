@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 if len(sys.argv) != 4 or sys.argv[1] == "-h" or sys.argv[1] == "-help" or sys.argv[1] == "--help":
-    print("Usage: get_nuc_seqs_parallel.py <NX.tsv> <HOG> <CDs-DIR>")
+    print("Usage: get_nuc_seqs.py <N5.tsv> <HOG_ID> <TRANSDECODER_DIR>")
     sys.exit()
 
 # get df of gene names

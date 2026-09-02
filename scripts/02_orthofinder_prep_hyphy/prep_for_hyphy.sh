@@ -3,7 +3,7 @@
 # Prepares HOG alignments/trees for HyPhy analyses (PREQUAL -> MACSE -> IQ-TREE -> BUSTED -> error-filter).
 
 #SBATCH --array=1-4756
-#SBATCH -n 12
+#SBATCH -n 3
 #SBATCH --output=reports/%x/%A_%a.out
 
 module load anaconda

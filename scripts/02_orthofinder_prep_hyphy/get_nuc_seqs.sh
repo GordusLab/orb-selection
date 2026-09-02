@@ -18,7 +18,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 REPORT_DIR=PATH_TO_REPORT_DIR
 mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
 
-HOG_LIST=${HOG_LIST:-$REPO_ROOT/assets/N5_occ48_remaining.txt}
+HOG_LIST=${HOG_LIST:-$REPO_ROOT/assets/N5.udiv.o75_list.txt}
 NX_TSV=${NX_TSV:-$REPO_ROOT/data/N5.tsv}
 TD_DIR=PATH_TO_TD_P_COMPLETE_DIR
 

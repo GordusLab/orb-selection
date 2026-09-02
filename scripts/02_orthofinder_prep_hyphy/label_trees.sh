@@ -1,13 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=260722_label_trees_nonorb
-#SBATCH --partition=parallel
-#SBATCH --account=agordus1
-#SBATCH --time=01:00:00
-#SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
 #SBATCH --array=1-4756
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
+#SBATCH -n 3
+#SBATCH --output=reports/%x/%A_%a.out
 
 module load anaconda
 conda activate /home/crunnel2/anaconda3/envs/selection

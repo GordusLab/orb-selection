@@ -2,6 +2,7 @@
 
 |Filename|Description|
 |---|---|
+|`GO.gmt`| Human GO GMT used as template for creating spider GO GMT files. |
 |`N5.GeneCount.tsv`| Output of OrthoFinder's [orthogroup_gene_count.py](https://github.com/OrthoFinder/OrthoFinder/blob/main/tools/orthogroup_gene_count.py) tool run on the [N5.tsv](data/N5.tsv) OrthoFinder output (below) |
 |`N5.tsv`| Orthogroups inferred by OrthoFinder at node 5, which includes only the species in [species_list_N5.txt](data/species_list_N5.txt).|
 |`N5.udiv.o75_list.txt`| List of N5 orthogroups with occupancy of at least 75 and the presence of at least one gene from the spider _Uloborus diversus_. These 4756 HOGs were analysed in the HyPhy selection tests. |

@@ -55,18 +55,17 @@ def main():
     manager = HyphyResultsManager()
     
     # Data paths in the orb-selection repository
-    # Point to the actual data directory in orb-selection
-    data_dir = repo_root / "data"
-    relax_path = str(data_dir / "relax")
-    busted_ph_path = str(data_dir / "busted_ph_orb") 
-    busted_ph_rev_path = str(data_dir / "busted_ph_non_orb")
-    absrel_path = str(data_dir / "absrel_rerun")
+    data_dir = str(repo_root / "results" / "hyphy_results_cache")
+    relax_path = os.path.join(data_dir, "relax")
+    busted_ph_orb_path = os.path.join(data_dir, "busted_ph_orb")
+    busted_ph_non_orb_path = os.path.join(data_dir, "busted_ph_non_orb")
+    absrel_path = os.path.join(data_dir, "absrel_rerun")
     
     # Check if directories exist
     paths_exist = {
         'relax': os.path.exists(relax_path),
-        'busted_ph': os.path.exists(busted_ph_path),
-        'busted_ph_rev': os.path.exists(busted_ph_rev_path),
+        'busted_ph_orb': os.path.exists(busted_ph_orb_path),
+        'busted_ph_non_orb': os.path.exists(busted_ph_non_orb_path),
         'absrel': os.path.exists(absrel_path)
     }
     
@@ -125,16 +124,16 @@ def main():
             print(f"  ✗ Error loading RELAX results: {e}")
         print()
     
-    if paths_exist['busted_ph']:
+    if paths_exist['busted_ph_orb']:
         try:
-            print("Loading BUSTED-PH results...")
-            busted_ph_result = manager.load_busted_ph_from_json(busted_ph_path, name='busted_ph')
-            results_loaded.append('busted_ph')
-            print(f"  ✓ Loaded {len(busted_ph_result)} BUSTED-PH results")
+            print("Loading BUSTED-PH, orb-weaver foreground results...")
+            busted_ph_orb_result = manager.load_busted_ph_from_json(busted_ph_orb_path, name='busted_ph_orb')
+            results_loaded.append('busted_ph_orb')
+            print(f"  ✓ Loaded {len(busted_ph_orb_result)} BUSTED-PH orb results")
             
             # Demonstrate BUSTED-PH-specific functionality
-            hits = busted_ph_result.get_hits()
-            non_sig = busted_ph_result.get_non_significant()
+            hits = busted_ph_orb_result.get_hits()
+            non_sig = busted_ph_orb_result.get_non_significant()
             print(f"    - Hits: {len(hits)}, Non-significant: {len(non_sig)}")
             
             # Convert hits to LOCs
@@ -151,44 +150,44 @@ def main():
                     print(f"      ✗ Error converting hits to LOCs: {e}")
             
             # Filter by omega values
-            filtered = busted_ph_result.filter_omega(10000)
+            filtered = busted_ph_orb_result.filter_omega(10000)
             print(f"    - After omega filtering (< 10000): {len(filtered)}")
             
         except Exception as e:
             print(f"  ✗ Error loading BUSTED-PH results: {e}")
         print()
     
-    if paths_exist['busted_ph_rev']:
+    if paths_exist['busted_ph_non_orb']:
         try:
-            print("Loading BUSTED-PH-REV results...")
-            busted_ph_rev_result = manager.load_busted_ph_from_json(busted_ph_rev_path, name='busted_ph_rev')
-            results_loaded.append('busted_ph_rev')
-            print(f"  ✓ Loaded {len(busted_ph_rev_result)} BUSTED-PH-REV results")
+            print("Loading BUSTED-PH, non-orb-weaver foreground results...")
+            busted_ph_non_orb_result = manager.load_busted_ph_from_json(busted_ph_non_orb_path, name='busted_ph_non_orb')
+            results_loaded.append('busted_ph_non_orb')
+            print(f"  ✓ Loaded {len(busted_ph_non_orb_result)} BUSTED-PH non-orb results")
             
-            # Demonstrate BUSTED-PH-REV-specific functionality
-            hits_rev = busted_ph_rev_result.get_hits()
-            non_sig_rev = busted_ph_rev_result.get_non_significant()
-            print(f"    - Hits: {len(hits_rev)}, Non-significant: {len(non_sig_rev)}")
+            # Demonstrate BUSTED-PH non-orb-specific functionality
+            hits_non_orb = busted_ph_non_orb_result.get_hits()
+            non_sig_non_orb = busted_ph_non_orb_result.get_non_significant()
+            print(f"    - Hits: {len(hits_non_orb)}, Non-significant: {len(non_sig_non_orb)}")
             
             # Convert hits to LOCs
-            if len(hits_rev) > 0:
-                print("    - Converting BUSTED-PH-REV hits to LOCs...")
+            if len(hits_non_orb) > 0:
+                print("    - Converting BUSTED-PH non-orb hits to LOCs...")
                 try:
-                    hits_rev_with_locs = convert_hyphy_results_to_locs(hits_rev)
-                    if 'LOC' in hits_rev_with_locs.columns:
-                        unique_locs_rev = hits_rev_with_locs['LOC'].dropna().nunique()
-                        print(f"      ✓ Converted {len(hits_rev)} hits to {unique_locs_rev} unique LOCs")
+                    hits_non_orb_with_locs = convert_hyphy_results_to_locs(hits_non_orb)
+                    if 'LOC' in hits_non_orb_with_locs.columns:
+                        unique_locs_non_orb = hits_non_orb_with_locs['LOC'].dropna().nunique()
+                        print(f"      ✓ Converted {len(hits_non_orb)} hits to {unique_locs_non_orb} unique LOCs")
                     else:
                         print("      ✗ LOC conversion failed")
                 except Exception as e:
                     print(f"      ✗ Error converting hits to LOCs: {e}")
             
             # Filter by omega values
-            filtered_rev = busted_ph_rev_result.filter_omega(10000)
-            print(f"    - After omega filtering (< 10000): {len(filtered_rev)}")
+            filtered_non_orb = busted_ph_non_orb_result.filter_omega(10000)
+            print(f"    - After omega filtering (< 10000): {len(filtered_non_orb)}")
             
         except Exception as e:
-            print(f"  ✗ Error loading BUSTED-PH-REV results: {e}")
+            print(f"  ✗ Error loading BUSTED-PH non-orb results: {e}")
         print()
     
     if paths_exist['absrel']:

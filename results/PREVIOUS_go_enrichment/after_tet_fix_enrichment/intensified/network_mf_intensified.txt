@@ -1,8 +1,0 @@
-GO.ID	Description	p.Val
-GO:0030170	pyridoxal phosphate binding	0.0007
-GO:0000049	tRNA binding	0.0215
-GO:0003725	double-stranded RNA binding	0.0254
-GO:0008509	monoatomic anion transmembrane transporter activity	0.0284
-GO:0003727	single-stranded RNA binding	0.0314
-GO:0032266	phosphatidylinositol-3-phosphate binding	0.0365
-GO:0008010	structural constituent of chitin-based larval cuticle	0.0496

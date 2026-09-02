@@ -1,4 +1,0 @@
-GO.ID	Description	p.Val
-GO:0090630	activation of GTPase activity	0.00607
-GO:0031398	positive regulation of protein ubiquitination	0.03403
-GO:0043161	proteasome-mediated ubiquitin-dependent protein catabolic process	0.04421

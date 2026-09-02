@@ -1,2 +1,0 @@
-GO.ID	Description	p.Val
-GO:0004402	histone acetyltransferase activity	0.023

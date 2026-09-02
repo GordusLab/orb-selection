@@ -1,6 +1,0 @@
-GO.ID	Description	p.Val
-GO:0008285	negative regulation of cell population proliferation	0.0071
-GO:0006006	glucose metabolic process	0.0128
-GO:0006811	monoatomic ion transport	0.0239
-GO:0006470	protein dephosphorylation	0.0397
-GO:0045930	negative regulation of mitotic cell cycle	0.0441

@@ -1,4 +1,0 @@
-GO.ID	Description	p.Val
-GO:0003779	actin binding	0.00569
-GO:0050661	NADP binding	0.01600
-GO:0050839	cell adhesion molecule binding	0.02439

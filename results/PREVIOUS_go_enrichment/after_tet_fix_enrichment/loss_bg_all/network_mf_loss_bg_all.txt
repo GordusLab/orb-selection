@@ -1,7 +1,0 @@
-GO.ID	Description	p.Val
-GO:0008036	diuretic hormone receptor activity	0.0031
-GO:0004197	cysteine-type endopeptidase activity	0.0035
-GO:0017046	peptide hormone binding	0.0146
-GO:0008237	metallopeptidase activity	0.0263
-GO:0008010	structural constituent of chitin-based larval cuticle	0.0368
-GO:0017056	structural constituent of nuclear pore	0.0426

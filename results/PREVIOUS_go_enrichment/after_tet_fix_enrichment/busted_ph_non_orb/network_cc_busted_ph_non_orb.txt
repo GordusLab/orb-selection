@@ -1,5 +1,0 @@
-GO.ID	Description	p.Val
-GO:0005764	lysosome	0.023
-GO:0005635	nuclear envelope	0.035
-GO:0005847	mRNA cleavage and polyadenylation specificity factor complex	0.035
-GO:0005615	extracellular space	0.040

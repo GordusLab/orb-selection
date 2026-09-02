@@ -1,8 +1,0 @@
-GO.ID	Description	p.Val
-GO:0003735	structural constituent of ribosome	0.012
-GO:0005104	fibroblast growth factor receptor binding	0.021
-GO:0031491	nucleosome binding	0.026
-GO:0015035	protein-disulfide reductase activity	0.034
-GO:0016208	AMP binding	0.034
-GO:0008083	growth factor activity	0.036
-GO:0005200	structural constituent of cytoskeleton	0.047

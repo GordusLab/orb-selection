@@ -1,9 +1,0 @@
-GO.ID	Description	p.Val
-GO:0045182	translation regulator activity	0.0028
-GO:0140297	DNA-binding transcription factor binding	0.0065
-GO:0003713	transcription coactivator activity	0.0145
-GO:0060090	molecular adaptor activity	0.0170
-GO:0004888	transmembrane signaling receptor activity	0.0179
-GO:1990817	poly(A) RNA polymerase activity	0.0416
-GO:0003730	mRNA 3'-UTR binding	0.0416
-GO:0042803	protein homodimerization activity	0.0416

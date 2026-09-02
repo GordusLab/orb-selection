@@ -1,7 +1,0 @@
-GO.ID	Description	p.Val
-GO:0043130	ubiquitin binding	0.0071
-GO:0005504	fatty acid binding	0.0354
-GO:0061631	ubiquitin conjugating enzyme activity	0.0424
-GO:0008308	voltage-gated monoatomic anion channel activity	0.0424
-GO:0030527	structural constituent of chromatin	0.0493
-GO:0061630	ubiquitin protein ligase activity	0.0495

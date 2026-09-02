@@ -1,6 +1,0 @@
-GO.ID	Description	p.Val
-GO:0019773	proteasome core complex, alpha-subunit complex	0.019
-GO:0031982	vesicle	0.020
-GO:0005615	extracellular space	0.031
-GO:0010494	cytoplasmic stress granule	0.031
-GO:0030425	dendrite	0.039

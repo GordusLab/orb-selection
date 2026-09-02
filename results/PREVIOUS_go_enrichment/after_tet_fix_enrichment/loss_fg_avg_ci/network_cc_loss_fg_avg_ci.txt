@@ -1,6 +1,0 @@
-GO.ID	Description	p.Val
-GO:0005685	U1 snRNP	0.039
-GO:0017119	Golgi transport complex	0.039
-GO:0070822	Sin3-type complex	0.039
-GO:0005665	RNA polymerase II, core complex	0.047
-GO:0005730	nucleolus	0.048

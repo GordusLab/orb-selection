@@ -1,5 +1,0 @@
-GO.ID	Description	p.Val
-GO:0008284	positive regulation of cell population proliferation	0.0086
-GO:0008219	cell death	0.0160
-GO:0050801	monoatomic ion homeostasis	0.0161
-GO:0000387	spliceosomal snRNP assembly	0.0367

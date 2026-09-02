@@ -1,5 +1,0 @@
-GO.ID	Description	p.Val
-GO:0005912	adherens junction	0.00813
-GO:0045177	apical part of cell	0.01358
-GO:0005856	cytoskeleton	0.02747
-GO:0000407	phagophore assembly site	0.04619

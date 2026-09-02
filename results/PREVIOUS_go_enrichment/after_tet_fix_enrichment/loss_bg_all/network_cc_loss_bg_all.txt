@@ -1,6 +1,0 @@
-GO.ID	Description	p.Val
-GO:0062129	chitin-based extracellular matrix	0.0287
-GO:0043231	intracellular membrane-bounded organelle	0.0322
-GO:0005737	cytoplasm	0.0351
-GO:0043296	apical junction complex	0.0377
-GO:0005669	transcription factor TFIID complex	0.0377

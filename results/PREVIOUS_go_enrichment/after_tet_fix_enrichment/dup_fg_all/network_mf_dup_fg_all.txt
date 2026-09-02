@@ -1,9 +1,0 @@
-GO.ID	Description	p.Val
-GO:0020037	heme binding	0.00016
-GO:0000981	DNA-binding transcription factor activity, RNA polymerase II-specific	0.00449
-GO:0016791	phosphatase activity	0.01083
-GO:0004867	serine-type endopeptidase inhibitor activity	0.01367
-GO:0000977	RNA polymerase II transcription regulatory region sequence-specific DNA binding	0.01589
-GO:0005506	iron ion binding	0.03087
-GO:0051087	protein-folding chaperone binding	0.03595
-GO:0016705	oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen	0.04874

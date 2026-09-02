@@ -1,5 +1,0 @@
-GO.ID	Description	p.Val
-GO:0030145	manganese ion binding	0.0041
-GO:0031369	translation initiation factor binding	0.0188
-GO:0070006	metalloaminopeptidase activity	0.0368
-GO:0005313	L-glutamate transmembrane transporter activity	0.0380

@@ -172,10 +172,7 @@ orb-selection.Rproj
 
 
 # Keep raw large JSON-result directories ignored, but allow other data files to be tracked.
-data/absrel_rerun/
-data/busted_ph_orb/
-data/busted_ph_non_orb/
-data/relax/
+results/hyphy_results_cache/*
 *.pkl
 # Keep renv bootstrap files and the lockfile tracked.
 renv/library/
@@ -189,4 +186,4 @@ miniconda3/
 
 # VS Code settings
 .vscode/
-/data/hyphy_results_old
+

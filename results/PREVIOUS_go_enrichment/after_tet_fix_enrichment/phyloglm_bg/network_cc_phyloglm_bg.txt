@@ -1,6 +1,0 @@
-GO.ID	Description	p.Val
-GO:0005762	mitochondrial large ribosomal subunit	0.00078
-GO:0030915	Smc5-Smc6 complex	0.01405
-GO:0005795	Golgi stack	0.02560
-GO:0005739	mitochondrion	0.03267
-GO:0005666	RNA polymerase III complex	0.04343

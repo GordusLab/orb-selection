@@ -1,5 +1,0 @@
-GO.ID	Description	p.Val
-GO:0004197	cysteine-type endopeptidase activity	0.0125
-GO:0043130	ubiquitin binding	0.0151
-GO:0031625	ubiquitin protein ligase binding	0.0287
-GO:0005096	GTPase activator activity	0.0409

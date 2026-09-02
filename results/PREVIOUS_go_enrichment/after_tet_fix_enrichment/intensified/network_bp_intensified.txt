@@ -1,9 +1,0 @@
-GO.ID	Description	p.Val
-GO:0055085	transmembrane transport	0.0053
-GO:0032465	regulation of cytokinesis	0.0134
-GO:0006820	monoatomic anion transport	0.0139
-GO:0034497	protein localization to phagophore assembly site	0.0139
-GO:0051453	regulation of intracellular pH	0.0244
-GO:0006783	heme biosynthetic process	0.0245
-GO:0034976	response to endoplasmic reticulum stress	0.0245
-GO:0042246	tissue regeneration	0.0297

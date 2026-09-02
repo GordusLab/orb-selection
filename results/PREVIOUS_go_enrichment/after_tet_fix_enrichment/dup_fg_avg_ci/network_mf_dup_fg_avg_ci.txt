@@ -1,7 +1,0 @@
-GO.ID	Description	p.Val
-GO:0004867	serine-type endopeptidase inhibitor activity	0.00352
-GO:0004252	serine-type endopeptidase activity	0.00464
-GO:0020037	heme binding	0.00892
-GO:0042043	neurexin family protein binding	0.03194
-GO:0008139	nuclear localization sequence binding	0.03821
-GO:0004000	adenosine deaminase activity	0.03821

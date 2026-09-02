@@ -1,6 +1,0 @@
-GO.ID	Description	p.Val
-GO:0032797	SMN complex	0.0028
-GO:0030136	clathrin-coated vesicle	0.0047
-GO:0005759	mitochondrial matrix	0.0149
-GO:0005737	cytoplasm	0.0310
-GO:0030991	intraciliary transport particle A	0.0380

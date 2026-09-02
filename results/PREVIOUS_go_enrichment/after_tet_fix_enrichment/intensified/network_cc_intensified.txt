@@ -1,7 +1,0 @@
-GO.ID	Description	p.Val
-GO:0051233	spindle midzone	0.00254
-GO:0005912	adherens junction	0.01370
-GO:0045177	apical part of cell	0.02408
-GO:0000407	phagophore assembly site	0.02740
-GO:0005813	centrosome	0.02991
-GO:0062129	chitin-based extracellular matrix	0.03810

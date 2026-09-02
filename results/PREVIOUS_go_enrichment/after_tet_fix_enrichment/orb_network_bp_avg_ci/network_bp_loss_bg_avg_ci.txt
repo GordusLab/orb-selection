@@ -1,4 +1,0 @@
-GO.ID	Description	p.Val
-GO:0006082	organic acid metabolic process	7.1e-07
-GO:0019693	ribose phosphate metabolic process	0.02931
-GO:0050801	monoatomic ion homeostasis	0.03033

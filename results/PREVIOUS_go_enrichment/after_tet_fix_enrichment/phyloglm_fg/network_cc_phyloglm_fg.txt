@@ -1,9 +1,0 @@
-GO.ID	Description	p.Val
-GO:0005886	plasma membrane	0.0084
-GO:0005635	nuclear envelope	0.0206
-GO:0008180	COP9 signalosome	0.0248
-GO:0005921	gap junction	0.0370
-GO:0005940	septin ring	0.0371
-GO:0031105	septin complex	0.0371
-GO:0005576	extracellular region	0.0428
-GO:0015630	microtubule cytoskeleton	0.0431

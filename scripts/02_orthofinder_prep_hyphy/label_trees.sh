@@ -1,39 +1,24 @@
 #!/bin/bash
 
-# Labels foreground branches on filtered trees using HyPhy LabelTrees.
-# Arguments: <CONDA_ENV_PATH> <REPORT_DIR> <WORK_DIR> <HYPHY_ANALYSES_DIR> <FG_ORB_OR_NONORB>
-
+#SBATCH --job-name=260722_label_trees_nonorb
+#SBATCH --partition=parallel
+#SBATCH --account=agordus1
+#SBATCH --time=01:00:00
+#SBATCH --mail-user=crunnel2@jhu.edu
+#SBATCH --mail-type=ALL
 #SBATCH --array=1-4756
-#SBATCH --output=reports/%x/%A_%a.out
-#SBATCH --error=reports/%x/%A_%a.err
+#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 
 module load anaconda
-CONDA_ENV_PATH=$1
-conda activate "$CONDA_ENV_PATH"
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+conda activate /home/crunnel2/anaconda3/envs/selection
 
 #make directory to store slurm reports
-REPORT_DIR=$2
-mkdir -p "$REPORT_DIR/$SBATCH_JOB_NAME/"
+mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
 
-WD=$3
-HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
-
-if [ "$5" == "orb" ]; then
-	FG_LIST=${FG_LIST:-$REPO_ROOT/data/orbweavers-list.txt}
-	FG_NAME="orb_fg"
-elif [ "$5" == "nonorb" ]; then
-	FG_LIST=${FG_LIST:-$REPO_ROOT/data/nonorbweavers-list.txt}
-	FG_NAME="nonorb_fg"
-else
-	echo "Error: Invalid foreground group specified. Use 'orb' or 'nonorb'."
-	exit 1
-fi
-
-#path to hyphy analyses repo clone: https://github.com/veg/hyphy-analyses/
-HYPHY_ANALYSES_DIR=$4
+WD=/scratch4/agordus1/crunnel2/hyphy_wd
+HOG_LIST=/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt
+FG_LIST=/home/crunnel2/orb-selection/data/non-orb-weavers-list.txt
+FG_NAME=non_orb_fg
 
 CURRENT_HOG=$(sed "${SLURM_ARRAY_TASK_ID}q;d" $HOG_LIST)
 
@@ -48,13 +33,20 @@ else
 
 	while read p; do
 		REGEX="^${p}"
-		hyphy "$HYPHY_ANALYSES_DIR/LabelTrees/label-tree.bf" \
+		hyphy /home/crunnel2/bin/hyphy-analyses/LabelTrees/label-tree.bf \
 		 --tree ${LBLD_TREE} \
 		 --regexp $REGEX \
-		 --output ${LBLD_TREE} 
+		 --output ${LBLD_TREE}
 	done < ${FG_LIST}
 
+	#Add a semicolon to the end of the last line of the tree file to avoid errors in HyPhy
 	sed -i '$s/$/;/' ${LBLD_TREE}
+
+	mv ${LBLD_TREE} ${LBLD_TREE}.tmp
+
+	# LabelTrees is adding 1E-10 branch lengths to every branch for some reason
+	gotree brlen clear -i ${LBLD_TREE}.tmp -o ${LBLD_TREE} && rm ${LBLD_TREE}.tmp
+
 fi
 
 conda deactivate

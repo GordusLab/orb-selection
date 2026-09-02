@@ -3,23 +3,38 @@
 Analysis repository for "Comparative transcriptomic analysis reveals signatures of selection
 for orb-weaving behavior in spiders," Runnels et al. 2026
 
+## Table of Contents
+
+- [Repository contents](#repository-contents)
+- [Environment setup](#environment-setup)
+- [Data Availability](#data-availability)
+- [Stage 01: Transcriptome data collection and pre-processing](#stage-01-transcriptome-data-collection-and-pre-processing)
+- [Stage 02: Orthology search and pre-testing pipeline](#stage-02-orthology-search-and-pre-testing-pipeline)
+- [Stage 03: Testing for positive and relaxed selection](#stage-03-testing-for-positive-and-relaxed-selection)
+- [Stage 04: Gene loss and duplication analysis](#stage-04-gene-loss-and-duplication-analysis)
+- [Stage 05: Phylogenetic regression](#stage-05-phylogenetic-regression)
+- [Stage 06: Ontology enrichment analysis](#stage-06-ontology-enrichment-analysis)
+- [Stage 07: Figures and tables](#stage-07-figures-and-tables)
+
 ## Repository contents
 
 |Directory / Filename|Description|
 |---|---|
 |`data/`| Raw and intermediate data files used in the pipeline, _e.g._ OrthoFinder outputs, BUSCO scores, lists of species belonging to different categories, lists of HOGs tested in the HyPhy analyses, permulation-generated phenotype designations, and resources used to annotate results.|
 |`figures/`| PDF files of all figures and figure elements output by the figure-generating notebooks in [`scripts/07_figures_tables`](scripts/07_figures_tables).|
-|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/06_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM. |
+|`renv/`| Project-level R environment activation scripts and settings for dependency management.|
+|`results/`| Results from the analyses including all Supplementary Tables ([source code](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)), lists of _U. diversus_ or _P. tepidariorum_ gene IDs for significant HOGs and complete GO enrichment of these genes (Fig. 3-5, [source code](scripts/06_enrichment)), and all outputs from the Log Odds Ratio test (Fig. 5, [source code](scripts/04_permulation_loss_dup)) and phyloGLM.|
 |`scripts/`| Full analysis pipeline divided into stages following the paper's methods section. See below for a complete description of the steps required for each stage of the analysis.|
-|`src/` | Contains helper modules used in various stages of the analysis. |
-|`.Rprofile`|Project-level R startup settings.|
-|`.gitignore`|Version control exclusion rules.|
-|`CHANGELOG.md`|Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex). |
+|`src/`| Contains helper modules used in various stages of the analysis.|
 |`README.md`| Top-level project overview, pipeline stage documentation, and usage notes.|
-|`environment.yml`|Python dependencies.|
-|`selection.yml`|Conda environment used to run the HyPhy selection tests (see [scripts/03_selection_tests](scripts/03_selection_tests)) on high performance computing cluster.|
-|`renv.lock`|R dependencies.|
-|`upset.yml`| Conda environment for running the [Upset Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).
+|`CHANGELOG.md`| Repository reorganization details. Reorganization support was performed with GitHub Copilot (GPT-5.3-Codex).|
+|`environment.yml`| Python dependencies.|
+|`environment_macos.yml`| Conda environment configuration optimized for macOS platforms.|
+|`selection.yml`| Conda environment used to run the HyPhy selection tests (see [scripts/03_selection_tests](scripts/03_selection_tests)) on high performance computing cluster.|
+|`upset.yml`| Conda environment for running the [UpSet Plots notebook](scripts/07_figures_tables/UpSet%20Plots.ipynb).|
+|`renv.lock`| R dependencies.|
+|`.Rprofile`| Project-level R startup settings.|
+|`.gitignore`| Version control exclusion rules.|
 
 ## Environment setup
 
@@ -34,7 +49,7 @@ Rscript -e 'renv::restore(prompt = FALSE)'
 
 The restore installs the managed R dependencies, including `phylolm`, `ape`, `dplyr`, `tidyr`, `topGO`, and the plotting packages. `RERconverge` is not installed by `renv`; install it separately using the [RERconverge installation instructions](https://github.com/nclark-lab/RERconverge/wiki/Install). On macOS, install [XQuartz](https://www.xquartz.org/) first if the `gdtools` dependency reports a missing X11 library.
 
-The Python and HyPhy workflows use separate environments. Create the relevant Conda environments with [`environment.yml`](environment.yml), [`hyphy_environment.yml`](hyphy_environment.yml), or [`upset_env.yml`](upset_env.yml) as described by the corresponding pipeline stage.
+The Python and HyPhy workflows use separate environments. Create the relevant Conda environments with [`environment.yml`](environment.yml) (or [`environment_macos.yml`](environment_macos.yml) on macOS), [`selection.yml`](selection.yml), or [`upset.yml`](upset.yml) as described by the corresponding pipeline stage.
 
 ## Data Availability
 
@@ -101,7 +116,7 @@ The script and notebook in [`scripts/05_phyloglm`](scripts/05_phyloglm) fit a ph
 
 ### Steps: 
 1. Run phyloglm analysis in parallel on ~12000 genes: [`phyloglm.R`](scripts/05_phyloglm/phyloglm.R)
-2. Inspect significant results: [`PhyloGLM Analysis.ipynb`](scripts/05_phyloglm/PhyloGLM%20Analysis.R)
+2. Inspect significant results: [`PhyloGLM Analysis.ipynb`](scripts/05_phyloglm/PhyloGLM%20Analysis.ipynb)
 
 ## Stage 06: Ontology enrichment analysis
 
@@ -109,10 +124,10 @@ The scripts in [`scripts/06_enrichment`](scripts/06_enrichment) create significa
 
 ### Steps:
 1. Make BLAST db from the [_P. tepidariorum_ genome](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_043381705.1/)
-2. Run [`annotate_ogroups_vs_ref.py`](scripts/06_enrichment/annotate_ogroups_vs_ref.py) to determine best BLAST hit for each orthogroup from the _P. tepidariorum_ for enrichment of significant gene sets for orthogroups more commonly found in non-orb-weavers
-3. Helper functions to generate significant ID list files for downstream enrichment: [`get_gene_id_lists.py`](scripts/06_enrichment/get_gene_id_lists.py)
-3. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/06_enrichment/go_enrichment.R)
-4. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/06_enrichment/summarise_topgo_output.sh)
+2. Run [`annotate_ogroups_vs_ref.py`](scripts/06_enrichment/annotate_ogroups_vs_ref.py) to determine best BLAST hit for each orthogroup from _P. tepidariorum_ for enrichment of significant gene sets
+3. Generate significant gene ID lists using helper module [`get_gene_id_lists.py`](scripts/06_enrichment/get_gene_id_lists.py) and workflow notebook [`Write Significant LOC Lists.ipynb`](scripts/06_enrichment/Write%20Significant%20LOC%20Lists.ipynb)
+4. Run topGO enrichment for each gene set: [`go_enrichment.R`](scripts/06_enrichment/go_enrichment.R)
+5. Summarize enrichment outputs into merged tables: [`summarise_topgo_output.sh`](scripts/06_enrichment/summarise_topgo_output.sh)
 
 Data note: Stage 06 depends on cached HyPhy and odds ratio test result objects for hit-list generation.
 
@@ -122,9 +137,9 @@ The scripts and notebooks in [`scripts/07_figures_tables`](scripts/07_figures_ta
 
 ### Steps:
 
-1. Plot HyPhy omega distributions and selected gene examples: [`Hyphy Omega Plots.ipynb`](scripts/06_figures_tables/Hyphy%20Omega%20Plots.ipynb)
-2. Plot odds ratio test results: [`Odds Ratio Test Plots.ipynb`](scripts/06_figures_tables/Odds%20Ratio%20Test%20Plots.ipynb)
-3. Generate UpSet plots and intersections of significant results: [`UpSet Plots.ipynb`](scripts/06_figures_tables/UpSet%20Plots.ipynb)
-4. Compile supplementary result tables for export: [`Supplementary Data Tables.ipynb`](scripts/06_figures_tables/Supplementary%20Data%20Tables.ipynb)
+1. Plot HyPhy omega distributions and selected gene examples: [`Hyphy Omega Plots.ipynb`](scripts/07_figures_tables/Hyphy%20Omega%20Plots.ipynb)
+2. Plot odds ratio test results: [`Odds Ratio Test Plots.ipynb`](scripts/07_figures_tables/Odds%20Ratio%20Test%20Plots.ipynb)
+3. Generate UpSet plots and intersections of significant results: [`UpSet Plots.ipynb`](scripts/07_figures_tables/UpSet%20Plots.ipynb)
+4. Compile supplementary result tables for export: [`Supplementary Data Tables.ipynb`](scripts/07_figures_tables/Supplementary%20Data%20Tables.ipynb)
 
 Data note: Stage 07 expects completed outputs from stages 03-05 and writes figure/table artifacts to `figures/` and `results/`.

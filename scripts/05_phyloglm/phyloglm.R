@@ -165,17 +165,5 @@ cat("Finished parallelized phyloglm regressions for gene count (discrete).\n")
 # Combine temp files into final CSV
 combine_tmp_results(tmp_dir, here("results", "phyloglm", "phyloglm.csv"))
 
-# Calculate Storey FDR (q-values) and save updated CSV
-library(qvalue)
-results <- read.csv(here("results", "phyloglm", "phyloglm.csv"))
-if ("coef_orb_weavingTRUE_p.value" %in% colnames(results)) {
-  pvals <- results$coef_orb_weavingTRUE_p.value
-  qobj <- qvalue(p = pvals)
-  results$qvalue <- qobj$qvalues
-  write.csv(results, here("results", "phyloglm", "phyloglm_qvals.csv"), row.names = FALSE)
-} else {
-  warning("Could not find p-value column 'coef_orb_weavingTRUE_p.value' in results. Please update the column name in the script.")
-}
-
 # Note: For a binary predictor like orb_weaving, the coefficient for orb_weavingTRUE is the effect size (log-odds or log-rate ratio) for TRUE vs FALSE.
 # The effect for orb_weaving == FALSE is the negative of this coefficient, and the p-value is the same.

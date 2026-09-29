@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Purpose: run BUSCO on TransDecoder peptide outputs for each sample.
+# Usage: scripts/01_pre_processing/process_fsas.busco.sh <input_dir> <busco_work_dir> <td_p_busco_run_dir> <td_p_busco_complete_dir>
 
-INPUT_DIR=PATH_TO_TD_P_OUTPUT_PARENT_DIR
-BUSCO_WORK_DIR=PATH_TO_BUSCO_WORK_DIR
-TD_P_BUSCO_RUN_DIR=PATH_TO_TD_P_BUSCO_RUN_DIR
-TD_P_BUSCO_COMPLETE_DIR=PATH_TO_TD_P_BUSCO_COMPLETE_DIR
+INPUT_DIR=$1
+BUSCO_WORK_DIR=$2
+TD_P_BUSCO_RUN_DIR=$3
+TD_P_BUSCO_COMPLETE_DIR=$4
 
 mkdir -p "$BUSCO_WORK_DIR"
 mkdir -p "$TD_P_BUSCO_COMPLETE_DIR"

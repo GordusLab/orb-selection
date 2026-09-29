@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Purpose: run blastp on longest TransDecoder ORFs and save tabular hits.
+# Usage: scripts/01_pre_processing/process_fsas.blastp.sh <input_dir> <td_lo_to_blastp_dir> <blastp_out_dir> <uniprot_db> <td_p_run_dir>
 
-INPUT_DIR=PATH_TO_CD_HIT_INPUT_DIR
-TD_LO_TO_BLASTP_DIR=PATH_TO_TD_LO_TO_BLASTP_DIR
-BLASTP_OUT_DIR=PATH_TO_BLASTP_OUTPUT_DIR
-UNIPROT_DB=PATH_TO_UNIPROT_SPROT_FASTA
-TD_P_RUN_DIR=PATH_TO_TD_P_RUN_DIR
+INPUT_DIR=$1
+TD_LO_TO_BLASTP_DIR=$2
+BLASTP_OUT_DIR=$3
+UNIPROT_DB=$4
+TD_P_RUN_DIR=$5
 
 mkdir -p "$BLASTP_OUT_DIR"
 mkdir -p "$TD_P_RUN_DIR"

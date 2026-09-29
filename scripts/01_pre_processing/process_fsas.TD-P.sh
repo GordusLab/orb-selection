@@ -2,10 +2,12 @@
 
 # Purpose: run TransDecoder.Predict using retained blastp hits.
 
-INPUT_DIR=PATH_TO_TD_LO_OUTPUT_DIR
-CD_HIT_FASTA_DIR=PATH_TO_CD_HIT_FASTA_DIR
-BLASTP_DIR=PATH_TO_BLASTP_OUTPUT_DIR
-TD_P_COMPLETE_DIR=PATH_TO_TD_P_COMPLETE_DIR
+# Usage: scripts/01_pre_processing/process_fsas.TD-P.sh <input_dir> <cd_hit_fasta_dir> <blastp_dir> <td_p_complete_dir>
+
+INPUT_DIR=$1
+CD_HIT_FASTA_DIR=$2
+BLASTP_DIR=$3
+TD_P_COMPLETE_DIR=$4
 
 mkdir -p "$TD_P_COMPLETE_DIR"
 

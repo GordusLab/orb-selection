@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # Purpose: cluster nucleotide FASTAs with cd-hit-est.
+# Usage: scripts/01_pre_processing/process_fsas_cd-hit.sh <input_dir> <cd_hit_out_dir> <cd_hit_complete_dir>
 
-INPUT_DIR=PATH_TO_FSA_INPUT_DIR
-CD_HIT_OUT_DIR=PATH_TO_CD_HIT_OUTPUT_DIR
-CD_HIT_COMPLETE_DIR=PATH_TO_PROCESSED_INPUT_DIR
+INPUT_DIR=$1
+CD_HIT_OUT_DIR=$2
+CD_HIT_COMPLETE_DIR=$3
 
 mkdir -p "$CD_HIT_OUT_DIR"
 mkdir -p "$CD_HIT_COMPLETE_DIR"

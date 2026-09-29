@@ -4,7 +4,7 @@
 # Usage: scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh <conda_env_path> <work_dir> <hog_cds_dir> <macse_jar> <hyphy_analyses>
 # Note: The script assumes that the input HOG CDS files are in FASTA format and that MACSE is available at the specified JAR path.
 
-#SBATCH --job-name=260723_busted_ph_rev_test_3
+#SBATCH --job-name=260929_prep_for_hyphy2
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=12:00:00

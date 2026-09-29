@@ -153,7 +153,7 @@ else
 
 	while read p; do
 		REGEX="^${p}"
-		hyphy /home/crunnel2/bin/hyphy-analyses/LabelTrees/label-tree.bf \
+		hyphy ${HYPHY_ANALYSES}/LabelTrees/label-tree.bf \
 		 --tree ${ORB_TREE} \
 		 --regexp $REGEX \
 		 --output ${ORB_TREE}
@@ -177,7 +177,7 @@ else
 
 	while read p; do
 		REGEX="^${p}"
-		hyphy /home/crunnel2/bin/hyphy-analyses/LabelTrees/label-tree.bf \
+		hyphy ${HYPHY_ANALYSES}/LabelTrees/label-tree.bf \
 		--tree ${NONORB_TREE} \
 		--regexp $REGEX \
 		--output ${NONORB_TREE}

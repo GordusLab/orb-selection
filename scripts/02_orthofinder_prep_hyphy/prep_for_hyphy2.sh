@@ -4,6 +4,9 @@
 # Usage: scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh <conda_env_path> <work_dir> <hog_cds_dir> <macse_jar> <hyphy_analyses>
 # Note: The script assumes that the input HOG CDS files are in FASTA format and that MACSE is available at the specified JAR path.
 
+# RUN FROM REPO ROOT
+# sbatch scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929/ ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
+
 #SBATCH --job-name=260929_prep_for_hyphy2
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
@@ -22,8 +25,7 @@ module load anaconda
 CONDA_ENV_PATH=$1
 conda activate "$CONDA_ENV_PATH"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+REPO_ROOT="$(pwd)"
 
 WD=$2
 
@@ -31,7 +33,7 @@ WD=$2
 HOG_CDS_DIR=$3
 
 #list of HOG IDs from directory of fasta files
-HOG_LIST=${HOG_LIST:-$REPO_ROOT/data/N5.udiv.o75_list.txt}
+HOG_LIST=${REPO_ROOT}/data/N5.udiv.o75_list.txt
 MACSE_JAR=$4
 
 HYPHY_ANALYSES=$5

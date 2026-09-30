@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Prepares HOG alignments/trees for HyPhy analyses.
 # Usage: scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh <conda_env_path> <work_dir> <hog_cds_dir> <macse_jar> <hyphy_analyses>
@@ -92,12 +93,15 @@ fi
 # Trim protein alignments using trimAl, then back-translate to nucleotide sequences
 TRIMAL_FILE=${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.fasta
 
+# replace all X/x with N/n in the prequal file for trimAl back-translation
+sed '/^>/! s/X/N/g; /^>/! s/x/n/g' "$PREQUAL_FILE" > "${PREQUAL_FILE}.trimAl.fasta"
+
 # check if trimAl has already completed for this HOG
 if [ -f ${TRIMAL_FILE} ]; then
 	echo "TrimAl file ${TRIMAL_FILE} exists; on to remove-duplicates."
 else
 	#run trimAl
-	trimal -in ${MACSE_FILE} -backtrans ${PREQUAL_FILE} -out ${TRIMAL_FILE} -gappyout
+	trimal -in ${MACSE_FILE} -backtrans "${PREQUAL_FILE}.trimAl.fasta" -out ${TRIMAL_FILE} -gappyout
 fi
 
 #######################

@@ -1,12 +1,11 @@
 #!/bin/bash
-set -e
 
 # Prepares HOG alignments/trees for HyPhy analyses.
 # Usage: scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh <conda_env_path> <work_dir> <hog_cds_dir> <macse_jar> <hyphy_analyses>
 # Note: The script assumes that the input HOG CDS files are in FASTA format and that MACSE is available at the specified JAR path.
 
 # RUN FROM REPO ROOT
-# sbatch scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929/ ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
+# sbatch scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
 #SBATCH --job-name=260930_prep_for_hyphy2
 #SBATCH --partition=parallel
@@ -15,9 +14,12 @@ set -e
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-2
-#SBATCH -n 3
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
+
+set -e
 
 #make directory to store slurm reports
 mkdir -p /data/agordus1/crunnel2/reports/$SBATCH_JOB_NAME/
@@ -136,7 +138,7 @@ else
 	mkdir -p ${WD}/${CURRENT_HOG}/iqtree/
 	iqtree -s ${DEDUP_FILE} \
 	-m MFP \
-	-ntmax 2 \
+	-ntmax 3 \
 	-T AUTO \
 	--prefix ${WD}/${CURRENT_HOG}/iqtree/${CURRENT_HOG}
 fi
@@ -148,53 +150,41 @@ fi
 ORB_LIST=${REPO_ROOT}/data/orbweavers-list.txt
 NONORB_LIST=${REPO_ROOT}/data/non-orbweavers-list.txt
 
-ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree
+for SETTING in "Parsimony" "All descendants"; do
 
-if [ -f ${ORB_TREE} ]; then
-	echo "The tree ${ORB_TREE} already exists."
-else
-	cp ${IQTREE_FILE} ${ORB_TREE}
+	SETTING_FILE=${SETTING// /_}
+	#label orb-weavers
+	ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.$SETTING_FILE.tree
+	if [ -f "${ORB_TREE}" ]; then
+		echo "The tree ${ORB_TREE} already exists."
+	else
+		SPECIES_REGEX=$(awk 'NF { sub(/\r$/, ""); printf "%s%s", sep, $0; sep = "|" }' "$ORB_LIST")
+		REGEX="^(${SPECIES_REGEX})\\|"
 
-	while read p; do
-		REGEX="^${p}"
-		hyphy ${HYPHY_ANALYSES}/LabelTrees/label-tree.bf \
-		 --tree ${ORB_TREE} \
-		 --regexp $REGEX \
-		 --output ${ORB_TREE}
-	done < ${ORB_LIST}
+		hyphy "$HYPHY_ANALYSES/LabelTrees/label-tree.bf" \
+		--tree "$IQTREE_FILE" \
+		--regexp "$REGEX" \
+		--output "$ORB_TREE" \
+		--internal-nodes "$SETTING"
 
-	# #Add a semicolon to the end of the last line of the tree file to avoid errors in HyPhy
-	# sed -i '$s/$/;/' ${ORB_TREE}
+	fi
 
-	# mv ${ORB_TREE} ${ORB_TREE}.tmp
+	#label non-orbweavers
+	NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.$SETTING_FILE.tree
+	if [ -f "${NONORB_TREE}" ]; then
+		echo "The tree ${NONORB_TREE} already exists."
+	else
+		SPECIES_REGEX=$(awk 'NF { sub(/\r$/, ""); printf "%s%s", sep, $0; sep = "|" }' "$NONORB_LIST")
+		REGEX="^(${SPECIES_REGEX})\\|"
 
-	# # LabelTrees is adding 1E-10 branch lengths to every branch for some reason
-	# gotree brlen clear -i ${ORB_TREE}.tmp -o ${ORB_TREE} && rm ${ORB_TREE}.tmp
-fi
+		hyphy "$HYPHY_ANALYSES/LabelTrees/label-tree.bf" \
+		--tree "$IQTREE_FILE" \
+		--regexp "$REGEX" \
+		--output "$NONORB_TREE" \
+		--internal-nodes "$SETTING"
 
-#label non-orbweavers
-NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree
-if [ -f ${NONORB_TREE} ]; then
-	echo "The tree ${NONORB_TREE} already exists."
-else
-	cp ${IQTREE_FILE} ${NONORB_TREE}
-
-	while read p; do
-		REGEX="^${p}"
-		hyphy ${HYPHY_ANALYSES}/LabelTrees/label-tree.bf \
-		--tree ${NONORB_TREE} \
-		--regexp $REGEX \
-		--output ${NONORB_TREE}
-	done < ${NONORB_LIST}
-
-	# #Add a semicolon to the end of the last line of the tree file to avoid errors in HyPhy
-	# sed -i '$s/$/;/' ${NONORB_TREE}
-
-	# mv ${NONORB_TREE} ${NONORB_TREE}.tmp
-
-	# # LabelTrees is adding 1E-10 branch lengths to every branch for some reason
-	# gotree brlen clear -i ${NONORB_TREE}.tmp -o ${NONORB_TREE} && rm ${NONORB_TREE}.tmp
-fi
+	fi
+done
 
 # ############
 # ## BUSTED ##

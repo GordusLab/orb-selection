@@ -153,7 +153,7 @@ ORB_LIST=${REPO_ROOT}/data/orbweavers-list.txt
 NONORB_LIST=${REPO_ROOT}/data/non-orbweavers-list.txt
 
 #label orb-weavers
-ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree
+ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.parsimony.tree
 if [ -f "${ORB_TREE}" ]; then
 	echo "The tree ${ORB_TREE} already exists."
 else
@@ -164,12 +164,12 @@ else
 	--tree "$IQTREE_FILE" \
 	--regexp "$REGEX" \
 	--output "$ORB_TREE" \
-	--internal-nodes "All descendants"
+	--internal-nodes "Parsimony"
 
 fi
 
 #label non-orbweavers
-NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree
+NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.parsimony.tree
 if [ -f "${NONORB_TREE}" ]; then
 	echo "The tree ${NONORB_TREE} already exists."
 else
@@ -180,7 +180,7 @@ else
 	--tree "$IQTREE_FILE" \
 	--regexp "$REGEX" \
 	--output "$NONORB_TREE" \
-	--internal-nodes "All descendants"
+	--internal-nodes "Parsimony"
 
 fi
 

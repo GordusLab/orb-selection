@@ -3,7 +3,8 @@
 # Runs RELAX and BUSTED-PH (orb fg and non orb fg) for one HOG per SLURM array task.
 
 #SBATCH --array=1-4756
-#SBATCH -n 3
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
 #SBATCH --output=reports/%x/%A_%a.out
 
 #make directory to store slurm reports
@@ -27,7 +28,7 @@ if grep -q "p-value" ${RELAX_OUT}; then
 else
 	#run relax
 	hyphy relax \
-	 CPU=${SLURM_NTASKS} \
+	 CPU=${SLURM_CPUS_PER_TASK} \
 	 --alignment ${WD}/${CURRENT_HOG}.non_orb_fg.nex \
 	 --test "FOREGROUND" \
 	 --multiple-hits Double+Triple \
@@ -46,7 +47,7 @@ if grep -q "p-value" ${BUSTEDPH_ORB_OUT}; then
 else
 	#run busted-ph
 	hyphy busted-ph \
-	 CPU=${SLURM_NTASKS} \
+	 CPU=${SLURM_CPUS_PER_TASK} \
 	 --alignment ${WD}/${CURRENT_HOG}.orb_fg.nex \
 	 --branches FOREGROUND \
 	 --output ${BUSTEDPH_ORB_OUT} \
@@ -60,7 +61,7 @@ if grep -q "p-value" ${BUSTEDPH_NON_ORB_OUT}; then
 else
 	#run busted-ph
 	hyphy busted-ph \
-	 CPU=${SLURM_NTASKS} \
+	 CPU=${SLURM_CPUS_PER_TASK} \
 	 --alignment ${WD}/${CURRENT_HOG}.non_orb_fg.nex \
 	 --branches FOREGROUND \
 	 --output ${BUSTEDPH_NON_ORB_OUT} \

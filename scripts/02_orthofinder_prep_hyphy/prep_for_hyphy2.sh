@@ -77,7 +77,7 @@ fi
 MACSE_FILE=${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_AA.fasta
 
 if [ -f ${MACSE_FILE} ]; then
-	echo "Macse file ${MACSE_FILE} exists; on to iqtree."
+	echo "Macse file ${MACSE_FILE} exists; on to TrimAl."
 else
 	#run macse
 	mkdir -p ${WD}/${CURRENT_HOG}/macse/
@@ -95,15 +95,17 @@ fi
 # Trim protein alignments using trimAl, then back-translate to nucleotide sequences
 TRIMAL_FILE=${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.fasta
 
+PREQUAL_CDS=${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_CDS_for_trimAl.fasta
 # replace all X/x with N/n in the prequal file for trimAl back-translation
-sed '/^>/! s/X/N/g; /^>/! s/x/n/g' "$PREQUAL_FILE" > "${PREQUAL_FILE}.trimAl.fasta"
+sed '/^>/! s/X/N/g; /^>/! s/x/n/g' "$PREQUAL_FILE" > "$PREQUAL_CDS"
 
 # check if trimAl has already completed for this HOG
 if [ -f ${TRIMAL_FILE} ]; then
 	echo "TrimAl file ${TRIMAL_FILE} exists; on to remove-duplicates."
 else
 	#run trimAl
-	trimal -in ${MACSE_FILE} -backtrans "${PREQUAL_FILE}.trimAl.fasta" -out ${TRIMAL_FILE} -gappyout
+	trimal -in ${MACSE_FILE} -backtrans "$PREQUAL_CDS" -out ${TRIMAL_FILE} -gappyout
+	echo "TrimAl completed for ${TRIMAL_FILE}"
 fi
 
 #######################
@@ -132,7 +134,7 @@ fi
 IQTREE_FILE=${WD}/${CURRENT_HOG}/iqtree/${CURRENT_HOG}.treefile
 
 if [ -f ${IQTREE_FILE} ]; then
-	echo "IQtree file ${IQTREE_FILE} exists; on to BUSTED."
+	echo "IQtree file ${IQTREE_FILE} exists; on to LabelTrees."
 else
 	#run iqtree
 	mkdir -p ${WD}/${CURRENT_HOG}/iqtree/
@@ -150,41 +152,37 @@ fi
 ORB_LIST=${REPO_ROOT}/data/orbweavers-list.txt
 NONORB_LIST=${REPO_ROOT}/data/non-orbweavers-list.txt
 
-for SETTING in "Parsimony" "All descendants"; do
+#label orb-weavers
+ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree
+if [ -f "${ORB_TREE}" ]; then
+	echo "The tree ${ORB_TREE} already exists."
+else
+	SPECIES_REGEX=$(awk 'NF { sub(/\r$/, ""); printf "%s%s", sep, $0; sep = "|" }' "$ORB_LIST")
+	REGEX="^(${SPECIES_REGEX})\\|"
 
-	SETTING_FILE=${SETTING// /_}
-	#label orb-weavers
-	ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.$SETTING_FILE.tree
-	if [ -f "${ORB_TREE}" ]; then
-		echo "The tree ${ORB_TREE} already exists."
-	else
-		SPECIES_REGEX=$(awk 'NF { sub(/\r$/, ""); printf "%s%s", sep, $0; sep = "|" }' "$ORB_LIST")
-		REGEX="^(${SPECIES_REGEX})\\|"
+	hyphy "$HYPHY_ANALYSES/LabelTrees/label-tree.bf" \
+	--tree "$IQTREE_FILE" \
+	--regexp "$REGEX" \
+	--output "$ORB_TREE" \
+	--internal-nodes "All descendants"
 
-		hyphy "$HYPHY_ANALYSES/LabelTrees/label-tree.bf" \
-		--tree "$IQTREE_FILE" \
-		--regexp "$REGEX" \
-		--output "$ORB_TREE" \
-		--internal-nodes "$SETTING"
+fi
 
-	fi
+#label non-orbweavers
+NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree
+if [ -f "${NONORB_TREE}" ]; then
+	echo "The tree ${NONORB_TREE} already exists."
+else
+	SPECIES_REGEX=$(awk 'NF { sub(/\r$/, ""); printf "%s%s", sep, $0; sep = "|" }' "$NONORB_LIST")
+	REGEX="^(${SPECIES_REGEX})\\|"
 
-	#label non-orbweavers
-	NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.$SETTING_FILE.tree
-	if [ -f "${NONORB_TREE}" ]; then
-		echo "The tree ${NONORB_TREE} already exists."
-	else
-		SPECIES_REGEX=$(awk 'NF { sub(/\r$/, ""); printf "%s%s", sep, $0; sep = "|" }' "$NONORB_LIST")
-		REGEX="^(${SPECIES_REGEX})\\|"
+	hyphy "$HYPHY_ANALYSES/LabelTrees/label-tree.bf" \
+	--tree "$IQTREE_FILE" \
+	--regexp "$REGEX" \
+	--output "$NONORB_TREE" \
+	--internal-nodes "All descendants"
 
-		hyphy "$HYPHY_ANALYSES/LabelTrees/label-tree.bf" \
-		--tree "$IQTREE_FILE" \
-		--regexp "$REGEX" \
-		--output "$NONORB_TREE" \
-		--internal-nodes "$SETTING"
-
-	fi
-done
+fi
 
 # ############
 # ## BUSTED ##

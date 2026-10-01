@@ -7,15 +7,15 @@
 # RUN FROM REPO ROOT
 # sbatch scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261001_prep_for_hyphy2
-#SBATCH --partition=shared
+#SBATCH --job-name=261001_prep_for_hyphy2_all
+#SBATCH --partition=parallel
 #SBATCH --account=agordus1
-#SBATCH --time=12:00:00
+#SBATCH --time=02:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=1-2
+#SBATCH --array=1-4756
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=3
+#SBATCH --cpus-per-task=2
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 
@@ -120,7 +120,7 @@ if [ -f ${DEDUP_FILE} ]; then
 else
 	#run remove-duplicates
 	hyphy ${HYPHY_ANALYSES}/remove-duplicates/remove-duplicates.bf \
-	 CPU=${SLURM_NTASKS} \
+	 CPU=${SLURM_CPUS_PER_TASK} \
 	 --msa ${TRIMAL_FILE} \
 	 --output ${DEDUP_FILE} \
 	 ENV="TOLERATE_NUMERICAL_ERRORS=1;"
@@ -153,7 +153,7 @@ ORB_LIST=${REPO_ROOT}/data/orbweavers-list.txt
 NONORB_LIST=${REPO_ROOT}/data/non-orbweavers-list.txt
 
 #label orb-weavers
-ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.parsimony.tree
+ORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree
 if [ -f "${ORB_TREE}" ]; then
 	echo "The tree ${ORB_TREE} already exists."
 else
@@ -164,12 +164,12 @@ else
 	--tree "$IQTREE_FILE" \
 	--regexp "$REGEX" \
 	--output "$ORB_TREE" \
-	--internal-nodes "Parsimony"
+	--internal-nodes "All descendants"
 
 fi
 
 #label non-orbweavers
-NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.parsimony.tree
+NONORB_TREE=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree
 if [ -f "${NONORB_TREE}" ]; then
 	echo "The tree ${NONORB_TREE} already exists."
 else
@@ -180,63 +180,6 @@ else
 	--tree "$IQTREE_FILE" \
 	--regexp "$REGEX" \
 	--output "$NONORB_TREE" \
-	--internal-nodes "Parsimony"
+	--internal-nodes "All descendants"
 
 fi
-
-# ############
-# ## BUSTED ##
-# ############
-
-# #run busted without a foreground in order to extract the error-filtered alignment
-
-# #could do remove-duplicates here... but I don't think I want to
-
-# #check if BUSTED has already completed for this HOG 
-# BUSTED_LOG=${WD}/${CURRENT_HOG}/busted/${CURRENT_HOG}_BUSTED.log
-
-# if grep -q "**p =" ${BUSTED_LOG}; then
-# 	echo "BUSTED complete; on to error-filter."
-# else
-# 	#run busted
-# 	mkdir -p ${WD}/${CURRENT_HOG}/busted/
-# 	time hyphy busted \
-# 	 CPU=12 \
-# 	 --alignment ${MACSE_FILE} \
-# 	 --tree ${IQTREE_FILE} \
-# 	 --multiple-hits Double+Triple \
-# 	 --output ${WD}/${CURRENT_HOG}/busted/${CURRENT_HOG}_BUSTED.json \
-# 	 --error-sink Yes \
-# 	 > ${BUSTED_LOG}
-# fi
-
-# ##################
-# ## ERROR-FILTER ##
-# ##################
-
-# #check if error-filter has already completed for this HOG
-# FLTRD_FASTA=${WD}/${CURRENT_HOG}/${CURRENT_HOG}.fltrd.fasta
-
-# if [ -f ${FLTRD_FASTA} ]; then
-# 	echo "Error-filtered file ${FLTRD_FASTA} exists; HOG is ready for HYPHY."
-# else
-# 	EF_OUT=${WD}/${CURRENT_HOG}/busted/${CURRENT_HOG}_error-fltrd.nxh
-
-# 	#extract error-filtered alignment from busted results
-# 	hyphy error-filter \
-# 	 CPU=12 \
-# 	 --json ${WD}/${CURRENT_HOG}/busted/${CURRENT_HOG}_BUSTED.json \
-# 	 --output ${EF_OUT} \
-# 	 --output-json ${WD}/${CURRENT_HOG}/busted/${CURRENT_HOG}_error-fltrd.json
-
-# 	#split up tree and alignment from error-filter results
-# 	if grep -q "(" ${EF_OUT}; then
-# 		grep "(" ${EF_OUT} > ${WD}/${CURRENT_HOG}/${CURRENT_HOG}.fltrd.tree
-# 		sed -i '$s/$/;/' ${WD}/${CURRENT_HOG}/${CURRENT_HOG}.fltrd.tree
-# 		grep -v "(" ${EF_OUT} > ${FLTRD_FASTA}
-# 	else
-# 		echo "Error-filtering failed; check results."
-# 	fi
-# fi
-
-# conda deactivate

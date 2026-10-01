@@ -7,7 +7,7 @@
 # RUN FROM REPO ROOT
 # sbatch scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=260930_prep_for_hyphy2
+#SBATCH --job-name=261001_prep_for_hyphy2
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=12:00:00

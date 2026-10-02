@@ -7,13 +7,13 @@
 
 # sbatch ~/orb-selection/scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261002_prep_for_hyphy2_last2
+#SBATCH --job-name=261002_prep_for_hyphy2_new_trimal_test
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=25,1254
+#SBATCH --array=1-2
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
@@ -96,13 +96,37 @@ PREQUAL_CDS="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_CDS_for_trimAl.fasta"
 # Replace all X/x with N/n in the prequal file for trimAl back-translation
 sed '/^>/! s/X/N/g; /^>/! s/x/n/g' "$PREQUAL_FILE" > "$PREQUAL_CDS"
 
+# Set RERUN_FROM_TRIMAL=1 to redo trimAl and everything downstream.
+# Old outputs are moved aside (not deleted) so earlier results are recoverable.
+if [ "${RERUN_FROM_TRIMAL:-0}" = "1" ]; then
+	ARCHIVE="${WD}/${CURRENT_HOG}/old_trimal_$(date +%y%m%d_%H%M%S)"
+	mkdir -p "$ARCHIVE"
+	for f in \
+		"$TRIMAL_FILE" \
+		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex" \
+		"${WD}/${CURRENT_HOG}/iqtree" \
+		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree" \
+		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"; do
+		[ -e "$f" ] && mv "$f" "$ARCHIVE/"
+	done
+	# remove-duplicates may also write sidecar files next to the dedup nexus
+	mv "${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup."* "$ARCHIVE/" 2>/dev/null || true
+	echo "Archived previous TrimAl-and-later outputs to ${ARCHIVE}"
+fi
+
 # Check if trimAl has already completed for this HOG
 if [ -f "$TRIMAL_FILE" ]; then
 	echo "TrimAl file ${TRIMAL_FILE} exists; on to remove-duplicates."
 else
 	# Run trimAl
-	trimal -in "$MACSE_FILE" -backtrans "$PREQUAL_CDS" -out "$TRIMAL_FILE" -gappyout
+	trimal \
+		-in "$MACSE_FILE" \
+		-backtrans "$PREQUAL_CDS" \
+		-out "$TRIMAL_FILE" \
+		-gt 0.6 \
+		-cons 50
 	echo "TrimAl completed for ${TRIMAL_FILE}"
+
 fi
 
 #######################

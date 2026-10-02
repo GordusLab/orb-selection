@@ -1,0 +1,131 @@
+
+There are 109 sequences
+Removal:
+	On average 1.7143% of sequence retained
+	Sequence with most removed (22.2973%) is [39] = Floronia_bucculenta|ICGA01019750.1.p1
+Core regions:
+	One average 99.4169% of sequence is in the core region
+	Sequence with least in core (79.5745%) is [11] = Argiope_bruennichi|IBFJ01007682.1.p1
+##
+[0] Acroaspis_sp_IDV6688|IANO01028279.1.p1 has 0.0000% removed and 100.0000% in the core
+[1] Acrosomoides_sp_IDV7426|ICOJ01035145.1.p1 has 0.0000% removed and 100.0000% in the core
+[2] Ainerigone_saitoi|IBTE01036657.1.p2 has 0.0000% removed and 100.0000% in the core
+[3] Ainerigone_saitoi|IBTE01013542.1.p2 has 0.0000% removed and 100.0000% in the core
+[4] Ambicodamus_IDV6680|ICBW01033580.1.p1 has 0.0000% removed and 100.0000% in the core
+[5] Ambicodamus_IDV6680|ICBW01012302.1.p1 has 0.0000% removed and 100.0000% in the core
+[6] Araneus_inustus|IAHS01034846.1.p1 has 0.0000% removed and 100.0000% in the core
+[7] Arcuphantes_paiki|IAWN01006280.1.p1 has 0.6250% removed and 99.3750% in the core
+[8] Arcuphantes_tamaensis|IAKU01019027.1.p1 has 0.0000% removed and 100.0000% in the core
+[9] Arcuphantes_uenoi|IBBK01016379.1.p1 has 0.0000% removed and 100.0000% in the core
+[10] Argiope_aetheroides|IASB01040301.1.p1 has 0.0000% removed and 100.0000% in the core
+[11] Argiope_bruennichi|IBFJ01007682.1.p1 has 20.4255% removed and 79.5745% in the core
+[12] Argiope_keyserlingi|IAET01014470.1.p1 has 0.0000% removed and 100.0000% in the core
+[13] Argyrodes_flavescens|IAFU01004431.1.p1 has 0.0000% removed and 100.0000% in the core
+[14] Argyrodes_miniaceus|IBQT01013735.1.p1 has 0.0000% removed and 100.0000% in the core
+[15] Argyrodes_miniaceus|IBQT01037630.1.p1 has 0.0000% removed and 100.0000% in the core
+[16] Backobourkia_brouni|ICCG01022508.1.p1 has 0.0000% removed and 100.0000% in the core
+[17] Baryphymula_kamakuraensis|IBGF01009243.1.p1 has 0.0000% removed and 100.0000% in the core
+[18] Caerostris_darwini|ICOF01013043.1.p1 has 0.0000% removed and 100.0000% in the core
+[19] Caerostris_extrusa|ICOE01010027.1.p1 has 0.0000% removed and 100.0000% in the core
+[20] Chrysso_octomaculata|IBWR01050717.1.p1 has 13.6364% removed and 92.9293% in the core
+[21] Clubiona_robusta|ICJS01010334.1.p2 has 6.2500% removed and 98.9583% in the core
+[22] Cryptachaea_gigantipes|IBTR01041594.1.p1 has 0.0000% removed and 100.0000% in the core
+[23] Cryptachaea_gigantipes|IBTR01019755.1.p1 has 0.0000% removed and 100.0000% in the core
+[24] Cyclosa_octotuberculata|IAQZ01040484.1.p1 has 0.0000% removed and 100.0000% in the core
+[25] Cyrtarachne_bufo|ICFD01011481.1.p1 has 9.5960% removed and 92.9293% in the core
+[26] Cyrtophora_cicatrosa|IBHY01009428.1.p1 has 2.1390% removed and 100.0000% in the core
+[27] Deinopis_sp_IDV6783|IBBP01006049.1.p1 has 0.0000% removed and 100.0000% in the core
+[28] Deinopis_sp_IDV7365|ICOI01036525.1.p1 has 2.5974% removed and 100.0000% in the core
+[29] Desis_marina|GIWQ01258107.1.p1 has 0.0000% removed and 100.0000% in the core
+[30] Desis_marina|GIWQ01024542.1.p1 has 0.0000% removed and 100.0000% in the core
+[31] Diaea_subdola|ICGF01022393.1.p1 has 0.5435% removed and 99.4565% in the core
+[32] Doenitzius_peniculus|IBJP01008584.1.p1 has 0.0000% removed and 100.0000% in the core
+[33] Doenitzius_peniculus|IBJP01034793.1.p1 has 0.0000% removed and 100.0000% in the core
+[34] Doenitzius_pruvus|IBVW01009091.1.p1 has 0.0000% removed and 100.0000% in the core
+[35] Dolophones_sp_IDV6683|IBZG01005513.1.p1 has 0.0000% removed and 100.0000% in the core
+[36] Drapetisca_socialis|ICKS01014854.1.p1 has 3.1250% removed and 100.0000% in the core
+[37] Ebrechtella_tricuspidata|ICBZ01000512.1.p1 has 3.6082% removed and 100.0000% in the core
+[38] Eriophora_pustulosa|IBIK01030484.1.p1 has 0.0000% removed and 100.0000% in the core
+[39] Floronia_bucculenta|ICGA01019750.1.p1 has 22.2973% removed and 97.9730% in the core
+[40] Gnathonarium_exsiccatum|ICCR01025608.1.p1 has 0.0000% removed and 100.0000% in the core
+[41] Helpis_minitabunda|IAUM01031893.1.p1 has 0.0000% removed and 100.0000% in the core
+[42] Hypsosinga_pygmaea|ICEG01031009.1.p1 has 0.0000% removed and 100.0000% in the core
+[43] Larinia_phthisica|IAJV01006146.1.p1 has 0.0000% removed and 100.0000% in the core
+[44] Lariniaria_argiopiformis|IAFI01034043.1.p1 has 0.0000% removed and 100.0000% in the core
+[45] Larinioides_cornutus|IAHZ01040378.1.p1 has 1.0811% removed and 98.9189% in the core
+[46] Latrodectus_hasseltii|IBKS01032999.1.p1 has 0.0000% removed and 100.0000% in the core
+[47] Lehtinelagia_evanida|IBFM01007185.1.p1 has 0.0000% removed and 100.0000% in the core
+[48] Leucauge_dromedari|IBHV01018790.1.p1 has 0.0000% removed and 100.0000% in the core
+[49] Leucauge_dromedari|IBHV01025726.1.p1 has 0.0000% removed and 100.0000% in the core
+[50] Mesida_sp_IDV5268|ICDG01038631.1.p1 has 0.0000% removed and 100.0000% in the core
+[51] Mesida_sp_IDV5268|ICDG01024201.1.p1 has 0.0000% removed and 100.0000% in the core
+[52] Metazygia_zilloides|IBDY01041527.1.p1 has 2.6178% removed and 97.3822% in the core
+[53] Metleucauge_yunohamensis|IBVS01021443.1.p1 has 0.0000% removed and 100.0000% in the core
+[54] Metleucauge_yunohamensis|IBVS01034012.1.p1 has 0.0000% removed and 100.0000% in the core
+[55] Neoantistea_quelpartensis|IBHE01035608.1.p1 has 4.7368% removed and 100.0000% in the core
+[56] Neon_minutus|IAIC01043089.1.p1 has 0.0000% removed and 100.0000% in the core
+[57] Neoscona_adianta|IBRX01006080.1.p1 has 0.0000% removed and 100.0000% in the core
+[58] Neoscona_nautica|ICBF01019360.1.p1 has 0.0000% removed and 100.0000% in the core
+[59] Neoscona_scylla|IAEU01024596.1.p1 has 0.0000% removed and 100.0000% in the core
+[60] Neoscona_subpullata|IBPZ01003881.1.p1 has 0.0000% removed and 100.0000% in the core
+[61] Neoscona_theisi|IAXT01026900.1.p1 has 0.0000% removed and 100.0000% in the core
+[62] Nuctenea_umbratica|IAPM01005031.1.p1 has 0.0000% removed and 100.0000% in the core
+[63] Ordgarius_hobsoni|IAGL01016936.1.p1 has 0.0000% removed and 100.0000% in the core
+[64] Ordgarius_hobsoni|IAGL01013070.1.p1 has 0.0000% removed and 100.0000% in the core
+[65] Ordgarius_sexspinosus|ICMU01008584.1.p1 has 0.0000% removed and 100.0000% in the core
+[66] Ordgarius_sexspinosus|ICMU01027234.1.p1 has 0.0000% removed and 100.0000% in the core
+[67] Oxytate_striatipes|IALM01039905.1.p1 has 0.0000% removed and 100.0000% in the core
+[68] Ozyptila_nongae|ICBR01022861.1.p1 has 0.0000% removed and 100.0000% in the core
+[69] Parasteatoda_culicivora|IBTW01036241.1.p1 has 0.0000% removed and 100.0000% in the core
+[70] Paratheuma_awasensis|IARK01037150.1.p1 has 2.6178% removed and 100.0000% in the core
+[71] Pardosa_graminea|ICDS01011812.1.p1 has 0.0000% removed and 100.0000% in the core
+[72] Pharta_brevipalpus|IAWA01040071.1.p1 has 0.5348% removed and 99.4652% in the core
+[73] Phonognatha_graeffei|IATW01001061.1.p1 has 0.0000% removed and 100.0000% in the core
+[74] Phrurolithus_coreanus|IBPN01023673.1.p1 has 18.7166% removed and 84.4920% in the core
+[75] Piratula_tanakai|IBYA01030462.1.p1 has 0.0000% removed and 100.0000% in the core
+[76] Plebs_sachalinensis|ICHT01014933.1.p1 has 0.0000% removed and 100.0000% in the core
+[77] Poecilopachys_australasia|ICKB01019010.1.p1 has 0.0000% removed and 100.0000% in the core
+[78] Poecilopachys_australasia|ICKB01005602.1.p1 has 0.0000% removed and 100.0000% in the core
+[79] Psechrus_IDV5238|IAQN01024433.1.p1 has 1.6667% removed and 98.3333% in the core
+[80] Pseudomicrargus_latitegulatus|IBJR01040978.1.p1 has 0.0000% removed and 100.0000% in the core
+[81] Rhomphaea_labiata|ICFA01040898.1.p1 has 0.0000% removed and 100.0000% in the core
+[82] Robertus_nojimai|ICAL01042699.1.p1 has 0.0000% removed and 100.0000% in the core
+[83] Robertus_nojimai|ICAL01009509.1.p1 has 0.0000% removed and 100.0000% in the core
+[84] Ryojius_japonicus|IBWO01001602.1.p1 has 2.6882% removed and 100.0000% in the core
+[85] Saaristoa_nipponica|IBAR01005355.1.p1 has 0.0000% removed and 100.0000% in the core
+[86] Saitonia_ojiroensis|IAHB01009016.1.p1 has 2.7027% removed and 100.0000% in the core
+[87] Steatoda_grossa|IAPP01007733.1.p1 has 0.0000% removed and 100.0000% in the core
+[88] Steatoda_grossa|IAPP01028675.1.p1 has 0.0000% removed and 100.0000% in the core
+[89] Stephanopis_cambridgei|ICHM01028661.1.p1 has 0.0000% removed and 100.0000% in the core
+[90] Stertinius_kumadai|IAUC01024254.1.p1 has 4.6392% removed and 100.0000% in the core
+[91] Tetragnatha_brevignatha|GITM01046010.1.p1 has 0.0000% removed and 100.0000% in the core
+[92] Tetragnatha_extensa|IAHF01018489.1.p2 has 12.8866% removed and 100.0000% in the core
+[93] Tetragnatha_filiciphilia|GITN01025630.1.p1 has 0.0000% removed and 100.0000% in the core
+[94] Tetragnatha_mandibulata|ICFC01020209.1.p1 has 5.2632% removed and 100.0000% in the core
+[95] Tetragnatha_maxillosa|ICMP01039300.1.p1 has 3.2258% removed and 100.0000% in the core
+[96] Tetragnatha_paludicola|GITO01017971.1.p1 has 0.0000% removed and 100.0000% in the core
+[97] Tetragnatha_paludicola|GITO01017970.1.p1 has 0.0000% removed and 100.0000% in the core
+[98] Tetragnatha_quasimodo|GITP01113446.1.p1 has 0.0000% removed and 100.0000% in the core
+[99] Tetragnatha_stelarobusta|GITQ01102179.1.p1 has 0.0000% removed and 100.0000% in the core
+[100] Tetragnatha_stelarobusta|GITQ01102180.1.p1 has 0.0000% removed and 100.0000% in the core
+[101] Tetragnatha_vermiformis|IAJJ01019261.1.p1 has 10.4167% removed and 100.0000% in the core
+[102] Tetragnatha_waikamoi|GITR01079926.1.p1 has 0.0000% removed and 100.0000% in the core
+[103] Tetragnatha_yesoensis|IBMZ01032969.1.p1 has 8.3333% removed and 100.0000% in the core
+[104] Theridion_varians|ICEL01011602.1.p1 has 1.6393% removed and 100.0000% in the core
+[105] Uloborus_diversus|GJZJ01044934.1.p1 has 3.9683% removed and 99.2063% in the core
+[106] Uloborus_diversus|jg45330.t1.p1 has 11.7347% removed and 100.0000% in the core
+[107] Ummeliata_osakaensis|IBXZ01002813.1.p1 has 0.0000% removed and 100.0000% in the core
+[108] Zelotes_iriomotensis|IAHP01026870.1.p1 has 2.5510% removed and 97.4490% in the core
+
+Helpful cut-offs ([PropRetained] Cutoffs):
+	[1.0000] 0.0000	[0.9900] 0.9525	[0.9800] 0.9981	[0.9700] 0.9997	[0.9600] 0.9999
+	[0.9500] 0.9999	[0.9400] 0.9999	[0.9300] 0.9999	[0.9200] 1.0000	[0.9100] 1.0000
+	[0.9000] 1.0000	[0.8900] 1.0000	[0.8800] 1.0000	[0.8700] 1.0000	[0.8600] 1.0000
+	[0.8500] 1.0000	[0.8400] 1.0000	[0.8300] 1.0000	[0.8200] 1.0000	[0.8100] 1.0000
+	[0.8000] 1.0000	[0.7900] 1.0000	[0.7800] 1.0000	[0.7700] 1.0000	[0.7600] 1.0000
+
+===================== Summary ======================
+                  Original    Filtered   %Retained
+#Sequences             109         109     100.000%
+#Residues            20313       19961      98.267%
+

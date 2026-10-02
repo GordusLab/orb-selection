@@ -27,7 +27,7 @@ module load anaconda
 CONDA_ENV_PATH=$1
 conda activate "$CONDA_ENV_PATH"
 
-REPO_ROOT="$(pwd)"
+REPO_ROOT="~/orb-selection"
 
 WD=$2
 

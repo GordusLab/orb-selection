@@ -2,14 +2,15 @@
 
 # Runs RELAX and BUSTED-PH (orb fg and non-orb fg) for one HOG per SLURM array task.
 
-#SBATCH --job-name=261002_run_selection_tests_ntasks
+#SBATCH --job-name=261002_run_selection_tests_hyphymp
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=1-2
-#SBATCH -n 3
+#SBATCH --array=3-4
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 
@@ -32,6 +33,9 @@ ALN_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex"
 ORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree"
 NONORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"
 
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
 ## BUSTED-PH
 
 BUSTEDPH_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg.json"
@@ -41,7 +45,6 @@ if grep -q "p-value" "$BUSTEDPH_ORB_OUT"; then
 else
 	# Run BUSTED-PH
 	hyphy busted-ph \
-		"CPU=${SLURM_NTASKS}" \
 		--alignment "$ALN_FILE" \
 		--tree "$ORB_TREE" \
 		--branches Foreground \
@@ -50,6 +53,7 @@ else
 		--error-sink Yes \
 		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg_intermediate.json" \
 		--output "$BUSTEDPH_ORB_OUT" \
+		"CPU=${SLURM_CPUS_PER_TASK}" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi
 
@@ -60,7 +64,6 @@ if grep -q "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
 else
 	# Run BUSTED-PH
 	hyphy busted-ph \
-		"CPU=${SLURM_NTASKS}" \
 		--alignment "$ALN_FILE" \
 		--tree "$NONORB_TREE" \
 		--branches Foreground \
@@ -69,6 +72,7 @@ else
 		--error-sink Yes \
 		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg_intermediate.json" \
 		--output "$BUSTEDPH_NON_ORB_OUT" \
+		"CPU=${SLURM_CPUS_PER_TASK}" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi
 
@@ -80,7 +84,6 @@ if grep -q "p-value" "$RELAX_OUT"; then
 else
 	# Run RELAX
 	hyphy relax \
-		"CPU=${SLURM_NTASKS}" \
 		--alignment "$ALN_FILE" \
 		--tree "$NONORB_TREE" \
 		--test Foreground \
@@ -89,6 +92,7 @@ else
 		--error-sink Yes \
 		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX_intermediate.json" \
 		--output "$RELAX_OUT" \
+		"CPU=${SLURM_CPUS_PER_TASK}" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi
 

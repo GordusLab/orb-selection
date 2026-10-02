@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Runs RELAX and BUSTED-PH (orb fg and non-orb fg) for one HOG per SLURM array task.
+# Runs one RELAX or BUSTED-PH test per SLURM array task, with three tasks per HOG.
 
-#SBATCH --job-name=261002_run_selection_tests_hyphymp
+#SBATCH --job-name=261002_run_selection_tests
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=5-6
+#SBATCH --array=1-14268
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
@@ -25,75 +25,69 @@ conda activate /home/crunnel2/anaconda3/envs/hyphy-new
 WD="/scratch4/agordus1/crunnel2/hyphy_wd_260929"
 HOG_LIST="/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt"
 
-#HYPHY_ANALYSES_DIR=/home/crunnel2/bin/hyphy-analyses/
-
-CURRENT_HOG="$(sed "${SLURM_ARRAY_TASK_ID}q;d" "$HOG_LIST")"
+HOG_INDEX=$(( (SLURM_ARRAY_TASK_ID - 1) / 3 + 1 ))
+TEST_INDEX=$(( (SLURM_ARRAY_TASK_ID - 1) % 3 + 1 ))
+CURRENT_HOG="$(sed "${HOG_INDEX}q;d" "$HOG_LIST")"
 
 ALN_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex"
 ORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree"
 NONORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"
 
-export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
-export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
-
-## BUSTED-PH
-
-BUSTEDPH_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg.json"
-# Check if BUSTED-PH, orb fg has already completed for this HOG
-if grep -q "p-value" "$BUSTEDPH_ORB_OUT"; then
-	echo "BUSTED-PH, orb fg already complete."
-else
-	# Run BUSTED-PH
-	hyphy busted-ph \
-		--alignment "$ALN_FILE" \
-		--tree "$ORB_TREE" \
-		--branches Foreground \
-		--multiple-hits Double+Triple \
-		--srv Yes \
-		--error-sink Yes \
-		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg_intermediate.json" \
-		--output "$BUSTEDPH_ORB_OUT" \
-		CPU=${SLURM_CPUS_PER_TASK} \
-		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
-fi
-
-BUSTEDPH_NON_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg.json"
-# Check if BUSTED-PH, non-orb fg has already completed for this HOG
-if grep -q "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
-	echo "BUSTED-PH, non-orb fg already complete."
-else
-	# Run BUSTED-PH
-	hyphy busted-ph \
-		--alignment "$ALN_FILE" \
-		--tree "$NONORB_TREE" \
-		--branches Foreground \
-		--multiple-hits Double+Triple \
-		--srv Yes \
-		--error-sink Yes \
-		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg_intermediate.json" \
-		--output "$BUSTEDPH_NON_ORB_OUT" \
-		CPU=${SLURM_CPUS_PER_TASK} \
-		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
-fi
-
-## RELAX
-RELAX_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX.json"
-# Check if RELAX has already completed for this HOG
-if grep -q "p-value" "$RELAX_OUT"; then
-	echo "RELAX already complete."
-else
-	# Run RELAX
-	hyphy relax \
-		--alignment "$ALN_FILE" \
-		--tree "$NONORB_TREE" \
-		--test Foreground \
-		--multiple-hits Double+Triple \
-		--srv Yes \
-		--error-sink Yes \
-		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX_intermediate.json" \
-		--output "$RELAX_OUT" \
-		CPU=${SLURM_CPUS_PER_TASK} \
-		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
-fi
+case "$TEST_INDEX" in
+	1)
+		BUSTEDPH_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg.json"
+		if grep -q "p-value" "$BUSTEDPH_ORB_OUT"; then
+			echo "BUSTED-PH, orb fg already complete."
+		else
+			hyphy busted-ph \
+				"CPU=${SLURM_CPUS_PER_TASK}" \
+				--alignment "$ALN_FILE" \
+				--tree "$ORB_TREE" \
+				--branches Foreground \
+				--multiple-hits Double+Triple \
+				--srv Yes \
+				--error-sink Yes \
+				--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg_intermediate.json" \
+				--output "$BUSTEDPH_ORB_OUT" \
+				ENV="TOLERATE_NUMERICAL_ERRORS=1;"
+		fi
+		;;
+	2)
+		BUSTEDPH_NON_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg.json"
+		if grep -q "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
+			echo "BUSTED-PH, non-orb fg already complete."
+		else
+			hyphy busted-ph \
+				"CPU=${SLURM_CPUS_PER_TASK}" \
+				--alignment "$ALN_FILE" \
+				--tree "$NONORB_TREE" \
+				--branches Foreground \
+				--multiple-hits Double+Triple \
+				--srv Yes \
+				--error-sink Yes \
+				--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg_intermediate.json" \
+				--output "$BUSTEDPH_NON_ORB_OUT" \
+				ENV="TOLERATE_NUMERICAL_ERRORS=1;"
+		fi
+		;;
+	3)
+		RELAX_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX.json"
+		if grep -q "p-value" "$RELAX_OUT"; then
+			echo "RELAX already complete."
+		else
+			hyphy relax \
+				"CPU=${SLURM_CPUS_PER_TASK}" \
+				--alignment "$ALN_FILE" \
+				--tree "$NONORB_TREE" \
+				--test Foreground \
+				--multiple-hits Double+Triple \
+				--srv Yes \
+				--error-sink Yes \
+				--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX_intermediate.json" \
+				--output "$RELAX_OUT" \
+				ENV="TOLERATE_NUMERICAL_ERRORS=1;"
+		fi
+		;;
+	esac
 
 conda deactivate

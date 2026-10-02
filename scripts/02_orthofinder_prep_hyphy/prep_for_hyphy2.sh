@@ -109,7 +109,7 @@ fi
 ## REMOVE-DUPLICATES ##
 #######################
 
-DEDUP_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.fasta"
+DEDUP_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex"
 
 # Check if remove-duplicates has already completed for this HOG
 if [ -f "$DEDUP_FILE" ]; then

@@ -8,7 +8,7 @@
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=3-4
+#SBATCH --array=5-6
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
@@ -33,8 +33,8 @@ ALN_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex"
 ORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree"
 NONORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"
 
-export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
-export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
+# export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+# export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 ## BUSTED-PH
 

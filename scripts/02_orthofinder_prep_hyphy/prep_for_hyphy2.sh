@@ -3,6 +3,7 @@
 # Prepares HOG alignments/trees for HyPhy analyses.
 # Usage: scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh <conda_env_path> <work_dir> <hog_cds_dir> <macse_jar> <hyphy_analyses>
 # Note: The script assumes that the input HOG CDS files are in FASTA format and that MACSE is available at the specified JAR path.
+# Assumes that the repo is located at $HOME/orb-selection
 
 # sbatch ~/orb-selection/scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
@@ -27,7 +28,7 @@ module load anaconda
 CONDA_ENV_PATH=$1
 conda activate "$CONDA_ENV_PATH"
 
-REPO_ROOT="~/orb-selection"
+REPO_ROOT="$HOME/orb-selection"
 
 WD=$2
 

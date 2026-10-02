@@ -2,13 +2,13 @@
 
 # Runs RELAX and BUSTED-PH (orb fg and non-orb fg) for one HOG per SLURM array task.
 
-#SBATCH --job-name=261002_run_selection_tests
+#SBATCH --job-name=261002_run_selection_tests_first10
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=1-4756
+#SBATCH --array=356,3776,3354,913,764,4576,1053,4688,533,2063
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out

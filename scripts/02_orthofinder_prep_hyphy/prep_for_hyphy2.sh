@@ -7,15 +7,15 @@
 # RUN FROM REPO ROOT
 # sbatch scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261001_prep_for_hyphy2_all
-#SBATCH --partition=parallel
+#SBATCH --job-name=261002_prep_for_hyphy2_last2
+#SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=02:00:00
+#SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=1-4756
+#SBATCH --array=25,1254
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 
@@ -130,18 +130,24 @@ fi
 ## IQTREE ##
 ############
 
-#check if iqtree has already completed for this HOG
 IQTREE_FILE=${WD}/${CURRENT_HOG}/iqtree/${CURRENT_HOG}.treefile
 
-if [ -f ${IQTREE_FILE} ]; then
-	echo "IQtree file ${IQTREE_FILE} exists; on to LabelTrees."
-else
-	#run iqtree
-	mkdir -p ${WD}/${CURRENT_HOG}/iqtree/
+#IQ-TREE errors on a finished checkpoint without -redo; a treefile alone doesn't prove the run finished
+mkdir -p ${WD}/${CURRENT_HOG}/iqtree/
+IQTREE_LOG=${WD}/${CURRENT_HOG}/iqtree/${CURRENT_HOG}.log
+if [ -f ${IQTREE_LOG} ] && grep -q "Total wall-clock time used" ${IQTREE_LOG}; then
+	echo "IQtree run for ${CURRENT_HOG} already finished; on to label-tree."
+elif ! iqtree -s ${DEDUP_FILE} \
+-m MFP \
+-T ${SLURM_CPUS_PER_TASK} \
+--prefix ${WD}/${CURRENT_HOG}/iqtree/${CURRENT_HOG}; then
+	#FreeRate EM can abort (ratefree.cpp assertion); retry without +R models
+	echo "IQ-TREE failed; retrying without FreeRate (R) models."
 	iqtree -s ${DEDUP_FILE} \
 	-m MFP \
-	-ntmax 3 \
-	-T AUTO \
+	-mrate E,I,G \
+	-T ${SLURM_CPUS_PER_TASK} \
+	-redo \
 	--prefix ${WD}/${CURRENT_HOG}/iqtree/${CURRENT_HOG}
 fi
 

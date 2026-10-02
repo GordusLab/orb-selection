@@ -41,7 +41,7 @@ if grep -q "p-value" "$BUSTEDPH_ORB_OUT"; then
 else
 	# Run BUSTED-PH
 	hyphy busted-ph \
-		# "CPU=${SLURM_CPUS_PER_TASK}" \
+		"CPU=${SLURM_NTASKS}" \
 		--alignment "$ALN_FILE" \
 		--tree "$ORB_TREE" \
 		--branches Foreground \
@@ -60,7 +60,7 @@ if grep -q "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
 else
 	# Run BUSTED-PH
 	hyphy busted-ph \
-		# "CPU=${SLURM_CPUS_PER_TASK}" \
+		"CPU=${SLURM_NTASKS}" \
 		--alignment "$ALN_FILE" \
 		--tree "$NONORB_TREE" \
 		--branches Foreground \
@@ -80,7 +80,7 @@ if grep -q "p-value" "$RELAX_OUT"; then
 else
 	# Run RELAX
 	hyphy relax \
-		# "CPU=${SLURM_CPUS_PER_TASK}" \
+		"CPU=${SLURM_NTASKS}" \
 		--alignment "$ALN_FILE" \
 		--tree "$NONORB_TREE" \
 		--test Foreground \

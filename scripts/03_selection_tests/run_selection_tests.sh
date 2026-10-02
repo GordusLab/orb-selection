@@ -2,15 +2,14 @@
 
 # Runs RELAX and BUSTED-PH (orb fg and non-orb fg) for one HOG per SLURM array task.
 
-#SBATCH --job-name=261002_run_selection_tests_first10
+#SBATCH --job-name=261002_run_selection_tests_ntasks
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=356,3776,3354,913,764,4576,1053,4688,533,2063
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=3
+#SBATCH --array=1-2
+#SBATCH -n 3
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 
@@ -42,7 +41,7 @@ if grep -q "p-value" "$BUSTEDPH_ORB_OUT"; then
 else
 	# Run BUSTED-PH
 	hyphy busted-ph \
-		"CPU=${SLURM_CPUS_PER_TASK}" \
+		# "CPU=${SLURM_CPUS_PER_TASK}" \
 		--alignment "$ALN_FILE" \
 		--tree "$ORB_TREE" \
 		--branches Foreground \
@@ -61,7 +60,7 @@ if grep -q "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
 else
 	# Run BUSTED-PH
 	hyphy busted-ph \
-		"CPU=${SLURM_CPUS_PER_TASK}" \
+		# "CPU=${SLURM_CPUS_PER_TASK}" \
 		--alignment "$ALN_FILE" \
 		--tree "$NONORB_TREE" \
 		--branches Foreground \
@@ -81,7 +80,7 @@ if grep -q "p-value" "$RELAX_OUT"; then
 else
 	# Run RELAX
 	hyphy relax \
-		"CPU=${SLURM_CPUS_PER_TASK}" \
+		# "CPU=${SLURM_CPUS_PER_TASK}" \
 		--alignment "$ALN_FILE" \
 		--tree "$NONORB_TREE" \
 		--test Foreground \

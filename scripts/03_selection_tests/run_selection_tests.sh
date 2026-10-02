@@ -53,7 +53,7 @@ else
 		--error-sink Yes \
 		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg_intermediate.json" \
 		--output "$BUSTEDPH_ORB_OUT" \
-		"CPU=${SLURM_CPUS_PER_TASK}" \
+		CPU=${SLURM_CPUS_PER_TASK} \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi
 
@@ -72,7 +72,7 @@ else
 		--error-sink Yes \
 		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg_intermediate.json" \
 		--output "$BUSTEDPH_NON_ORB_OUT" \
-		"CPU=${SLURM_CPUS_PER_TASK}" \
+		CPU=${SLURM_CPUS_PER_TASK} \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi
 
@@ -92,7 +92,7 @@ else
 		--error-sink Yes \
 		--intermediate-fits "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX_intermediate.json" \
 		--output "$RELAX_OUT" \
-		"CPU=${SLURM_CPUS_PER_TASK}" \
+		CPU=${SLURM_CPUS_PER_TASK} \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi
 

@@ -7,15 +7,15 @@
 
 # sbatch ~/orb-selection/scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261002_prep_for_hyphy2_new_trimal_all
+#SBATCH --job-name=261003_prep_for_hyphy2_new_trimal_last2
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=3-4756
+#SBATCH --array=82,630
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=3
+#SBATCH --cpus-per-task=6
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 

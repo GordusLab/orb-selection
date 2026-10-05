@@ -32,6 +32,8 @@ HYPHY_ANALYSES="$5"
 
 module load anaconda
 conda activate "$CONDA_ENV_PATH"
+# Cluster modules can leak PYTHONPATH (e.g. a python3.9 biopython) that shadows the env's packages
+unset PYTHONPATH
 
 REPO_ROOT="$HOME/orb-selection"
 

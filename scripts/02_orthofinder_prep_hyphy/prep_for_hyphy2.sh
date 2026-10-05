@@ -7,15 +7,15 @@
 
 # sbatch ~/orb-selection/scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261003_prep_for_hyphy2_new_trimal_last2
+#SBATCH --job-name=261005_prep_for_hyphy2_clipkit_test
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=06:00:00
+#SBATCH --time=00:01:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=82,630
+#SBATCH --array=1,2,21,82,630,1053
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=6
+#SBATCH --cpus-per-task=1
 #SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
 
@@ -71,38 +71,38 @@ fi
 ###########
 
 # Check if MACSE has already completed for this HOG
-MACSE_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_AA.fasta"
+MACSE_NT_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.fasta"
 
-if [ -f "$MACSE_FILE" ]; then
-	echo "Macse file ${MACSE_FILE} exists; on to TrimAl."
+if [ -f "$MACSE_NT_FILE" ]; then
+	echo "Macse file ${MACSE_NT_FILE} exists; on to ClipKIT."
 else
 	# Run MACSE
 	mkdir -p "${WD}/${CURRENT_HOG}/macse/"
 	java -jar -Xmx47G "$MACSE_JAR" \
 		-prog alignSequences \
 		-seq "$PREQUAL_FILE" \
-		-out_NT "${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.fasta" \
-		-out_AA "$MACSE_FILE"
+		-out_NT "$MACSE_NT_FILE" \
+		-out_AA "${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_AA.fasta"
 fi
 
-############
-## TRIMAL ##
-############
+##############
+## CLIPKIT  ##
+##############
 
-# Trim protein alignments using trimAl, then back-translate to nucleotide sequences
-TRIMAL_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.fasta"
+# Trim the MACSE codon alignment with ClipKIT. Start with smart-gap; if it picks a
+# gaps threshold > 0.9 (too permissive), rerun with gappy -g 0.9.
+CLIPKIT_DIR="${WD}/${CURRENT_HOG}/clipkit"
+TRIM_FILE="${CLIPKIT_DIR}/${CURRENT_HOG}_NT.trim.fasta"
+CLIPKIT_STATS="${CLIPKIT_DIR}/${CURRENT_HOG}_clipkit_stats.tsv"
 
-PREQUAL_CDS="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_CDS_for_trimAl.fasta"
-# Replace all X/x with N/n in the prequal file for trimAl back-translation
-sed '/^>/! s/X/N/g; /^>/! s/x/n/g' "$PREQUAL_FILE" > "$PREQUAL_CDS"
-
-# Set RERUN_FROM_TRIMAL=1 to redo trimAl and everything downstream.
+# Set RERUN_FROM_TRIM=1 to redo trimming and everything downstream.
 # Old outputs are moved aside (not deleted) so earlier results are recoverable.
-if [ "${RERUN_FROM_TRIMAL:-0}" = "1" ]; then
-	ARCHIVE="${WD}/${CURRENT_HOG}/old_trimal_$(date +%y%m%d_%H%M%S)"
+if [ "${RERUN_FROM_TRIM:-0}" = "1" ]; then
+	ARCHIVE="${WD}/${CURRENT_HOG}/old_trim_$(date +%y%m%d_%H%M%S)"
 	mkdir -p "$ARCHIVE"
 	for f in \
-		"$TRIMAL_FILE" \
+		"$CLIPKIT_DIR" \
+		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.fasta" \
 		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex" \
 		"${WD}/${CURRENT_HOG}/iqtree" \
 		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree" \
@@ -111,22 +111,61 @@ if [ "${RERUN_FROM_TRIMAL:-0}" = "1" ]; then
 	done
 	# remove-duplicates may also write sidecar files next to the dedup nexus
 	mv "${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup."* "$ARCHIVE/" 2>/dev/null || true
-	echo "Archived previous TrimAl-and-later outputs to ${ARCHIVE}"
+	echo "Archived previous trimming-and-later outputs to ${ARCHIVE}"
 fi
 
-# Check if trimAl has already completed for this HOG
-if [ -f "$TRIMAL_FILE" ]; then
-	echo "TrimAl file ${TRIMAL_FILE} exists; on to remove-duplicates."
-else
-	# Run trimAl
-	trimal \
-		-in "$MACSE_FILE" \
-		-backtrans "$PREQUAL_CDS" \
-		-out "$TRIMAL_FILE" \
-		-gt 0.6 \
-		-cons 50
-	echo "TrimAl completed for ${TRIMAL_FILE}"
+# Runs clipkit and records its stdout. Args: <mode label> <output prefix> <clipkit mode args...>
+run_clipkit() {
+	local label="$1" prefix="$2"
+	shift 2
+	local out="${CLIPKIT_DIR}/${prefix}.fasta"
+	local stdout_file="${CLIPKIT_DIR}/${prefix}.stdout.txt"
+	clipkit "$MACSE_NT_FILE" "$@" \
+		--codon --sequence_type nt --remove_stop_codons all \
+		--log --plot_trim_report \
+		--output "$out" > "$stdout_file"
+	cat "$stdout_file"
+	CK_OUT="$out"
+	CK_GAPS="$(awk -F': ' '/^Gaps threshold:/ {print $2}' "$stdout_file")"
+	# Append stats row (one file per HOG so parallel array tasks don't collide)
+	awk -F': ' -v hog="$CURRENT_HOG" -v mode="$label" -v gaps="$CK_GAPS" '
+		/^Original length:/ {orig=$2}
+		/^Number of sites kept:/ {kept=$2}
+		/^Number of sites trimmed:/ {trimmed=$2}
+		/^Percentage of alignment trimmed:/ {pct=$2; sub(/%/, "", pct)}
+		END {printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\n", hog, mode, gaps, orig, kept, trimmed, pct}
+	' "$stdout_file" >> "$CLIPKIT_STATS"
+}
 
+if [ -f "$TRIM_FILE" ]; then
+	echo "Trimmed file ${TRIM_FILE} exists; on to remove-duplicates."
+else
+	mkdir -p "$CLIPKIT_DIR"
+	printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\n" > "$CLIPKIT_STATS"
+
+	run_clipkit smart-gap "${CURRENT_HOG}_NT.smart-gap" -m smart-gap
+	FINAL_CK="$CK_OUT"
+
+	if [ -z "$CK_GAPS" ]; then
+		echo "Could not parse ClipKIT gaps threshold from output" >&2
+		exit 1
+	fi
+
+	if awk -v g="$CK_GAPS" 'BEGIN {exit !(g > 0.9)}'; then
+		echo "smart-gap threshold ${CK_GAPS} > 0.9; rerunning with gappy -g 0.9."
+		run_clipkit gappy90 "${CURRENT_HOG}_NT.gappy90" -m gappy -g 0.9
+		FINAL_CK="$CK_OUT"
+	fi
+
+	# Stable name for downstream steps
+	cp "$FINAL_CK" "$TRIM_FILE"
+	echo "ClipKIT completed; using ${FINAL_CK} as ${TRIM_FILE}"
+fi
+
+# Set STOP_AFTER_TRIM=1 to stop once trimming is done (skips dedup, IQ-TREE, labelling)
+if [ "${STOP_AFTER_TRIM:-0}" = "1" ]; then
+	echo "STOP_AFTER_TRIM=1; stopping after trimming."
+	exit 0
 fi
 
 #######################
@@ -142,7 +181,7 @@ else
 	# Run remove-duplicates
 	hyphy "${HYPHY_ANALYSES}/remove-duplicates/remove-duplicates.bf" \
 		"CPU=${SLURM_CPUS_PER_TASK}" \
-		--msa "$TRIMAL_FILE" \
+		--msa "$TRIM_FILE" \
 		--output "$DEDUP_FILE" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi

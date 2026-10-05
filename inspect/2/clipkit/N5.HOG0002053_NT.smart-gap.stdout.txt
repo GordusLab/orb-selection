@@ -1,0 +1,42 @@
+
+-------------
+| Arguments |
+-------------
+Input file: /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/macse/N5.HOG0002053_NT.fasta (format: fasta)
+Output file: /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/clipkit/N5.HOG0002053_NT.smart-gap.fasta (format: fasta)
+Sequence type: Nucleotides
+Ambiguity handling: missing
+Gaps threshold: 0.993
+Gap characters: ['-', '?', '*', 'X', 'x', 'N', 'n']
+Trimming mode: smart-gap
+Create complementary output: False
+Process as codons: True
+Stop codon masking mode: all
+Trim ends only: False
+Create log file: True
+
+
+------------------------
+| Writing output files |
+------------------------
+Trimmed alignment: /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/clipkit/N5.HOG0002053_NT.smart-gap.fasta
+Complement file: False
+Log file: /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/clipkit/N5.HOG0002053_NT.smart-gap.fasta.log
+
+Wrote trim plot report to /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/clipkit/N5.HOG0002053_NT.smart-gap.fasta.trim_report.html
+
+---------------------
+| Output Statistics |
+---------------------
+Original length: 1998
+Number of sites kept: 1446
+Number of sites trimmed: 552
+Percentage of alignment trimmed: 27.628%
+
+Stop codon masking mode: all
+Terminal stop codons masked: 0
+Internal stop codons masked: 0
+Total stop codons masked: 0
+
+Execution time: 1.115s
+

@@ -1,0 +1,559 @@
+IQ-TREE 3.1.3 built Jul 26 2026
+
+Input file name: /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/macse/N5.HOG0002053_NT.trim.dedup.fasta
+Type of analysis: ModelFinder + tree reconstruction
+Random seed number: 920223
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Piyumal Demotte, Hector Banos,
+Andrew J. Roger, Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman,
+Matthew W. Hahn, Mario dos Reis, Le Sy Vinh, Gavin Huttley, Robert Lanfear, Bui Quang Minh (2026)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Molecular Biology and Evolution, msag117.
+https://doi.org/10.1093/molbev/msag117
+
+Since you used ModelFinder please also cite: 
+
+Subha Kalyaanamoorthy, Bui Quang Minh, Thomas KF Wong, Arndt von Haeseler,
+and Lars S Jermiin (2017) ModelFinder: Fast model selection for
+accurate phylogenetic estimates. Nature Methods, 14:587–589.
+https://doi.org/10.1038/nmeth.4285
+
+SEQUENCE ALIGNMENT
+------------------
+
+NOTE: Alignment sequence type is auto-detected. If in doubt, specify it via -st option.
+Input data: 141 sequences with 510 nucleotide sites
+Number of constant sites: 61 (= 11.9608% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 61 (= 11.9608% of all sites)
+Number of parsimony informative sites: 419
+Number of distinct site patterns: 475
+
+ModelFinder
+-----------
+
+Best-fit model according to BIC: GTR+I+R4
+
+List of models sorted by BIC scores: 
+
+Model                  LogL         AIC      w-AIC        AICc     w-AICc         BIC      w-BIC
+GTR+I+R4         -29762.948   60107.897 -  0.00159   60887.456 +   0.0778   61340.110 +    0.257
+SYM+I+R4         -29763.009   60108.018 -  0.00149   60887.578 +   0.0732   61340.232 +    0.242
+SYM+I+R4         -29763.009   60108.018 -  0.00149   60887.578 +   0.0732   61340.232 +    0.242
+GTR+I+R5         -29758.050   60102.101 -   0.0288   60899.712 -  0.00017   61342.783 +   0.0675
+SYM+I+R5         -29758.121   60102.243 -   0.0268   60899.854 - 0.000158   61342.925 +   0.0629
+SYM+I+R5         -29758.121   60102.243 -   0.0268   60899.854 - 0.000158   61342.925 +   0.0629
+GTR+F+I+R4       -29755.878   60099.756 +   0.0931   60906.546 - 5.57e-06   61344.672 -   0.0263
+TIM2+I+R4        -29772.480   60122.959 - 8.51e-07   60884.868 +    0.284   61346.704 -  0.00951
+TIM2e+I+R4       -29772.628   60123.256 - 7.34e-07   60885.165 +    0.245   61347.001 -   0.0082
+TIM2e+I+R4       -29772.628   60123.256 - 7.34e-07   60885.165 +    0.245   61347.001 -   0.0082
+GTR+F+I+R5       -29751.705   60095.410 +    0.817   60920.875 - 4.31e-09   61348.796 -  0.00334
+TIM2+I+R5        -29767.540   60117.079 - 1.61e-05   60896.639 - 0.000789   61349.293 -  0.00261
+TIM2e+I+R5       -29767.610   60117.219 -  1.5e-05   60896.779 - 0.000735   61349.433 -  0.00243
+TIM2e+I+R5       -29767.610   60117.219 -  1.5e-05   60896.779 - 0.000735   61349.433 -  0.00243
+GTR+R5           -29765.724   60115.447 - 3.64e-05   60903.982 - 2.01e-05   61351.895 -  0.00071
+SYM+R5           -29765.756   60115.512 - 3.53e-05   60904.046 - 1.94e-05   61351.960 - 0.000687
+SYM+R5           -29765.756   60115.512 - 3.53e-05   60904.046 - 1.94e-05   61351.960 - 0.000687
+TIM2+F+I+R4      -29766.335   60116.670 - 1.98e-05   60905.205 - 1.09e-05   61353.118 - 0.000385
+GTR+F+R5         -29758.635   60107.270 -  0.00217   60923.345 - 1.25e-09   61356.421 - 7.38e-05
+TIM2+F+I+R5      -29761.781   60111.562 - 0.000254   60918.353 - 1.52e-08   61356.479 - 7.17e-05
+TIM2+R5          -29775.290   60130.581 - 1.88e-08   60901.266 -  7.8e-05   61358.560 - 2.53e-05
+TIM2e+R5         -29775.335   60130.669 -  1.8e-08   60901.354 - 7.46e-05   61358.649 - 2.42e-05
+TIM2e+R5         -29775.335   60130.669 -  1.8e-08   60901.354 - 7.46e-05   61358.649 - 2.42e-05
+TIM2+F+R5        -29769.062   60124.124 - 4.76e-07   60921.735 -  2.8e-09   61364.806 - 1.12e-06
+TVM+F+I+R5       -29788.116   60166.232 - 3.42e-16   60982.306 - 1.97e-22   61415.383 - 1.16e-17
+TVM+F+I+R4       -29795.473   60176.945 - 1.61e-18   60974.557 - 9.49e-21   61417.628 - 3.78e-18
+TVM+F+R5         -29794.245   60176.489 - 2.02e-18   60983.280 - 1.21e-22   61421.406 - 5.71e-19
+TPM2u+F+I+R4     -29805.783   60193.566 - 3.96e-22   60973.126 - 1.94e-20   61425.780 - 6.41e-20
+TPM2u+F+I+R5     -29799.672   60185.345 - 2.42e-20   60982.956 - 1.42e-22   61426.027 - 5.67e-20
+TIM+F+I+R4       -29803.261   60190.522 - 1.82e-21   60979.056 -    1e-21   61426.970 - 3.54e-20
+TVM+I+R5         -29803.287   60190.575 - 1.77e-21   60979.109 - 9.74e-22   61427.023 - 3.45e-20
+TVMe+I+R5        -29803.332   60190.664 - 1.69e-21   60979.198 - 9.32e-22   61427.111 -  3.3e-20
+TVMe+I+R5        -29803.332   60190.664 - 1.69e-21   60979.198 - 9.32e-22   61427.111 -  3.3e-20
+TIM+F+I+R5       -29797.739   60183.478 - 6.15e-20   60990.269 - 3.68e-24   61428.395 - 1.74e-20
+TPM2u+F+R5       -29804.729   60193.458 - 4.18e-22   60981.993 -  2.3e-22   61429.906 - 8.15e-21
+TVM+I+R4         -29811.574   60203.147 - 3.29e-24   60973.832 - 1.36e-20   61431.127 - 4.43e-21
+TVMe+I+R4        -29811.664   60203.328 - 3.01e-24   60974.013 - 1.25e-20   61431.307 - 4.04e-21
+TVMe+I+R4        -29811.664   60203.328 - 3.01e-24   60974.013 - 1.25e-20   61431.307 - 4.04e-21
+TVM+R5           -29809.868   60201.737 - 6.66e-24   60981.297 - 3.26e-22   61433.950 - 1.08e-21
+TPM2u+I+R5       -29813.127   60206.255 - 6.96e-25   60976.939 - 2.88e-21   61434.234 - 9.36e-22
+TVMe+R5          -29810.020   60202.040 - 5.73e-24   60981.599 -  2.8e-22   61434.253 - 9.27e-22
+TVMe+R5          -29810.020   60202.040 - 5.73e-24   60981.599 -  2.8e-22   61434.253 - 9.27e-22
+TPM2+I+R5        -29813.261   60206.523 - 6.09e-25   60977.208 - 2.52e-21   61434.502 - 8.19e-22
+TPM2+I+R5        -29813.261   60206.523 - 6.09e-25   60977.208 - 2.52e-21   61434.502 - 8.19e-22
+TN+F+I+R4        -29810.707   60203.413 - 2.88e-24   60982.973 - 1.41e-22   61435.627 - 4.67e-22
+TPM2u+I+R4       -29820.726   60217.452 - 2.58e-27   60970.682 - 6.58e-20   61436.962 - 2.39e-22
+TPM2+I+R4        -29820.822   60217.645 - 2.34e-27   60970.876 - 5.98e-20   61437.155 - 2.17e-22
+TPM2+I+R4        -29820.822   60217.645 - 2.34e-27   60970.876 - 5.98e-20   61437.155 - 2.17e-22
+TN+F+I+R5        -29805.370   60196.740 - 8.11e-23   60994.351 - 4.78e-25   61437.422 -  1.9e-22
+TPM2u+R5         -29818.811   60215.622 - 6.44e-27   60977.531 - 2.14e-21   61439.367 - 7.19e-23
+TPM2+R5          -29818.948   60215.896 - 5.61e-27   60977.805 - 1.87e-21   61439.641 - 6.27e-23
+TPM2+R5          -29818.948   60215.896 - 5.61e-27   60977.805 - 1.87e-21   61439.641 - 6.27e-23
+TIM+F+R5         -29806.495   60198.991 - 2.63e-23   60996.602 - 1.55e-25   61439.673 - 6.17e-23
+TIM3+F+I+R4      -29809.829   60203.657 - 2.55e-24   60992.192 - 1.41e-24   61440.105 - 4.97e-23
+TIM3+F+I+R5      -29804.103   60196.206 - 1.06e-22   61002.997 - 6.33e-27   61441.123 - 2.99e-23
+TN+F+R5          -29813.745   60211.490 - 5.08e-26   61000.024 -  2.8e-26   61447.938 -  9.9e-25
+TIM3+F+R5        -29812.966   60211.931 - 4.07e-26   61009.542 -  2.4e-28   61452.614 - 9.56e-26
+TIM+I+R4         -29837.020   60252.040 - 7.96e-35   61013.949 - 2.65e-29   61475.784 - 8.89e-31
+TIMe+I+R4        -29837.144   60252.289 - 7.02e-35   61014.198 - 2.34e-29   61476.033 - 7.85e-31
+TIMe+I+R4        -29837.144   60252.289 - 7.02e-35   61014.198 - 2.34e-29   61476.033 - 7.85e-31
+TIM+I+R5         -29830.918   60243.835 - 4.81e-33   61023.395 - 2.36e-31   61476.049 - 7.79e-31
+TIMe+I+R5        -29831.006   60244.012 -  4.4e-33   61023.571 - 2.16e-31   61476.225 - 7.13e-31
+TIMe+I+R5        -29831.006   60244.012 -  4.4e-33   61023.571 - 2.16e-31   61476.225 - 7.13e-31
+TN+I+R4          -29842.520   60261.039 - 8.84e-37   61014.270 - 2.26e-29   61480.549 - 8.21e-32
+TNe+I+R4         -29842.678   60261.357 - 7.54e-37   61014.588 - 1.93e-29   61480.867 -    7e-32
+TNe+I+R4         -29842.678   60261.357 - 7.54e-37   61014.588 - 1.93e-29   61480.867 -    7e-32
+TN+I+R5          -29836.495   60252.991 - 4.95e-35   61023.676 - 2.05e-31   61480.970 - 6.65e-32
+TNe+I+R5         -29836.712   60253.423 - 3.98e-35   61024.108 - 1.65e-31   61481.402 - 5.36e-32
+TNe+I+R5         -29836.712   60253.423 - 3.98e-35   61024.108 - 1.65e-31   61481.402 - 5.36e-32
+TIM3+I+R5        -29833.643   60249.287 - 3.15e-34   61028.846 - 1.54e-32   61481.500 -  5.1e-32
+TIM3e+I+R5       -29833.702   60249.404 - 2.97e-34   61028.963 - 1.46e-32   61481.617 - 4.81e-32
+TIM3e+I+R5       -29833.702   60249.404 - 2.97e-34   61028.963 - 1.46e-32   61481.617 - 4.81e-32
+TIM3+I+R4        -29840.631   60259.263 - 2.15e-36   61021.172 - 7.16e-31   61483.007 -  2.4e-32
+TIM3e+I+R4       -29840.740   60259.481 - 1.93e-36   61021.390 - 6.42e-31   61483.225 - 2.15e-32
+TIM3e+I+R4       -29840.740   60259.481 - 1.93e-36   61021.390 - 6.42e-31   61483.225 - 2.15e-32
+TIM+R5           -29839.654   60259.307 -  2.1e-36   61029.992 -  8.7e-33   61487.286 - 2.83e-33
+TIMe+R5          -29839.688   60259.376 - 2.03e-36   61030.061 - 8.41e-33   61487.355 - 2.73e-33
+TIMe+R5          -29839.688   60259.376 - 2.03e-36   61030.061 - 8.41e-33   61487.355 - 2.73e-33
+K3Pu+F+I+R4      -29836.695   60255.391 - 1.49e-35   61034.950 - 7.29e-34   61487.604 - 2.41e-33
+K3Pu+F+I+R5      -29832.057   60250.114 - 2.08e-34   61047.725 - 1.23e-36   61490.796 - 4.89e-34
+TN+R5            -29845.426   60268.853 - 1.78e-38   61030.762 - 5.92e-33   61492.598 - 1.99e-34
+TNe+R5           -29845.486   60268.972 - 1.67e-38   61030.881 - 5.58e-33   61492.717 - 1.87e-34
+TNe+R5           -29845.486   60268.972 - 1.67e-38   61030.881 - 5.58e-33   61492.717 - 1.87e-34
+TIM3+R5          -29842.991   60265.982 - 7.47e-38   61036.666 - 3.09e-34   61493.961 -    1e-34
+TIM3e+R5         -29843.065   60266.129 - 6.94e-38   61036.814 - 2.87e-34   61494.108 - 9.33e-35
+TIM3e+R5         -29843.065   60266.129 - 6.94e-38   61036.814 - 2.87e-34   61494.108 - 9.33e-35
+K3Pu+F+R5        -29837.564   60259.127 -  2.3e-36   61047.662 - 1.27e-36   61495.575 - 4.48e-35
+HKY+F+I+R4       -29844.147   60268.293 - 2.35e-38   61038.978 - 9.73e-35   61496.272 - 3.16e-35
+HKY+F+I+R5       -29839.872   60263.743 - 2.29e-37   61052.278 - 1.26e-37   61500.191 - 4.46e-36
+TPM3u+F+I+R4     -29843.016   60268.033 - 2.68e-38   61047.592 - 1.31e-36   61500.246 - 4.34e-36
+TPM3u+F+I+R5     -29837.544   60261.089 - 8.62e-37   61058.700 - 5.08e-39   61501.771 - 2.02e-36
+HKY+F+R5         -29845.694   60273.388 - 1.84e-39   61052.948 - 9.01e-38   61505.602 - 2.98e-37
+TPM3u+F+R5       -29843.750   60271.500 - 4.73e-39   61060.035 - 2.61e-39   61507.948 - 9.22e-38
+K3Pu+I+R4        -29879.277   60334.554 - 9.61e-53   61087.785 - 2.46e-45   61554.064 - 8.92e-48
+K3P+I+R4         -29879.330   60334.661 - 9.12e-53   61087.891 - 2.33e-45   61554.171 - 8.46e-48
+K3P+I+R4         -29879.330   60334.661 - 9.12e-53   61087.891 - 2.33e-45   61554.171 - 8.46e-48
+K3Pu+I+R5        -29873.421   60326.843 - 4.54e-51   61097.528 - 1.88e-47   61554.822 - 6.11e-48
+K3P+I+R5         -29873.520   60327.041 - 4.12e-51   61097.726 -  1.7e-47   61555.020 - 5.53e-48
+K3P+I+R5         -29873.520   60327.041 - 4.12e-51   61097.726 -  1.7e-47   61555.020 - 5.53e-48
+HKY+I+R4         -29884.398   60342.796 - 1.56e-54   61087.444 - 2.91e-45   61558.072 -  1.2e-48
+K2P+I+R4         -29884.476   60342.951 - 1.44e-54   61087.600 - 2.69e-45   61558.227 - 1.11e-48
+K2P+I+R4         -29884.476   60342.951 - 1.44e-54   61087.600 - 2.69e-45   61558.227 - 1.11e-48
+HKY+I+R5         -29879.174   60336.349 - 3.92e-53   61098.258 - 1.31e-47   61560.094 - 4.38e-49
+K2P+I+R5         -29879.388   60336.777 - 3.16e-53   61098.686 - 1.05e-47   61560.522 - 3.53e-49
+K2P+I+R5         -29879.388   60336.777 - 3.16e-53   61098.686 - 1.05e-47   61560.522 - 3.53e-49
+K3Pu+R5          -29879.448   60336.896 - 2.98e-53   61098.805 - 9.93e-48   61560.641 - 3.33e-49
+K3P+R5           -29879.604   60337.208 - 2.55e-53   61099.117 -  8.5e-48   61560.953 - 2.85e-49
+K3P+R5           -29879.604   60337.208 - 2.55e-53   61099.117 -  8.5e-48   61560.953 - 2.85e-49
+TPM3u+I+R5       -29876.501   60333.002 - 2.09e-52   61103.687 - 8.65e-49   61560.981 - 2.81e-49
+TPM3+I+R5        -29876.552   60333.105 - 1.98e-52   61103.790 - 8.22e-49   61561.084 - 2.67e-49
+TPM3+I+R5        -29876.552   60333.105 - 1.98e-52   61103.790 - 8.22e-49   61561.084 - 2.67e-49
+TPM3u+I+R4       -29883.161   60342.323 - 1.98e-54   61095.554 - 5.05e-47   61561.833 - 1.83e-49
+TPM3+I+R4        -29883.220   60342.441 - 1.86e-54   61095.672 - 4.76e-47   61561.951 - 1.73e-49
+TPM3+I+R4        -29883.220   60342.441 - 1.86e-54   61095.672 - 4.76e-47   61561.951 - 1.73e-49
+HKY+R5           -29884.862   60345.724 - 3.61e-55   61098.955 - 9.22e-48   61565.234 - 3.35e-50
+K2P+R5           -29885.069   60346.137 - 2.94e-55   61099.368 -  7.5e-48   61565.648 - 2.72e-50
+K2P+R5           -29885.069   60346.137 - 2.94e-55   61099.368 -  7.5e-48   61565.648 - 2.72e-50
+TPM3u+R5         -29883.279   60344.558 - 6.47e-55   61106.467 - 2.15e-49   61568.303 - 7.22e-51
+TPM3+R5          -29883.435   60344.871 - 5.53e-55   61106.780 - 1.84e-49   61568.615 - 6.18e-51
+TPM3+R5          -29883.435   60344.871 - 5.53e-55   61106.780 - 1.84e-49   61568.615 - 6.18e-51
+F81+F+I+R4       -30625.621   61829.241 -        0   62591.150 -        0   63052.986 -        0
+F81+F+I+R5       -30621.835   61825.670 -        0   62605.230 -        0   63057.884 -        0
+F81+F+R5         -30627.514   61835.027 -        0   62605.712 -        0   63063.006 -        0
+F81+I+R4         -30654.529   61881.058 -        0   62617.220 -        0   63092.100 -        0
+JC+I+R4          -30654.718   61881.437 -        0   62617.598 -        0   63092.478 -        0
+JC+I+R4          -30654.718   61881.437 -        0   62617.598 -        0   63092.478 -        0
+F81+I+R5         -30650.117   61876.234 -        0   62629.465 -        0   63095.745 -        0
+JC+I+R5          -30650.346   61876.693 -        0   62629.923 -        0   63096.203 -        0
+JC+I+R5          -30650.346   61876.693 -        0   62629.923 -        0   63096.203 -        0
+F81+R5           -30656.100   61886.199 -        0   62630.848 -        0   63101.475 -        0
+JC+R5            -30656.321   61886.643 -        0   62631.291 -        0   63101.918 -        0
+JC+R5            -30656.321   61886.643 -        0   62631.291 -        0   63101.918 -        0
+JC+R6            -30654.584   61887.168 -        0   62649.078 -        0   63110.913 -        0
+JC+I+G4          -30685.902   61933.805 -        0   62628.910 -        0   63123.674 -        0
+JC+R4            -30680.387   61930.774 -        0   62658.542 -        0   63137.581 -        0
+JC+I+R3          -30697.753   61963.507 -        0   62682.973 -        0   63166.079 -        0
+JC+G4            -30735.538   62031.075 -        0   62718.237 -        0   63216.710 -        0
+JC+R3            -30762.486   62090.971 -        0   62802.228 -        0   63289.310 -        0
+JC+I+R2          -30985.970   62535.939 -        0   63239.076 -        0   63730.043 -        0
+JC+R2            -31166.273   62894.545 -        0   63589.651 -        0   64084.415 -        0
+JC+I             -32356.123   65272.246 -        0   65959.408 -        0   66457.881 -        0
+JC               -33267.916   67093.833 -        0   67773.137 -        0   68275.234 -        0
+
+AIC, w-AIC   : Akaike information criterion scores and weights.
+AICc, w-AICc : Corrected AIC scores and weights.
+BIC, w-BIC   : Bayesian information criterion scores and weights.
+
+Plus signs denote the 95% confidence sets.
+Minus signs denote significant exclusion.
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: GTR+F+I+R4
+
+Rate parameter R:
+
+  A-C: 1.5734
+  A-G: 3.5549
+  A-T: 2.0156
+  C-G: 1.2381
+  C-T: 5.2209
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.2658
+  pi(C) = 0.2719
+  pi(G) = 0.2331
+  pi(T) = 0.2293
+
+Rate matrix Q:
+
+  A     -0.94     0.234    0.4532    0.2528
+  C    0.2287    -1.041    0.1578    0.6547
+  G    0.5168    0.1842   -0.8263    0.1254
+  T     0.293    0.7766    0.1275    -1.197
+
+Model of rate heterogeneity: Invar+FreeRate with 4 categories
+Proportion of invariable sites: 0.09982
+Site proportion and rates:  (0.2098,0.1163) (0.2162,0.5907) (0.2761,1.245) (0.1981,2.545)
+
+ Category  Relative_rate  Proportion
+  0         0              0.09982
+  1         0.1163         0.2098
+  2         0.5907         0.2162
+  3         1.245          0.2761
+  4         2.545          0.1981
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -29730.8884 (s.e. 882.9304)
+Unconstrained log-likelihood (without tree): -3111.7953
+Number of free parameters (#branches + #model parameters): 294
+Akaike information criterion (AIC) score: 60049.7767
+Corrected Akaike information criterion (AICc) score: 60856.5674
+Bayesian information criterion (BIC) score: 61294.6935
+
+Total tree length (sum of branch lengths): 22.2520
+Sum of internal branch lengths: 8.9388 (40.1707% of tree length)
+
+WARNING: 2 near-zero internal branches (<0.0020) should be treated with caution
+         Such branches are denoted by '**' in the figure below
+
+NOTE: Tree is UNROOTED although outgroup taxon 'Stephanopis_cambridgei|ICHM01019341.1.p1' is drawn at root
+
++----Stephanopis_cambridgei|ICHM01019341.1.p1
+|
+|                             +--Pharta_brevipalpus|IAWA01024394.1.p1
+|                          +--|
+|                          |  |     +--Stephanopis_cambridgei|ICHM01048005.1.p1
+|                          |  |  +--|
+|                          |  |  |  +---Psechrus_IDV5238|IAQN01031297.1.p1
+|                          |  +--|
+|                          |     |           +--Ebrechtella_tricuspidata|ICBZ01007431.1.p1
+|                          |     |        +--|
+|                          |     |        |  |      +--Lehtinelagia_evanida|IBFM01038538.1.p1
+|                          |     |        |  |  +---|
+|                          |     |        |  |  |   +--Lehtinelagia_evanida|IBFM01043563.1.p1
+|                          |     |        |  +--|
+|                          |     |        |     +--Diaea_subdola|ICGF01033647.1.p1
+|                          |     |     +--|
+|                          |     |     |  +--Ozyptila_nongae|ICBR01039790.1.p1
+|                          |     |  +--|
+|                          |     |  |  |  +**Oxytate_striatipes|IALM01039757.1.p1
+|                          |     |  |  +--|
+|                          |     |  |     +--Oxytate_striatipes|IALM01048145.1.p1
+|                          |     +--|
+|                          |        |         +--Diaea_subdola|ICGF01012919.1.p1
+|                          |        |      +--|
+|                          |        |      |  +--Ozyptila_nongae|ICBR01019632.1.p1
+|                          |        |   +**|
+|                          |        |   |  +--Lehtinelagia_evanida|IBFM01042760.1.p1
+|                          |        +---|
+|                          |            +--Ebrechtella_tricuspidata|ICBZ01034428.1.p1
+|                       +--|
+|                       |  |  +---Piratula_tanakai|IBYA01005941.1.p1
+|                       |  +--|
+|                       |     +--Pardosa_graminea|ICDS01019466.1.p2
+|                    +--|
+|                    |  |     +--Stertinius_kumadai|IAUC01028663.1.p1
+|                    |  +-----|
+|                    |        |  +--Helpis_minitabunda|IAUM01040533.1.p1
+|                    |        +--|
+|                    |           +--Neon_minutus|IAIC01009112.1.p1
+|                 +--|
+|                 |  |  +----Phrurolithus_coreanus|IBPN01018548.1.p1
+|                 |  +--|
+|                 |     +-----Clubiona_robusta|ICJS01000372.1.p2
+|              +--|
+|              |  +----Paratheuma_awasensis|IARK01011193.1.p1
+|           +--|
+|           |  |      +--Deinopis_sp_IDV7365|ICOI01024238.1.p1
+|           |  |  +---|
+|           |  |  |   +--Deinopis_sp_IDV6783|IBBP01018110.1.p1
+|           |  +--|
+|           |     +------Uloborus_diversus|GJZJ01217347.1.p1
+|        +--|
+|        |  |                                  +---Neoscona_subpullata|IBPZ01009394.1.p1
+|        |  |                               +--|
+|        |  |                               |  +--Neoscona_nautica|ICBF01008228.1.p1
+|        |  |                            +--|
+|        |  |                            |  +--Neoscona_scylla|IAEU01041667.1.p1
+|        |  |                         +--|
+|        |  |                         |  +---Hypsosinga_pygmaea|ICEG01003980.1.p1
+|        |  |                      +--|
+|        |  |                      |  +--Poecilopachys_australasia|ICKB01021646.1.p1
+|        |  |                   +--|
+|        |  |                   |  +--Araneus_inustus|IAHS01003358.1.p1
+|        |  |               +---|
+|        |  |               |   |     +--Argiope_keyserlingi|IAET01019897.1.p1
+|        |  |               |   |  +--|
+|        |  |               |   |  |  +---Cyrtophora_cicatrosa|IBHY01032635.1.p1
+|        |  |               |   +--|
+|        |  |               |      |        +--Eriophora_pustulosa|IBIK01030165.1.p1
+|        |  |               |      |     +--|
+|        |  |               |      |     |  +--Acroaspis_sp_IDV6688|IANO01000741.1.p1
+|        |  |               |      |  +--|
+|        |  |               |      |  |  |  +--Backobourkia_brouni|ICCG01036229.1.p1
+|        |  |               |      |  |  +--|
+|        |  |               |      |  |     +--Cyclosa_octotuberculata|IAQZ01028801.1.p1
+|        |  |               |      +--|
+|        |  |               |         +--Dolophones_sp_IDV6683|IBZG01045062.1.p1
+|        |  |           +---|
+|        |  |           |   |            +--Caerostris_extrusa|ICOE01009072.1.p1
+|        |  |           |   +------------|
+|        |  |           |                +--Caerostris_extrusa|ICOE01007858.1.p1
+|        |  |        +--|
+|        |  |        |  |               +--Tetragnatha_yesoensis|IBMZ01026719.1.p1
+|        |  |        |  |        +------|
+|        |  |        |  |        |      |        +--Tetragnatha_filiciphilia|GITN01102397.1.p1
+|        |  |        |  |        |      |     +--|
+|        |  |        |  |        |      |     |  |  +--Tetragnatha_stelarobusta|GITQ01108808.1.p1
+|        |  |        |  |        |      |     |  +**|
+|        |  |        |  |        |      |     |     +--Tetragnatha_paludicola|GITO01017939.1.p1
+|        |  |        |  |        |      |  +--|
+|        |  |        |  |        |      |  |  |     +--Tetragnatha_vermiformis|IAJJ01040770.1.p2
+|        |  |        |  |        |      |  |  |  +--|
+|        |  |        |  |        |      |  |  |  |  +--Tetragnatha_mandibulata|ICFC01014411.1.p1
+|        |  |        |  |        |      |  |  +--|
+|        |  |        |  |        |      |  |     +--Tetragnatha_maxillosa|ICMP01044684.1.p2
+|        |  |        |  |        |      +--|
+|        |  |        |  |        |         +--Tetragnatha_extensa|IAHF01024510.1.p1
+|        |  |        |  |     +--|
+|        |  |        |  |     |  +--Leucauge_dromedari|IBHV01020243.1.p1
+|        |  |        |  |  +--|
+|        |  |        |  |  |  +--Metleucauge_yunohamensis|IBVS01005311.1.p1
+|        |  |        |  +--|
+|        |  |        |     +-------------Tekellina_sadamotoi|IALE01029111.1.p1
+|        |  |     +--|
+|        |  |     |  |              +--Cyrtophora_cicatrosa|IBHY01038625.1.p1
+|        |  |     |  |           +--|
+|        |  |     |  |           |  |     +--Neoscona_adianta|IBRX01015898.1.p1
+|        |  |     |  |           |  |  +--|
+|        |  |     |  |           |  |  |  +--Neoscona_nautica|ICBF01014221.1.p1
+|        |  |     |  |           |  +--|
+|        |  |     |  |           |     +--Poecilopachys_australasia|ICKB01025976.1.p1
+|        |  |     |  |        +--|
+|        |  |     |  |        |  |           +--Backobourkia_brouni|ICCG01037189.1.p1
+|        |  |     |  |        |  |        +--|
+|        |  |     |  |        |  |        |  +--Dolophones_sp_IDV6683|IBZG01022898.1.p1
+|        |  |     |  |        |  |     +--|
+|        |  |     |  |        |  |     |  +--Eriophora_pustulosa|IBIK01004417.1.p1
+|        |  |     |  |        |  |  +--|
+|        |  |     |  |        |  |  |  +--Acroaspis_sp_IDV6688|IANO01015057.1.p1
+|        |  |     |  |        |  +--|
+|        |  |     |  |        |     +--Acrosomoides_sp_IDV7426|ICOJ01042147.1.p1
+|        |  |     |  |     +--|
+|        |  |     |  |     |  |  +--Argiope_aetheroides|IASB01027458.1.p1
+|        |  |     |  |     |  +--|
+|        |  |     |  |     |     +--Argiope_bruennichi|IBFJ01034473.1.p1
+|        |  |     |  |  +--|
+|        |  |     |  |  |  |                       +--Nuctenea_umbratica|IAPM01012812.1.p1
+|        |  |     |  |  |  |                    +--|
+|        |  |     |  |  |  |                    |  +**Nuctenea_umbratica|IAPM01017533.1.p1
+|        |  |     |  |  |  |                 +--|
+|        |  |     |  |  |  |                 |  |  +--Larinia_phthisica|IAJV01029670.1.p1
+|        |  |     |  |  |  |                 |  +--|
+|        |  |     |  |  |  |                 |     +--Lariniaria_argiopiformis|IAFI01041955.1.p1
+|        |  |     |  |  |  |              +--|
+|        |  |     |  |  |  |              |  +--Larinioides_cornutus|IAHZ01016973.1.p1
+|        |  |     |  |  |  |           +--|
+|        |  |     |  |  |  |           |  |              +--Neoscona_nautica|ICBF01031405.1.p2
+|        |  |     |  |  |  |           |  |           +--|
+|        |  |     |  |  |  |           |  |           |  +--Neoscona_adianta|IBRX01024763.1.p1
+|        |  |     |  |  |  |           |  |        +--|
+|        |  |     |  |  |  |           |  |        |  +--Neoscona_theisi|IAXT01037628.1.p1
+|        |  |     |  |  |  |           |  |     +--|
+|        |  |     |  |  |  |           |  |     |  +--Neoscona_subpullata|IBPZ01041492.1.p1
+|        |  |     |  |  |  |           |  |  +--|
+|        |  |     |  |  |  |           |  |  |  +--Neoscona_scylla|IAEU01032114.1.p1
+|        |  |     |  |  |  |           |  +--|
+|        |  |     |  |  |  |           |     |     +--Cyrtarachne_bufo|ICFD01009456.1.p1
+|        |  |     |  |  |  |           |     |  +--|
+|        |  |     |  |  |  |           |     |  |  +--Poecilopachys_australasia|ICKB01014734.1.p1
+|        |  |     |  |  |  |           |     +--|
+|        |  |     |  |  |  |           |        |     +**Ordgarius_sexspinosus|ICMU01030155.1.p1
+|        |  |     |  |  |  |           |        |  +--|
+|        |  |     |  |  |  |           |        |  |  |  +--Ordgarius_hobsoni|IAGL01004338.1.p1
+|        |  |     |  |  |  |           |        |  |  +--|
+|        |  |     |  |  |  |           |        |  |     +---Ordgarius_sexspinosus|ICMU01030188.1.p1
+|        |  |     |  |  |  |           |        +--|
+|        |  |     |  |  |  |           |           +**Ordgarius_sexspinosus|ICMU01007572.1.p1
+|        |  |     |  |  |  |        +--|
+|        |  |     |  |  |  |        |  |  +**Araneus_inustus|IAHS01042969.1.p1
+|        |  |     |  |  |  |        |  +--|
+|        |  |     |  |  |  |        |     +--Araneus_inustus|IAHS01000407.1.p1
+|        |  |     |  |  |  |     +--|
+|        |  |     |  |  |  |     |  +--Hypsosinga_pygmaea|ICEG01006760.1.p1
+|        |  |     |  |  |  |  +--|
+|        |  |     |  |  |  |  |  |  +--Metazygia_zilloides|IBDY01028015.1.p1
+|        |  |     |  |  |  |  |  +--|
+|        |  |     |  |  |  |  |     |              +--Acroaspis_sp_IDV6688|IANO01033924.1.p1
+|        |  |     |  |  |  |  |     |           +--|
+|        |  |     |  |  |  |  |     |           |  +--Eriophora_pustulosa|IBIK01027950.1.p1
+|        |  |     |  |  |  |  |     |        +--|
+|        |  |     |  |  |  |  |     |        |  +--Dolophones_sp_IDV6683|IBZG01024443.1.p1
+|        |  |     |  |  |  |  |     |     +--|
+|        |  |     |  |  |  |  |     |     |  +--Backobourkia_brouni|ICCG01020842.1.p1
+|        |  |     |  |  |  |  |     |  +--|
+|        |  |     |  |  |  |  |     |  |  |  +--Cyclosa_octotuberculata|IAQZ01001643.1.p1
+|        |  |     |  |  |  |  |     |  |  +--|
+|        |  |     |  |  |  |  |     |  |     +--Acrosomoides_sp_IDV7426|ICOJ01006776.1.p1
+|        |  |     |  |  |  |  |     +--|
+|        |  |     |  |  |  |  |        +--Plebs_sachalinensis|ICHT01046242.1.p1
+|        |  |     |  |  |  +--|
+|        |  |     |  |  |     |           +--Argiope_keyserlingi|IAET01033584.1.p1
+|        |  |     |  |  |     |        +--|
+|        |  |     |  |  |     |        |  +--Argiope_keyserlingi|IAET01008573.1.p1
+|        |  |     |  |  |     |     +--|
+|        |  |     |  |  |     |     |  +--Argiope_aetheroides|IASB01027917.1.p1
+|        |  |     |  |  |     |  +--|
+|        |  |     |  |  |     |  |  +--Argiope_bruennichi|IBFJ01034793.1.p1
+|        |  |     |  |  |     +--|
+|        |  |     |  |  |        +--Cyrtophora_cicatrosa|IBHY01020784.1.p1
+|        |  |     |  +--|
+|        |  |     |     |         +**Caerostris_darwini|ICOF01030684.1.p2
+|        |  |     |     |      +--|
+|        |  |     |     |      |  +--Caerostris_darwini|ICOF01030684.1.p1
+|        |  |     |     |  +---|
+|        |  |     |     |  |   +--Caerostris_extrusa|ICOE01027964.1.p1
+|        |  |     |     +--|
+|        |  |     |        +----Phonognatha_graeffei|IATW01004957.1.p1
+|        |  |  +--|
+|        |  |  |  |                 +--Argyrodes_flavescens|IAFU01005862.1.p2
+|        |  |  |  |              +--|
+|        |  |  |  |              |  +--Argyrodes_miniaceus|IBQT01034604.1.p1
+|        |  |  |  |           +--|
+|        |  |  |  |           |  +--Rhomphaea_labiata|ICFA01022393.1.p1
+|        |  |  |  |        +--|
+|        |  |  |  |        |  |      +**Argyrodes_flavescens|IAFU01023206.1.p1
+|        |  |  |  |        |  +------|
+|        |  |  |  |        |         +--Argyrodes_flavescens|IAFU01003489.1.p1
+|        |  |  |  |     +--|
+|        |  |  |  |     |  |     +--Steatoda_grossa|IAPP01034562.1.p1
+|        |  |  |  |     |  |  +--|
+|        |  |  |  |     |  |  |  +--Latrodectus_hasseltii|IBKS01033922.1.p1
+|        |  |  |  |     |  +--|
+|        |  |  |  |     |     +----Robertus_nojimai|ICAL01042016.1.p1
+|        |  |  |  |  +--|
+|        |  |  |  |  |  |           +**Theridion_varians|ICEL01021245.1.p1
+|        |  |  |  |  |  |        +--|
+|        |  |  |  |  |  |        |  +------------------------------------Latrodectus_hasseltii|IBKS01011899.1.p1
+|        |  |  |  |  |  |     +--|
+|        |  |  |  |  |  |     |  +--Cryptachaea_gigantipes|IBTR01043887.1.p1
+|        |  |  |  |  |  +-----|
+|        |  |  |  |  |        +--Chrysso_octomaculata|IBWR01001960.1.p1
+|        |  |  |  +--|
+|        |  |  |     |    +---Neriene_clathrata|IAFP01015718.1.p1
+|        |  |  |     +----|
+|        |  |  |          |              +--Arcuphantes_uenoi|IBBK01005347.1.p1
+|        |  |  |          |           +--|
+|        |  |  |          |           |  +--Arcuphantes_paiki|IAWN01011782.1.p1
+|        |  |  |          |        +--|
+|        |  |  |          |        |  +--Arcuphantes_tamaensis|IAKU01002192.1.p1
+|        |  |  |          |     +--|
+|        |  |  |          |     |  +--Drapetisca_socialis|ICKS01000516.1.p1
+|        |  |  |          |  +--|
+|        |  |  |          |  |  +--Floronia_bucculenta|ICGA01028945.1.p1
+|        |  |  |          +--|
+|        |  |  |             |     +--Ryojius_japonicus|IBWO01001943.1.p1
+|        |  |  |             |  +--|
+|        |  |  |             |  |  |     +--Saitonia_ojiroensis|IAHB01013783.1.p1
+|        |  |  |             |  |  |  +--|
+|        |  |  |             |  |  |  |  |  +--Ainerigone_saitoi|IBTE01043756.1.p1
+|        |  |  |             |  |  |  |  +--|
+|        |  |  |             |  |  |  |     |  +--Ummeliata_osakaensis|IBXZ01002010.1.p1
+|        |  |  |             |  |  |  |     +--|
+|        |  |  |             |  |  |  |        +--Gnathonarium_exsiccatum|ICCR01017613.1.p1
+|        |  |  |             |  |  +--|
+|        |  |  |             |  |     |  +--Baryphymula_kamakuraensis|IBGF01045819.1.p2
+|        |  |  |             |  |     +--|
+|        |  |  |             |  |        +--Pseudomicrargus_latitegulatus|IBJR01027873.1.p1
+|        |  |  |             +--|
+|        |  |  |                |  +--Doenitzius_peniculus|IBJP01024829.1.p1
+|        |  |  |                +--|
+|        |  |  |                   |  +--Saaristoa_nipponica|IBAR01007448.1.p1
+|        |  |  |                   +--|
+|        |  |  |                      +--Doenitzius_pruvus|IBVW01014393.1.p1
+|        |  +--|
+|        |     +-------Desis_marina|GIWQ01174427.1.p1
+|     +--|
+|     |  +----Ambicodamus_IDV6680|ICBW01030574.1.p1
+|  +--|
+|  |  |     +--Zelotes_iriomotensis|IAHP01018783.1.p1
+|  |  |  +--|
+|  |  |  |  +-------Phrurolithus_coreanus|IBPN01018011.1.p1
+|  |  +--|
+|  |     |        +--Helpis_minitabunda|IAUM01033346.1.p1
+|  |     |  +-----|
+|  |     |  |     +--Helpis_minitabunda|IAUM01010691.1.p2
+|  |     +--|
+|  |        +-------Clubiona_robusta|ICJS01002679.1.p1
++--|
+|  +------Pardosa_graminea|ICDS01021533.1.p1
+|
+|        +--Ebrechtella_tricuspidata|ICBZ01007638.1.p1
+|     +--|
+|     |  +**Ebrechtella_tricuspidata|ICBZ01047326.1.p1
+|  +--|
+|  |  +--Lehtinelagia_evanida|IBFM01014957.1.p1
++--|
+   |     +**Pharta_brevipalpus|IAWA01018630.1.p1
+   |  +--|
+   |  |  +**Pharta_brevipalpus|IAWA01020667.1.p1
+   +--|
+      +--Pharta_brevipalpus|IAWA01001058.1.p1
+
+Tree in newick format:
+
+(Stephanopis_cambridgei|ICHM01019341.1.p1:0.2291238806,((((((((((Pharta_brevipalpus|IAWA01024394.1.p1:0.1527136702,((Stephanopis_cambridgei|ICHM01048005.1.p1:0.1083728293,Psechrus_IDV5238|IAQN01031297.1.p1:0.1743467735):0.0201140875,((((Ebrechtella_tricuspidata|ICBZ01007431.1.p1:0.0470780358,((Lehtinelagia_evanida|IBFM01038538.1.p1:0.0062700056,Lehtinelagia_evanida|IBFM01043563.1.p1:0.0041511110):0.1676276097,Diaea_subdola|ICGF01033647.1.p1:0.0352850759):0.0353931031):0.0197856350,Ozyptila_nongae|ICBR01039790.1.p1:0.0495885999):0.0257879655,(Oxytate_striatipes|IALM01039757.1.p1:0.0000010880,Oxytate_striatipes|IALM01048145.1.p1:0.0040754480):0.0579151157):0.1152791675,(((Diaea_subdola|ICGF01012919.1.p1:0.0679675743,Ozyptila_nongae|ICBR01019632.1.p1:0.0631897446):0.0432876460,Lehtinelagia_evanida|IBFM01042760.1.p1:0.0937920627):0.0000025436,Ebrechtella_tricuspidata|ICBZ01034428.1.p1:0.0844107357):0.1718107063):0.0559311398):0.0246132672):0.0598623096,(Piratula_tanakai|IBYA01005941.1.p1:0.1958476846,Pardosa_graminea|ICDS01019466.1.p2:0.1151811138):0.0799867206):0.0559578441,(Stertinius_kumadai|IAUC01028663.1.p1:0.0916425413,(Helpis_minitabunda|IAUM01040533.1.p1:0.0726685770,Neon_minutus|IAIC01009112.1.p1:0.1169799385):0.0201443082):0.2445818368):0.0412490255,(Phrurolithus_coreanus|IBPN01018548.1.p1:0.2228966461,Clubiona_robusta|ICJS01000372.1.p2:0.2563586974):0.0380684305):0.1562629947,Paratheuma_awasensis|IARK01011193.1.p1:0.2272793246):0.0574064575,((Deinopis_sp_IDV7365|ICOI01024238.1.p1:0.1265449153,Deinopis_sp_IDV6783|IBBP01018110.1.p1:0.0825221112):0.1933414854,Uloborus_diversus|GJZJ01217347.1.p1:0.2902015868):0.0692504245):0.0321018319,(((((((((((Neoscona_subpullata|IBPZ01009394.1.p1:0.1660618866,Neoscona_nautica|ICBF01008228.1.p1:0.0776602942):0.0468502568,Neoscona_scylla|IAEU01041667.1.p1:0.0552125111):0.0694001895,Hypsosinga_pygmaea|ICEG01003980.1.p1:0.1947792195):0.0088046239,Poecilopachys_australasia|ICKB01021646.1.p1:0.1036784825):0.0114395087,Araneus_inustus|IAHS01003358.1.p1:0.1061065188):0.0314202755,((Argiope_keyserlingi|IAET01019897.1.p1:0.1401642553,Cyrtophora_cicatrosa|IBHY01032635.1.p1:0.1700683166):0.0242625215,(((Eriophora_pustulosa|IBIK01030165.1.p1:0.0380798219,Acroaspis_sp_IDV6688|IANO01000741.1.p1:0.0472143507):0.0240826662,(Backobourkia_brouni|ICCG01036229.1.p1:0.0243065549,Cyclosa_octotuberculata|IAQZ01028801.1.p1:0.1265670631):0.0214740618):0.0119835679,Dolophones_sp_IDV6683|IBZG01045062.1.p1:0.0861885194):0.0414306374):0.0331322443):0.1636720024,(Caerostris_extrusa|ICOE01009072.1.p1:0.1247288141,Caerostris_extrusa|ICOE01007858.1.p1:0.0590660092):0.5440237081):0.1899694684,((((Tetragnatha_yesoensis|IBMZ01026719.1.p1:0.0602700860,(((Tetragnatha_filiciphilia|GITN01102397.1.p1:0.0126754439,(Tetragnatha_stelarobusta|GITQ01108808.1.p1:0.0078316420,Tetragnatha_paludicola|GITO01017939.1.p1:0.0138764963):0.0000010880):0.0379607187,((Tetragnatha_vermiformis|IAJJ01040770.1.p2:0.0598362038,Tetragnatha_mandibulata|ICFC01014411.1.p1:0.0464067853):0.0180893306,Tetragnatha_maxillosa|ICMP01044684.1.p2:0.0398914992):0.0296542569):0.0128074656,Tetragnatha_extensa|IAHF01024510.1.p1:0.0245711966):0.0640788728):0.3174593862,Leucauge_dromedari|IBHV01020243.1.p1:0.0622977143):0.0910698363,Metleucauge_yunohamensis|IBVS01005311.1.p1:0.0701746928):0.1423231236,Tekellina_sadamotoi|IALE01029111.1.p1:0.6065563830):0.1012060516):0.0420402957,(((((Cyrtophora_cicatrosa|IBHY01038625.1.p1:0.1116811086,((Neoscona_adianta|IBRX01015898.1.p1:0.0366198725,Neoscona_nautica|ICBF01014221.1.p1:0.0837781492):0.0558241775,Poecilopachys_australasia|ICKB01025976.1.p1:0.1186460008):0.0102271203):0.0165179414,((((Backobourkia_brouni|ICCG01037189.1.p1:0.0431914889,Dolophones_sp_IDV6683|IBZG01022898.1.p1:0.0482838044):0.0086639852,Eriophora_pustulosa|IBIK01004417.1.p1:0.0277460592):0.0078520030,Acroaspis_sp_IDV6688|IANO01015057.1.p1:0.0404127666):0.0176044178,Acrosomoides_sp_IDV7426|ICOJ01042147.1.p1:0.1462257923):0.0619274784):0.0279342649,(Argiope_aetheroides|IASB01027458.1.p1:0.0554853221,Argiope_bruennichi|IBFJ01034473.1.p1:0.0533269895):0.0430400766):0.0583625885,((((((((Nuctenea_umbratica|IAPM01012812.1.p1:0.0022814453,Nuctenea_umbratica|IAPM01017533.1.p1:0.0000029391):0.0630221980,(Larinia_phthisica|IAJV01029670.1.p1:0.0595592066,Lariniaria_argiopiformis|IAFI01041955.1.p1:0.0338513810):0.0405749820):0.0075164945,Larinioides_cornutus|IAHZ01016973.1.p1:0.0409831280):0.0248215580,(((((Neoscona_nautica|ICBF01031405.1.p2:0.0794533694,Neoscona_adianta|IBRX01024763.1.p1:0.0445398965):0.0071024306,Neoscona_theisi|IAXT01037628.1.p1:0.0408770698):0.0406063301,Neoscona_subpullata|IBPZ01041492.1.p1:0.0651779790):0.0197325303,Neoscona_scylla|IAEU01032114.1.p1:0.0344966863):0.0359676641,((Cyrtarachne_bufo|ICFD01009456.1.p1:0.0304140112,Poecilopachys_australasia|ICKB01014734.1.p1:0.0552201809):0.0193383292,((Ordgarius_sexspinosus|ICMU01030155.1.p1:0.0000028824,(Ordgarius_hobsoni|IAGL01004338.1.p1:0.0224406522,Ordgarius_sexspinosus|ICMU01030188.1.p1:0.1940685305):0.0459421106):0.0081193730,Ordgarius_sexspinosus|ICMU01007572.1.p1:0.0000021274):0.1386068948):0.0177182901):0.0139826950):0.0147472578,(Araneus_inustus|IAHS01042969.1.p1:0.0016872703,Araneus_inustus|IAHS01000407.1.p1:0.0023308407):0.0641394613):0.0116865840,Hypsosinga_pygmaea|ICEG01006760.1.p1:0.1354961744):0.0100898967,(Metazygia_zilloides|IBDY01028015.1.p1:0.1344453346,(((((Acroaspis_sp_IDV6688|IANO01033924.1.p1:0.0164728076,Eriophora_pustulosa|IBIK01027950.1.p1:0.0320097043):0.0229162972,Dolophones_sp_IDV6683|IBZG01024443.1.p1:0.0531779296):0.0038735949,Backobourkia_brouni|ICCG01020842.1.p1:0.0435163609):0.0021825634,(Cyclosa_octotuberculata|IAQZ01001643.1.p1:0.0482815277,Acrosomoides_sp_IDV7426|ICOJ01006776.1.p1:0.1138931474):0.0107748370):0.0056527672,Plebs_sachalinensis|ICHT01046242.1.p1:0.0445436225):0.0288770431):0.0249766074):0.0058230243,((((Argiope_keyserlingi|IAET01033584.1.p1:0.0122541408,Argiope_keyserlingi|IAET01008573.1.p1:0.0034675387):0.0110060321,Argiope_aetheroides|IASB01027917.1.p1:0.0240077259):0.0386824368,Argiope_bruennichi|IBFJ01034793.1.p1:0.0454023598):0.0453700993,Cyrtophora_cicatrosa|IBHY01020784.1.p1:0.1053447229):0.0239850510):0.0292786943):0.0900108201,(((Caerostris_darwini|ICOF01030684.1.p2:0.0000010880,Caerostris_darwini|ICOF01030684.1.p1:0.0099197668):0.0187924521,Caerostris_extrusa|ICOE01027964.1.p1:0.0156044904):0.1784916677,Phonognatha_graeffei|IATW01004957.1.p1:0.2261286211):0.0432090797):0.0598138107):0.0309579378,((((((Argyrodes_flavescens|IAFU01005862.1.p2:0.0537662406,Argyrodes_miniaceus|IBQT01034604.1.p1:0.0711994825):0.1173250798,Rhomphaea_labiata|ICFA01022393.1.p1:0.1213289902):0.0632838195,(Argyrodes_flavescens|IAFU01023206.1.p1:0.0000023383,Argyrodes_flavescens|IAFU01003489.1.p1:0.0020760243):0.2884326510):0.1042203021,((Steatoda_grossa|IAPP01034562.1.p1:0.1386396154,Latrodectus_hasseltii|IBKS01033922.1.p1:0.1066453303):0.1196357945,Robertus_nojimai|ICAL01042016.1.p1:0.2215674409):0.1221118127):0.0303713190,(((Theridion_varians|ICEL01021245.1.p1:0.0000024431,Latrodectus_hasseltii|IBKS01011899.1.p1:1.5152898260):0.0574245173,Cryptachaea_gigantipes|IBTR01043887.1.p1:0.1094034777):0.0649120845,Chrysso_octomaculata|IBWR01001960.1.p1:0.0689458633):0.2633571207):0.0398647389,(Neriene_clathrata|IAFP01015718.1.p1:0.1977413249,(((((Arcuphantes_uenoi|IBBK01005347.1.p1:0.0044924925,Arcuphantes_paiki|IAWN01011782.1.p1:0.0041865463):0.0373135979,Arcuphantes_tamaensis|IAKU01002192.1.p1:0.0357628465):0.0227187484,Drapetisca_socialis|ICKS01000516.1.p1:0.0887007167):0.0385792395,Floronia_bucculenta|ICGA01028945.1.p1:0.0732923518):0.0186039368,((Ryojius_japonicus|IBWO01001943.1.p1:0.0836529994,((Saitonia_ojiroensis|IAHB01013783.1.p1:0.1182379216,(Ainerigone_saitoi|IBTE01043756.1.p1:0.0377788983,(Ummeliata_osakaensis|IBXZ01002010.1.p1:0.0207666776,Gnathonarium_exsiccatum|ICCR01017613.1.p1:0.0276169409):0.0299627320):0.0340204390):0.0130940643,(Baryphymula_kamakuraensis|IBGF01045819.1.p2:0.0607436455,Pseudomicrargus_latitegulatus|IBJR01027873.1.p1:0.0638482767):0.0052001213):0.1537973908):0.1054368106,(Doenitzius_peniculus|IBJP01024829.1.p1:0.0335264745,(Saaristoa_nipponica|IBAR01007448.1.p1:0.0295684004,Doenitzius_pruvus|IBVW01014393.1.p1:0.0241843500):0.0100689426):0.1248252692):0.0305769788):0.0525285905):0.2260192409):0.0376955109):0.1123773079,Desis_marina|GIWQ01174427.1.p1:0.3390543248):0.0225323749):0.0306498622,Ambicodamus_IDV6680|ICBW01030574.1.p1:0.2289390116):0.1413348656,((Zelotes_iriomotensis|IAHP01018783.1.p1:0.1349487708,Phrurolithus_coreanus|IBPN01018011.1.p1:0.3262612337):0.0582001802,((Helpis_minitabunda|IAUM01033346.1.p1:0.0187060450,Helpis_minitabunda|IAUM01010691.1.p2:0.0048163144):0.2734872285,Clubiona_robusta|ICJS01002679.1.p1:0.3412357703):0.0718994635):0.0390346120):0.0669444323,Pardosa_graminea|ICDS01021533.1.p1:0.2984593364):0.0844326203,(((Ebrechtella_tricuspidata|ICBZ01007638.1.p1:0.0144244246,Ebrechtella_tricuspidata|ICBZ01047326.1.p1:0.0000025614):0.0956636624,Lehtinelagia_evanida|IBFM01014957.1.p1:0.1144592430):0.1520316029,((Pharta_brevipalpus|IAWA01018630.1.p1:0.0000010880,Pharta_brevipalpus|IAWA01020667.1.p1:0.0000010880):0.0774137414,Pharta_brevipalpus|IAWA01001058.1.p1:0.1219853532):0.1209025701):0.0271558166);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/iqtree/N5.HOG0002053.treefile -m "GTR{1.57339,3.5549,2.01564,1.23808,5.22093}+F{0.265751,0.271926,0.233071,0.229252}+I{0.0998212}+R4{0.209839,0.116273,0.216186,0.590699,0.276062,1.24526,0.198091,2.54495}" --length 510
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/macse/N5.HOG0002053_NT.trim.dedup.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s /home/crunnel2/scratch/hyphy_wd_260929/N5.HOG0002053/macse/N5.HOG0002053_NT.trim.dedup.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Thu Oct  1 19:07:00 2026
+Total CPU time used: 131.302 seconds (0h:2m:11s)
+Total wall-clock time used: 127.744 seconds (0h:2m:7s)
+

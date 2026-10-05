@@ -1,0 +1,3 @@
+hog	mode	gaps_threshold	original_length	sites_kept	sites_trimmed	pct_trimmed
+N5.HOG0002053	smart-gap	0.993	1998	1446	552	27.628
+N5.HOG0002053	gappy90	0.9	1998	675	1323	66.216

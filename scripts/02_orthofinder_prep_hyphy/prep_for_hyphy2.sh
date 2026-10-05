@@ -94,7 +94,7 @@ fi
 # Trim the MACSE codon alignment with ClipKIT. Start with smart-gap; if it picks a
 # gaps threshold > 0.9 (too permissive), rerun with gappy -g 0.9.
 CLIPKIT_DIR="${WD}/${CURRENT_HOG}/clipkit"
-TRIM_FILE="${CLIPKIT_DIR}/${CURRENT_HOG}_NT.trim.fasta"
+FINAL_CK_RECORD="${CLIPKIT_DIR}/${CURRENT_HOG}_final_alignment.txt"
 CLIPKIT_STATS="${CLIPKIT_DIR}/${CURRENT_HOG}_clipkit_stats.tsv"
 
 # Set RERUN_FROM_TRIM=1 to redo trimming and everything downstream.
@@ -121,14 +121,13 @@ run_clipkit() {
 	local label="$1" prefix="$2"
 	shift 2
 	local out="${CLIPKIT_DIR}/${prefix}.fasta"
-	local stdout_file="${CLIPKIT_DIR}/${prefix}.stdout.txt"
-	clipkit "$MACSE_NT_FILE" "$@" \
+	local ck_stdout
+	ck_stdout="$(clipkit "$MACSE_NT_FILE" "$@" \
 		--codon --sequence_type nt --remove_stop_codons all \
-		--log --plot_trim_report \
-		--output "$out" > "$stdout_file"
-	cat "$stdout_file"
+		--output "$out")"
+	echo "$ck_stdout"
 	CK_OUT="$out"
-	CK_GAPS="$(awk -F': ' '/^Gaps threshold:/ {print $2}' "$stdout_file")"
+	CK_GAPS="$(awk -F': ' '/^Gaps threshold:/ {print $2}' <<< "$ck_stdout")"
 	# Append stats row (one file per HOG so parallel array tasks don't collide)
 	awk -F': ' -v hog="$CURRENT_HOG" -v mode="$label" -v gaps="$CK_GAPS" '
 		/^Original length:/ {orig=$2}
@@ -136,11 +135,13 @@ run_clipkit() {
 		/^Number of sites trimmed:/ {trimmed=$2}
 		/^Percentage of alignment trimmed:/ {pct=$2; sub(/%/, "", pct)}
 		END {printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\n", hog, mode, gaps, orig, kept, trimmed, pct}
-	' "$stdout_file" >> "$CLIPKIT_STATS"
+	' <<< "$ck_stdout" >> "$CLIPKIT_STATS"
 }
 
-if [ -f "$TRIM_FILE" ]; then
-	echo "Trimmed file ${TRIM_FILE} exists; on to remove-duplicates."
+# The record file is written last, so its presence means trimming finished
+if [ -f "$FINAL_CK_RECORD" ]; then
+	FINAL_CK="$(cat "$FINAL_CK_RECORD")"
+	echo "ClipKIT already done; using ${FINAL_CK}; on to remove-duplicates."
 else
 	mkdir -p "$CLIPKIT_DIR"
 	printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\n" > "$CLIPKIT_STATS"
@@ -159,9 +160,8 @@ else
 		FINAL_CK="$CK_OUT"
 	fi
 
-	# Stable name for downstream steps
-	cp "$FINAL_CK" "$TRIM_FILE"
-	echo "ClipKIT completed; using ${FINAL_CK} as ${TRIM_FILE}"
+	echo "$FINAL_CK" > "$FINAL_CK_RECORD"
+	echo "ClipKIT completed; using ${FINAL_CK}"
 fi
 
 # Set STOP_AFTER_TRIM=1 to stop once trimming is done (skips dedup, IQ-TREE, labelling)
@@ -183,7 +183,7 @@ else
 	# Run remove-duplicates
 	hyphy "${HYPHY_ANALYSES}/remove-duplicates/remove-duplicates.bf" \
 		"CPU=${SLURM_CPUS_PER_TASK}" \
-		--msa "$TRIM_FILE" \
+		--msa "$FINAL_CK" \
 		--output "$DEDUP_FILE" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi

@@ -7,22 +7,22 @@
 
 # sbatch ~/orb-selection/scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261005_prep_for_hyphy2_clipkit_test
-#SBATCH --partition=shared
+#SBATCH --job-name=261005_prep_for_hyphy2_clipkit_all
+#SBATCH --partition=parallel
 #SBATCH --account=agordus1
-#SBATCH --time=00:01:00
+#SBATCH --time=00:10:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=1,2,21,82,630,1053
+#SBATCH --array=1-4756
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
-#SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
+#SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
+#SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 
 set -e
 
 # Make directory to store SLURM reports
-mkdir -p "/data/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/"
+mkdir -p "/scratch4/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/"
 
 CONDA_ENV_PATH="$1"
 WD="$2"
@@ -124,6 +124,7 @@ run_clipkit() {
 	local ck_stdout
 	ck_stdout="$(clipkit "$MACSE_NT_FILE" "$@" \
 		--codon --sequence_type nt --remove_stop_codons all \
+		-t "$SLURM_CPUS_PER_TASK" \
 		--output "$out")"
 	echo "$ck_stdout"
 	CK_OUT="$out"
@@ -174,7 +175,7 @@ fi
 ## REMOVE-DUPLICATES ##
 #######################
 
-DEDUP_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex"
+DEDUP_FILE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_NT.trim.dedup.nex"
 
 # Check if remove-duplicates has already completed for this HOG
 if [ -f "$DEDUP_FILE" ]; then

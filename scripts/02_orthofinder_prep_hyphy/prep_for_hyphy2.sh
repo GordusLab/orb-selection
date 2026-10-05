@@ -10,7 +10,7 @@
 #SBATCH --job-name=261005_prep_for_hyphy2_clipkit_all
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=00:10:00
+#SBATCH --time=00:01:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-4756%50

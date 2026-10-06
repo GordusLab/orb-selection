@@ -29,9 +29,16 @@ HOG_INDEX=$(( (SLURM_ARRAY_TASK_ID - 1) / 3 + 1 ))
 TEST_INDEX=$(( (SLURM_ARRAY_TASK_ID - 1) % 3 + 1 ))
 CURRENT_HOG="$(sed "${HOG_INDEX}q;d" "$HOG_LIST")"
 
-ALN_FILE="${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex"
+ALN_FILE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_NT.trim.dedup.nex"
 ORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree"
 NONORB_TREE="${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"
+
+for f in "$ALN_FILE" "$ORB_TREE" "$NONORB_TREE"; do
+	if [ ! -s "$f" ]; then
+		echo "ERROR: missing or empty input for ${CURRENT_HOG}: $f" >&2
+		exit 1
+	fi
+done
 
 case "$TEST_INDEX" in
 	1)

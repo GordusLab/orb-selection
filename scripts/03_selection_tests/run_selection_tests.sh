@@ -3,7 +3,7 @@
 # Runs one RELAX or BUSTED-PH test per SLURM array task, with three tasks per HOG.
 
 #SBATCH --job-name=261002_run_selection_tests
-#SBATCH --partition=shared
+#SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
@@ -11,19 +11,19 @@
 #SBATCH --array=1-14268
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
-#SBATCH --output=/data/agordus1/crunnel2/reports/%x/%A_%a.out
-#SBATCH --error=/data/agordus1/crunnel2/reports/%x/%A_%a.err
+#SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
+#SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 
 set -e
 
 # Make directory to store SLURM reports
-mkdir -p "/data/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/"
+mkdir -p "/scratch4/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/"
 
 module load anaconda
 conda activate /home/crunnel2/anaconda3/envs/hyphy-new
 
 WD="/scratch4/agordus1/crunnel2/hyphy_wd_260929"
-HOG_LIST="/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt"
+HOG_LIST="${HOG_LIST:-/home/crunnel2/orb-selection/data/N5.udiv.o75_list.txt}"
 
 HOG_INDEX=$(( (SLURM_ARRAY_TASK_ID - 1) / 3 + 1 ))
 TEST_INDEX=$(( (SLURM_ARRAY_TASK_ID - 1) % 3 + 1 ))

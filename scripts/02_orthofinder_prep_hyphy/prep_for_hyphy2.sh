@@ -140,7 +140,7 @@ run_clipkit() {
 }
 
 # The record file is written last, so its presence means trimming finished
-if [ -f "$FINAL_CK_RECORD" ]; then
+if [ -s "$FINAL_CK_RECORD" ] && [ -f "$(cat "$FINAL_CK_RECORD")" ]; then
 	FINAL_CK="$(cat "$FINAL_CK_RECORD")"
 	echo "ClipKIT already done; using ${FINAL_CK}; on to remove-duplicates."
 else
@@ -211,6 +211,11 @@ else
 		--msa "$FINAL_CK" \
 		--output "$DEDUP_FILE" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
+	# HyPhy can exit 0 without writing output
+	if [ ! -s "$DEDUP_FILE" ]; then
+		echo "remove-duplicates did not produce ${DEDUP_FILE}" >&2
+		exit 1
+	fi
 fi
 
 ############

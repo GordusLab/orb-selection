@@ -10,7 +10,7 @@
 #SBATCH --job-name=261006_prep_for_hyphy2_full_iqtree
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=00:12:00
+#SBATCH --time=12:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-4756%500
@@ -145,6 +145,7 @@ if [ -f "$FINAL_CK_RECORD" ]; then
 	echo "ClipKIT already done; using ${FINAL_CK}; on to remove-duplicates."
 else
 	mkdir -p "$CLIPKIT_DIR"
+
 	printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\n" > "$CLIPKIT_STATS"
 
 	run_clipkit smart-gap "${CURRENT_HOG}_NT.smart-gap" -m smart-gap
@@ -163,6 +164,29 @@ else
 
 	echo "$FINAL_CK" > "$FINAL_CK_RECORD"
 	echo "ClipKIT completed; using ${FINAL_CK}"
+fi
+
+# MACSE marks frameshifts with "!", which HyPhy can't read. ClipKIT trims whole codons,
+# so replace any remaining codon containing "!" with a gap codon (only when needed).
+if grep -v '^>' "$FINAL_CK" | grep -q '!'; then
+	NOFS_FILE="${FINAL_CK%.fasta}.nofs.fasta"
+	awk '
+		function flush(   i, c, out) {
+			if (seq == "") return
+			out = ""
+			for (i = 1; i <= length(seq); i += 3) {
+				c = substr(seq, i, 3)
+				out = out (index(c, "!") ? "---" : c)
+			}
+			print out
+			seq = ""
+		}
+		/^>/ {flush(); print; next}
+		{seq = seq $0}
+		END {flush()}
+	' "$FINAL_CK" > "$NOFS_FILE"
+	FINAL_CK="$NOFS_FILE"
+	echo "Frameshift marks replaced; using ${FINAL_CK}"
 fi
 
 # Set STOP_AFTER_TRIM=1 to stop once trimming is done (skips dedup, IQ-TREE, labelling)

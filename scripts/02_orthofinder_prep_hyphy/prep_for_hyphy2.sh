@@ -10,12 +10,12 @@
 #SBATCH --job-name=261005_prep_for_hyphy2_clipkit_timeout
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=00:10:00
+#SBATCH --time=00:06:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=696,703-712,873,880,881,927-944
+#SBATCH --array=1-4756%500
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=3
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 

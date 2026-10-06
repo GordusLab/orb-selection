@@ -7,13 +7,13 @@
 
 # sbatch ~/orb-selection/scripts/02_orthofinder_prep_hyphy/prep_for_hyphy2.sh ~/anaconda3/envs/hyphy-new/ ~/scratch/hyphy_wd_260929 ~/scratch/hyphy_wd_260929/HOG_CDS/ ~/bin/macse_v2.07.jar ~/bin/hyphy-analyses/
 
-#SBATCH --job-name=261005_prep_for_hyphy2_clipkit_all
+#SBATCH --job-name=261005_prep_for_hyphy2_clipkit_timeout
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=00:01:00
+#SBATCH --time=00:10:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
-#SBATCH --array=1-4756%50
+#SBATCH --array=696,703-712,873,880,881,927-944
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out

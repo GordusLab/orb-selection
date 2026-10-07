@@ -91,11 +91,13 @@ fi
 ## CLIPKIT  ##
 ##############
 
-# Trim the MACSE codon alignment with ClipKIT. Start with smart-gap; if it picks a
-# gaps threshold > 0.9 (too permissive), rerun with gappy -g 0.9.
+# Remove truncated/frameshifted sequences (and mask remaining "!" frameshift codons as gaps), then trim the MACSE codon alignment with
+# ClipKIT gappy -g 0.9 (drops only sites that are >90% gaps).
 CLIPKIT_DIR="${WD}/${CURRENT_HOG}/clipkit"
-FINAL_CK_RECORD="${CLIPKIT_DIR}/${CURRENT_HOG}_final_alignment.txt"
+FINAL_CK="${CLIPKIT_DIR}/${CURRENT_HOG}_NT.gappy90.fasta"
 CLIPKIT_STATS="${CLIPKIT_DIR}/${CURRENT_HOG}_clipkit_stats.tsv"
+FILTER_DIR="${WD}/${CURRENT_HOG}/seqfilter"
+FILTERED_FILE="${FILTER_DIR}/${CURRENT_HOG}_NT.filtered.fasta"
 
 # Set RERUN_FROM_TRIM=1 to redo trimming and everything downstream.
 # Old outputs are moved aside (not deleted) so earlier results are recoverable.
@@ -104,6 +106,7 @@ if [ "${RERUN_FROM_TRIM:-0}" = "1" ]; then
 	mkdir -p "$ARCHIVE"
 	for f in \
 		"$CLIPKIT_DIR" \
+		"$FILTER_DIR" \
 		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.fasta" \
 		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex" \
 		"${WD}/${CURRENT_HOG}/iqtree" \
@@ -111,82 +114,48 @@ if [ "${RERUN_FROM_TRIM:-0}" = "1" ]; then
 		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"; do
 		[ -e "$f" ] && mv "$f" "$ARCHIVE/"
 	done
+	# HyPhy results (BUSTED-PH, RELAX, and their intermediates) depend on the old alignment/tree
+	mv "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED"*.json "${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX"*.json "$ARCHIVE/" 2>/dev/null || true
 	# remove-duplicates may also write sidecar files next to the dedup nexus
 	mv "${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup."* "$ARCHIVE/" 2>/dev/null || true
 	echo "Archived previous trimming-and-later outputs to ${ARCHIVE}"
 fi
 
-# Runs clipkit and records its stdout. Args: <mode label> <output prefix> <clipkit mode args...>
-run_clipkit() {
-	local label="$1" prefix="$2"
-	shift 2
-	local out="${CLIPKIT_DIR}/${prefix}.fasta"
-	local ck_stdout
-	ck_stdout="$(clipkit "$MACSE_NT_FILE" "$@" \
-		--codon --sequence_type nt --remove_stop_codons all \
-		-t "$SLURM_CPUS_PER_TASK" \
-		--output "$out")"
-	echo "$ck_stdout"
-	CK_OUT="$out"
-	CK_GAPS="$(awk -F': ' '/^Gaps threshold:/ {print $2}' <<< "$ck_stdout")"
-	# Append stats row (one file per HOG so parallel array tasks don't collide)
-	awk -F': ' -v hog="$CURRENT_HOG" -v mode="$label" -v gaps="$CK_GAPS" '
-		/^Original length:/ {orig=$2}
-		/^Number of sites kept:/ {kept=$2}
-		/^Number of sites trimmed:/ {trimmed=$2}
-		/^Percentage of alignment trimmed:/ {pct=$2; sub(/%/, "", pct)}
-		END {printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\n", hog, mode, gaps, orig, kept, trimmed, pct}
-	' <<< "$ck_stdout" >> "$CLIPKIT_STATS"
-}
-
-# The record file is written last, so its presence means trimming finished
-if [ -s "$FINAL_CK_RECORD" ] && [ -f "$(cat "$FINAL_CK_RECORD")" ]; then
-	FINAL_CK="$(cat "$FINAL_CK_RECORD")"
+# The final file is only moved into place once ClipKIT succeeds, so its presence means trimming finished
+if [ -s "$FINAL_CK" ]; then
 	echo "ClipKIT already done; using ${FINAL_CK}; on to remove-duplicates."
 else
-	mkdir -p "$CLIPKIT_DIR"
+	mkdir -p "$CLIPKIT_DIR" "$FILTER_DIR"
 
-	printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\n" > "$CLIPKIT_STATS"
+	# Remove truncated/frameshifted sequences before trimming (log in seqfilter/)
+	python "${REPO_ROOT}/scripts/02_orthofinder_prep_hyphy/filter_msa_sequences.py" \
+		"$MACSE_NT_FILE" "$FILTERED_FILE" "${FILTER_DIR}/${CURRENT_HOG}_removed.tsv" \
+		"${REPO_ROOT}/data/orbweavers-list.txt"
 
-	run_clipkit smart-gap "${CURRENT_HOG}_NT.smart-gap" -m smart-gap
-	FINAL_CK="$CK_OUT"
+	ck_stdout="$(clipkit "$FILTERED_FILE" -m gappy -g 0.9 \
+		--codon --sequence_type nt --remove_stop_codons all \
+		-t "$SLURM_CPUS_PER_TASK" \
+		--output "${FINAL_CK}.tmp")"
+	echo "$ck_stdout"
 
-	if [ -z "$CK_GAPS" ]; then
-		echo "Could not parse ClipKIT gaps threshold from output" >&2
+	# One stats row per HOG (one file per HOG so parallel array tasks don't collide)
+	{
+		printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\n"
+		awk -F': ' -v hog="$CURRENT_HOG" '
+			/^Original length:/ {orig=$2}
+			/^Number of sites kept:/ {kept=$2}
+			/^Number of sites trimmed:/ {trimmed=$2}
+			/^Percentage of alignment trimmed:/ {pct=$2; sub(/%/, "", pct)}
+			END {printf "%s\tgappy90\t0.9\t%s\t%s\t%s\t%s\n", hog, orig, kept, trimmed, pct}
+		' <<< "$ck_stdout"
+	} > "$CLIPKIT_STATS"
+
+	if [ ! -s "${FINAL_CK}.tmp" ]; then
+		echo "ClipKIT did not produce a non-empty ${FINAL_CK}.tmp" >&2
 		exit 1
 	fi
-
-	if awk -v g="$CK_GAPS" 'BEGIN {exit !(g > 0.9)}'; then
-		echo "smart-gap threshold ${CK_GAPS} > 0.9; rerunning with gappy -g 0.9."
-		run_clipkit gappy90 "${CURRENT_HOG}_NT.gappy90" -m gappy -g 0.9
-		FINAL_CK="$CK_OUT"
-	fi
-
-	echo "$FINAL_CK" > "$FINAL_CK_RECORD"
+	mv "${FINAL_CK}.tmp" "$FINAL_CK"
 	echo "ClipKIT completed; using ${FINAL_CK}"
-fi
-
-# MACSE marks frameshifts with "!", which HyPhy can't read. ClipKIT trims whole codons,
-# so replace any remaining codon containing "!" with a gap codon (only when needed).
-if grep -v '^>' "$FINAL_CK" | grep -q '!'; then
-	NOFS_FILE="${FINAL_CK%.fasta}.nofs.fasta"
-	awk '
-		function flush(   i, c, out) {
-			if (seq == "") return
-			out = ""
-			for (i = 1; i <= length(seq); i += 3) {
-				c = substr(seq, i, 3)
-				out = out (index(c, "!") ? "---" : c)
-			}
-			print out
-			seq = ""
-		}
-		/^>/ {flush(); print; next}
-		{seq = seq $0}
-		END {flush()}
-	' "$FINAL_CK" > "$NOFS_FILE"
-	FINAL_CK="$NOFS_FILE"
-	echo "Frameshift marks replaced; using ${FINAL_CK}"
 fi
 
 # Set STOP_AFTER_TRIM=1 to stop once trimming is done (skips dedup, IQ-TREE, labelling)

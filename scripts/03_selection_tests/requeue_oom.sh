@@ -2,7 +2,7 @@
 
 # Resubmits OUT_OF_MEMORY array tasks of a job with more CPUs (4 GB each on parallel).
 # Usage: requeue_oom.sh <array_job_id> <hog_list> <cpus> [time]
-# The original job's HOG list is needed because task IDs index into it. Run from the repo root.
+# The original job's HOG list is needed because task IDs index into it.
 
 set -e
 

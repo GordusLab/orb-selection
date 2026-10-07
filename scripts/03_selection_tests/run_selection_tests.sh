@@ -9,6 +9,7 @@
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=NONE
 #SBATCH --array=1-14268
+#SBATCH --chdir=/scratch4/agordus1/crunnel2
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out

@@ -132,6 +132,10 @@ else
 		"$MACSE_NT_FILE" "$FILTERED_FILE" "${FILTER_DIR}/${CURRENT_HOG}_removed.tsv" \
 		"${REPO_ROOT}/data/orbweavers-list.txt"
 
+	N_SEQS_IN="$(grep -c '^>' "$MACSE_NT_FILE")"
+	N_SEQS_OUT="$(grep -c '^>' "$FILTERED_FILE")"
+	N_SEQS_REMOVED=$((N_SEQS_IN - N_SEQS_OUT))
+
 	ck_stdout="$(clipkit "$FILTERED_FILE" -m gappy -g 0.9 \
 		--codon --sequence_type nt --remove_stop_codons all \
 		-t "$SLURM_CPUS_PER_TASK" \
@@ -140,13 +144,13 @@ else
 
 	# One stats row per HOG (one file per HOG so parallel array tasks don't collide)
 	{
-		printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\n"
-		awk -F': ' -v hog="$CURRENT_HOG" '
+		printf "hog\tmode\tgaps_threshold\toriginal_length\tsites_kept\tsites_trimmed\tpct_trimmed\tn_seqs_in\tn_seqs_removed\tn_seqs_out\n"
+		awk -F': ' -v hog="$CURRENT_HOG" -v nin="$N_SEQS_IN" -v nrem="$N_SEQS_REMOVED" -v nout="$N_SEQS_OUT" '
 			/^Original length:/ {orig=$2}
 			/^Number of sites kept:/ {kept=$2}
 			/^Number of sites trimmed:/ {trimmed=$2}
 			/^Percentage of alignment trimmed:/ {pct=$2; sub(/%/, "", pct)}
-			END {printf "%s\tgappy90\t0.9\t%s\t%s\t%s\t%s\n", hog, orig, kept, trimmed, pct}
+			END {printf "%s\tgappy90\t0.9\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", hog, orig, kept, trimmed, pct, nin, nrem, nout}
 		' <<< "$ck_stdout"
 	} > "$CLIPKIT_STATS"
 

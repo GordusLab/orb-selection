@@ -187,3 +187,6 @@ miniconda3/
 # VS Code settings
 .vscode/
 
+
+# Local scratch copies of cluster outputs
+/inspect/

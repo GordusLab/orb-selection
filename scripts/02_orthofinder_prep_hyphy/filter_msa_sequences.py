@@ -5,7 +5,8 @@ A sequence is removed if more than --max-frameshift-frac of its residues are fra
 marks ("!"; isolated frameshifts are kept and masked later), it has more than
 --max-internal-stops internal stops, or an ungapped length below --min-frac of the gene's median ungapped length.
 Protected taxa (default Uloborus_diversus) are only removed if they have a frameshift/stop
-or fall below the lower --protected-min-frac.
+or fall below the lower --protected-min-frac. If the protected species has several copies
+and at least one passes everything, copies below the normal --min-frac are also removed.
 
 Safety nets (the gene is then written unfiltered and the reason is logged):
   - removal would exceed --max-removed-frac of the sequences
@@ -74,6 +75,14 @@ def main():
         if internal_stops(s) > a.max_internal_stops:
             why.append("internal_stop")
         reasons.append(",".join(why))
+
+    # Protected species with several copies: if a good copy remains, drop copies that fail
+    # the normal length cutoff (the lower floor only protects a species' sole/best copies)
+    prot = [i for i, n in enumerate(names) if n.split("|")[0] == a.protected]
+    if len(prot) > 1 and any(not reasons[i] for i in prot):
+        for i in prot:
+            if not reasons[i] and lens[i] < a.min_frac * med:
+                reasons[i] = f"short_paralog({lens[i] / med:.2f}<{a.min_frac})"
 
     remove = [i for i, r in enumerate(reasons) if r]
     keep = [i for i in range(len(seqs)) if not reasons[i]]

@@ -7,7 +7,7 @@
 #SBATCH --account=agordus1
 #SBATCH --time=06:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
-#SBATCH --mail-type=ALL
+#SBATCH --mail-type=NONE
 #SBATCH --array=1-14268
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
@@ -15,9 +15,6 @@
 #SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 
 set -e
-
-# Make directory to store SLURM reports
-mkdir -p "/scratch4/agordus1/crunnel2/reports/${SBATCH_JOB_NAME}/"
 
 module load anaconda
 conda activate /home/crunnel2/anaconda3/envs/hyphy-new
@@ -43,7 +40,7 @@ done
 case "$TEST_INDEX" in
 	1)
 		BUSTEDPH_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg.json"
-		if grep -q "p-value" "$BUSTEDPH_ORB_OUT"; then
+		if grep -qs "p-value" "$BUSTEDPH_ORB_OUT"; then
 			echo "BUSTED-PH, orb fg already complete."
 		else
 			hyphy busted-ph \
@@ -61,7 +58,7 @@ case "$TEST_INDEX" in
 		;;
 	2)
 		BUSTEDPH_NON_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg.json"
-		if grep -q "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
+		if grep -qs "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
 			echo "BUSTED-PH, non-orb fg already complete."
 		else
 			hyphy busted-ph \
@@ -79,7 +76,7 @@ case "$TEST_INDEX" in
 		;;
 	3)
 		RELAX_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX.json"
-		if grep -q "p-value" "$RELAX_OUT"; then
+		if grep -qs "p-value" "$RELAX_OUT"; then
 			echo "RELAX already complete."
 		else
 			hyphy relax \

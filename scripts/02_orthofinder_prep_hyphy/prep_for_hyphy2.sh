@@ -10,7 +10,7 @@
 #SBATCH --job-name=261006_prep_for_hyphy2_full_iqtree
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
-#SBATCH --time=12:00:00
+#SBATCH --time=00:10:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=ALL
 #SBATCH --array=1-4756%500
@@ -108,7 +108,7 @@ if [ "${RERUN_FROM_TRIM:-0}" = "1" ]; then
 		"$CLIPKIT_DIR" \
 		"$FILTER_DIR" \
 		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.fasta" \
-		"${WD}/${CURRENT_HOG}/macse/${CURRENT_HOG}_NT.trim.dedup.nex" \
+		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}_NT.trim.dedup.nex" \
 		"${WD}/${CURRENT_HOG}/iqtree" \
 		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}.orb_fg.tree" \
 		"${WD}/${CURRENT_HOG}/${CURRENT_HOG}.nonorb_fg.tree"; do

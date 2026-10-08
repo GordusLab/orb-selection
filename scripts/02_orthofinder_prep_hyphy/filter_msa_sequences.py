@@ -12,8 +12,6 @@ Safety nets (the gene is then written unfiltered and the reason is logged):
   - removal would exceed --max-removed-frac of the sequences
   - fewer than --min-seqs sequences would remain
   - all orbweavers or all non-orbweavers would be removed
-Columns that are all gaps after removal are dropped.
-
 Usage:
   filter_msa_sequences.py <in.fasta> <out.fasta> <removed.tsv> <orbweavers-list.txt> [options]
 """
@@ -115,16 +113,9 @@ def main():
 
     kept_names = [names[i] for i in keep]
     kept_seqs = [seqs[i] for i in keep]
-    # Drop codons that are all gaps in the remaining sequences
-    L = len(kept_seqs[0])
-    cols = []
-    for c in range(0, L - L % 3, 3):
-        if any(s[c:c + 3] != "---" for s in kept_seqs):
-            cols.extend((c, c + 1, c + 2))
-    kept_seqs = ["".join(s[c] for c in cols) for s in kept_seqs]
     write_fasta(a.out_fasta, kept_names, kept_seqs)
     print(f"Filter removed {len(remove)}/{len(seqs)} sequences; "
-          f"alignment {len(seqs[0])} -> {len(cols)} columns.")
+          f"retained all {len(seqs[0])} alignment columns for ClipKIT.")
 
 
 if __name__ == "__main__":

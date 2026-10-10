@@ -40,9 +40,9 @@ def main():
             shared_p = float(first_present(
                 data, "test results shared distributions", "Comparative selection test results",
             )["p-value"])
-        except Exception as e:
+        except Exception:
+            # Most skips are genes still mid-run (incomplete JSON); not worth printing per-file.
             n_error += 1
-            print(f"SKIP {path}: {e}", file=sys.stderr)
             continue
 
         n_complete += 1

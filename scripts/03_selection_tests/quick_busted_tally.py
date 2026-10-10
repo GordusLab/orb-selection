@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Quick tally of BUSTED-PH hits from completed JSONs, without pandas/numpy.
 
-A "hit" (per hyphy_results_parser.py's load_busted_ph_from_json): test p <= 0.05,
-background p > 0.05, shared p <= 0.05.
+A "hit" is read directly from HyPhy's own "Summary" sentence rather than
+re-deriving it from the three p-values (which has version-dependent key
+names across HyPhy builds, e.g. "test results background" vs "Background
+selection test results"): a hit is a Summary containing "associated with
+the trait" without a "**no**" right before it.
 
 Usage: python3 quick_busted_tally.py <glob-pattern>
 Example: python3 quick_busted_tally.py \
@@ -11,13 +14,6 @@ Example: python3 quick_busted_tally.py \
 import glob
 import json
 import sys
-
-
-def first_present(mapping, *keys):
-    for key in keys:
-        if key in mapping:
-            return mapping[key]
-    raise KeyError(f"None of the expected keys were found: {', '.join(keys)}")
 
 
 def main():
@@ -33,22 +29,16 @@ def main():
         try:
             with open(path) as f:
                 data = json.load(f)
-            test_p = float(data["test results"]["p-value"])
-            bg_p = float(first_present(
-                data, "test results background", "Background selection test results",
-            )["p-value"])
-            shared_p = float(first_present(
-                data, "test results shared distributions", "Comparative selection test results",
-            )["p-value"])
+            summary = data["BUSTED-PH"]["Summary"]
         except Exception:
             # Most skips are genes still mid-run (incomplete JSON); not worth printing per-file.
             n_error += 1
             continue
 
         n_complete += 1
-        if test_p <= 0.05 and bg_p > 0.05 and shared_p <= 0.05:
+        if "associated with the trait" in summary and "**no**" not in summary:
             n_hit += 1
-            print(f"HIT\t{path}\t{test_p}\t{bg_p}\t{shared_p}")
+            print(f"HIT\t{path}")
 
     print(
         f"\n{n_complete} completed JSONs matched, {n_error} skipped, "

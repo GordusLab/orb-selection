@@ -9,7 +9,7 @@
 # test genes. RELAX CPUs scale with tier, since its memory use tracked tier in testing:
 # tier A genes reached 9.6-11.5 GB (fits in 4 CPUs/16 GB), tier C reached 14.7-17.7 GB
 # (needs 6 CPUs/24 GB). RELAX stays single-threaded regardless of CPUs given.
-# Requeue any OOM tasks with requeue_oom.sh.
+# Requeue any failed/OOM/timed-out tasks with requeue_failed.sh.
 
 set -e
 

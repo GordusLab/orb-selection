@@ -110,5 +110,24 @@ resumability pattern worth preserving when editing them:
   original author's cluster paths (`/scratch4/agordus1/crunnel2/...`, `$HOME/orb-selection`) into
   new reusable scripts.
 - `scripts/03_selection_tests/submit_tiers.sh` encodes HOG runtime tiers (A/B/C, from prior Pass-2
-  run-time records) to right-size `--time`/`--cpus-per-task` per job batch; `requeue_oom.sh`
+  run-time records) to right-size `--time`/`--cpus-per-task` per job batch; `requeue_failed.sh`
   handles re-submitting OOM-killed tasks at higher memory.
+
+## Working efficiently with Claude Code
+
+See the global `CLAUDE.md` for general cost/context habits. Repo-specific additions: several
+files here are large and don't need to be read in full:
+- `data/N5.tsv` (44M) / `data/N5.GeneCount.tsv`, HyPhy result JSONs under `results/`, and `.pkl`
+  caches (the `odds_ratio_test/` ones run 265-272M) — grep/filter for the HOG(s) or column(s)
+  needed, or write a short Python snippet that prints a summary, instead of reading the whole
+  file into context.
+- Alignment/tree intermediates under `inspect/` (`.fasta`, `.mldist`, `.nex`, `.PP`) — these are
+  per-HOG debugging artifacts; look up the specific HOG's file rather than scanning the directory.
+- `GO.sqlite`/other `AnnotationDbi` databases under `renv/library/` (67-73M) — package internals,
+  never need inspecting directly.
+- Stage 07 notebooks can carry large embedded plot outputs — read specific cells rather than the
+  whole notebook when only the code or one result is needed.
+- SLURM logs (`*.out`/`*.err`) — grep for the completion marker or error rather than catting the
+  whole log.
+- For schema/column meaning, check `README.md` / `data/README.md` / the relevant
+  `scripts/*/README.md` first rather than inferring it from raw data.

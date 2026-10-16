@@ -9,9 +9,40 @@ MIN_VISIBLE_PROPORTION = 0.006
 TICK_EDGE_PADDING = 10 ** 0.25
 
 
-def _visible_proportion(proportion):
-    """Keep nonzero bars visible without representing zero as nonzero."""
-    return max(proportion, MIN_VISIBLE_PROPORTION) if proportion > 0 else 0
+SAVEFIG_DPI = 300
+
+
+def _min_top_gap(ax, dpi):
+    """Data-unit height needed for a visible gap below the top spine at the given dpi.
+
+    The top spine itself is drawn ~centered on ymax and has nonzero width, so a bar
+    reaching to within one bare pixel of ymax still visually touches the spine. Clear
+    half the spine's rendered width plus one pixel of actual white space.
+    """
+    pos = ax.get_position()
+    pixel_height = pos.height * ax.get_figure().get_figheight() * dpi
+    if pixel_height <= 0:
+        return 0
+    spine_px = ax.spines['top'].get_linewidth() * dpi / 72
+    margin_px = spine_px / 2 + 1
+    ymin, ymax = ax.get_ylim()
+    return (ymax - ymin) * margin_px / pixel_height
+
+
+def _visible_proportion(proportion, ax=None):
+    """Keep nonzero bars visible without representing zero, or near-1, as exactly 1.
+
+    Uses the lower of the figure's on-screen dpi and the eventual savefig dpi, so the
+    gap stays visible whichever rendering (inline display or saved file) is viewed.
+    """
+    if proportion <= 0:
+        return 0
+    height = max(proportion, MIN_VISIBLE_PROPORTION)
+    if ax is not None and proportion < 1.0:
+        _, ymax = ax.get_ylim()
+        dpi = min(ax.get_figure().dpi, SAVEFIG_DPI)
+        height = min(height, ymax - _min_top_gap(ax, dpi))
+    return height
 
 
 def _plot_tiny_proportion_marker(ax, omega, proportion, color, alpha):
@@ -330,7 +361,7 @@ def plot_omega_single_gene(
     ax.vlines(
         x['ω1_ref'],
         0,
-        _visible_proportion(x['ω1_ref_P']),
+        _visible_proportion(x['ω1_ref_P'], ax),
         linewidth=20,
         color='salmon',
         alpha=0.17,
@@ -345,7 +376,7 @@ def plot_omega_single_gene(
     ax.vlines(
         x['ω2_ref'],
         0,
-        _visible_proportion(x['ω2_ref_P']),
+        _visible_proportion(x['ω2_ref_P'], ax),
         linewidth=20,
         color='steelblue',
         alpha=0.17,
@@ -360,7 +391,7 @@ def plot_omega_single_gene(
     ax.vlines(
         x['ω3_ref'],
         0,
-        _visible_proportion(x['ω3_ref_P']),
+        _visible_proportion(x['ω3_ref_P'], ax),
         linewidth=20,
         color='goldenrod',
         alpha=0.17,
@@ -379,7 +410,7 @@ def plot_omega_single_gene(
     ax.vlines(
         x['ω1_test'],
         0,
-        _visible_proportion(x['ω1_test_P']),
+        _visible_proportion(x['ω1_test_P'], ax),
         linewidth=20,
         color='salmon',
         alpha=test_alpha,
@@ -392,7 +423,7 @@ def plot_omega_single_gene(
     ax.vlines(
         x['ω2_test'],
         0,
-        _visible_proportion(x['ω2_test_P']),
+        _visible_proportion(x['ω2_test_P'], ax),
         linewidth=20,
         color='steelblue',
         alpha=test_alpha,
@@ -405,7 +436,7 @@ def plot_omega_single_gene(
     ax.vlines(
         x['ω3_test'],
         0,
-        _visible_proportion(x['ω3_test_P']),
+        _visible_proportion(x['ω3_test_P'], ax),
         linewidth=20,
         color='goldenrod',
         alpha=test_alpha,

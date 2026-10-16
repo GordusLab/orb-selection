@@ -334,129 +334,236 @@ class HyphyResultsManager:
             if key in mapping:
                 return mapping[key]
         raise KeyError(f"None of the expected keys were found: {', '.join(keys)}")
-    
+
+    # HyPhy's own lower bound for the --error-sink Yes "error absorption"
+    # omega class (see error-sink-bound in RELAX.bf/BUSTED.bf) -- any fitted
+    # category at or above this is the error sink, never a real site-rate
+    # class, which are constrained below it.
+    _ERROR_SINK_OMEGA_BOUND = 100
+
+    @classmethod
+    def _omega_rate_columns(cls, rate_distribution: Dict, suffix: str) -> Dict:
+        """
+        Flatten a HyPhy per-branch-set omega rate distribution into
+        ω{category}_{suffix}/ω{category}_{suffix}_P columns.
+
+        BUSTED/BUSTED-PH/RELAX reserve one high-omega (>=100) class as an
+        "error-sink" category whenever a run used --error-sink Yes, meant to
+        absorb alignment/sequencing-error artifacts without biasing the rest
+        of the fit -- it's expected to converge to ~0 proportion when the
+        data doesn't need it. It is NOT at a consistent JSON key across
+        tools: BUSTED/BUSTED-PH always place it at key "0" (categories are
+        written in raw fit order), but RELAX sorts its distribution
+        ascending by omega before writing JSON, so the error-sink class
+        lands at the *last* key instead. Using the literal JSON key as the
+        column name (as a naive port of either tool's convention would)
+        silently mislabels a real category as ω0 for one of the two tools.
+
+        Instead, identify the error-sink category by value (omega >=
+        _ERROR_SINK_OMEGA_BOUND, the bound HyPhy itself enforces -- real
+        categories are constrained below it) and always call it ω0_{suffix},
+        then number the remaining real categories ω1.. in their original
+        relative order so ω1-ω3 are always exactly the 3 real site-rate
+        categories, matching the hardcoded assumption in
+        hyphy_results_helpers.py's calculate_mean_omega.
+        """
+        ordered_categories = sorted(rate_distribution, key=int)
+        real_categories = [
+            c for c in ordered_categories
+            if rate_distribution[c]['omega'] < cls._ERROR_SINK_OMEGA_BOUND
+        ]
+        sink_categories = [
+            c for c in ordered_categories
+            if rate_distribution[c]['omega'] >= cls._ERROR_SINK_OMEGA_BOUND
+        ]
+
+        columns = {}
+        for sink_category in sink_categories:
+            columns[f'ω0_{suffix}'] = rate_distribution[sink_category]['omega']
+            columns[f'ω0_{suffix}_P'] = rate_distribution[sink_category]['proportion']
+        for new_index, category in enumerate(real_categories, start=1):
+            columns[f'ω{new_index}_{suffix}'] = rate_distribution[category]['omega']
+            columns[f'ω{new_index}_{suffix}_P'] = rate_distribution[category]['proportion']
+        return columns
+
     def list_results(self) -> List[str]:
         """List all available result names."""
         return list(self.results.keys())
     
+    def _parse_relax_record(self, json_file: str, data: Dict) -> Dict:
+        """
+        Build one RELAX results row from a parsed JSON payload.
+
+        Raises:
+            KeyError: if a field this row needs is missing (e.g. a timed-out/
+                incomplete HyPhy run). Also used by check_hyphy_completeness.py
+                to validate files without building a full DataFrame.
+        """
+        pval = data['test results']['p-value']
+        k = data['test results']['relaxation or intensification parameter']
+
+        # Determine result classification
+        if (float(pval) <= 0.05) & (float(k) < 1):
+            result = 'relaxed'
+        elif (float(pval) <= 0.05) & (float(k) > 1):
+            result = 'intensified'
+        else:
+            result = 'not significant'
+
+        record = {
+            'HOG': json_file.split('_')[0],
+            'p_value': pval,
+            'k': k,
+            'LRT': data['test results']['LRT'],
+            'MG94xREV_ω_reference': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *Reference*"][0][0],
+            'MG94xREV_ω_test': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *Test*"][0][0],
+            'result': result
+        }
+
+        alt_rate_distributions = data["fits"]["RELAX alternative"]["Rate Distributions"]
+        record.update(self._omega_rate_columns(alt_rate_distributions["Test"], 'test'))
+        record.update(self._omega_rate_columns(alt_rate_distributions["Reference"], 'ref'))
+
+        # "RELAX partitioned descriptive" fits test/reference branches
+        # independently (no shared K), unlike "RELAX alternative" which
+        # constrains them via the relaxation parameter -- useful as a check
+        # on the alternative-model rate classes above.
+        pd_rate_distributions = data["fits"]["RELAX partitioned descriptive"]["Rate Distributions"]
+        record.update(self._omega_rate_columns(pd_rate_distributions["Test"], 'test_pd'))
+        record.update(self._omega_rate_columns(pd_rate_distributions["Reference"], 'ref_pd'))
+        return record
+
     def load_relax_from_json(self, json_directory: str, name: str = 'relax') -> RelaxResult:
         """
         Load RELAX results from JSON files.
-        
+
         Args:
             json_directory: Directory containing RELAX JSON files
             name: Name to store the result under
-            
+
         Returns:
             RelaxResult instance
         """
         json_files = [f for f in os.listdir(json_directory) if f.endswith('.json')]
         relax_results = []
-        
+        skipped_files = []
+
         for json_file in json_files:
             with open(os.path.join(json_directory, json_file), 'r') as f:
-                data = json.load(f)
-                pval = data['test results']['p-value']
-                k = data['test results']['relaxation or intensification parameter']
-                
-                # Determine result classification
-                if (float(pval) <= 0.05) & (float(k) < 1):
-                    result = 'relaxed'
-                elif (float(pval) <= 0.05) & (float(k) > 1):
-                    result = 'intensified'
-                else:
-                    result = 'not significant'
-                
-                relax_results.append({
-                    'HOG': json_file.split('_')[0],
-                    'p_value': pval,
-                    'k': k,
-                    'LRT': data['test results']['LRT'],
-                    'MG94xREV_ω_reference': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *Reference*"][0][0],
-                    'MG94xREV_ω_test': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *Test*"][0][0],
-                    'ω1_test': data["fits"]["RELAX alternative"]["Rate Distributions"]["Test"]["0"]["omega"],
-                    'ω1_test_P': data["fits"]["RELAX alternative"]["Rate Distributions"]["Test"]["0"]["proportion"],
-                    'ω2_test': data["fits"]["RELAX alternative"]["Rate Distributions"]["Test"]["1"]["omega"],
-                    'ω2_test_P': data["fits"]["RELAX alternative"]["Rate Distributions"]["Test"]["1"]["proportion"],
-                    'ω3_test': data["fits"]["RELAX alternative"]["Rate Distributions"]["Test"]["2"]["omega"],
-                    'ω3_test_P': data["fits"]["RELAX alternative"]["Rate Distributions"]["Test"]["2"]["proportion"],
-                    'ω1_ref': data["fits"]["RELAX alternative"]["Rate Distributions"]["Reference"]["0"]["omega"],
-                    'ω1_ref_P': data["fits"]["RELAX alternative"]["Rate Distributions"]["Reference"]["0"]["proportion"],
-                    'ω2_ref': data["fits"]["RELAX alternative"]["Rate Distributions"]["Reference"]["1"]["omega"],
-                    'ω2_ref_P': data["fits"]["RELAX alternative"]["Rate Distributions"]["Reference"]["1"]["proportion"],
-                    'ω3_ref': data["fits"]["RELAX alternative"]["Rate Distributions"]["Reference"]["2"]["omega"],
-                    'ω3_ref_P': data["fits"]["RELAX alternative"]["Rate Distributions"]["Reference"]["2"]["proportion"],
-                    'result': result
-                })
-        
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError as e:
+                    skipped_files.append((json_file, f"invalid JSON: {e}"))
+                    continue
+            try:
+                relax_results.append(self._parse_relax_record(json_file, data))
+            except KeyError as e:
+                skipped_files.append((json_file, str(e)))
+
+        if skipped_files:
+            print(f"    ⚠ Skipped {len(skipped_files)} file(s) missing RELAX keys "
+                  "(likely an incomplete/timed-out run):")
+            for skipped_file, reason in skipped_files:
+                print(f"      - {skipped_file}: {reason}")
+
         relax_df = pd.DataFrame(relax_results).set_index('HOG')
         result_obj = RelaxResult(relax_df)
         self.add_result(name, result_obj)
         return result_obj
     
+    def _parse_busted_ph_record(self, json_file: str, data: Dict) -> Dict:
+        """
+        Build one BUSTED-PH results row from a parsed JSON payload.
+
+        Raises:
+            KeyError: if a field this row needs is missing — e.g. a timed-out
+                task whose output JSON was left holding only a plain BUSTED fit
+                (no 'BUSTED-PH'/background/comparative keys). Also used by
+                check_hyphy_completeness.py to validate files without building
+                a full DataFrame.
+        """
+        test_pval = data['test results']['p-value']
+        background_results = self._first_present(
+            data,
+            'test results background',
+            'Background selection test results',
+        )
+        shared_results = self._first_present(
+            data,
+            'test results shared distributions',
+            'Comparative selection test results',
+        )
+
+        background_pval = background_results['p-value']
+        shared_pval = shared_results['p-value']
+
+        # Determine result classification
+        if (float(test_pval) <= 0.05) & (float(background_pval) > 0.05) & (float(shared_pval) <= 0.05):
+            result = 'hit'
+        else:
+            result = 'not significant'
+
+        record = {
+            'HOG': json_file.split('_')[0],
+            'test_pval': test_pval,
+            'test_LRT': data['test results']['LRT'],
+            'background_pval': background_pval,
+            'background_LRT': background_results['LRT'],
+            'shared_pval': shared_pval,
+            'shared_LRT': shared_results['LRT'],
+            'MG94xREV_ω_test': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *test*"][0][0],
+            'MG94xREV_ω_ref': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *background*"][0][0],
+            'result': result
+        }
+
+        unconstrained_rate_distributions = data["fits"]["Unconstrained model"]["Rate Distributions"]
+        record.update(self._omega_rate_columns(unconstrained_rate_distributions["Test"], 'test'))
+        record.update(self._omega_rate_columns(unconstrained_rate_distributions["Background"], 'ref'))
+
+        # HyPhy skips fitting "Constrained model" (the null, no-selection fit)
+        # entirely when the unconstrained fit already shows no evidence of
+        # selection (test p-value == 0.5) -- so it's genuinely absent on most
+        # files, not a sign of an incomplete run, and must stay optional here.
+        constrained_fit = data["fits"].get("Constrained model")
+        if constrained_fit is not None:
+            constrained_rate_distributions = constrained_fit["Rate Distributions"]
+            record.update(self._omega_rate_columns(constrained_rate_distributions["Test"], 'test_null'))
+            record.update(self._omega_rate_columns(constrained_rate_distributions["Background"], 'ref_null'))
+        return record
+
     def load_busted_ph_from_json(self, json_directory: str, name: str = 'busted_ph') -> BustedPhResult:
         """
         Load BUSTED-PH results from JSON files.
-        
+
         Args:
             json_directory: Directory containing BUSTED-PH JSON files
             name: Name to store the result under
-            
+
         Returns:
             BustedPhResult instance
         """
         json_files = [f for f in os.listdir(json_directory) if f.endswith('.json')]
         busted_ph_results = []
-        
+        skipped_files = []
+
         for json_file in json_files:
             with open(os.path.join(json_directory, json_file), 'r') as f:
-                data = json.load(f)
-                test_pval = data['test results']['p-value']
-                background_results = self._first_present(
-                    data,
-                    'test results background',
-                    'Background selection test results',
-                )
-                shared_results = self._first_present(
-                    data,
-                    'test results shared distributions',
-                    'Comparative selection test results',
-                )
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError as e:
+                    skipped_files.append((json_file, f"invalid JSON: {e}"))
+                    continue
+            try:
+                busted_ph_results.append(self._parse_busted_ph_record(json_file, data))
+            except KeyError as e:
+                skipped_files.append((json_file, str(e)))
 
-                background_pval = background_results['p-value']
-                shared_pval = shared_results['p-value']
-                
-                # Determine result classification
-                if (float(test_pval) <= 0.05) & (float(background_pval) > 0.05) & (float(shared_pval) <= 0.05):
-                    result = 'hit'
-                else:
-                    result = 'not significant'
-                
-                busted_ph_results.append({
-                    'HOG': json_file.split('_')[0],
-                    'test_pval': test_pval,
-                    'test_LRT': data['test results']['LRT'],
-                    'background_pval': background_pval,
-                    'background_LRT': background_results['LRT'],
-                    'shared_pval': shared_pval,
-                    'shared_LRT': shared_results['LRT'],
-                    'MG94xREV_ω_test': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *test*"][0][0],
-                    'MG94xREV_ω_ref': data["fits"]["MG94xREV with separate rates for branch sets"]["Rate Distributions"]["non-synonymous/synonymous rate ratio for *background*"][0][0],
-                    'ω1_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["0"]["omega"],
-                    'ω1_test_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["0"]["proportion"],
-                    'ω2_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["1"]["omega"],
-                    'ω2_test_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["1"]["proportion"],
-                    'ω3_test': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["2"]["omega"],
-                    'ω3_test_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Test"]["2"]["proportion"],
-                    'ω1_ref': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["0"]["omega"],
-                    'ω1_ref_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["0"]["proportion"],
-                    'ω2_ref': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["1"]["omega"],
-                    'ω2_ref_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["1"]["proportion"],
-                    'ω3_ref': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["2"]["omega"],
-                    'ω3_ref_P': data["fits"]["Unconstrained model"]["Rate Distributions"]["Background"]["2"]["proportion"],
-                    'result': result
-                })
-        
+        if skipped_files:
+            print(f"    ⚠ Skipped {len(skipped_files)} file(s) missing BUSTED-PH keys "
+                  "(likely plain BUSTED fallback output):")
+            for skipped_file, reason in skipped_files:
+                print(f"      - {skipped_file}: {reason}")
+
         busted_ph_df = pd.DataFrame(busted_ph_results).set_index('HOG')
         result_obj = BustedPhResult(busted_ph_df)
         self.add_result(name, result_obj)

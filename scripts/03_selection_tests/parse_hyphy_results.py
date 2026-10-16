@@ -1,5 +1,7 @@
 # Run using the orb-selection conda environment:
-# conda run -n orb-selection python scripts/03_selection_tests/parse_hyphy_results.py
+# conda run --live-stream -n orb-selection python scripts/03_selection_tests/parse_hyphy_results.py
+# (--live-stream disables conda run's output buffering, needed for progress bars/prints to show live;
+# older conda versions use --no-capture-output instead)
 
 """Parse and summarize HyPhy JSON outputs for downstream analyses.
 

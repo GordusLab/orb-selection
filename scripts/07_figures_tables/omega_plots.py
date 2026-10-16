@@ -147,13 +147,20 @@ def plot_omega_distributions(
     xlim_min=0.001,
     shift_top_title=False,
     transparent=True,
+    groups=('test', 'ref'),
 ):
-    """Plot ω distributions and mean site proportions for test and reference."""
+    """Plot ω distributions and mean site proportions for test and reference.
+
+    `groups` names the test/reference column suffixes to plot, e.g. the default
+    ('test', 'ref') for the RELAX/BUSTED-PH alternative model, or
+    ('test_pd', 'ref_pd') for the RELAX partitioned descriptive model.
+    """
+    test_group, ref_group = groups
     logbins = np.geomspace(xlim_min, xlim_max, 100)
 
     y_limits = []
 
-    for group in ['test', 'ref']:
+    for group in groups:
         ω3_counts = np.histogram(x[f'ω3_{group}'], bins=logbins)[0]
         ω2_counts = np.histogram(x[f'ω2_{group}'], bins=logbins)[0]
 
@@ -174,13 +181,13 @@ def plot_omega_distributions(
     axs[1].set_ylim(0, np.max(y_limits))
     axs[1].invert_yaxis()
 
-    _plot_distributions(axs[0], x, 'test', logbins)
-    _plot_distributions(axs[1], x, 'ref', logbins, labels=True)
+    _plot_distributions(axs[0], x, test_group, logbins)
+    _plot_distributions(axs[1], x, ref_group, logbins, labels=True)
 
     ax_avgs = axs[0].twinx()
     ax_avgs.set_facecolor('none')
     _plot_mean_lines(
-        ax_avgs, x, 'test', stroke_width=7.5 if result == 'busted' else 7
+        ax_avgs, x, test_group, stroke_width=7.5 if result == 'busted' else 7
     )
     ax_avgs.spines.right.set_visible(False)
 
@@ -190,7 +197,7 @@ def plot_omega_distributions(
     _plot_mean_lines(
         ax_avgs2,
         x,
-        'ref',
+        ref_group,
         inverted=True,
         stroke_width=7 if result == 'busted' else 7.5,
     )
@@ -304,35 +311,42 @@ def plot_omega_single_gene(
     zorder_2test=1,
     zorder_3test=1,
     axis_fontsize=14,
+    groups=('test', 'ref'),
 ):
-    """Plot inferred ω values and site proportions for one gene."""
+    """Plot inferred ω values and site proportions for one gene.
+
+    `groups` names the test/reference column suffixes to plot, e.g. the default
+    ('test', 'ref') for the RELAX/BUSTED-PH alternative model, or
+    ('test_pd', 'ref_pd') for the RELAX partitioned descriptive model.
+    """
+    test_group, ref_group = groups
 
     x = df.loc[gene]
 
     fig, ax = plt.subplots(figsize=(5.5, 5))
 
     # Collapse numerical near-zero estimates so they share the zero position.
-    if x['ω1_ref'] < 1e-9:
-        x['ω1_ref'] = 0
+    if x[f'ω1_{ref_group}'] < 1e-9:
+        x[f'ω1_{ref_group}'] = 0
 
-    if x['ω1_test'] < 1e-9:
-        x['ω1_test'] = 0
+    if x[f'ω1_{test_group}'] < 1e-9:
+        x[f'ω1_{test_group}'] = 0
 
     omega_values = np.asarray([
-        x['ω1_ref'], x['ω2_ref'], x['ω3_ref'],
-        x['ω1_test'], x['ω2_test'], x['ω3_test'],
+        x[f'ω1_{ref_group}'], x[f'ω2_{ref_group}'], x[f'ω3_{ref_group}'],
+        x[f'ω1_{test_group}'], x[f'ω2_{test_group}'], x[f'ω3_{test_group}'],
     ])
     has_zero = np.any(omega_values == 0)
 
-    if np.min([x['ω2_ref'], x['ω2_test']]) > 0:
-        if np.min([x['ω1_ref'], x['ω1_test']]) > 0:
-            thresh = np.min([x['ω1_ref'], x['ω1_test']]) * 0.1
-        elif np.max([x['ω1_ref'], x['ω1_test']]) > 0:
-            thresh = np.max([x['ω1_ref'], x['ω1_test']]) * 0.1
+    if np.min([x[f'ω2_{ref_group}'], x[f'ω2_{test_group}']]) > 0:
+        if np.min([x[f'ω1_{ref_group}'], x[f'ω1_{test_group}']]) > 0:
+            thresh = np.min([x[f'ω1_{ref_group}'], x[f'ω1_{test_group}']]) * 0.1
+        elif np.max([x[f'ω1_{ref_group}'], x[f'ω1_{test_group}']]) > 0:
+            thresh = np.max([x[f'ω1_{ref_group}'], x[f'ω1_{test_group}']]) * 0.1
         else:
-            thresh = np.min([x['ω2_ref'], x['ω2_test']]) * 0.1
-    elif np.max([x['ω2_ref'], x['ω2_test']]) > 0:
-        thresh = np.max([x['ω2_ref'], x['ω2_test']]) * 0.1
+            thresh = np.min([x[f'ω2_{ref_group}'], x[f'ω2_{test_group}']]) * 0.1
+    elif np.max([x[f'ω2_{ref_group}'], x[f'ω2_{test_group}']]) > 0:
+        thresh = np.max([x[f'ω2_{ref_group}'], x[f'ω2_{test_group}']]) * 0.1
     else:
         thresh = 0.01
 
@@ -359,9 +373,9 @@ def plot_omega_single_gene(
     ]
 
     ax.vlines(
-        x['ω1_ref'],
+        x[f'ω1_{ref_group}'],
         0,
-        _visible_proportion(x['ω1_ref_P'], ax),
+        _visible_proportion(x[f'ω1_{ref_group}_P'], ax),
         linewidth=20,
         color='salmon',
         alpha=0.17,
@@ -371,12 +385,12 @@ def plot_omega_single_gene(
         ),
     )
     _plot_tiny_proportion_marker(
-        ax, x['ω1_ref'], x['ω1_ref_P'], 'salmon', alpha=0.17
+        ax, x[f'ω1_{ref_group}'], x[f'ω1_{ref_group}_P'], 'salmon', alpha=0.17
     )
     ax.vlines(
-        x['ω2_ref'],
+        x[f'ω2_{ref_group}'],
         0,
-        _visible_proportion(x['ω2_ref_P'], ax),
+        _visible_proportion(x[f'ω2_{ref_group}_P'], ax),
         linewidth=20,
         color='steelblue',
         alpha=0.17,
@@ -386,12 +400,12 @@ def plot_omega_single_gene(
         ),
     )
     _plot_tiny_proportion_marker(
-        ax, x['ω2_ref'], x['ω2_ref_P'], 'steelblue', alpha=0.17
+        ax, x[f'ω2_{ref_group}'], x[f'ω2_{ref_group}_P'], 'steelblue', alpha=0.17
     )
     ax.vlines(
-        x['ω3_ref'],
+        x[f'ω3_{ref_group}'],
         0,
-        _visible_proportion(x['ω3_ref_P'], ax),
+        _visible_proportion(x[f'ω3_{ref_group}_P'], ax),
         linewidth=20,
         color='goldenrod',
         alpha=0.17,
@@ -399,7 +413,7 @@ def plot_omega_single_gene(
         path_effects=ref_path_effects
     )
     _plot_tiny_proportion_marker(
-        ax, x['ω3_ref'], x['ω3_ref_P'], 'goldenrod', alpha=0.3
+        ax, x[f'ω3_{ref_group}'], x[f'ω3_{ref_group}_P'], 'goldenrod', alpha=0.3
     )
 
     test_alpha = 1
@@ -408,9 +422,9 @@ def plot_omega_single_gene(
     ]
 
     ax.vlines(
-        x['ω1_test'],
+        x[f'ω1_{test_group}'],
         0,
-        _visible_proportion(x['ω1_test_P'], ax),
+        _visible_proportion(x[f'ω1_{test_group}_P'], ax),
         linewidth=20,
         color='salmon',
         alpha=test_alpha,
@@ -418,12 +432,12 @@ def plot_omega_single_gene(
         path_effects=test_effects,
     )
     _plot_tiny_proportion_marker(
-        ax, x['ω1_test'], x['ω1_test_P'], 'salmon', alpha=1
+        ax, x[f'ω1_{test_group}'], x[f'ω1_{test_group}_P'], 'salmon', alpha=1
     )
     ax.vlines(
-        x['ω2_test'],
+        x[f'ω2_{test_group}'],
         0,
-        _visible_proportion(x['ω2_test_P'], ax),
+        _visible_proportion(x[f'ω2_{test_group}_P'], ax),
         linewidth=20,
         color='steelblue',
         alpha=test_alpha,
@@ -431,12 +445,12 @@ def plot_omega_single_gene(
         path_effects=test_effects,
     )
     _plot_tiny_proportion_marker(
-        ax, x['ω2_test'], x['ω2_test_P'], 'steelblue', alpha=1
+        ax, x[f'ω2_{test_group}'], x[f'ω2_{test_group}_P'], 'steelblue', alpha=1
     )
     ax.vlines(
-        x['ω3_test'],
+        x[f'ω3_{test_group}'],
         0,
-        _visible_proportion(x['ω3_test_P'], ax),
+        _visible_proportion(x[f'ω3_{test_group}_P'], ax),
         linewidth=20,
         color='goldenrod',
         alpha=test_alpha,
@@ -444,7 +458,7 @@ def plot_omega_single_gene(
         path_effects=test_effects,
     )
     _plot_tiny_proportion_marker(
-        ax, x['ω3_test'], x['ω3_test_P'], 'goldenrod', alpha=1
+        ax, x[f'ω3_{test_group}'], x[f'ω3_{test_group}_P'], 'goldenrod', alpha=1
     )
 
     if not has_zero:
@@ -544,15 +558,19 @@ def plot_omega_single_gene(
         plt.savefig(filename, dpi=300, transparent=transparent)
 
     print(
-        f"ω values for {gene}: ω1_test={x['ω1_test']:.4f}, "
-        f"ω2_test={x['ω2_test']:.4f}, ω3_test={x['ω3_test']:.4f},\n"
-        f"ω1_ref={x['ω1_ref']:.4f}, ω2_ref={x['ω2_ref']:.4f}, "
-        f"ω3_ref={x['ω3_ref']:.4f};\n"
-        f"Proportions: ω1_test_P={x['ω1_test_P']:.4f}, "
-        f"ω2_test_P={x['ω2_test_P']:.4f}, "
-        f"ω3_test_P={x['ω3_test_P']:.4f},\n"
-        f"ω1_ref_P={x['ω1_ref_P']:.4f}, ω2_ref_P={x['ω2_ref_P']:.4f}, "
-        f"ω3_ref_P={x['ω3_ref_P']:.4f}"
+        f"ω values for {gene}: "
+        f"ω1_{test_group}={x[f'ω1_{test_group}']:.4f}, "
+        f"ω2_{test_group}={x[f'ω2_{test_group}']:.4f}, "
+        f"ω3_{test_group}={x[f'ω3_{test_group}']:.4f},\n"
+        f"ω1_{ref_group}={x[f'ω1_{ref_group}']:.4f}, "
+        f"ω2_{ref_group}={x[f'ω2_{ref_group}']:.4f}, "
+        f"ω3_{ref_group}={x[f'ω3_{ref_group}']:.4f};\n"
+        f"Proportions: ω1_{test_group}_P={x[f'ω1_{test_group}_P']:.4f}, "
+        f"ω2_{test_group}_P={x[f'ω2_{test_group}_P']:.4f}, "
+        f"ω3_{test_group}_P={x[f'ω3_{test_group}_P']:.4f},\n"
+        f"ω1_{ref_group}_P={x[f'ω1_{ref_group}_P']:.4f}, "
+        f"ω2_{ref_group}_P={x[f'ω2_{ref_group}_P']:.4f}, "
+        f"ω3_{ref_group}_P={x[f'ω3_{ref_group}_P']:.4f}"
     )
 
     return fig, ax

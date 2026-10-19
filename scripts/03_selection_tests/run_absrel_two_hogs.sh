@@ -2,8 +2,8 @@
 
 # Runs aBSREL for two specific HOGs as a SLURM array job.
 
-#SBATCH --job-name=absrel_two_hogs
-#SBATCH --partition=parallel
+#SBATCH --job-name=261019_absrel_two_hogs
+#SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
@@ -12,7 +12,6 @@
 #SBATCH --chdir=/scratch4/agordus1/crunnel2
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
-#SBATCH --mem=12G
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 

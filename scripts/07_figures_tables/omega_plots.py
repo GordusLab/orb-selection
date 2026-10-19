@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import patheffects as pe
 from matplotlib import pyplot as plt
 from matplotlib import ticker
+from matplotlib.patches import Rectangle
 
 OMEGA_COLORS = ('salmon', 'steelblue', 'goldenrod')
 OMEGA_STROKE_COLORS = ('darkred', 'darkblue', 'brown')
@@ -43,6 +44,48 @@ def _visible_proportion(proportion, ax=None):
         dpi = min(ax.get_figure().dpi, SAVEFIG_DPI)
         height = min(height, ymax - _min_top_gap(ax, dpi))
     return height
+
+
+def _hatched_bar_bounds(ax, x_data, linewidth):
+    """Data-unit (left, right) bounds of a vlines bar of the given linewidth (pts).
+
+    `ax.vlines` bars are fixed-width in points regardless of the x-axis scale;
+    replicating that width for a Rectangle patch means converting through
+    pixels at the bar's actual location rather than using a flat data-unit width.
+    """
+    dpi = ax.get_figure().dpi
+    half_width_px = linewidth * dpi / 72 / 2
+    x_px, y_px = ax.transData.transform((x_data, 0))
+    x_left = ax.transData.inverted().transform((x_px - half_width_px, y_px))[0]
+    x_right = ax.transData.inverted().transform((x_px + half_width_px, y_px))[0]
+    return x_left, x_right
+
+
+def _plot_combined_zero_bar(ax, height, alpha, zorder, path_effects=None):
+    """Diagonally hatch an ω=0 bar in both ω1 (salmon) and ω2 (steelblue).
+
+    When both rate classes collapse to the same ω=0 position, drawing them as
+    two overlapping solid vlines leaves whichever is drawn second (ω2) fully
+    occluding ω1, even when ω1 has a nonzero site proportion. A two-direction
+    hatch makes both categories visible at once.
+
+    The white halo (`path_effects`) is rendered once, on an invisible vlines
+    at the same position/width -- applying it directly to each hatch
+    Rectangle instead would stroke them independently and let one rectangle's
+    halo paint over the other's hatch lines.
+    """
+    if path_effects:
+        ax.vlines(0, 0, height, linewidth=20, color='none', zorder=zorder - 0.01,
+                   path_effects=path_effects)
+
+    x_left, x_right = _hatched_bar_bounds(ax, 0, linewidth=20)
+    width = x_right - x_left
+    for edgecolor, hatch in (('salmon', '//'), ('steelblue', '\\\\')):
+        ax.add_patch(Rectangle(
+            (x_left, 0), width, height,
+            facecolor='none', edgecolor=edgecolor, hatch=hatch,
+            linewidth=0, alpha=alpha, zorder=zorder,
+        ))
 
 
 def _plot_tiny_proportion_marker(ax, omega, proportion, color, alpha):
@@ -135,6 +178,135 @@ def _add_secondary_ylabel(fig):
     )
 
 
+def _build_split_axes(
+    x,
+    test_group,
+    ref_group,
+    logbins,
+    xlim_min,
+    xlim_max,
+    split_lower_max=None,
+    split_upper_max=None,
+):
+    """Build a 6-row grid with a broken gap in both the test and ref y-axes.
+
+    Each side (test/ref) gets a "near" panel (close to the break, showing the
+    bulk of the ω2/ω3 counts) and a "far" panel (the ω3 tail, which otherwise
+    dwarfs everything else on a linear count axis). Returns the figure, the
+    6 data/spacer axes, and the two full-height overlay axes used for the
+    mean-line twins (ax_avgs/ax_avgs2 in the caller).
+    """
+    # Derive one pair of y-axis intervals from both distributions. Using
+    # separate intervals makes numerically similar breaks look misaligned
+    # because their panels receive different physical heights.
+    maxima = []
+    for group in (test_group, ref_group):
+        for rate_class in (2, 3):
+            counts = np.histogram(x[f'ω{rate_class}_{group}'], bins=logbins)[0]
+            maxima.extend((np.max(counts), np.partition(counts, -2)[-2]))
+
+    ymax = np.max(maxima)
+    lower_max = (
+        np.partition(maxima, -2)[-2]
+        if split_lower_max is None else split_lower_max
+    )
+    if not 0 < lower_max < ymax:
+        raise ValueError(
+            'split_lower_max must be greater than zero and below the upper '
+            f'panel minimum ({ymax:.2f}).'
+        )
+    pad = ymax / 10
+    round_scale = 10 ** np.floor(np.log10(ymax))
+    upper_tick = (
+        np.ceil(ymax / round_scale) * round_scale
+        if split_upper_max is None else split_upper_max
+    )
+    upper_min = ymax - pad
+    upper_span = upper_tick - upper_min
+    upper_interval = (upper_min, upper_tick + 0.2 * upper_span)
+    if upper_interval[1] < ymax:
+        raise ValueError(
+            'split_upper_max and its display padding must include the largest '
+            f'histogram-bin count ({ymax:.2f}).'
+        )
+    lower_interval = (0, lower_max + pad)
+
+    upper_height = upper_interval[1] - upper_interval[0]
+    lower_height = lower_interval[1] - lower_interval[0]
+    upper_ratio = 4 / (1 + lower_height / upper_height)
+    lower_ratio = 4 - upper_ratio
+
+    fig, axs = plt.subplots(
+        6, 1, sharex=True,
+        height_ratios=[upper_ratio, 0.2, lower_ratio, lower_ratio, 0.2, upper_ratio],
+        figsize=(6, 5),
+    )
+
+    plt.subplots_adjust(hspace=0)
+    plt.xlim(xlim_min, xlim_max)
+    plt.xscale('log')
+    plt.rcParams['font.family'] = 'Verdana'
+
+    axs[1].set_axis_off()
+    axs[4].set_axis_off()
+
+    axs[0].set_ylim(*upper_interval)
+    axs[2].set_ylim(*lower_interval)
+    axs[3].set_ylim(*lower_interval)
+    axs[3].invert_yaxis()
+    axs[5].set_ylim(*upper_interval)
+    axs[5].invert_yaxis()
+
+    intervals = []
+    for ax in (axs[0], axs[2]):
+        _plot_distributions(ax, x, test_group, logbins)
+        locator = ticker.AutoLocator()
+        ax.yaxis.set_major_locator(locator)
+        intervals.append(locator()[1] - locator()[0])
+
+    for ax in (axs[3], axs[5]):
+        _plot_distributions(ax, x, ref_group, logbins, labels=True)
+        locator = ticker.AutoLocator()
+        ax.yaxis.set_major_locator(locator)
+        intervals.append(locator()[1] - locator()[0])
+
+    tick_step = 100 if any(i >= 100 for i in intervals) else np.max(intervals)
+    for j in (2, 3, 5):
+        axs[j].yaxis.set_major_locator(ticker.MultipleLocator(tick_step))
+    # Each upper panel is intentionally a single round-number outlier tick.
+    for j in (0, 5):
+        axs[j].yaxis.set_major_locator(ticker.FixedLocator([upper_tick]))
+
+    axs[0].spines.bottom.set_visible(False)
+    axs[2].spines.top.set_visible(False)
+    axs[3].spines.bottom.set_visible(False)
+    axs[5].spines.top.set_visible(False)
+
+    # Overlay axes spanning each half of the grid, for the mean-line twins.
+    gs = axs[0].get_gridspec()
+    top_overlay = fig.add_subplot(gs[:3], sharex=axs[5])
+    bottom_overlay = fig.add_subplot(gs[3:], sharex=axs[5])
+    top_overlay.set_facecolor('none')
+    top_overlay.set_axis_off()
+    bottom_overlay.set_facecolor('none')
+    bottom_overlay.set_axis_off()
+
+    axs[0].tick_params(bottom=False, which='both')
+    axs[3].tick_params(bottom=False, which='both')
+
+    # Diagonal break markers at the right side of each gap.
+    d = 0.1
+    marker_kwargs = dict(
+        marker=[(-1, -d), (1, d)], markersize=8, linestyle='none',
+        color='k', mec='dimgrey', mew=1, clip_on=False,
+    )
+    for ax, y in ((axs[0], 0), (axs[2], 1), (axs[3], 0), (axs[5], 1)):
+        ax.plot((None, 1), (y, y), transform=ax.transAxes, **marker_kwargs)
+
+    hist_axes = [axs[0], axs[2], axs[3], axs[5]]
+    return fig, axs, hist_axes, top_overlay, bottom_overlay
+
+
 def plot_omega_distributions(
     x,
     result,
@@ -143,55 +315,113 @@ def plot_omega_distributions(
     numeral="",
     suptitle=None,
     filename=None,
-    xlim_max=100000,
-    xlim_min=0.001,
+    xlim_max=None,
+    xlim_min=None,
     shift_top_title=False,
     transparent=True,
     groups=('test', 'ref'),
+    split_axis=False,
+    partitioned_desc=False,
+    split_lower_max=None,
+    split_upper_max=None,
 ):
     """Plot ω distributions and mean site proportions for test and reference.
 
     `groups` names the test/reference column suffixes to plot, e.g. the default
     ('test', 'ref') for the RELAX/BUSTED-PH alternative model, or
     ('test_pd', 'ref_pd') for the RELAX partitioned descriptive model.
+    `partitioned_desc=True` is shorthand for `groups=('test_pd', 'ref_pd')` and
+    takes precedence over `groups` if both are given.
+
+    `split_axis` breaks each side's y-axis into a near/far pair of panels
+    (with a diagonal-marked gap) so a handful of outlier ω3 counts don't
+    flatten the rest of the distribution. Use it when the ω2/ω3 counts span
+    a wide enough range that a single linear y-axis can't show both.
+    `split_lower_max` optionally sets the maximum y-value displayed below the
+    break for both mirrored distributions; otherwise it is inferred.
+    `split_upper_max` optionally sets the single, round-number tick and maximum
+    y-value shown above the break for both mirrored distributions.
+
+    `xlim_min`/`xlim_max` default to the 0.1st/99.9th percentile of the
+    plotted ω2/ω3 values, rounded outward to the nearest power of 10, rather
+    than a fixed range or the true min/max -- RELAX in particular can fit a
+    rate class to a vanishing proportion of sites with an essentially
+    unconstrained ω estimate, producing underflow values (e.g. ~1e-98) that
+    are numerically real but not a meaningful plot boundary; a fixed default
+    would either clip real data or blow out the axis depending on the dataset,
+    and true min/max stretches the whole axis to fit a single such outlier.
     """
+    if partitioned_desc:
+        groups = ('test_pd', 'ref_pd')
     test_group, ref_group = groups
+
+    omega23 = np.concatenate([
+        x[f'ω{index}_{group}'].values
+        for index in (2, 3) for group in groups
+    ])
+    omega23 = omega23[omega23 > 0]
+    if xlim_min is None:
+        xlim_min = (
+            10 ** np.floor(np.log10(np.percentile(omega23, 0.1)))
+            if omega23.size else 0.001
+        )
+    if xlim_max is None:
+        xlim_max = (
+            10 ** np.ceil(np.log10(np.percentile(omega23, 99.9)))
+            if omega23.size else 100000
+        )
+
     logbins = np.geomspace(xlim_min, xlim_max, 100)
 
-    y_limits = []
+    if split_axis:
+        fig, axs, hist_axes, top_overlay, bottom_overlay = _build_split_axes(
+            x, test_group, ref_group, logbins, xlim_min, xlim_max,
+            split_lower_max=split_lower_max,
+            split_upper_max=split_upper_max,
+        )
+        bottom_tick_axis = axs[5]
 
-    for group in groups:
-        ω3_counts = np.histogram(x[f'ω3_{group}'], bins=logbins)[0]
-        ω2_counts = np.histogram(x[f'ω2_{group}'], bins=logbins)[0]
+        ax_avgs = top_overlay.twinx()
+        ax_avgs2 = bottom_overlay.twinx()
+    else:
+        y_limits = []
 
-        ymax = np.max([np.max(ω3_counts), np.max(ω2_counts)])
-        pad = ymax / 10
+        for group in groups:
+            ω3_counts = np.histogram(x[f'ω3_{group}'], bins=logbins)[0]
+            ω2_counts = np.histogram(x[f'ω2_{group}'], bins=logbins)[0]
 
-        y_limits.append(ymax + 0.75 * pad)
+            ymax = np.max([np.max(ω3_counts), np.max(ω2_counts)])
+            pad = ymax / 10
 
-    fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6, 5))
+            y_limits.append(ymax + 0.75 * pad)
 
-    plt.subplots_adjust(hspace=0)
-    plt.xlim(xlim_min, xlim_max)
-    plt.xscale('log')
-    plt.rcParams['font.family'] = 'Verdana'
+        fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6, 5))
 
-    # Match histogram scales so the mirrored distributions remain comparable.
-    axs[0].set_ylim(0, np.max(y_limits))
-    axs[1].set_ylim(0, np.max(y_limits))
-    axs[1].invert_yaxis()
+        plt.subplots_adjust(hspace=0)
+        plt.xlim(xlim_min, xlim_max)
+        plt.xscale('log')
+        plt.rcParams['font.family'] = 'Verdana'
 
-    _plot_distributions(axs[0], x, test_group, logbins)
-    _plot_distributions(axs[1], x, ref_group, logbins, labels=True)
+        # Match histogram scales so the mirrored distributions remain comparable.
+        axs[0].set_ylim(0, np.max(y_limits))
+        axs[1].set_ylim(0, np.max(y_limits))
+        axs[1].invert_yaxis()
 
-    ax_avgs = axs[0].twinx()
+        _plot_distributions(axs[0], x, test_group, logbins)
+        _plot_distributions(axs[1], x, ref_group, logbins, labels=True)
+
+        hist_axes = axs
+        bottom_tick_axis = axs[1]
+
+        ax_avgs = axs[0].twinx()
+        ax_avgs2 = axs[1].twinx()
+
     ax_avgs.set_facecolor('none')
     _plot_mean_lines(
         ax_avgs, x, test_group, stroke_width=7.5 if result == 'busted' else 7
     )
     ax_avgs.spines.right.set_visible(False)
 
-    ax_avgs2 = axs[1].twinx()
     ax_avgs2.set_facecolor('none')
     ax_avgs2.invert_yaxis()
     _plot_mean_lines(
@@ -216,13 +446,12 @@ def plot_omega_distributions(
             weight='bold', backgroundcolor='lightgray',
         )
     elif result != 'busted':
-        bottom_title_x = 0.185 if result in ('relaxed', 'intensified') else 0.2
         ax_avgs.set_title(
-            top_title, x=0.75, y=0.7, fontsize=13, color='white',
+            top_title, x=0.25, y=0.7, fontsize=13, color='white',
             weight='bold', backgroundcolor='lightgray',
         )
         ax_avgs2.set_title(
-            bottom_title, x=bottom_title_x, y=0.05, fontsize=13, alpha=0.8,
+            bottom_title, x=0.25, y=0.05, fontsize=13, alpha=0.8,
             color='silver', weight='bold', backgroundcolor='white',
         )
 
@@ -264,13 +493,13 @@ def plot_omega_distributions(
     for ax in [ax_avgs, ax_avgs2]:
         _style_mean_axis(ax)
 
-    for axis in axs:
+    for axis in hist_axes:
         axis.yaxis.set_label_position('right')
         axis.yaxis.tick_right()
         for tick in axis.get_yticklabels():
             tick.set_fontsize(14)
 
-    for tick in axs[1].get_xticklabels():
+    for tick in bottom_tick_axis.get_xticklabels():
         tick.set_fontsize(14)
 
     fig.supylabel('mean proportion of sites', x=0.01, weight='bold', fontsize=16)
@@ -547,8 +776,9 @@ def plot_omega_single_gene(
             )
         else:
             plt.text(
-                0.65, 0.9,
+                0.7, 0.85,
                 f'$\\it{{p_1}}$={x["test_pval"]:.2e}\n'
+                f'$\\it{{p_2}}$={x["background_pval"]}\n'
                 f'$\\it{{p_3}}$={x["shared_pval"]:.2e}',
                 fontsize=13, ha='left', va='center', transform=ax.transAxes,
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),

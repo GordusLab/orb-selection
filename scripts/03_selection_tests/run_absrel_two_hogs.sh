@@ -2,18 +2,20 @@
 
 # Runs aBSREL for two specific HOGs as a SLURM array job.
 
-#SBATCH --job-name=261019_absrel_two_hogs
-#SBATCH --partition=shared
+#SBATCH --job-name=261019_absrel_non_orb
+#SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=24:00:00
 #SBATCH --mail-user=crunnel2@jhu.edu
 #SBATCH --mail-type=NONE
-#SBATCH --array=1-2
+#SBATCH --array=1-21
 #SBATCH --chdir=/scratch4/agordus1/crunnel2
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
+
+mkdir -p /scratch4/agordus1/crunnel2/reports/261019_absrel_non_orb
 
 set -e
 
@@ -21,9 +23,9 @@ module load anaconda
 conda activate /home/crunnel2/anaconda3/envs/hyphy-new
 
 WD="/scratch4/agordus1/crunnel2/hyphy_wd_260929"
-HOGS=("N5.HOG0052434" "N5.HOG0068277")
+HOG_LIST="/scratch4/agordus1/crunnel2/nonorb_fg.txt"
 
-HOG="${HOGS[$((SLURM_ARRAY_TASK_ID - 1))]}"
+HOG=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$HOG_LIST")
 
 echo "Running aBSREL for $HOG (task $SLURM_ARRAY_TASK_ID)..."
 

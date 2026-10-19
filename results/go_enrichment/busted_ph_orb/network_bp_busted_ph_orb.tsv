@@ -1,4 +1,4 @@
 GO.ID	Description	p.Val
-GO:0008285	negative regulation of cell population proliferation	0.0079
-GO:0006470	protein dephosphorylation	0.0363
-GO:0045930	negative regulation of mitotic cell cycle	0.0467
+GO:0045454	cell redox homeostasis	0.0043
+GO:0034599	cellular response to oxidative stress	0.0050
+GO:0006749	glutathione metabolic process	0.0085

@@ -1,23 +1,15 @@
 Description	Count	p	Ontology
-cell differentiation	17	0.00026	bp
-innate immune response	5	0.00569	bp
-regulation of gene expression	51	0.01045	bp
-signal transduction	53	0.01687	bp
-regulation of apoptotic process	5	0.01811	bp
-microtubule-based movement	6	0.01922	bp
-peptidyl-serine phosphorylation	4	0.02434	bp
-protein phosphorylation	16	0.03473	bp
-developmental process	30	0.03831	bp
-extrinsic apoptotic signaling pathway in absence of ligand	3	0.04303	bp
-central nervous system development	3	0.04309	bp
-extrinsic component of cytoplasmic side of plasma membrane	3	0.0084	cc
-synapse	9	0.0086	cc
-axon	5	0.0089	cc
-plasma membrane	31	0.0209	cc
-cell surface	5	0.0300	cc
-translation regulator activity	4	0.003	mf
-molecular adaptor activity	19	0.018	mf
-zinc ion binding	18	0.031	mf
-mRNA 3'-UTR binding	3	0.031	mf
-transcription coactivator activity	5	0.040	mf
-protein homodimerization activity	3	0.044	mf
+innate immune response	6	0.00184	bp
+carbohydrate metabolic process	12	0.01320	bp
+canonical NF-kappaB signal transduction	4	0.01345	bp
+regulation of RNA splicing	4	0.01348	bp
+SCF-dependent proteasomal ubiquitin-dependent protein catabolic process	5	0.02427	bp
+regulation of DNA-templated transcription	46	0.03402	bp
+synapse	11	0.0058	cc
+plasma membrane	35	0.0270	cc
+membrane	115	0.0462	cc
+growth factor activity	6	0.0018	mf
+translation regulator activity	5	0.0020	mf
+DNA-binding transcription factor activity	22	0.0112	mf
+peptide binding	5	0.0158	mf
+GTPase activator activity	6	0.0496	mf

@@ -1,5 +1,6 @@
 GO.ID	Description	p.Val
-GO:0070652	HAUS complex	0.030
-GO:0030015	CCR4-NOT core complex	0.030
-GO:0035102	PRC1 complex	0.030
-GO:0051233	spindle midzone	0.030
+GO:0005634	nucleus	0.00011
+GO:0000407	phagophore assembly site	0.00477
+GO:0051233	spindle midzone	0.01502
+GO:0010494	cytoplasmic stress granule	0.02239
+GO:0005778	peroxisomal membrane	0.03470

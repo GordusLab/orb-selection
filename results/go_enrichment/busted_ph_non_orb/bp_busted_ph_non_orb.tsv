@@ -1,101 +1,101 @@
 GO.ID	Term	Annotated	Significant	Expected	P_value
-1	GO:0090630	activation of GTPase activity	8	3	0.4	0.0057
-2	GO:0006370	7-methylguanosine mRNA capping	3	2	0.15	0.0072
-3	GO:0031398	positive regulation of protein ubiquitination	4	2	0.2	0.0140
-4	GO:0006020	inositol metabolic process	2	2	0.1	0.0497
-5	GO:0030330	DNA damage response, signal transduction by p53 class mediator	3	2	0.15	0.0497
-6	GO:0010142	farnesyl diphosphate biosynthetic process, mevalonate pathway	1	1	0.05	0.0500
-7	GO:0046426	negative regulation of receptor signaling pathway via JAK-STAT	1	1	0.05	0.0500
-8	GO:0042276	error-prone translesion synthesis	1	1	0.05	0.0500
-9	GO:0006685	sphingomyelin catabolic process	1	1	0.05	0.0500
-10	GO:0033148	positive regulation of intracellular estrogen receptor signaling pathway	1	1	0.05	0.0500
-11	GO:0070373	negative regulation of ERK1 and ERK2 cascade	1	1	0.05	0.0500
-12	GO:0006021	inositol biosynthetic process	1	1	0.05	0.0500
-13	GO:0015793	glycerol transmembrane transport	1	1	0.05	0.0500
-14	GO:0036498	IRE1-mediated unfolded protein response	1	1	0.05	0.0500
-15	GO:0097345	mitochondrial outer membrane permeabilization	1	1	0.05	0.0500
-16	GO:0019878	L-lysine biosynthetic process via aminoadipic acid	1	1	0.05	0.0500
-17	GO:0018343	protein farnesylation	1	1	0.05	0.0500
-18	GO:0033209	tumor necrosis factor-mediated signaling pathway	1	1	0.05	0.0500
-19	GO:0043252	sodium-independent organic anion transport	1	1	0.05	0.0500
-20	GO:0006798	polyphosphate catabolic process	1	1	0.05	0.0500
-21	GO:0000301	retrograde transport, vesicle recycling within Golgi	1	1	0.05	0.0500
-22	GO:0043065	positive regulation of apoptotic process	8	2	0.4	0.0571
-23	GO:0031124	mRNA 3'-end processing	10	2	0.5	0.0860
-24	GO:0007091	metaphase/anaphase transition of mitotic cell cycle	11	2	0.55	0.0972
-25	GO:0008283	cell population proliferation	20	2	1	0.0975
-26	GO:0043516	regulation of DNA damage response, signal transduction by p53 class mediator	2	1	0.1	0.0976
-27	GO:0070979	protein K11-linked ubiquitination	2	1	0.1	0.0976
-28	GO:0006657	CDP-choline pathway	2	1	0.1	0.0976
-29	GO:0120009	intermembrane lipid transfer	2	1	0.1	0.0976
-30	GO:1902808	positive regulation of cell cycle G1/S phase transition	2	1	0.1	0.0976
-31	GO:0051231	spindle elongation	2	1	0.1	0.0976
-32	GO:0005979	regulation of glycogen biosynthetic process	2	1	0.1	0.0976
-33	GO:0030155	regulation of cell adhesion	2	1	0.1	0.0976
-34	GO:0032924	activin receptor signaling pathway	2	1	0.1	0.0976
-35	GO:0007254	JNK cascade	2	1	0.1	0.0976
-36	GO:0006833	water transport	2	1	0.1	0.0976
-37	GO:0009253	peptidoglycan catabolic process	2	1	0.1	0.0976
-38	GO:0006015	5-phosphoribose 1-diphosphate biosynthetic process	2	1	0.1	0.0976
-39	GO:0045943	positive regulation of transcription by RNA polymerase I	2	1	0.1	0.0976
-40	GO:0000012	single strand break repair	2	1	0.1	0.0976
-41	GO:0061668	mitochondrial ribosome assembly	2	1	0.1	0.0976
-42	GO:1904263	positive regulation of TORC1 signaling	2	1	0.1	0.0976
-43	GO:0098719	sodium ion import across plasma membrane	2	1	0.1	0.0976
-44	GO:0034614	cellular response to reactive oxygen species	2	1	0.1	0.0976
-45	GO:0034198	cellular response to amino acid starvation	2	1	0.1	0.0976
-46	GO:0006468	protein phosphorylation	110	8	5.5	0.0990
-47	GO:0006511	ubiquitin-dependent protein catabolic process	98	9	4.9	0.1230
-48	GO:0051225	spindle assembly	13	2	0.65	0.1353
-49	GO:0016266	protein O-linked glycosylation via N-acetyl-galactosamine	3	1	0.15	0.1428
-50	GO:0045494	photoreceptor cell maintenance	3	1	0.15	0.1428
-51	GO:0008053	mitochondrial fusion	3	1	0.15	0.1428
-52	GO:0070125	mitochondrial translational elongation	3	1	0.15	0.1428
-53	GO:0035735	intraciliary transport involved in cilium assembly	3	1	0.15	0.1428
-54	GO:0030162	regulation of proteolysis	3	1	0.15	0.1428
-55	GO:0018095	protein polyglutamylation	3	1	0.15	0.1428
-56	GO:0006084	acetyl-CoA metabolic process	3	1	0.15	0.1428
-57	GO:0006384	transcription initiation at RNA polymerase III promoter	3	1	0.15	0.1428
-58	GO:0010507	negative regulation of autophagy	3	1	0.15	0.1428
-59	GO:0035335	peptidyl-tyrosine dephosphorylation	3	1	0.15	0.1428
-60	GO:0034501	protein localization to kinetochore	3	1	0.15	0.1428
-61	GO:1904294	positive regulation of ERAD pathway	3	1	0.15	0.1428
-62	GO:0090090	negative regulation of canonical Wnt signaling pathway	3	1	0.15	0.1428
-63	GO:0016139	glycoside catabolic process	3	1	0.15	0.1428
-64	GO:0015936	coenzyme A metabolic process	3	1	0.15	0.1428
-65	GO:0006488	dolichol-linked oligosaccharide biosynthetic process	3	1	0.15	0.1428
-66	GO:0006397	mRNA processing	104	10	5.2	0.1466
-67	GO:0007052	mitotic spindle organization	14	2	0.7	0.1529
-68	GO:0035556	intracellular signal transduction	172	17	8.61	0.1823
-69	GO:0043409	negative regulation of MAPK cascade	5	2	0.25	0.1846
-70	GO:0006164	purine nucleotide biosynthetic process	19	2	0.95	0.1854
-71	GO:0070988	demethylation	4	1	0.2	0.1857
-72	GO:0042593	glucose homeostasis	4	1	0.2	0.1857
-73	GO:0009887	animal organ morphogenesis	4	1	0.2	0.1857
-74	GO:0007020	microtubule nucleation	4	1	0.2	0.1857
-75	GO:0035023	regulation of Rho protein signal transduction	4	1	0.2	0.1857
-76	GO:0006376	mRNA splice site recognition	4	1	0.2	0.1857
-77	GO:0006303	double-strand break repair via nonhomologous end joining	4	1	0.2	0.1857
-78	GO:0018344	protein geranylgeranylation	4	1	0.2	0.1857
-79	GO:0007507	heart development	4	1	0.2	0.1857
-80	GO:0061709	reticulophagy	4	1	0.2	0.1857
-81	GO:0000462	maturation of SSU-rRNA from tricistronic rRNA transcript (SSU-rRNA, 5.8S rRNA, LSU-rRNA)	16	2	0.8	0.1892
-82	GO:0045087	innate immune response	16	2	0.8	0.1892
-83	GO:0043547	positive regulation of GTPase activity	13	4	0.65	0.2228
-84	GO:0008202	steroid metabolic process	13	2	0.65	0.2256
-85	GO:0002098	tRNA wobble uridine modification	5	1	0.25	0.2265
-86	GO:0016925	protein sumoylation	5	1	0.25	0.2265
-87	GO:0016126	sterol biosynthetic process	5	1	0.25	0.2265
-88	GO:0000338	protein deneddylation	5	1	0.25	0.2265
-89	GO:0007264	small GTPase-mediated signal transduction	38	4	1.9	0.2427
-90	GO:0008299	isoprenoid biosynthetic process	8	2	0.4	0.2638
-91	GO:0010506	regulation of autophagy	9	2	0.45	0.2639
-92	GO:0006633	fatty acid biosynthetic process	15	2	0.75	0.2644
-93	GO:0034975	protein folding in endoplasmic reticulum	6	1	0.3	0.2653
-94	GO:0007099	centriole replication	6	1	0.3	0.2653
-95	GO:0008284	positive regulation of cell population proliferation	6	1	0.3	0.2653
-96	GO:0006904	vesicle docking involved in exocytosis	6	1	0.3	0.2653
-97	GO:0008543	fibroblast growth factor receptor signaling pathway	6	1	0.3	0.2653
-98	GO:0009311	oligosaccharide metabolic process	6	1	0.3	0.2653
-99	GO:0051453	regulation of intracellular pH	6	1	0.3	0.2653
-100	GO:0030010	establishment of cell polarity	6	1	0.3	0.2653
+1	GO:0007026	negative regulation of microtubule depolymerization	1	1	0	0.0027
+2	GO:2000766	negative regulation of cytoplasmic translation	1	1	0	0.0027
+3	GO:0042407	cristae formation	3	1	0.01	0.0081
+4	GO:0090090	negative regulation of canonical Wnt signaling pathway	4	1	0.01	0.0108
+5	GO:0006303	double-strand break repair via nonhomologous end joining	4	1	0.01	0.0108
+6	GO:0001708	cell fate specification	4	1	0.01	0.0108
+7	GO:0007389	pattern specification process	7	1	0.02	0.0188
+8	GO:0045595	regulation of cell differentiation	12	1	0.03	0.0321
+9	GO:0045732	positive regulation of protein catabolic process	15	1	0.04	0.0400
+10	GO:0016477	cell migration	25	1	0.07	0.0659
+11	GO:0000122	negative regulation of transcription by RNA polymerase II	33	1	0.09	0.0861
+12	GO:0007399	nervous system development	53	1	0.14	0.1351
+13	GO:0006355	regulation of DNA-templated transcription	311	2	0.84	0.1761
+14	GO:0006468	protein phosphorylation	112	1	0.3	0.2665
+15	GO:0007165	signal transduction	332	2	0.9	0.3676
+16	GO:0017148	negative regulation of translation	10	1	0.03	1.0000
+17	GO:0051493	regulation of cytoskeleton organization	27	1	0.07	1.0000
+18	GO:0051494	negative regulation of cytoskeleton organization	7	1	0.02	1.0000
+19	GO:0007275	multicellular organism development	78	1	0.21	1.0000
+20	GO:0141187	nucleic acid biosynthetic process	638	2	1.73	1.0000
+21	GO:0043170	macromolecule metabolic process	1506	6	4.08	1.0000
+22	GO:0030111	regulation of Wnt signaling pathway	9	1	0.02	1.0000
+23	GO:0006139	nucleobase-containing compound metabolic process	873	3	2.37	1.0000
+24	GO:0032886	regulation of microtubule-based process	9	1	0.02	1.0000
+25	GO:0044238	primary metabolic process	1736	6	4.71	1.0000
+26	GO:0048870	cell motility	27	1	0.07	1.0000
+27	GO:0060070	canonical Wnt signaling pathway	14	1	0.04	1.0000
+28	GO:0031110	regulation of microtubule polymerization or depolymerization	4	1	0.01	1.0000
+29	GO:0010604	positive regulation of macromolecule metabolic process	131	1	0.36	1.0000
+30	GO:0031111	negative regulation of microtubule polymerization or depolymerization	1	1	0	1.0000
+31	GO:0010605	negative regulation of macromolecule metabolic process	133	2	0.36	1.0000
+32	GO:0010556	regulation of macromolecule biosynthetic process	433	3	1.17	1.0000
+33	GO:0031114	regulation of microtubule depolymerization	1	1	0	1.0000
+34	GO:0010608	post-transcriptional regulation of gene expression	54	1	0.15	1.0000
+35	GO:0023051	regulation of signaling	118	1	0.32	1.0000
+36	GO:0048522	positive regulation of cellular process	211	1	0.57	1.0000
+37	GO:0023052	signaling	361	2	0.98	1.0000
+38	GO:0010558	negative regulation of macromolecule biosynthetic process	121	2	0.33	1.0000
+39	GO:0006996	organelle organization	407	2	1.1	1.0000
+40	GO:0048523	negative regulation of cellular process	221	3	0.6	1.0000
+41	GO:0051261	protein depolymerization	5	1	0.01	1.0000
+42	GO:0023057	negative regulation of signaling	32	1	0.09	1.0000
+43	GO:0019222	regulation of metabolic process	525	4	1.42	1.0000
+44	GO:0016055	Wnt signaling pathway	18	1	0.05	1.0000
+45	GO:0070507	regulation of microtubule cytoskeleton organization	7	1	0.02	1.0000
+46	GO:0006259	DNA metabolic process	113	1	0.31	1.0000
+47	GO:1902679	negative regulation of RNA biosynthetic process	55	1	0.15	1.0000
+48	GO:0000226	microtubule cytoskeleton organization	65	1	0.18	1.0000
+49	GO:0032774	RNA biosynthetic process	634	2	1.72	1.0000
+50	GO:0061024	membrane organization	75	1	0.2	1.0000
+51	GO:0051252	regulation of RNA metabolic process	345	2	0.94	1.0000
+52	GO:0051253	negative regulation of RNA metabolic process	57	1	0.15	1.0000
+53	GO:0048518	positive regulation of biological process	216	1	0.59	1.0000
+54	GO:0036211	protein modification process	347	1	0.94	1.0000
+55	GO:0048519	negative regulation of biological process	223	3	0.6	1.0000
+56	GO:0090304	nucleic acid metabolic process	795	3	2.16	1.0000
+57	GO:0006281	DNA repair	75	1	0.2	1.0000
+58	GO:0050789	regulation of biological process	932	5	2.53	1.0000
+59	GO:0045165	cell fate commitment	8	1	0.02	1.0000
+60	GO:0019538	protein metabolic process	723	3	1.96	1.0000
+61	GO:0043242	negative regulation of protein-containing complex disassembly	5	1	0.01	1.0000
+62	GO:0060255	regulation of macromolecule metabolic process	498	4	1.35	1.0000
+63	GO:0043244	regulation of protein-containing complex disassembly	7	1	0.02	1.0000
+64	GO:0009889	regulation of biosynthetic process	439	3	1.19	1.0000
+65	GO:0019219	regulation of nucleobase-containing compound metabolic process	359	2	0.97	1.0000
+66	GO:0006366	transcription by RNA polymerase II	253	1	0.69	1.0000
+67	GO:0043412	macromolecule modification	399	1	1.08	1.0000
+68	GO:0007005	mitochondrion organization	58	1	0.16	1.0000
+69	GO:0010629	negative regulation of gene expression	69	1	0.19	1.0000
+70	GO:0008150	biological_process	2951	8	8	1.0000
+71	GO:0007006	mitochondrial membrane organization	9	1	0.02	1.0000
+72	GO:0033554	cellular response to stress	153	1	0.41	1.0000
+73	GO:0016310	phosphorylation	120	1	0.33	1.0000
+74	GO:0007007	inner mitochondrial membrane organization	9	1	0.02	1.0000
+75	GO:0008152	metabolic process	1922	6	5.21	1.0000
+76	GO:0016070	RNA metabolic process	692	2	1.88	1.0000
+77	GO:0045934	negative regulation of nucleobase-containing compound metabolic process	62	1	0.17	1.0000
+78	GO:0010467	gene expression	944	3	2.56	1.0000
+79	GO:0010468	regulation of gene expression	429	3	1.16	1.0000
+80	GO:0006351	DNA-templated transcription	363	2	0.98	1.0000
+81	GO:0030163	protein catabolic process	124	1	0.34	1.0000
+82	GO:0006357	regulation of transcription by RNA polymerase II	217	1	0.59	1.0000
+83	GO:0080090	regulation of primary metabolic process	455	4	1.23	1.0000
+84	GO:0042176	regulation of protein catabolic process	19	1	0.05	1.0000
+85	GO:0006302	double-strand break repair	39	1	0.11	1.0000
+86	GO:0060828	regulation of canonical Wnt signaling pathway	7	1	0.02	1.0000
+87	GO:0006950	response to stress	193	1	0.52	1.0000
+88	GO:0032984	protein-containing complex disassembly	18	1	0.05	1.0000
+89	GO:0030154	cell differentiation	92	1	0.25	1.0000
+90	GO:0050896	response to stimulus	497	3	1.35	1.0000
+91	GO:0010646	regulation of cell communication	118	1	0.32	1.0000
+92	GO:0010648	negative regulation of cell communication	32	1	0.09	1.0000
+93	GO:0006793	phosphorus metabolic process	293	1	0.79	1.0000
+94	GO:0009966	regulation of signal transduction	99	1	0.27	1.0000
+95	GO:0048731	system development	60	1	0.16	1.0000
+96	GO:0006796	phosphate-containing compound metabolic process	292	1	0.79	1.0000
+97	GO:0009968	negative regulation of signal transduction	32	1	0.09	1.0000
+98	GO:0002181	cytoplasmic translation	22	1	0.06	1.0000
+99	GO:0022411	cellular component disassembly	24	1	0.07	1.0000
+100	GO:0045892	negative regulation of DNA-templated transcription	55	1	0.15	1.0000

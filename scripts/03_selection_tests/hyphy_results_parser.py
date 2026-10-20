@@ -104,8 +104,19 @@ class HyphyResult(ABC):
     @classmethod
     def load_from_pickle(cls, filepath: str) -> 'HyphyResult':
         """Load results object from a pickle file."""
-        with open(filepath, 'rb') as f:
-            return pickle.load(f)
+        try:
+            with open(filepath, 'rb') as f:
+                return pickle.load(f)
+        except (NotImplementedError, TypeError) as e:
+            raise RuntimeError(
+                f"Failed to load pickle file {filepath}. This may be due to "
+                f"incompatibility between the pandas version used to create the pickle "
+                f"and the current environment.\n\n"
+                f"To fix this, run:\n"
+                f"  cd {Path(filepath).parent}\n"
+                f"  python rebuild_pickle_cache.py\n\n"
+                f"Original error: {type(e).__name__}: {e}"
+            ) from e
     
     def to_csv(self, filepath: str, **kwargs) -> None:
         """Save results DataFrame to CSV."""
@@ -216,6 +227,8 @@ class RelaxResult(HyphyResult):
         df = self.classify_selection_type()
         
         counts = {
+            'total relaxed': len(df[df['result'] == 'relaxed']),
+            'total intensified': len(df[df['result'] == 'intensified']),
             'relaxation_of_positive': len(df[
                 (df['result'] == 'relaxed') & 
                 (df['ω_mean_test'] < df['ω_mean_ref'])

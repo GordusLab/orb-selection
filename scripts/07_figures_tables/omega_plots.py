@@ -541,12 +541,15 @@ def plot_omega_single_gene(
     zorder_3test=1,
     axis_fontsize=14,
     groups=('test', 'ref'),
+    show_subticks=True,
 ):
     """Plot inferred ω values and site proportions for one gene.
 
     `groups` names the test/reference column suffixes to plot, e.g. the default
     ('test', 'ref') for the RELAX/BUSTED-PH alternative model, or
     ('test_pd', 'ref_pd') for the RELAX partitioned descriptive model.
+    Set `show_subticks=True` to display unlabeled minor ticks at 2–9 within
+    each logarithmic decade.
     """
     test_group, ref_group = groups
 
@@ -713,7 +716,10 @@ def plot_omega_single_gene(
         )
         ax.xaxis.set_major_locator(ticker.FixedLocator(log_ticks))
         ax.xaxis.set_major_formatter(ticker.LogFormatterSciNotation())
-        ax.xaxis.set_minor_locator(ticker.NullLocator())
+        ax.xaxis.set_minor_locator(
+            ticker.LogLocator(base=10, subs=np.arange(2, 10))
+            if show_subticks else ticker.NullLocator()
+        )
     if has_zero:
         positive_omegas = omega_values[omega_values > 0]
         lowest_tick = 10 ** np.ceil(
@@ -728,7 +734,11 @@ def plot_omega_single_gene(
                 lambda value, _: '0' if value == 0 else f'$10^{{{int(np.log10(value))}}}$'
             )
         )
-        ax.xaxis.set_minor_locator(ticker.NullLocator())
+        ax.xaxis.set_minor_locator(
+            ticker.SymmetricalLogLocator(
+                base=10, linthresh=thresh, subs=np.arange(2, 10)
+            ) if show_subticks else ticker.NullLocator()
+        )
         zero_x = ax.transAxes.inverted().transform(
             ax.transData.transform((0, 0))
         )[0]

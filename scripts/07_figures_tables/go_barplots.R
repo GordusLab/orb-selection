@@ -38,6 +38,13 @@ truncate.labels <- function(x, len) {
   }
 }
 
+# Collapse the count range (split[1], split[2]] down to a gap of `gap` units so one
+# large bar doesn't squash the rest
+.split_counts <- function(count, split, gap) {
+  ifelse(count > split[2], count - (split[2] - split[1]) + gap, count)
+}
+
+
 # Function to create bar plots for GO enrichment results
 go.barplot <- function(
   sumfile, 
@@ -53,14 +60,19 @@ go.barplot <- function(
   desc_text_size = 16,
   wrap_desc = NULL, 
   truncate_desc = NULL, 
-  transparent = FALSE
+  transparent = FALSE,
+  exclude = NULL,          # GO term descriptions to drop from the plot
+  split_axis = NULL,       # c(from, to): cut the gene-count axis between these values
+  split_gap = 7,           # width of the break, in gene-count units
+  split_tick_interval = 10
   ) {
   # Load the data
   df <- read.table(
     file = sumfile,
     sep = "\t", quote = "", row.names = NULL, stringsAsFactors = FALSE, header = TRUE
   )
-  print(rev)
+  omitted <- filter(df, Description %in% exclude)
+  df <- filter(df, !Description %in% exclude)
   df <- transform(
     df,
     "Enrichment score" = -log10(p)
@@ -84,6 +96,12 @@ go.barplot <- function(
     hj <- 0
   }
 
+  if (rev && !is.null(split_axis)) {
+    stop("split_axis is not supported with rev = TRUE")
+  }
+
+  df$.display_count <- if (is.null(split_axis)) df$Count else .split_counts(df$Count, split_axis, split_gap)
+
   theme_elements <- list(
     text = element_text(family = "Verdana"),
     axis.text.x = element_text(color = "black", size = axis_text_size),
@@ -91,8 +109,10 @@ go.barplot <- function(
     legend.position = "none",
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
-    panel.border = element_rect(color = "black", fill = NA, size = 1),
-    strip.background = element_rect(color = "black", size = 1, fill = colors[1]),
+    panel.background = element_rect(fill = "white", color = NA),
+    panel.grid = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+    strip.background = element_rect(color = "black", linewidth = 1, fill = colors[1]),
     strip.text = element_text(size = strip_text_size, face = "bold"),
     plot.title = element_text(size = title_size, hjust = hj)
   )
@@ -102,12 +122,12 @@ go.barplot <- function(
   }
 
   p <- ggbarplot(df,
-    x = "Description", y = "Count", fill = "p",
+    x = "Description", y = ".display_count", fill = "p",
     orientation = "horiz", width = 0.8, ylab = "Gene count"
   ) +
     facet_grid(
       rows = vars(Ontology), scales = "free_y",
-      space = "free_y", drop = T, switch = sw
+      space = "free_y", drop = TRUE, switch = sw
     ) +
     scale_fill_gradient(
       high = colors[1],
@@ -119,17 +139,66 @@ go.barplot <- function(
     do.call(theme, theme_elements) +
     scale_x_discrete(position = "top")
 
-  max_count <- suppressWarnings(max(as.numeric(df$Count), na.rm = TRUE))
+  if (!is.null(split_axis)) {
+    # Ticks below the break are labelled as-is; ticks above it are shifted down to
+    # their display position but keep their true count as the label
+    upper_ticks <- seq(
+      0, ceiling(max(df$Count) / split_tick_interval) * split_tick_interval,
+      by = split_tick_interval
+    )
+    upper_ticks <- upper_ticks[upper_ticks > split_axis[2]]
+    tick_labels <- c(seq(0, split_axis[1], by = split_tick_interval), upper_ticks)
+
+    gap_mid <- split_axis[1] + split_gap / 2
+
+    # "//" across the count axis at the bottom edge of the last facet panel
+    slashes <- data.frame(Ontology = tail(sort(unique(df$Ontology)), 1))
+
+    p <- p +
+      # White block through each bar that crosses the break, wider than the bar
+      # so it also covers the outline
+      geom_tile(
+        data = filter(df, Count > split_axis[2]),
+        aes(x = Description, y = gap_mid),
+        inherit.aes = FALSE, fill = "white", width = 0.9, height = split_gap
+      ) +
+      geom_hline(
+        yintercept = gap_mid, color = "grey35",
+        linewidth = 0.6, linetype = "dotted"
+      ) +
+      geom_label(
+        data = slashes,
+        aes(x = -Inf, y = gap_mid, label = "//"),
+        inherit.aes = FALSE, size = 1.25 * axis_text_size / .pt, fontface = "bold",
+        fill = "white", border.colour = NA, label.padding = unit(0.05, "lines")
+      ) +
+      scale_y_continuous(
+        breaks = .split_counts(tick_labels, split_axis, split_gap),
+        labels = tick_labels
+      ) +
+      expand_limits(y = .split_counts(max(tick_labels), split_axis, split_gap)) +
+      coord_flip(clip = "off")
+  }
 
   if (rev) {
-    # if (is.finite(max_count) && max_count <= 10) {
-    #   p <- p + scale_y_reverse(breaks = c(10, 5, 0), limits = c(10, 0)) + scale_x_discrete(position = "bottom")
-    # } else {
-      p <- p + scale_y_reverse() + scale_x_discrete(position = "bottom")
-    }
-  # } else if (is.finite(max_count) && max_count <= 10) {
-  #   p <- p + scale_y_continuous(breaks = c(0, 5, 10), limits = c(0, 10))
-  # }
+    p <- p + scale_y_reverse() + scale_x_discrete(position = "bottom")
+  }
+
+  # Note the excluded terms in the top-right corner of their own ontology's panel
+  if (nrow(omitted) > 0) {
+    omitted_note <- omitted %>%
+      group_by(Ontology) %>%
+      summarise(label = paste0(
+        "Omitted: ", Description, " (", Count, " genes)", collapse = "\n"
+      ))
+    p <- p + geom_label(
+      data = omitted_note,
+      aes(x = Inf, y = Inf, label = label),
+      inherit.aes = FALSE, hjust = 1.05, vjust = 1.3,
+      size = 0.8 * desc_text_size / .pt, family = "Verdana", fontface = "italic",
+      fill = "white"
+    )
+  }
 
   if (!is.null(title)) {
     p <- p + ggtitle(title)
@@ -150,21 +219,26 @@ go.barplot <- function(
 # Hyphy analysis
 go.barplot(
   sumfile = here("results/go_enrichment/relaxed/summary_relaxed.tsv"),
+  title = "RELAX: relaxed selection",
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(25,25),
+  figsize = c(24.5, 24),
   wrap_desc = 35,
   desc_text_size = 16,
   rev = FALSE,
+  exclude = "membrane",
   output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
 )
 
 go.barplot(
   sumfile = here("results/go_enrichment/intensified/summary_intensified.tsv"),
+  title = "RELAX: intensified selection",
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(25,25),
+  figsize = c(24.5, 24),
   wrap_desc = 35,
   desc_text_size = 16,
   rev = FALSE,
+  exclude = "nucleus",
+  split_axis = c(55, 265),
   output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
 )
 
@@ -244,10 +318,7 @@ go.barplot(
   output_filename = here("figures/supplementary/phyloglm_bg_ptep_go_barplot.png"),
   wrap_desc = 35,
   figsize = c(25, 20),
-  title = "PhyloGLM genes, copy number ~ non-orb-weaving",
-  # axis_text_size = 26,
-  # axis_title_size = 30,
-  # strip_text_size = 26
+  title = "PhyloGLM genes, copy number ~ non-orb-weaving"
 )
 
 go.barplot(
@@ -257,8 +328,5 @@ go.barplot(
   output_filename = here("figures/supplementary/phyloglm_fg_udiv_go_barplot.png"),
   wrap_desc = 35,
   figsize = c(25, 20),
-  title = "PhyloGLM genes, copy number ~ orb-weaving",
-  # axis_text_size = 26,
-  # axis_title_size = 30,
-  # strip_text_size = 26
+  title = "PhyloGLM genes, copy number ~ orb-weaving"
 )

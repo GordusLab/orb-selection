@@ -30,7 +30,7 @@ HOG=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$HOG_LIST")
 echo "Running aBSREL for $HOG (task $SLURM_ARRAY_TASK_ID)..."
 
 ALN_FILE="${WD}/${HOG}/${HOG}_NT.trim.dedup.nex"
-NONORB_TREE="${WD}/${HOG}/${HOG}.non_orb_fg.tree"
+NONORB_TREE="${WD}/${HOG}/${HOG}.nonorb_fg.tree"
 ABSREL_OUT="${WD}/${HOG}/${HOG}_ABSREL_non_orb_fg.json"
 
 # Check inputs exist

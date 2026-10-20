@@ -2,7 +2,7 @@
 
 # Runs aBSREL for two specific HOGs as a SLURM array job.
 
-#SBATCH --job-name=261019_absrel_non_orb
+#SBATCH --job-name=261020_absrel_non_orb
 #SBATCH --partition=parallel
 #SBATCH --account=agordus1
 #SBATCH --time=24:00:00
@@ -15,7 +15,7 @@
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 
-mkdir -p /scratch4/agordus1/crunnel2/reports/261019_absrel_non_orb
+mkdir -p /scratch4/agordus1/crunnel2/reports/261020_absrel_non_orb
 
 set -e
 
@@ -30,11 +30,11 @@ HOG=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$HOG_LIST")
 echo "Running aBSREL for $HOG (task $SLURM_ARRAY_TASK_ID)..."
 
 ALN_FILE="${WD}/${HOG}/${HOG}_NT.trim.dedup.nex"
-ORB_TREE="${WD}/${HOG}/${HOG}.orb_fg.tree"
-ABSREL_OUT="${WD}/${HOG}/${HOG}_ABSREL_orb_fg.json"
+NONORB_TREE="${WD}/${HOG}/${HOG}.non_orb_fg.tree"
+ABSREL_OUT="${WD}/${HOG}/${HOG}_ABSREL_non_orb_fg.json"
 
 # Check inputs exist
-for f in "$ALN_FILE" "$ORB_TREE"; do
+for f in "$ALN_FILE" "$NONORB_TREE"; do
 	if [ ! -s "$f" ]; then
 		echo "ERROR: missing or empty input for ${HOG}: $f" >&2
 		exit 1
@@ -48,11 +48,11 @@ else
 	hyphy absrel \
 		"CPU=${SLURM_CPUS_PER_TASK}" \
 		--alignment "$ALN_FILE" \
-		--tree "$ORB_TREE" \
+		--tree "$NONORB_TREE" \
 		--multiple-hits Double+Triple \
 		--srv Yes \
 		--error-sink Yes \
-		--intermediate-fits "${WD}/${HOG}/${HOG}_ABSREL_orb_fg_intermediate.json" \
+		--intermediate-fits "${WD}/${HOG}/${HOG}_ABSREL_non_orb_fg_intermediate.json" \
 		--output "$ABSREL_OUT" \
 		ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 fi

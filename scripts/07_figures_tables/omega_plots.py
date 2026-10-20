@@ -88,8 +88,11 @@ def _plot_combined_zero_bar(ax, height, alpha, zorder, path_effects=None):
         ))
 
 
-def _plot_tiny_proportion_marker(ax, omega, proportion, color, alpha):
-    """Mark bars that were raised to the minimum visible height."""
+def _plot_tiny_proportion_marker(ax, omega, proportion, color, alpha, zorder=10):
+    """Mark bars that were raised to the minimum visible height.
+
+    Pass the bar's own zorder to keep the marker layered with its bar.
+    """
     if 0 < proportion < MIN_VISIBLE_PROPORTION:
         ax.plot(
             omega,
@@ -99,7 +102,7 @@ def _plot_tiny_proportion_marker(ax, omega, proportion, color, alpha):
             markeredgewidth=2,
             color=color,
             alpha=alpha,
-            zorder=10,
+            zorder=zorder,
         )
         print(f"plotting marker: omega={omega}, proportion={proportion}")
 
@@ -542,6 +545,8 @@ def plot_omega_single_gene(
     axis_fontsize=14,
     groups=('test', 'ref'),
     show_subticks=True,
+    bold_group=None,
+    bold_on_top=True,
 ):
     """Plot inferred ω values and site proportions for one gene.
 
@@ -550,6 +555,13 @@ def plot_omega_single_gene(
     ('test_pd', 'ref_pd') for the RELAX partitioned descriptive model.
     Set `show_subticks=True` to display unlabeled minor ticks at 2–9 within
     each logarithmic decade.
+
+    `bold_group` ('test' or 'ref') picks which group is drawn in solid colors
+    on top; the other is drawn faded underneath. Defaults to 'ref' when `k`
+    is set (RELAX: orb-weaver reference) and 'test' otherwise (BUSTED-PH
+    foreground), so orb-weavers are the bold group in both. The `offset_zero_*`
+    shadows always apply to the faded group. Set `bold_on_top=False` to draw
+    the test (foreground) group on top instead, even when it is the faded one.
     """
     test_group, ref_group = groups
 
@@ -591,107 +603,64 @@ def plot_omega_single_gene(
     ax.set_ylim(0, 1)
     plt.rcParams['font.family'] = 'Verdana'
 
-    ref_path_effects_w1_offset = [
-        pe.SimpleLineShadow(offset=(-2, 0), alpha=0.3, foreground='salmon'),
+    if bold_group is None:
+        bold_group = 'ref' if k else 'test'
+    if bold_group not in ('test', 'ref'):
+        raise ValueError("bold_group must be 'test', 'ref', or None")
+    light_group = 'test' if bold_group == 'ref' else 'ref'
+    suffixes = {'test': test_group, 'ref': ref_group}
+    zorders = {
+        'ref': (zorder_1ref, zorder_2ref, zorder_3ref),
+        'test': (zorder_1test, zorder_2test, zorder_3test),
+    }
+    colors = ('salmon', 'steelblue', 'goldenrod')
+
+    # White halo around each bar; the raised copy also covers the top half of
+    # any minimum-height marker on a bar layered underneath.
+    halo = [
+        pe.Stroke(linewidth=22, foreground='white'),
+        pe.Stroke(linewidth=22, foreground='white', offset=(0, 1)),
         pe.Normal(),
     ]
-    ref_path_effects_w2_offset = [
-        pe.SimpleLineShadow(offset=(-2, 0), alpha=0.3, foreground='steelblue'),
-        pe.Normal(),
+    light_path_effects = [*halo, pe.Normal()]
+    light_offset_effects = [
+        [pe.SimpleLineShadow(offset=(-2, 0), alpha=0.3, foreground=color), pe.Normal()]
+        for color in colors[:2]
     ]
-    ref_path_effects = [
-        pe.withStroke(linewidth=22, foreground='white', offset=(-0.5, 1)),
-        pe.Normal(),
+    light_effects = [
+        light_offset_effects[0] if offset_zero_w1 else light_path_effects,
+        light_offset_effects[1] if offset_zero_w2 else light_path_effects,
+        light_path_effects,
     ]
+    bold_effects = [] if build_in else halo
 
-    ax.vlines(
-        x[f'ω1_{ref_group}'],
-        0,
-        _visible_proportion(x[f'ω1_{ref_group}_P'], ax),
-        linewidth=20,
-        color='salmon',
-        alpha=0.17,
-        zorder=zorder_1ref,
-        path_effects=(
-            ref_path_effects if not offset_zero_w1 else ref_path_effects_w1_offset
-        ),
-    )
-    _plot_tiny_proportion_marker(
-        ax, x[f'ω1_{ref_group}'], x[f'ω1_{ref_group}_P'], 'salmon', alpha=0.17
-    )
-    ax.vlines(
-        x[f'ω2_{ref_group}'],
-        0,
-        _visible_proportion(x[f'ω2_{ref_group}_P'], ax),
-        linewidth=20,
-        color='steelblue',
-        alpha=0.17,
-        zorder=zorder_2ref,
-        path_effects=(
-            ref_path_effects if not offset_zero_w2 else ref_path_effects_w2_offset
-        ),
-    )
-    _plot_tiny_proportion_marker(
-        ax, x[f'ω2_{ref_group}'], x[f'ω2_{ref_group}_P'], 'steelblue', alpha=0.17
-    )
-    ax.vlines(
-        x[f'ω3_{ref_group}'],
-        0,
-        _visible_proportion(x[f'ω3_{ref_group}_P'], ax),
-        linewidth=20,
-        color='goldenrod',
-        alpha=0.17,
-        zorder=zorder_3ref,
-        path_effects=ref_path_effects
-    )
-    _plot_tiny_proportion_marker(
-        ax, x[f'ω3_{ref_group}'], x[f'ω3_{ref_group}_P'], 'goldenrod', alpha=0.3
-    )
-
-    test_alpha = 1
-    test_effects = [] if build_in else [
-        pe.withStroke(linewidth=22, foreground='white', offset=(-0.5, 1))
+    layers = [
+        (light_group, 0.17, light_effects, (0.17, 0.17, 0.3)),
+        (bold_group, 1, [bold_effects] * 3, (1, 1, 1)),
     ]
-
-    ax.vlines(
-        x[f'ω1_{test_group}'],
-        0,
-        _visible_proportion(x[f'ω1_{test_group}_P'], ax),
-        linewidth=20,
-        color='salmon',
-        alpha=test_alpha,
-        zorder=zorder_1test,
-        path_effects=test_effects,
-    )
-    _plot_tiny_proportion_marker(
-        ax, x[f'ω1_{test_group}'], x[f'ω1_{test_group}_P'], 'salmon', alpha=1
-    )
-    ax.vlines(
-        x[f'ω2_{test_group}'],
-        0,
-        _visible_proportion(x[f'ω2_{test_group}_P'], ax),
-        linewidth=20,
-        color='steelblue',
-        alpha=test_alpha,
-        zorder=zorder_2test,
-        path_effects=test_effects,
-    )
-    _plot_tiny_proportion_marker(
-        ax, x[f'ω2_{test_group}'], x[f'ω2_{test_group}_P'], 'steelblue', alpha=1
-    )
-    ax.vlines(
-        x[f'ω3_{test_group}'],
-        0,
-        _visible_proportion(x[f'ω3_{test_group}_P'], ax),
-        linewidth=20,
-        color='goldenrod',
-        alpha=test_alpha,
-        zorder=zorder_3test,
-        path_effects=test_effects,
-    )
-    _plot_tiny_proportion_marker(
-        ax, x[f'ω3_{test_group}'], x[f'ω3_{test_group}_P'], 'goldenrod', alpha=1
-    )
+    # Later layers sit on top at equal zorder: bold group by default,
+    # otherwise the test (foreground) group.
+    if not bold_on_top and layers[-1][0] != 'test':
+        layers.reverse()
+    for group, alpha, effects, marker_alphas in layers:
+        suffix = suffixes[group]
+        for rate_class, color in enumerate(colors):
+            omega = x[f'ω{rate_class + 1}_{suffix}']
+            proportion = x[f'ω{rate_class + 1}_{suffix}_P']
+            ax.vlines(
+                omega,
+                0,
+                _visible_proportion(proportion, ax),
+                linewidth=20,
+                color=color,
+                alpha=alpha,
+                zorder=zorders[group][rate_class],
+                path_effects=effects[rate_class],
+            )
+            _plot_tiny_proportion_marker(
+                ax, omega, proportion, color, alpha=marker_alphas[rate_class],
+                zorder=zorders[group][rate_class],
+            )
 
     if not has_zero:
         lowest_tick = 10 ** np.floor(np.log10(omega_values.min()))

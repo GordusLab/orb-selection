@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import patheffects as pe
 from matplotlib import pyplot as plt
 from matplotlib import ticker
+from matplotlib import transforms as mtransforms
 from matplotlib.patches import Rectangle
 
 OMEGA_COLORS = ('salmon', 'steelblue', 'goldenrod')
@@ -123,7 +124,7 @@ def _plot_distributions(ax, x, group, logbins, labels=False):
         ax.hist(x[f'ω{index}_{group}'], **histogram_kwargs)
 
 
-def _plot_mean_lines(ax, x, group, inverted=False, stroke_width=7.5):
+def _plot_mean_lines(ax, x, group, inverted=False, stroke_width=7.5, min_bar=0.0):
     means = [x[f'ω{index}_{group}'].mean() for index in range(1, 4)]
     weights = [x[f'ω{index}_{group}_P'].mean() for index in range(1, 4)]
 
@@ -137,6 +138,8 @@ def _plot_mean_lines(ax, x, group, inverted=False, stroke_width=7.5):
     for index, (mean, weight, color) in enumerate(
         zip(means, weights, OMEGA_COLORS), start=1
         ):
+        # Draw tiny proportions at a minimum visible length (data unchanged).
+        weight = max(weight, min_bar)
         line_kwargs = {
             'linewidth': 6,
             'color': color,
@@ -327,14 +330,29 @@ def plot_omega_distributions(
     partitioned_desc=False,
     split_lower_max=None,
     split_upper_max=None,
+    min_mean_bar=0.0,
+    figsize=(6, 5),
+    xlabel=None,
+    show_ylabels=True,
+    show_xticklabels=True,
+    show_yticklabels=True,
 ):
     """Plot ω distributions and mean site proportions for test and reference.
+
+    `figsize` is the (width, height) in inches of the non-split figure.
+    `xlabel` is an optional x-axis label (e.g. 'dN/dS') under the bottom panel.
+    `show_ylabels=False` omits both y labels (left and right).
+    `show_xticklabels` / `show_yticklabels` set False hide the tick labels
+    (both y sides for the latter); the ticks themselves stay.
 
     `groups` names the test/reference column suffixes to plot, e.g. the default
     ('test', 'ref') for the RELAX/BUSTED-PH alternative model, or
     ('test_pd', 'ref_pd') for the RELAX partitioned descriptive model.
     `partitioned_desc=True` is shorthand for `groups=('test_pd', 'ref_pd')` and
     takes precedence over `groups` if both are given.
+
+    `min_mean_bar` is the minimum drawn length (axis fraction) of the mean-ω
+    bars, so a very small mean site proportion (e.g. ω3) stays visible.
 
     `split_axis` breaks each side's y-axis into a near/far pair of panels
     (with a diagonal-marked gap) so a handful of outlier ω3 counts don't
@@ -398,7 +416,7 @@ def plot_omega_distributions(
 
             y_limits.append(ymax + 0.75 * pad)
 
-        fig, axs = plt.subplots(2, 1, sharex=True, figsize=(6, 5))
+        fig, axs = plt.subplots(2, 1, sharex=True, figsize=figsize)
 
         plt.subplots_adjust(hspace=0)
         plt.xlim(xlim_min, xlim_max)
@@ -421,7 +439,8 @@ def plot_omega_distributions(
 
     ax_avgs.set_facecolor('none')
     _plot_mean_lines(
-        ax_avgs, x, test_group, stroke_width=7.5 if result == 'busted' else 7
+        ax_avgs, x, test_group, stroke_width=7.5 if result == 'busted' else 7,
+        min_bar=min_mean_bar,
     )
     ax_avgs.spines.right.set_visible(False)
 
@@ -433,6 +452,7 @@ def plot_omega_distributions(
         ref_group,
         inverted=True,
         stroke_width=7 if result == 'busted' else 7.5,
+        min_bar=min_mean_bar,
     )
     ax_avgs2.spines.right.set_visible(False)
 
@@ -441,11 +461,11 @@ def plot_omega_distributions(
 
     if result == 'all':
         ax_avgs.set_title(
-            top_title, x=0.2, y=0.7, fontsize=13, color='white',
+            top_title, x=0.45, y=0.8, fontsize=13, color='white',
             weight='bold', backgroundcolor='lightgray',
         )
         ax_avgs2.set_title(
-            bottom_title, x=0.2, y=0.1, fontsize=13, color='white',
+            bottom_title, x=0.45, y=0.1, fontsize=13, color='white',
             weight='bold', backgroundcolor='lightgray',
         )
     elif result != 'busted':
@@ -505,21 +525,174 @@ def plot_omega_distributions(
     for tick in bottom_tick_axis.get_xticklabels():
         tick.set_fontsize(14)
 
-    fig.supylabel('mean proportion of sites', x=0.01, weight='bold', fontsize=16)
-    _add_secondary_ylabel(fig)
+    if show_ylabels:
+        fig.supylabel('mean proportion of sites', x=0.01, weight='bold', fontsize=16)
+        _add_secondary_ylabel(fig)
 
     for ax in fig.axes:
         ax.tick_params(direction='in')
         ax.tick_params(axis='x', which='major', pad=10)
 
+    if xlabel:
+        bottom_tick_axis.set_xlabel(xlabel, fontsize=16, labelpad=6)
+
+    for ax in fig.axes:
+        if not show_xticklabels:
+            ax.tick_params(axis='x', labelbottom=False)
+        if not show_yticklabels:
+            ax.tick_params(axis='y', labelleft=False, labelright=False)
+
     if suptitle is not None:
-        y_pos = 0.96 if result == 'all' else 0.98
+        y_pos = 0.945 if result == 'all' else 0.965
         fig.suptitle(f"{numeral}{suptitle}", y=y_pos, fontsize=16)
 
     if filename is not None:
         plt.savefig(filename, dpi=600, transparent=transparent, bbox_inches='tight')
 
     return fig, axs
+
+
+def _text_width(fig, text, fontsize, weight='normal'):
+    """Width in inches of the widest line of `text`."""
+    probe = fig.text(0, 0, text, fontsize=fontsize, fontweight=weight)
+    width = probe.get_window_extent(fig.canvas.get_renderer()).width / fig.dpi
+    probe.remove()
+    return width
+
+
+def _apply_scaled_layout(
+    fig, ax, suptitle, subtitle, font_scale, xlabel=None, show_ylabel=True,
+    show_yticklabels=True, side_title=None, fixed_layout=True,
+    show_xticklabels=True,
+):
+    """Lay the single-gene figure out in absolute inches for scaled-up fonts.
+
+    The axes keep their usual physical size; the figure grows around them to
+    hold the (wrapped) titles, y-label/ticks and x tick labels. Overlapping
+    x tick labels are hidden. With `fixed_layout`, space is reserved for every
+    optional element (side title, y label, y tick labels, x label, and
+    2 title lines + 3 subtitle lines), so the axes have the same size AND the
+    same position in the figure whether or not those elements are shown, and
+    panels from separate calls line up when tiled.
+    """
+    axes_w, axes_h = 4.3, 3.85
+    # The one-line y label must fit within the axes height so it can't run
+    # into the titles above; grow the axes if needed.
+    probe = fig.text(0, 0, 'proportion of sites', fontsize=13.5 * font_scale)
+    ylabel_len = probe.get_window_extent(fig.canvas.get_renderer()).width / fig.dpi
+    probe.remove()
+    axes_h = max(axes_h, ylabel_len + 0.1)
+    ylabel_w = 13.5 * font_scale * 1.25 / 72
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    # Measured from a fixed string (not the live tick labels) so the margin is
+    # identical across panels.
+    probe = fig.text(0, 0, '0.0', fontsize=13.5 * font_scale)
+    ytick_w = probe.get_window_extent(renderer).width / fig.dpi
+    probe.remove()
+    if not show_xticklabels:
+        ax.tick_params(axis='x', labelbottom=False)
+    if not show_yticklabels:
+        ax.tick_params(axis='y', labelleft=False)
+        if not fixed_layout:
+            ytick_w = 0
+    side_w = (
+        16 * font_scale * 1.25 / 72 + 0.1 if side_title or fixed_layout else 0
+    )
+    # side title + y label + gap + tick labels + tick label pad
+    left = (
+        side_w + 0.1
+        + (ylabel_w + 0.05 if show_ylabel or fixed_layout else 0)
+        + ytick_w + 0.1
+    )
+    # Titles are not wrapped (wrap them manually with '\n'); widen the right
+    # margin if one overhangs the axes by more than the default margin.
+    title_w = max(
+        [_text_width(fig, suptitle, 16 * font_scale, 'bold') if suptitle else 0]
+        + [_text_width(fig, subtitle, 10 * font_scale) if subtitle else 0]
+    )
+    # fixed_layout hardcodes the right margin (so it can't vary with title width).
+    right = 1.0 if fixed_layout else max(0.2, (title_w - axes_w) / 2 + 0.1)
+    # x tick labels sit below the y-axis' bottom '0.0' label, which overhangs the axes
+    xtick_pad = 3 + 5 * font_scale
+    bottom = (xtick_pad + 13.5 * font_scale * 1.6) / 72 + 0.1
+    xlabel_h = 13.5 * font_scale * 1.0 / 72 - 0.1 if xlabel or fixed_layout else 0
+    bottom += xlabel_h
+    ax.tick_params(axis='x', pad=xtick_pad)
+    ax.tick_params(axis='both', which='major', length=5 * font_scale,
+                   width=0.8 * font_scale)
+    ax.tick_params(axis='both', which='minor', length=3 * font_scale,
+                   width=0.6 * font_scale)
+    width = left + axes_w + right
+    pad = 0.08
+
+    sup = sub = ''
+    title_gap = 0.2
+    axes_gap = 0.25
+    sup = suptitle or ''
+    sub = subtitle or ''
+    sup_h = (sup.count('\n') + 1) * 16 * font_scale * 1.25 / 72 if sup else 0
+    sub_h = (sub.count('\n') + 1) * 10 * font_scale * 1.25 / 72 if sub else 0
+    line = 1.25 / 72
+    if fixed_layout:
+        # Constant, independent of the actual titles: room for 2 title lines
+        # and 3 subtitle lines. Longer titles grow upward past the figure top
+        # (clipped), rather than moving the axes.
+        sup_room = 2 * 16 * font_scale * line
+        sub_room = 3 * 10 * font_scale * line
+        top = pad + sup_room + pad + title_gap + sub_room + axes_gap
+    else:
+        top = pad + sup_h + (pad + title_gap + sub_h if sub else 0) + axes_gap
+    if fixed_layout:
+        # Snap every dimension to the 300 dpi pixel grid so the axes land on
+        # exactly the same pixels in every panel.
+        snap = lambda v: round(v * SAVEFIG_DPI) / SAVEFIG_DPI
+        left, right, bottom, top = snap(left), snap(right), snap(bottom), snap(top)
+        axes_w, axes_h = snap(axes_w), snap(axes_h)
+        width = left + axes_w + right
+    height = bottom + axes_h + top
+
+    fig.set_size_inches(width, height)
+    ax.set_position([left / width, bottom / height, axes_w / width, axes_h / height])
+    if side_title:
+        fig.text(0.05 / width, (bottom + axes_h / 2) / height, side_title,
+                 rotation=90, ha='left', va='center', fontweight='bold',
+                 fontsize=16 * font_scale)
+    if show_ylabel:
+        fig.text((side_w + 0.1) / width, (bottom + axes_h / 2) / height,
+                 'proportion of sites', rotation=90, ha='left', va='center',
+                 fontsize=13.5 * font_scale, linespacing=1.25)
+    if xlabel:
+        fig.text((left + axes_w / 2) / width, 0.05 / height, xlabel,
+                 ha='center', va='bottom', fontsize=13.5 * font_scale)
+    # Titles are anchored just above the axes, so the gap to the plot is the
+    # same however many lines they wrap to.
+    axes_top = bottom + axes_h
+    # The title is centered over the plot area.
+    title_x = left + axes_w / 2
+    sub_y = axes_top + axes_gap
+    if sub:
+        fig.text((left + axes_w / 2) / width, sub_y / height, sub,
+                 ha='center', va='bottom', fontsize=10 * font_scale,
+                 linespacing=1.25)
+    if sup:
+        sup_y = sub_y + (sub_h + pad + title_gap if sub else 0)
+        fig.text(title_x / width, sup_y / height, sup, ha='center', va='bottom',
+                 fontsize=16 * font_scale, fontweight='bold', linespacing=1.25)
+
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    last_right = -np.inf
+    ticks = sorted(
+        (t for t in ax.xaxis.get_major_ticks() if t.label1.get_text()),
+        key=lambda t: t.label1.get_window_extent(renderer).x0,
+    )
+    for tick in ticks:
+        box = tick.label1.get_window_extent(renderer)
+        if box.x0 < last_right + 0.08 * fig.dpi:
+            tick.label1.set_visible(False)
+        else:
+            last_right = box.x1
 
 
 def plot_omega_single_gene(
@@ -547,6 +720,13 @@ def plot_omega_single_gene(
     show_subticks=True,
     bold_group=None,
     bold_on_top=True,
+    font_scale=1.0,
+    xlabel=None,
+    show_ylabel=True,
+    show_yticklabels=True,
+    side_title=None,
+    fixed_layout=True,
+    show_xticklabels=True,
 ):
     """Plot inferred ω values and site proportions for one gene.
 
@@ -562,6 +742,21 @@ def plot_omega_single_gene(
     foreground), so orb-weavers are the bold group in both. The `offset_zero_*`
     shadows always apply to the faded group. Set `bold_on_top=False` to draw
     the test (foreground) group on top instead, even when it is the faded one.
+
+    `xlabel` is an optional x-axis label (e.g. 'dN/dS'); the figure grows to
+    make room for it.
+
+    For tiling several plots into one multi-panel figure: `show_ylabel`,
+    `show_yticklabels` and `show_xticklabels` can be turned off for panels that
+    share an axis, and
+    `side_title` adds bold text rotated 90 degrees at the far left to label a
+    row (`font_scale` != 1 only). With `fixed_layout=True` (default, `font_scale` != 1
+    only) room is reserved for all of these plus the x label and titles, so the
+    axes are the same size and in the same place in every panel; set it False
+    to trim unused margins.
+
+    `font_scale` multiplies every font size (ticks, labels, titles, annotations),
+    for figures that will be shrunk in the final layout.
     """
     test_group, ref_group = groups
 
@@ -715,51 +910,108 @@ def plot_omega_single_gene(
             ax.transData.transform((lowest_tick, 0))
         )[0]
         break_x = zero_x + (first_tick_x - zero_x) * 0.35
-        for offset in (-0.012, 0.012):
+        if font_scale == 1.0:
+            for offset in (-0.012, 0.012):
+                ax.plot(
+                    (break_x + offset - 0.007, break_x + offset + 0.007),
+                    (-0.015, 0.015),
+                    color='black', linewidth=1, transform=ax.transAxes,
+                    clip_on=False,
+                )
+        else:
+            # Bold "//" on a white patch that breaks the axis line, as in
+            # go_barplots.R. Sized in points so it scales with font_scale.
             ax.plot(
-                (break_x + offset - 0.007, break_x + offset + 0.007),
-                (-0.015, 0.015),
-                color='black', linewidth=1, transform=ax.transAxes,
-                clip_on=False,
+                [break_x], [0], marker=[(-1, -0.3), (1, -0.3), (1, 0.3), (-1, 0.3)],
+                markersize=7 * font_scale, linestyle='none', color='white',
+                mec='none', transform=ax.transAxes, zorder=3, clip_on=False,
             )
+            for dx in (-3, 3):
+                ax.plot(
+                    [break_x], [0],
+                    marker=[(-0.3, -1), (0.3, 1)], markersize=9 * font_scale,
+                    linestyle='none', color='black', mew=1.5 * font_scale,
+                    transform=mtransforms.offset_copy(
+                        ax.transAxes, fig=fig, x=dx * font_scale, units='points',
+                    ),
+                    zorder=4, clip_on=False,
+                )
     ax.tick_params(axis='x', which='both', zorder=3)
 
     for tick in ax.get_yticklabels():
-        tick.set_fontweight('bold')
-        tick.set_fontsize(14)
+        tick.set_fontsize(13.5 * font_scale)
 
     for tick in ax.get_xticklabels():
-        tick.set_fontsize(axis_fontsize)
+        tick.set_fontsize(axis_fontsize * font_scale)
 
-    fig.supylabel('proportion of sites', x=0.01, weight='bold', fontsize=16)
+    if font_scale == 1.0:
+        if show_ylabel:
+            fig.supylabel('proportion of sites', x=0.01, fontsize=16)
+        if not show_yticklabels:
+            ax.tick_params(axis='y', labelleft=False)
+        if not show_xticklabels:
+            ax.tick_params(axis='x', labelbottom=False)
+        if side_title:
+            raise ValueError('side_title requires font_scale != 1')
 
     for ax in fig.axes:
         ax.tick_params(direction='in')
 
-    if suptitle is not None:
+    if font_scale != 1.0:
+        _apply_scaled_layout(
+            fig, ax, None if suptitle is None else f"{i}{suptitle}",
+            None if build_in else subtitle, font_scale, xlabel,
+            show_ylabel, show_yticklabels, side_title, fixed_layout,
+            show_xticklabels,
+        )
+    elif xlabel:
+        ax.set_xlabel(xlabel, fontsize=16)
+        # Grow the figure for the label while keeping the axes the same size.
+        w, h = fig.get_size_inches()
+        new_h = h + 0.4
+        sp = fig.subplotpars
+        fig.set_size_inches(w, new_h)
+        fig.subplots_adjust(bottom=(sp.bottom * h + 0.4) / new_h,
+                            top=(sp.top * h + 0.4) / new_h)
+    if font_scale == 1.0 and suptitle is not None:
         if subtitle is not None:
-            fig.suptitle(f"{i}{suptitle}", y=0.96, fontsize=14, fontweight='bold')
+            y_sup = 0.96
+            extra_lines = subtitle.count('\n')
+            if extra_lines and not build_in:
+                # Grow the figure by the height of the extra subtitle lines
+                # (12 pt, 1.2 line spacing) while keeping the axes the same
+                # absolute size and the suptitle the same distance from the top.
+                w, h = fig.get_size_inches()
+                new_h = h + extra_lines * 12 * 1.2 / 72
+                sp = fig.subplotpars
+                fig.set_size_inches(w, new_h)
+                fig.subplots_adjust(bottom=sp.bottom * h / new_h,
+                                    top=sp.top * h / new_h)
+                y_sup = 1 - (1 - y_sup) * h / new_h
+            fig.suptitle(f"{i}{suptitle}", y=y_sup, fontsize=14, fontweight='bold')
         else:
             fig.suptitle(f"{i}{suptitle}", y=0.92, fontsize=14, fontweight='bold')
 
     if not build_in:
-        if subtitle is not None:
+        if subtitle is not None and font_scale == 1.0:
             plt.title(subtitle, fontsize=12)
 
         if k:
             plt.text(
-                0.7, 0.9,
+                0.7 if font_scale == 1.0 else 0.97, 0.9 if font_scale == 1.0 else 0.86,
                 f'$\\it{{k}}$={round(x["k"], 2)}\n$\\it{{p}}$={x["p_value"]:.2e}',
-                fontsize=13, ha='left', va='center', transform=ax.transAxes,
+                fontsize=13 * font_scale,
+                ha='left' if font_scale == 1.0 else 'right', va='center', transform=ax.transAxes,
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),
             )
         else:
             plt.text(
-                0.7, 0.85,
+                0.7 if font_scale == 1.0 else 0.97, 0.85 if font_scale == 1.0 else 0.8,
                 f'$\\it{{p_1}}$={x["test_pval"]:.2e}\n'
                 f'$\\it{{p_2}}$={x["background_pval"]}\n'
                 f'$\\it{{p_3}}$={x["shared_pval"]:.2e}',
-                fontsize=13, ha='left', va='center', transform=ax.transAxes,
+                fontsize=13 * font_scale,
+                ha='left' if font_scale == 1.0 else 'right', va='center', transform=ax.transAxes,
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),
             )
 

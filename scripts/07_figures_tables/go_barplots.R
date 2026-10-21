@@ -107,11 +107,21 @@ go.barplot <- function(
     axis.text.x = element_text(color = "black", size = axis_text_size),
     axis.text.y = element_text(color = "black", size = desc_text_size),
     legend.position = "none",
-    axis.title.x = element_blank(),
+    axis.title.x = element_text(size = axis_title_size),
     axis.title.y = element_blank(),
-    panel.background = element_rect(fill = "white", color = NA),
+    # With a split axis the border is drawn by panel.background so that the
+    # white patch behind the "//" (a layer) sits on top of it; panel.border
+    # would be drawn over the patch.
+    panel.background = element_rect(
+      fill = "white", linewidth = 1,
+      color = if (is.null(split_axis)) NA else "black"
+    ),
     panel.grid = element_blank(),
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+    panel.border = if (is.null(split_axis)) {
+      element_rect(color = "black", fill = NA, linewidth = 1)
+    } else {
+      element_blank()
+    },
     strip.background = element_rect(color = "black", linewidth = 1, fill = colors[1]),
     strip.text = element_text(size = strip_text_size, face = "bold"),
     plot.title = element_text(size = title_size, hjust = hj)
@@ -194,7 +204,7 @@ go.barplot <- function(
     p <- p + geom_label(
       data = omitted_note,
       aes(x = Inf, y = Inf, label = label),
-      inherit.aes = FALSE, hjust = 1.05, vjust = 1.3,
+      inherit.aes = FALSE, hjust = 1.02, vjust = 1.3,
       size = 0.8 * desc_text_size / .pt, family = "Verdana", fontface = "italic",
       fill = "white"
     )
@@ -219,114 +229,118 @@ go.barplot <- function(
 # Hyphy analysis
 go.barplot(
   sumfile = here("results/go_enrichment/relaxed/summary_relaxed.tsv"),
-  title = "RELAX: relaxed selection",
+  title = expression("Enriched GO terms, " * bold("relaxed") * " genes"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(24.5, 24),
+  figsize = c(30, 26),
   wrap_desc = 35,
-  desc_text_size = 16,
+  desc_text_size = 22,
+  title_size = 28,
   rev = FALSE,
   exclude = "membrane",
-  output_filename = here("figures/figure_3/relax_relaxed_go_barplot.png")
+  transparent = TRUE,
+  output_filename = here("figures/figure_2/relax_relaxed_go_barplot.png")
 )
 
 go.barplot(
   sumfile = here("results/go_enrichment/intensified/summary_intensified.tsv"),
-  title = "RELAX: intensified selection",
+  title = expression("Enriched GO terms, " * bold("intensified") * " genes"),
   colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(24.5, 24),
+  figsize = c(30, 26),
   wrap_desc = 35,
-  desc_text_size = 16,
+  desc_text_size = 22,
+  title_size = 28,
   rev = FALSE,
   exclude = "nucleus",
   split_axis = c(55, 265),
-  output_filename = here("figures/figure_3/relax_intensified_go_barplot.png")
+  transparent = TRUE,
+  output_filename = here("figures/figure_2/relax_intensified_go_barplot.png")
 )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/busted_ph_orb/summary_busted_ph_orb.tsv"),
-  colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(20, 16),
-  rev = FALSE,
-  output_filename = here("figures/figure_4/busted_ph_orb_go_barplot.png"),
-  wrap_desc = 33,
-  desc_text_size = 20,
-  axis_text_size = 26,
-  axis_title_size = 30,
-  strip_text_size = 26
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/busted_ph_orb/summary_busted_ph_orb.tsv"),
+#   colors = c("#F5EFF9", "#926AB0"),
+#   figsize = c(20, 16),
+#   rev = FALSE,
+#   output_filename = here("figures/figure_4/busted_ph_orb_go_barplot.png"),
+#   wrap_desc = 33,
+#   desc_text_size = 20,
+#   axis_text_size = 26,
+#   axis_title_size = 30,
+#   strip_text_size = 26
+# )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/busted_ph_non_orb/summary_busted_ph_non_orb.tsv"),
-  colors = c("#F5EFF9", "#926AB0"),
-  figsize = c(20, 16),
-  desc_text_size = 20,
-  wrap_desc = 30,
-  rev = FALSE,
-  output_filename = here("figures/figure_4/busted_ph_non_orb_go_barplot.png"),
-  axis_text_size = 26,
-  axis_title_size = 30,
-  strip_text_size = 26
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/busted_ph_non_orb/summary_busted_ph_non_orb.tsv"),
+#   colors = c("#F5EFF9", "#926AB0"),
+#   figsize = c(20, 16),
+#   desc_text_size = 20,
+#   wrap_desc = 30,
+#   rev = FALSE,
+#   output_filename = here("figures/figure_4/busted_ph_non_orb_go_barplot.png"),
+#   axis_text_size = 26,
+#   axis_title_size = 30,
+#   strip_text_size = 26
+# )
 
-# Log odds ratio analysis
-go.barplot(
-  sumfile = here("results/go_enrichment/dup_bg/summary_dup_bg.tsv"),
-  colors = c("#FEE9E7", "#FA8072"),
-  figsize = c(28,28),
-  title = "Genes more likely to be duplicated in non-orbweavers",
-  rev = FALSE,
-  output_filename = here("figures/supplementary/duplication_nonorb_go_barplot.png"),
-  wrap_desc = 35
-)
+# # Log odds ratio analysis
+# go.barplot(
+#   sumfile = here("results/go_enrichment/dup_bg/summary_dup_bg.tsv"),
+#   colors = c("#FEE9E7", "#FA8072"),
+#   figsize = c(28,28),
+#   title = "Genes more likely to be duplicated in non-orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/supplementary/duplication_nonorb_go_barplot.png"),
+#   wrap_desc = 35
+# )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/dup_fg/summary_dup_fg.tsv"),
-  colors = c("#E0F2DB", "#639B51"),
-  figsize = c(30, 25),
-  title = "Genes more likely to be duplicated in orbweavers",
-  rev = FALSE,
-  output_filename = here("figures/supplementary/duplication_orb_go_barplot.png"),
-  wrap_desc = 35
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/dup_fg/summary_dup_fg.tsv"),
+#   colors = c("#E0F2DB", "#639B51"),
+#   figsize = c(30, 25),
+#   title = "Genes more likely to be duplicated in orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/supplementary/duplication_orb_go_barplot.png"),
+#   wrap_desc = 35
+# )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/loss_bg/summary_loss_bg.tsv"),
-  colors = c("#DFE9F2", "#4682B4"),
-  figsize = c(25, 15),
-  title = "Genes more likely to be missing in non-orbweavers",
-  rev = FALSE,
-  output_filename = here("figures/supplementary/loss_nonorb_go_barplot.png"),
-  wrap_desc = 35
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/loss_bg/summary_loss_bg.tsv"),
+#   colors = c("#DFE9F2", "#4682B4"),
+#   figsize = c(25, 15),
+#   title = "Genes more likely to be missing in non-orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/supplementary/loss_nonorb_go_barplot.png"),
+#   wrap_desc = 35
+# )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/loss_fg/summary_loss_fg.tsv"),
-  colors = c("#F9F0D9", "#DAA520"),
-  figsize = c(28, 30),
-  title = "Genes more likely to be missing in orbweavers",
-  rev = FALSE,
-  output_filename = here("figures/supplementary/loss_orb_go_barplot.png"),
-  wrap_desc = 35
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/loss_fg/summary_loss_fg.tsv"),
+#   colors = c("#F9F0D9", "#DAA520"),
+#   figsize = c(28, 30),
+#   title = "Genes more likely to be missing in orbweavers",
+#   rev = FALSE,
+#   output_filename = here("figures/supplementary/loss_orb_go_barplot.png"),
+#   wrap_desc = 35
+# )
 
-# PhyloGLM
+# # PhyloGLM
 
-go.barplot(
-  sumfile = here("results/go_enrichment/pglm_non_orb/summary_pglm_non_orb.tsv"),
-  colors = c("#F5EFF9", "#926AB0"),
-  rev = FALSE,
-  output_filename = here("figures/supplementary/phyloglm_bg_ptep_go_barplot.png"),
-  wrap_desc = 35,
-  figsize = c(25, 20),
-  title = "PhyloGLM genes, copy number ~ non-orb-weaving"
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/pglm_non_orb/summary_pglm_non_orb.tsv"),
+#   colors = c("#F5EFF9", "#926AB0"),
+#   rev = FALSE,
+#   output_filename = here("figures/supplementary/phyloglm_bg_ptep_go_barplot.png"),
+#   wrap_desc = 35,
+#   figsize = c(25, 20),
+#   title = "PhyloGLM genes, copy number ~ non-orb-weaving"
+# )
 
-go.barplot(
-  sumfile = here("results/go_enrichment/pglm_orb/summary_pglm_orb.tsv"),
-  colors = c("#F5EFF9", "#926AB0"),
-  rev = FALSE,
-  output_filename = here("figures/supplementary/phyloglm_fg_udiv_go_barplot.png"),
-  wrap_desc = 35,
-  figsize = c(25, 20),
-  title = "PhyloGLM genes, copy number ~ orb-weaving"
-)
+# go.barplot(
+#   sumfile = here("results/go_enrichment/pglm_orb/summary_pglm_orb.tsv"),
+#   colors = c("#F5EFF9", "#926AB0"),
+#   rev = FALSE,
+#   output_filename = here("figures/supplementary/phyloglm_fg_udiv_go_barplot.png"),
+#   wrap_desc = 35,
+#   figsize = c(25, 20),
+#   title = "PhyloGLM genes, copy number ~ orb-weaving"
+# )

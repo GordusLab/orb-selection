@@ -720,7 +720,7 @@ def plot_omega_single_gene(
     bold_group=None,
     bold_on_top=True,
     font_scale=1.0,
-    xlabel=None,
+    xlabel='dN/dS',
     show_ylabel=True,
     show_yticklabels=True,
     side_title=None,
@@ -756,8 +756,8 @@ def plot_omega_single_gene(
     shadows always apply to the faded group. Set `bold_on_top=False` to draw
     the test (foreground) group on top instead, even when it is the faded one.
 
-    `xlabel` is an optional x-axis label (e.g. 'dN/dS'); the figure grows to
-    make room for it.
+    `xlabel` is the x-axis label, 'dN/dS' by default (pass None for no label);
+    the figure grows to make room for it.
 
     For tiling several plots into one multi-panel figure: `show_ylabel`,
     `show_yticklabels` and `show_xticklabels` can be turned off for panels that
@@ -887,6 +887,12 @@ def plot_omega_single_gene(
             left=min(xlim_min, -thresh * 0.25) if xlim_min is not None else -thresh * 0.25,
             right=xlim_max if xlim_max is not None else highest_tick * TICK_EDGE_PADDING,
         )
+
+    # Manual limits can reach past the data, so tick every decade inside them.
+    if xlim_max is not None:
+        highest_tick = max(highest_tick, 10 ** np.floor(np.log10(xlim_max) + 1e-9))
+    if xlim_min is not None and xlim_min > 0 and not has_zero:
+        lowest_tick = min(lowest_tick, 10 ** np.ceil(np.log10(xlim_min) - 1e-9))
 
     ax.axvline(1, linewidth=1, linestyle='dashed', color='k', alpha=0.5)
     if not has_zero:
@@ -1054,3 +1060,86 @@ def plot_omega_single_gene(
     )
 
     return fig, ax
+
+
+def plot_omega_example_gene(
+    test_omegas=None,
+    test_props=None,
+    ref_omegas=None,
+    ref_props=None,
+    test_pval=None,
+    background_pval=None,
+    shared_pval=None,
+    k=None,
+    p_value=None,
+    name='example',
+    **kwargs,
+):
+    """Plot a single illustrative gene from manually entered values.
+
+    `test_omegas`/`ref_omegas` are the three ω rate classes (ω1, ω2, ω3) and
+    `test_props`/`ref_props` the matching site proportions for the test
+    (foreground, orb-weaver) and reference (background) groups. Leave a
+    group's omegas and props out (None) to not plot that group; the axes are
+    then scaled from the group that is given.
+
+    Annotations are optional. For the BUSTED-PH style annotation pass any of
+    `test_pval`, `background_pval`, `shared_pval` (only the ones given are
+    printed); for the RELAX style annotation pass `k` and `p_value`. With none
+    given no annotation is drawn. All other keyword arguments (titles, `k`
+    layout options, `show_groups`, `filename`, ...) go to
+    `plot_omega_single_gene`.
+
+    Example:
+        plot_omega_example_gene(
+            test_omegas=(0, 0.5, 8), test_props=(0.6, 0.3, 0.1),
+            ref_omegas=(0, 0.5, 1.2), ref_props=(0.6, 0.35, 0.05),
+            test_pval=0.003, suptitle='Example gene',
+        )
+    """
+    import pandas as pd
+
+    groups_given = {}
+    for group, omegas, props in (
+        ('test', test_omegas, test_props), ('ref', ref_omegas, ref_props),
+    ):
+        if omegas is None and props is None:
+            continue
+        if omegas is None or props is None:
+            raise ValueError(f'{group}: give both omegas and props, or neither')
+        if len(omegas) != 3 or len(props) != 3:
+            raise ValueError(f'{group}: omegas and props must have 3 values each')
+        if not np.isclose(sum(props), 1, atol=0.01):
+            raise ValueError(f'{group}_props must sum to 1, got {sum(props):.3f}')
+        groups_given[group] = (omegas, props)
+    if not groups_given:
+        raise ValueError('give omegas and props for at least one of test or ref')
+    # The plot function derives its axes from both groups, so a missing group
+    # borrows the other's values and is simply not drawn.
+    only = next(iter(groups_given)) if len(groups_given) == 1 else None
+    if only is not None:
+        groups_given['ref' if only == 'test' else 'test'] = groups_given[only]
+        kwargs.setdefault('show_groups', (only,))
+        kwargs.setdefault('bold_group', only)
+
+    row = {}
+    for group, (omegas, props) in groups_given.items():
+        for n in range(3):
+            row[f'ω{n + 1}_{group}'] = float(omegas[n])
+            row[f'ω{n + 1}_{group}_P'] = float(props[n])
+
+    nan = float('nan')
+    row['test_pval'] = nan if test_pval is None else test_pval
+    row['background_pval'] = nan if background_pval is None else background_pval
+    row['shared_pval'] = nan if shared_pval is None else shared_pval
+    row['k'] = nan if k is None else k
+    row['p_value'] = nan if p_value is None else p_value
+    df = pd.DataFrame([row], index=[name])
+
+    use_k = k is not None
+    if not use_k and 'show_pvalues' not in kwargs:
+        kwargs['show_pvalues'] = tuple(
+            n for n, p in enumerate((test_pval, background_pval, shared_pval), 1)
+            if p is not None
+        )
+    return plot_omega_single_gene(df, name, k=use_k, **kwargs)

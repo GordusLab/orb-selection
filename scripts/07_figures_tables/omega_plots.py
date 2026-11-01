@@ -706,7 +706,6 @@ def plot_omega_single_gene(
     k=False,
     filename=None,
     transparent=True,
-    build_in=False,
     xlim_min=None,
     xlim_max=None,
     zorder_1ref=1,
@@ -727,8 +726,22 @@ def plot_omega_single_gene(
     side_title=None,
     fixed_layout=True,
     show_xticklabels=True,
+    show_groups=('test', 'ref'),
+    show_rate_classes=(1, 2, 3),
+    show_pvalues=(1, 2, 3),
 ):
     """Plot inferred ω values and site proportions for one gene.
+
+    `show_groups` ('test' and/or 'ref') and `show_rate_classes` (any of 1, 2, 3)
+    select which bars are drawn, for building a figure up over several frames
+    (e.g. background only, then add the foreground; ω1 only, then ω2, ...).
+    Axis limits and scaling are still computed from all values, so every frame
+    of a build has identical axes and the bars appear in place.
+
+    `show_pvalues` (any of 1, 2, 3) selects which of the BUSTED-PH p-values
+    (p_1 test, p_2 background, p_3 shared) are printed; hidden ones leave a
+    blank line so the shown ones stay where they are in the full annotation.
+    It has no effect when `k` is set (RELAX k/p annotation).
 
     `groups` names the test/reference column suffixes to plot, e.g. the default
     ('test', 'ref') for the RELAX/BUSTED-PH alternative model, or
@@ -827,19 +840,21 @@ def plot_omega_single_gene(
         light_offset_effects[1] if offset_zero_w2 else light_path_effects,
         light_path_effects,
     ]
-    bold_effects = [] if build_in else halo
-
     layers = [
         (light_group, 0.17, light_effects, (0.17, 0.17, 0.3)),
-        (bold_group, 1, [bold_effects] * 3, (1, 1, 1)),
+        (bold_group, 1, [halo] * 3, (1, 1, 1)),
     ]
     # Later layers sit on top at equal zorder: bold group by default,
     # otherwise the test (foreground) group.
     if not bold_on_top and layers[-1][0] != 'test':
         layers.reverse()
     for group, alpha, effects, marker_alphas in layers:
+        if group not in show_groups:
+            continue
         suffix = suffixes[group]
         for rate_class, color in enumerate(colors):
+            if rate_class + 1 not in show_rate_classes:
+                continue
             omega = x[f'ω{rate_class + 1}_{suffix}']
             proportion = x[f'ω{rate_class + 1}_{suffix}_P']
             ax.vlines(
@@ -960,7 +975,7 @@ def plot_omega_single_gene(
     if font_scale != 1.0:
         _apply_scaled_layout(
             fig, ax, None if suptitle is None else f"{i}{suptitle}",
-            None if build_in else subtitle, font_scale, xlabel,
+            subtitle, font_scale, xlabel,
             show_ylabel, show_yticklabels, side_title, fixed_layout,
             show_xticklabels,
         )
@@ -977,7 +992,7 @@ def plot_omega_single_gene(
         if subtitle is not None:
             y_sup = 0.96
             extra_lines = subtitle.count('\n')
-            if extra_lines and not build_in:
+            if extra_lines:
                 # Grow the figure by the height of the extra subtitle lines
                 # (12 pt, 1.2 line spacing) while keeping the axes the same
                 # absolute size and the suptitle the same distance from the top.
@@ -992,24 +1007,28 @@ def plot_omega_single_gene(
         else:
             fig.suptitle(f"{i}{suptitle}", y=0.92, fontsize=14, fontweight='bold')
 
-    if not build_in:
-        if subtitle is not None and font_scale == 1.0:
-            plt.title(subtitle, fontsize=12)
+    if subtitle is not None and font_scale == 1.0:
+        plt.title(subtitle, fontsize=12)
 
-        if k:
-            plt.text(
-                0.7 if font_scale == 1.0 else 0.97, 0.9 if font_scale == 1.0 else 0.86,
-                f'$\\it{{k}}$={round(x["k"], 2)}\n$\\it{{p}}$={x["p_value"]:.2e}',
-                fontsize=13 * font_scale,
-                ha='left' if font_scale == 1.0 else 'right', va='center', transform=ax.transAxes,
-                bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),
-            )
-        else:
+    if k:
+        plt.text(
+            0.7 if font_scale == 1.0 else 0.97, 0.9 if font_scale == 1.0 else 0.86,
+            f'$\\it{{k}}$={round(x["k"], 2)}\n$\\it{{p}}$={x["p_value"]:.2e}',
+            fontsize=13 * font_scale,
+            ha='left' if font_scale == 1.0 else 'right', va='center', transform=ax.transAxes,
+            bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),
+        )
+    else:
+        pvalue_lines = {
+            1: f'$\\it{{p_1}}$={x["test_pval"]:.2e}',
+            2: f'$\\it{{p_2}}$={x["background_pval"]}',
+            3: f'$\\it{{p_3}}$={x["shared_pval"]:.2e}',
+        }
+        if any(n in show_pvalues for n in pvalue_lines):
             plt.text(
                 0.7 if font_scale == 1.0 else 0.97, 0.85 if font_scale == 1.0 else 0.8,
-                f'$\\it{{p_1}}$={x["test_pval"]:.2e}\n'
-                f'$\\it{{p_2}}$={x["background_pval"]}\n'
-                f'$\\it{{p_3}}$={x["shared_pval"]:.2e}',
+                '\n'.join(line if n in show_pvalues else ' '
+                          for n, line in pvalue_lines.items()),
                 fontsize=13 * font_scale,
                 ha='left' if font_scale == 1.0 else 'right', va='center', transform=ax.transAxes,
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),

@@ -8,8 +8,6 @@ from typing import Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-import id_converter
-
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 _REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir, os.pardir))
 CONSOLE_PRINT_WIDTH = 96
@@ -202,6 +200,55 @@ def calculate_odds(foreground_bool_arr, background_bool_arr, test_bool_mat, busc
     return np.log(odds_ratio_arr)
 
 
+def calculate_odds_batch(foreground_mat, background_mat, test_bool_mat, busco_arr=None):
+    """Log odds ratios for many foreground/background assignments at once.
+
+    Same arithmetic as calculate_odds, applied to every column of the species-by-assignment
+    matrices in one matrix product.
+
+    Args:
+        foreground_mat: (n_species, n_assignments) 1/0 matrix, 1 = foreground.
+        background_mat: (n_species, n_assignments) 1/0 matrix, 1 = background.
+        test_bool_mat: (n_hogs, n_species) 1/0 matrix, 1 = species has the event (loss/duplication).
+        busco_arr: optional (n_species,) per-species BUSCO weights.
+
+    Returns:
+        (n_hogs, n_assignments) array of log odds ratios.
+    """
+    foreground_mat = np.asarray(foreground_mat, dtype=float)
+    background_mat = np.asarray(background_mat, dtype=float)
+    if busco_arr is not None:
+        weights = np.asarray(busco_arr, dtype=float)[:, None]
+        foreground_mat = foreground_mat * weights
+        background_mat = background_mat * weights
+
+    # (1 - test_bool_mat) @ x == column_sum(x) - test_bool_mat @ x, so the inverse matrix is not needed
+    foreground_yes = test_bool_mat @ foreground_mat + 0.5
+    background_yes = test_bool_mat @ background_mat + 0.5
+    foreground_no = foreground_mat.sum(axis=0)[None, :] - (foreground_yes - 0.5) + 0.5
+    background_no = background_mat.sum(axis=0)[None, :] - (background_yes - 0.5) + 0.5
+
+    return np.log((foreground_yes / foreground_no) / (background_yes / background_no))
+
+
+def permulated_foreground_matrices(species_arr, tip_values, included_idx):
+    """Species-by-permulation foreground/background matrices in analysis species order.
+
+    A species is foreground when its permulated tip value is 1. Species outside the analysis
+    (not in included_idx) get 0 in both matrices.
+    """
+    n_species, n_perm = len(species_arr), len(tip_values)
+    foreground = np.zeros((n_species, n_perm))
+    for j, tips in enumerate(tip_values):
+        for idx in included_idx:
+            species = species_arr[idx]
+            if species in tips:
+                foreground[idx, j] = 1.0 if float(tips[species]) == 1.0 else 0.0
+    background = np.zeros_like(foreground)
+    background[included_idx, :] = 1.0 - foreground[included_idx, :]
+    return foreground, background
+
+
 def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]]:
     """Load permulated tip values from a CSV file."""
     csv_path = _resolve_repo_path(csv_path)
@@ -228,15 +275,16 @@ def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]
     ]
 
 
-def save_loc_list(df, NX_path, output_path):
-    """Convert HOGs to LOCs and save them one per line."""
-    locs_df = id_converter.convert_hogs_to_locs(df, NX_path, show_progress=False)
-    loc_ids = locs_df["LOC"].dropna().unique()
-    with open(output_path, "w", encoding="utf-8") as file_obj:
-        for loc in loc_ids:
-            file_obj.write(f"{loc}\n")
-    print(f"Wrote {len(loc_ids)} items to {output_path}")
-    return loc_ids
+def benjamini_hochberg(pvals):
+    """Return Benjamini-Hochberg adjusted p-values (q-values) for a 1-D array of p-values."""
+    pvals = np.asarray(pvals, dtype=float)
+    n = len(pvals)
+    order = np.argsort(pvals)
+    scaled = pvals[order] * n / np.arange(1, n + 1)
+    adjusted = np.minimum(np.minimum.accumulate(scaled[::-1])[::-1], 1.0)
+    qvals = np.empty(n)
+    qvals[order] = adjusted
+    return qvals
 
 
 __all__ = [
@@ -246,10 +294,12 @@ __all__ = [
     "_fixed_width_lines",
     "_resolve_repo_path",
     "_unique_results_dir",
+    "benjamini_hochberg",
     "calculate_odds",
+    "calculate_odds_batch",
     "drop_empty_cols",
     "filter_for_sp_of_interest",
     "load_permulation_tip_values_from_csv",
     "occupancy_filter",
-    "save_loc_list",
+    "permulated_foreground_matrices",
 ]

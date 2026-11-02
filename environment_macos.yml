@@ -17,6 +17,7 @@ dependencies:
   - scipy
   - matplotlib
   - seaborn
+  - statsmodels
   - tqdm
   - pip
   - pip:

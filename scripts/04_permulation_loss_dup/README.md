@@ -52,3 +52,23 @@ The function returns a `PermulationTestResults` object. When `results_dir` is se
 ## Recommended Usage
 
 The notebook `scripts/04_permulation_loss_dup/Odds Ratio Permulation Test.ipynb` demonstrates practical usage and parameter settings for this module.
+
+## Batched log odds ratios
+
+`calculate_odds_batch` in `odds_ratio_test_helpers.py` computes log odds ratios for many permulations at once (a species-by-permulation matrix in,
+a HOG-by-permulation matrix out) and matches `calculate_odds` to about 1e-14. `permulated_foreground_matrices` builds those matrices from the permulation tip values.
+
+## Generating more permulations
+
+`permulations_batch.R` generates one batch of permulations (batch id, count and output directory as arguments).
+`run_permulation_batches.sh` runs several batches as local parallel processes, and `permulations_batch_slurm.sh` runs them as a SLURM array.
+`combine_permulation_batches.py` concatenates the batch CSVs and checks that the foreground count is constant.
+
+## How the p-values are computed
+
+For each HOG and test, the log odds ratio under the true foreground labeling is compared with the log odds ratio under each permulated labeling.
+The four per-HOG p-values are `(1 + count) / (permulations + 1)`, where `count` is the number of permulations whose log odds ratio is at least as
+extreme as the true one (inclusive of ties, within a 1e-9 tolerance), in each direction: larger (event more likely in the foreground) or smaller (more likely in the background).
+The same add-one estimator is used for the global mean tests. A p-value therefore never reaches 0 and cannot go below `1 / (permulations + 1)`.
+The two directions of one test are the two tails of the same comparison, so `alpha` (default 0.05) is treated as a two-sided level and each direction is
+called at `alpha / 2` (0.025). `results_df` also carries Benjamini-Hochberg q-values (`Q-value ...`) computed over both directions of each test stacked together.

@@ -24,12 +24,14 @@ from odds_ratio_test_helpers import (
     _emit,
     _resolve_repo_path,
     _unique_results_dir,
+    benjamini_hochberg,
     calculate_odds,
+    calculate_odds_batch,
     drop_empty_cols,
     filter_for_sp_of_interest,
     load_permulation_tip_values_from_csv,
     occupancy_filter,
-    save_loc_list,
+    permulated_foreground_matrices,
 )
 import odds_ratio_test_plotting as plotting
 import orthogroup_gene_count
@@ -41,6 +43,10 @@ random.seed(42)
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 _REPO_ROOT = os.path.abspath(os.path.join(_SRC_DIR, os.pardir, os.pardir))
 CONSOLE_PRINT_WIDTH = 96
+
+# Permulated log odds ratios within this distance of the true value count as ties. Batch and
+# per-species arithmetic differ by ~1e-14, so exact float comparison would split genuine ties arbitrarily.
+TIE_TOLERANCE = 1e-9
 
 
 class OddsRatioResults:
@@ -407,69 +413,6 @@ class PermulationTestResults:
         self.dup_ci_av = compute_ci(self.means_dup, self.stddevs_dup)
 
         return self.loss_ci_av, self.dup_ci_av
-    
-    def get_universe_permulation(self) -> tuple:
-        """
-        Generate universe LOC files for topGO analysis at different occupancy thresholds.
-        """
-        genecount_df = self.true_odds.genecount_df.copy()
-
-        print("Generating universe LOCs...")
-
-        genecount_df["occupancy"] = genecount_df.select_dtypes(include="number").astype(
-            "bool"
-        ).sum(axis=1)
-        genecount_df = genecount_df[["occupancy"]]
-        dup_uni_df = genecount_df[genecount_df["occupancy"] >= self.min_occ]
-
-        loss_uni_df = dup_uni_df.loc[
-            (dup_uni_df["occupancy"] <= self.max_occ)
-        ]
-
-        return loss_uni_df, dup_uni_df
-
-    def save_go_lists(self, results_dir: str, use_avg_cis=False):
-        wanted = ("loss_bg", "dup_fg")
-        dfs = {k: self.results_fltrd_dfs[k] for k in wanted}
-        keys_to_write = list(dfs.keys())
-        locs_dir = os.path.join(results_dir, "loc_lists")
-        os.makedirs(locs_dir, exist_ok=True)
-        if use_avg_cis:
-            dfs_avg_cis = {
-                key: dfs[key][self._permulation_significant_mask(dfs[key])]
-                for key in keys_to_write
-            }
-        else:
-            dfs_avg_cis = None
-
-        # Convert HOG hit list to LOCs + descriptions and save as a companion file.
-        for key in keys_to_write:
-            save_loc_list(
-                dfs[key],
-                self.true_odds.hog_node_genes_tsv,
-                f"{locs_dir}/{key}_sig_locs.txt",
-            )
-
-        if dfs_avg_cis is not None:
-            for key in keys_to_write:
-                save_loc_list(
-                    dfs_avg_cis[key],
-                    self.true_odds.hog_node_genes_tsv,
-                    f"{locs_dir}/{key}_sig_locs_avg_ci.txt",
-                )
-
-        loss_uni, dup_uni = self.get_universe_permulation()
-
-        save_loc_list(
-            loss_uni,
-            self.true_odds.hog_node_genes_tsv,
-            f"{locs_dir}/loss_universe_locs.txt",
-        )
-        save_loc_list(
-            dup_uni,
-            self.true_odds.hog_node_genes_tsv,
-            f"{locs_dir}/dup_universe_locs.txt",
-        )
 
     def _count_species_of_interest_hits(self, species_name):
         return {
@@ -501,121 +444,6 @@ class PermulationTestResults:
             ].shape[0]
             for key in ("loss_fg", "loss_bg", "dup_fg", "dup_bg")
         }
-
-    def _foreground_background_from_permulation(
-        self,
-        perm_tips: Dict[str, float],
-        species_incl_idx: np.ndarray,
-    ):
-        """Map a permulated named tip-value vector onto analysis species order."""
-
-        new_foregrounds = np.zeros(self.true_odds.total_species_count)
-
-        mapped = 0
-        for idx in species_incl_idx:
-            species = self.true_odds.all_species_arr[idx]
-            if species in perm_tips:
-                new_foregrounds[idx] = 1 if float(perm_tips[species]) == 1.0 else 0
-                mapped += 1
-
-        if mapped == 0:
-            raise ValueError(
-                "No species names from permulation tips matched analysis species names."
-            )
-
-        new_backgrounds = np.zeros(self.true_odds.total_species_count)
-        new_backgrounds[species_incl_idx] = 1.0 - new_foregrounds[species_incl_idx]
-
-        return new_foregrounds, new_backgrounds
-
-    def _permulation_iter(
-        self,
-        i,
-        counter_mean_loss,
-        counter_mean_dup,
-        counters_hogs,
-        species_incl_idx,
-        perm_tips=None,
-    ):
-        """Function to perform a single iteration of the permulation test"""
-
-        # Create a new set of foreground and background arrays for permulation.
-        new_foregrounds, new_backgrounds = self._foreground_background_from_permulation(
-            perm_tips,
-            species_incl_idx,
-        )
-
-        # Recalculate the odds ratios and log odds ratios for the new foreground/background arrays
-        # for loss
-        new_log_odds_ratio_loss = calculate_odds(
-            new_foregrounds,
-            new_backgrounds,
-            self.true_odds.loss_bool_mat,
-            busco_arr=getattr(self.true_odds, "loss_busco_arr", None),
-        )
-
-        # for duplication
-        new_log_odds_ratio_dup = calculate_odds(
-            new_foregrounds,
-            new_backgrounds,
-            self.true_odds.dup_bool_mat,
-            busco_arr=getattr(self.true_odds, "dup_busco_arr", None),
-        )
-
-        # Compare the log odds ratio of each gene in the new permulated distribution
-        # to the log odds ratio of the same gene in the true distribution, and count
-        # how many times the permulated log odds ratio is more extreme than the true
-        # log odds ratio according to the alternative hypothesis
-
-        # for loss, greater
-        counters_hogs[:, 0] += (
-            new_log_odds_ratio_loss > self.true_odds.loss_lor_arr
-        ).flatten()
-        # for loss, less
-        counters_hogs[:, 1] += (
-            new_log_odds_ratio_loss < self.true_odds.loss_lor_arr
-        ).flatten()
-
-        # for duplication, greater
-        counters_hogs[:, 2] += (
-            new_log_odds_ratio_dup > self.true_odds.dup_lor_arr
-        ).flatten()
-        # for duplication, less
-        counters_hogs[:, 3] += (
-            new_log_odds_ratio_dup < self.true_odds.dup_lor_arr
-        ).flatten()
-
-        # Filter the new log odds ratio arrays based on the occupancy threshold
-        new_loss_lor_fltrd = occupancy_filter(
-            new_log_odds_ratio_loss,
-            self.min_occ,
-            self.max_occ,
-            self.true_odds.total_occ_arr,
-        )
-        new_dup_lor_fltrd = occupancy_filter(
-            new_log_odds_ratio_dup,
-            self.min_occ,
-            None,
-            self.true_odds.total_occ_arr,
-        )
-        # Calculate the statistics for the new filtered, permulated distribution
-        new_mean_loss = np.mean(new_loss_lor_fltrd)
-        new_stddev_loss = np.std(new_loss_lor_fltrd)
-        new_mean_dup = np.mean(new_dup_lor_fltrd)
-        new_stddev_dup = np.std(new_dup_lor_fltrd)
-
-        # Compare permulated mean to true mean according to the alternative hypothesis and update counter
-        if new_mean_loss < self.true_mean_loss:
-            counter_mean_loss += 1
-        if new_mean_dup > self.true_mean_dup:
-            counter_mean_dup += 1
-
-        self.means_loss[i] = new_mean_loss
-        self.stddevs_loss[i] = new_stddev_loss
-        self.means_dup[i] = new_mean_dup
-        self.stddevs_dup[i] = new_stddev_dup
-
-        return counter_mean_loss, counter_mean_dup, counters_hogs
 
     def _run_permulation(self):
         """Creating 10,000 test log odds ratio distributions with the set
@@ -658,11 +486,6 @@ class PermulationTestResults:
         self.stddevs_loss = np.zeros(self.permulation_reps)
         self.stddevs_dup = np.zeros(self.permulation_reps)
 
-        # Initialize counter for how often the means of the permulated
-        # distributions exceed the true mean
-        counter_mean_loss = 0
-        counter_mean_dup = 0
-
         # Initialize an array which counts how many times the gene's log
         # odds ratio in the permulated distribution is more extreme than the
         # gene's log odds ratio in the true distribution, according to the
@@ -676,19 +499,67 @@ class PermulationTestResults:
         ).astype(bool)
         species_incl_idx = species_incl_arr.nonzero()[0]
 
-        for i, perm_tips in enumerate(tqdm(self.permulation_tip_values)):
-            counter_mean_loss, counter_mean_dup, counters_hogs = self._permulation_iter(
-                i,
-                counter_mean_loss,
-                counter_mean_dup,
-                counters_hogs,
-                species_incl_idx,
-                perm_tips=perm_tips,
+        # Foreground/background labelings for all permulations as species-by-permulation matrices
+        foreground_mat, background_mat = permulated_foreground_matrices(
+            self.true_odds.all_species_arr, self.permulation_tip_values, species_incl_idx
+        )
+        if not foreground_mat.any():
+            raise ValueError(
+                "No species names from permulation tips matched analysis species names."
             )
 
-        pval_mean_loss = counter_mean_loss / self.permulation_reps
-        pval_mean_dup = counter_mean_dup / self.permulation_reps
-        pvals_hogs = counters_hogs / self.permulation_reps
+        # Rows (HOGs) used for each test's distribution statistics: loss is restricted to
+        # min_occ-max_occ, duplication to min_occ and above
+        occ = self.true_odds.total_occ_arr.ravel()
+        loss_rows = (occ >= self.min_occ) & (occ <= self.max_occ)
+        dup_rows = occ >= self.min_occ
+
+        true_loss = self.true_odds.loss_lor_arr
+        true_dup = self.true_odds.dup_lor_arr
+
+        # Permulations are processed in chunks to bound memory (n_hogs x chunk matrices)
+        chunk_size = 100
+        for start in tqdm(range(0, self.permulation_reps, chunk_size)):
+            stop = min(start + chunk_size, self.permulation_reps)
+            fg_chunk = foreground_mat[:, start:stop]
+            bg_chunk = background_mat[:, start:stop]
+
+            new_loss = calculate_odds_batch(
+                fg_chunk,
+                bg_chunk,
+                self.true_odds.loss_bool_mat,
+                busco_arr=getattr(self.true_odds, "loss_busco_arr", None),
+            )
+            new_dup = calculate_odds_batch(
+                fg_chunk,
+                bg_chunk,
+                self.true_odds.dup_bool_mat,
+                busco_arr=getattr(self.true_odds, "dup_busco_arr", None),
+            )
+
+            # Count, per HOG, the permulations whose log odds ratio is at least as extreme as the
+            # true one in each direction. Ties count as "as extreme" (inclusive), the standard
+            # permutation-test convention.
+            counters_hogs[:, 0] += (new_loss >= true_loss - TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[:, 1] += (new_loss <= true_loss + TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[:, 2] += (new_dup >= true_dup - TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[:, 3] += (new_dup <= true_dup + TIE_TOLERANCE).sum(axis=1)
+
+            # Mean and standard deviation of each permulated distribution over the tested HOGs
+            self.means_loss[start:stop] = new_loss[loss_rows].mean(axis=0)
+            self.stddevs_loss[start:stop] = new_loss[loss_rows].std(axis=0)
+            self.means_dup[start:stop] = new_dup[dup_rows].mean(axis=0)
+            self.stddevs_dup[start:stop] = new_dup[dup_rows].std(axis=0)
+
+        # Compare each permulated mean with the true mean in the direction of the alternative
+        counter_mean_loss = int((self.means_loss <= self.true_mean_loss).sum())
+        counter_mean_dup = int((self.means_dup >= self.true_mean_dup).sum())
+
+        # Add-one estimator: the observed labeling counts as one more draw from the null, so a
+        # p-value is never 0 and cannot go below 1 / (permulation_reps + 1)
+        pval_mean_loss = (counter_mean_loss + 1) / (self.permulation_reps + 1)
+        pval_mean_dup = (counter_mean_dup + 1) / (self.permulation_reps + 1)
+        pvals_hogs = (counters_hogs + 1) / (self.permulation_reps + 1)
         _cprint(
             f"Permulation counter for MEANS:\n Loss: {str(counter_mean_loss)}, Duplication: {str(counter_mean_dup)}\n"
         )
@@ -701,6 +572,31 @@ class PermulationTestResults:
         self.results_df["P-value loss more likely in bg"] = pvals_hogs[:, 1]
         self.results_df["P-value duplication more likely in fg"] = pvals_hogs[:, 2]
         self.results_df["P-value duplication more likely in bg"] = pvals_hogs[:, 3]
+
+        # Benjamini-Hochberg q-values, computed only over the HOGs actually tested (loss:
+        # min_occ-max_occ; duplication: min_occ and above; NaN elsewhere). The two directions of a
+        # test are two tails of one comparison, so each test's fg and bg p-values are stacked and
+        # corrected together.
+        occ = self.results_df["Occupancy"]
+        tested = {
+            "loss": (occ >= self.min_occ) & (occ <= self.max_occ),
+            "duplication": occ >= self.min_occ,
+        }
+        for test_name, in_universe in tested.items():
+            fg_col = f"P-value {test_name} more likely in fg"
+            bg_col = f"P-value {test_name} more likely in bg"
+            stacked = np.concatenate(
+                [
+                    self.results_df.loc[in_universe, fg_col].to_numpy(),
+                    self.results_df.loc[in_universe, bg_col].to_numpy(),
+                ]
+            )
+            qvals = benjamini_hochberg(stacked)
+            n_tested = int(in_universe.sum())
+            for group, block in (("fg", qvals[:n_tested]), ("bg", qvals[n_tested:])):
+                qcol = f"Q-value {test_name} more likely in {group}"
+                self.results_df[qcol] = np.nan
+                self.results_df.loc[in_universe, qcol] = block
 
         # Getting average stats from across the 10000 permulated distributions
         self.loss_mean_av = np.mean(self.means_loss)
@@ -722,10 +618,13 @@ class PermulationTestResults:
         if max_occ is None:
             max_occ = self.max_occ
 
+        # alpha is the two-sided level; each direction is tested at alpha / 2
+        tail_alpha = self.alpha / 2
+
         loss_fg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["Occupancy"] <= max_occ)
-            & (df["P-value loss more likely in fg"] <= self.alpha)
+            & (df["P-value loss more likely in fg"] <= tail_alpha)
         ].copy()
 
         loss_fg_df["Significant by avgd thresholds"] = np.where(
@@ -735,7 +634,7 @@ class PermulationTestResults:
         loss_bg_df = df[
             (df["Occupancy"] >= min_occ)
             & (df["Occupancy"] <= max_occ)
-            & (df["P-value loss more likely in bg"] <= self.alpha)
+            & (df["P-value loss more likely in bg"] <= tail_alpha)
         ].copy()
 
         loss_bg_df["Significant by avgd thresholds"] = np.where(
@@ -744,7 +643,7 @@ class PermulationTestResults:
 
         dup_fg_df = df[
             (df["Occupancy"] >= min_occ)
-             & (df["P-value duplication more likely in fg"] <= self.alpha)
+             & (df["P-value duplication more likely in fg"] <= tail_alpha)
             
         ].copy()
 
@@ -756,7 +655,7 @@ class PermulationTestResults:
 
         dup_bg_df = df[
             (df["Occupancy"] >= min_occ)
-            & (df["P-value duplication more likely in bg"] <= self.alpha)
+            & (df["P-value duplication more likely in bg"] <= tail_alpha)
         ].copy()
 
         dup_bg_df["Significant by avgd thresholds"] = np.where(
@@ -964,7 +863,7 @@ class PermulationTestResults:
                 f"Permulated average standard deviation, loss: {self._fmt_stat(self.loss_stddev_av, ndigits=3)}\n"
                 f"Permulated average mean, duplication: {self._fmt_stat(self.dup_mean_av, ndigits=3)}\n"
                 f"Permulated average standard deviation, duplication: {self._fmt_stat(self.dup_stddev_av, ndigits=3)}\n"
-                f"User-defined significance threshold: {self.alpha}\n"
+                f"User-defined significance threshold: {self.alpha} (two-sided; {self.alpha / 2} per direction)\n"
                 f"Permulation-derived alpha threshold, loss: {self._fmt_ci(self.loss_ci_av, ndigits=3)}\n"
                 f"Permulation-derived alpha threshold, duplication: {self._fmt_ci(self.dup_ci_av, ndigits=3)}\n\n"
                 f"Significant HOGs (all): {self.all_hits_count}\n",
@@ -1038,9 +937,6 @@ class PermulationTestResults:
         # Save a text file summarizing results from the analysis
         self.print_permulation_results(fname=f"{results_dir}/" + "results_summary.txt")
 
-        # Save LOC lists for significant hits and universes.
-        self.save_go_lists(results_dir=results_dir, use_avg_cis=True)
-
         #### Save figures ####
 
         figure_outputs = [
@@ -1060,10 +956,6 @@ class PermulationTestResults:
             "  - results_all.csv: all HOG odds/log-odds and p-values\n"
             "  - fltrd_hits.csv: significant hits after occupancy/p-value filters\n"
             "  - results_summary.txt: text summary of run settings and statistics\n"
-            "  - loc_lists/: LOC exports for hits and universes\n"
-            "    - *_sig_locs.txt: hit LOC lists\n"
-            "    - *_sig_locs_perm_pval.txt: hit LOC lists filtered by permulation p-values\n"
-            "    - loss_universe_locs.txt / dup_universe_locs.txt: universe LOC lists\n"
             "  - loss_stats_dists.png: permulated mean/stddev histograms for loss\n"
             "  - dup_stats_dists.png: permulated mean/stddev histograms for duplication\n"
             "  - loss_results.png: loss LOR true distribution vs permulated average\n"
@@ -1129,8 +1021,7 @@ def odds_ratio_test(
         buscos_filename=buscos_filename,
     )
 
-    # Determine permulation assignments source.
-    # Priority: explicit in-memory values > provided CSV > random permulation.
+    # Permulated tip values are read from the CSV written by permulations.R.
     permulation_tip_values = load_permulation_tip_values_from_csv(
         permulations_tip_values_csv
     )
@@ -1177,7 +1068,7 @@ def odds_ratio_test(
             results_dir=unique_results_dir,
             save_pickle=save_pickle,
             fg_name=fg_name,
-            bg_name=bg_name,
+            bg_name=bg_name or "background",
         )
 
     else:

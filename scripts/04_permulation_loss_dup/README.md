@@ -72,3 +72,18 @@ extreme as the true one (inclusive of ties, within a 1e-9 tolerance), in each di
 The same add-one estimator is used for the global mean tests. A p-value therefore never reaches 0 and cannot go below `1 / (permulations + 1)`.
 The two directions of one test are the two tails of the same comparison, so `alpha` (default 0.05) is treated as a two-sided level and each direction is
 called at `alpha / 2` (0.025). `results_df` also carries Benjamini-Hochberg q-values (`Q-value ...`) computed over both directions of each test stacked together.
+
+## Pre-specified directions
+
+The hypotheses are directional: loss is more likely in non-orb-weavers (the background) and duplication is more likely in orb-weavers (the foreground).
+`directional_q_values` in `odds_ratio_test_helpers.py` computes Benjamini-Hochberg q-values for just those two one-sided tests, each corrected within its own tail over the HOGs
+tested for it (loss: occupancy `min_occ`-`max_occ`; duplication: `min_occ` and above). `PermulationTestResults` adds them to `results_df` as
+`Q-value loss more likely in bg (directional)` and `Q-value duplication more likely in fg (directional)`, and `results_summary.txt` reports how many HOGs reach q < 0.05.
+The two-sided `Q-value ...` columns, which stack both tails of each test, are still produced. For results files written before this existed,
+call `directional_q_values(results_df, min_occ, max_occ)` on the `results_all.csv` table.
+
+## Which HOGs get p-values
+
+The permulation loop only evaluates the HOGs that are tested: loss for occupancy `min_occ`-`max_occ` and duplication for occupancy `min_occ` and above.
+In `results_all.csv`, a HOG outside a test's range has an empty p-value (and q-value) for that test, for example the loss p-values of HOGs present in more than `max_occ` species.
+Log odds ratios are still reported for every HOG.

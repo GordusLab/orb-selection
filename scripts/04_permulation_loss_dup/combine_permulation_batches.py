@@ -9,6 +9,7 @@ Usage (from the repo root):
 import argparse
 import glob
 import os
+import re
 import sys
 
 import pandas as pd
@@ -24,11 +25,23 @@ def main():
         help="Existing tip-value CSVs to include (e.g. the original 10,000 permulations)",
     )
     parser.add_argument("--out", default="data/perms_tip_values_100k.csv")
+    parser.add_argument(
+        "--max-batch",
+        type=int,
+        default=None,
+        help="Only use batches with an id up to this number (batches are named batch_<id>_tip_values.csv)",
+    )
     args = parser.parse_args()
 
-    paths = list(args.include) + sorted(
-        glob.glob(os.path.join(args.batches_dir, "batch_*_tip_values.csv"))
+    def batch_id(path):
+        return int(re.search(r"batch_(\d+)_tip_values", os.path.basename(path)).group(1))
+
+    batch_paths = sorted(
+        glob.glob(os.path.join(args.batches_dir, "batch_*_tip_values.csv")), key=batch_id
     )
+    if args.max_batch is not None:
+        batch_paths = [p for p in batch_paths if batch_id(p) <= args.max_batch]
+    paths = list(args.include) + batch_paths
     if not paths:
         sys.exit("No input CSVs found.")
 

@@ -27,6 +27,7 @@ from odds_ratio_test_helpers import (
     benjamini_hochberg,
     calculate_odds,
     calculate_odds_batch,
+    directional_q_values,
     drop_empty_cols,
     filter_for_sp_of_interest,
     load_permulation_tip_values_from_csv,
@@ -508,14 +509,18 @@ class PermulationTestResults:
                 "No species names from permulation tips matched analysis species names."
             )
 
-        # Rows (HOGs) used for each test's distribution statistics: loss is restricted to
-        # min_occ-max_occ, duplication to min_occ and above
+        # Only the HOGs that are actually tested are evaluated: loss within min_occ-max_occ,
+        # duplication at min_occ and above. HOGs outside those ranges get no p-value (NaN).
         occ = self.true_odds.total_occ_arr.ravel()
-        loss_rows = (occ >= self.min_occ) & (occ <= self.max_occ)
-        dup_rows = occ >= self.min_occ
+        loss_idx = np.where((occ >= self.min_occ) & (occ <= self.max_occ))[0]
+        dup_idx = np.where(occ >= self.min_occ)[0]
 
-        true_loss = self.true_odds.loss_lor_arr
-        true_dup = self.true_odds.dup_lor_arr
+        loss_mat = self.true_odds.loss_bool_mat[loss_idx]
+        dup_mat = self.true_odds.dup_bool_mat[dup_idx]
+        loss_busco = getattr(self.true_odds, "loss_busco_arr", None)
+        dup_busco = getattr(self.true_odds, "dup_busco_arr", None)
+        true_loss = self.true_odds.loss_lor_arr[loss_idx]
+        true_dup = self.true_odds.dup_lor_arr[dup_idx]
 
         # Permulations are processed in chunks to bound memory (n_hogs x chunk matrices)
         chunk_size = 100
@@ -524,32 +529,22 @@ class PermulationTestResults:
             fg_chunk = foreground_mat[:, start:stop]
             bg_chunk = background_mat[:, start:stop]
 
-            new_loss = calculate_odds_batch(
-                fg_chunk,
-                bg_chunk,
-                self.true_odds.loss_bool_mat,
-                busco_arr=getattr(self.true_odds, "loss_busco_arr", None),
-            )
-            new_dup = calculate_odds_batch(
-                fg_chunk,
-                bg_chunk,
-                self.true_odds.dup_bool_mat,
-                busco_arr=getattr(self.true_odds, "dup_busco_arr", None),
-            )
+            new_loss = calculate_odds_batch(fg_chunk, bg_chunk, loss_mat, busco_arr=loss_busco)
+            new_dup = calculate_odds_batch(fg_chunk, bg_chunk, dup_mat, busco_arr=dup_busco)
 
             # Count, per HOG, the permulations whose log odds ratio is at least as extreme as the
             # true one in each direction. Ties count as "as extreme" (inclusive), the standard
             # permutation-test convention.
-            counters_hogs[:, 0] += (new_loss >= true_loss - TIE_TOLERANCE).sum(axis=1)
-            counters_hogs[:, 1] += (new_loss <= true_loss + TIE_TOLERANCE).sum(axis=1)
-            counters_hogs[:, 2] += (new_dup >= true_dup - TIE_TOLERANCE).sum(axis=1)
-            counters_hogs[:, 3] += (new_dup <= true_dup + TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[loss_idx, 0] += (new_loss >= true_loss - TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[loss_idx, 1] += (new_loss <= true_loss + TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[dup_idx, 2] += (new_dup >= true_dup - TIE_TOLERANCE).sum(axis=1)
+            counters_hogs[dup_idx, 3] += (new_dup <= true_dup + TIE_TOLERANCE).sum(axis=1)
 
             # Mean and standard deviation of each permulated distribution over the tested HOGs
-            self.means_loss[start:stop] = new_loss[loss_rows].mean(axis=0)
-            self.stddevs_loss[start:stop] = new_loss[loss_rows].std(axis=0)
-            self.means_dup[start:stop] = new_dup[dup_rows].mean(axis=0)
-            self.stddevs_dup[start:stop] = new_dup[dup_rows].std(axis=0)
+            self.means_loss[start:stop] = new_loss.mean(axis=0)
+            self.stddevs_loss[start:stop] = new_loss.std(axis=0)
+            self.means_dup[start:stop] = new_dup.mean(axis=0)
+            self.stddevs_dup[start:stop] = new_dup.std(axis=0)
 
         # Compare each permulated mean with the true mean in the direction of the alternative
         counter_mean_loss = int((self.means_loss <= self.true_mean_loss).sum())
@@ -560,6 +555,9 @@ class PermulationTestResults:
         pval_mean_loss = (counter_mean_loss + 1) / (self.permulation_reps + 1)
         pval_mean_dup = (counter_mean_dup + 1) / (self.permulation_reps + 1)
         pvals_hogs = (counters_hogs + 1) / (self.permulation_reps + 1)
+        # HOGs outside a test's occupancy range were not tested for it
+        pvals_hogs[np.setdiff1d(np.arange(pvals_hogs.shape[0]), loss_idx), 0:2] = np.nan
+        pvals_hogs[np.setdiff1d(np.arange(pvals_hogs.shape[0]), dup_idx), 2:4] = np.nan
         _cprint(
             f"Permulation counter for MEANS:\n Loss: {str(counter_mean_loss)}, Duplication: {str(counter_mean_dup)}\n"
         )
@@ -597,6 +595,12 @@ class PermulationTestResults:
                 qcol = f"Q-value {test_name} more likely in {group}"
                 self.results_df[qcol] = np.nan
                 self.results_df.loc[in_universe, qcol] = block
+
+        # Pre-specified directions (loss in the background, duplication in the foreground), each
+        # corrected within its own tail
+        self.results_df = self.results_df.join(
+            directional_q_values(self.results_df, self.min_occ, self.max_occ)
+        )
 
         # Getting average stats from across the 10000 permulated distributions
         self.loss_mean_av = np.mean(self.means_loss)
@@ -870,6 +874,24 @@ class PermulationTestResults:
                 file_obj,
             )
             self._emit_count_summary(file_obj, self.counts_hits)
+
+            _emit("\nPre-specified directions (BH within each tail):", file_obj)
+            for label, qcol in (
+                (
+                    "loss more likely in non-orb-weavers",
+                    "Q-value loss more likely in bg (directional)",
+                ),
+                (
+                    "duplication more likely in orb-weavers",
+                    "Q-value duplication more likely in fg (directional)",
+                ),
+            ):
+                q = self.results_df[qcol].dropna()
+                _emit(
+                    f"  - {label}: {len(q)} HOGs tested, {int((q < 0.05).sum())} with q < 0.05, "
+                    f"smallest q {q.min():.4f} ({q.idxmin()})",
+                    file_obj,
+                )
 
             if self.species_of_interest is not None:
                 sp_of_int_counts = self._count_species_of_interest_hits(

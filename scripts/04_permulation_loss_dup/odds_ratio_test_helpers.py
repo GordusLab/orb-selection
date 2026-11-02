@@ -249,6 +249,30 @@ def permulated_foreground_matrices(species_arr, tip_values, included_idx):
     return foreground, background
 
 
+def directional_q_values(results_df, min_occ, max_occ):
+    """Benjamini-Hochberg q-values for the two pre-specified directions.
+
+    The hypotheses are that loss is more likely in the background (non-orb-weavers) and that
+    duplication is more likely in the foreground (orb-weavers). Each direction is a one-sided test
+    corrected within its own tail over the HOGs tested for it (loss: min_occ-max_occ; duplication:
+    min_occ and above); HOGs outside those ranges get NaN.
+
+    Returns a DataFrame indexed like results_df with the two "(directional)" Q-value columns.
+    """
+    occ = results_df["Occupancy"]
+    specs = (
+        ("loss", "bg", (occ >= min_occ) & (occ <= max_occ)),
+        ("duplication", "fg", occ >= min_occ),
+    )
+    out = pd.DataFrame(index=results_df.index)
+    for test_name, group, universe in specs:
+        pcol = f"P-value {test_name} more likely in {group}"
+        qcol = f"Q-value {test_name} more likely in {group} (directional)"
+        out[qcol] = np.nan
+        out.loc[universe, qcol] = benjamini_hochberg(results_df.loc[universe, pcol].to_numpy())
+    return out
+
+
 def load_permulation_tip_values_from_csv(csv_path: str) -> List[Dict[str, float]]:
     """Load permulated tip values from a CSV file."""
     csv_path = _resolve_repo_path(csv_path)
@@ -297,6 +321,7 @@ __all__ = [
     "benjamini_hochberg",
     "calculate_odds",
     "calculate_odds_batch",
+    "directional_q_values",
     "drop_empty_cols",
     "filter_for_sp_of_interest",
     "load_permulation_tip_values_from_csv",

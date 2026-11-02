@@ -6,7 +6,7 @@
 #SBATCH --array=1-45%20
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=16G
+#SBATCH --mem=4000M  # one CPU's share on shared (4000 MB/CPU); measured peak is ~360 MB. Larger requests are charged extra CPUs.
 #SBATCH --output=permulation_batches_%A_%a.out
 #SBATCH --error=permulation_batches_%A_%a.err
 

@@ -27,7 +27,9 @@ from odds_ratio_test_helpers import (
     benjamini_hochberg,
     calculate_odds,
     calculate_odds_batch,
+    calculate_odds_batch_weighted,
     directional_q_values,
+    load_flagged_cells,
     drop_empty_cols,
     filter_for_sp_of_interest,
     load_permulation_tip_values_from_csv,
@@ -61,8 +63,15 @@ class OddsRatioResults:
         foreground_list_filename,
         background_list_filename=None,
         buscos_filename=None,
+        flagged_cells=None,
     ):
-        """Initialize the inputs for the odds ratio calculations"""
+        """Initialize the inputs for the odds ratio calculations
+
+        flagged_cells: optional DataFrame (HOG, species, n_flagged) of gene copies to treat as
+        contaminated. They are removed from the gene counts, and a species with no copy left in a
+        HOG is treated as missing (not absent) in that HOG only.
+        """
+        self.flagged_cells = flagged_cells
         self.genecount_csv = genecount_csv
         self.hog_node_genes_tsv = hog_node_genes_tsv
         self.time = time
@@ -108,6 +117,18 @@ class OddsRatioResults:
             self.dup_bool_mat,
             busco_arr=getattr(self, "dup_busco_arr", None),
         )
+
+        # HOGs with a missing (flagged) cell weight that species 0, so they need the weighted calculation
+        if len(self.flagged_hog_idx):
+            rows = self.flagged_hog_idx
+            for test in ("loss", "dup"):
+                lor_arr = getattr(self, f"{test}_lor_arr")
+                lor_arr[rows] = calculate_odds_batch_weighted(
+                    self.foreground_bool_arr,
+                    self.background_bool_arr,
+                    getattr(self, f"{test}_bool_mat")[rows],
+                    self.weight_matrix(test, rows),
+                )
 
         # Create the results DataFrame
         self.results_df = self.results_to_df()
@@ -178,6 +199,12 @@ class OddsRatioResults:
                 .values
             )
 
+        # Flagged gene copies (suspected contamination) are removed from the counts; a species with no
+        # copy left in a HOG is missing there (not absent) and gets weight 0 in that HOG's tests
+        missing_mat = np.zeros(genecount_df.shape, dtype=bool)
+        self.occ_unflagged_arr = genecount_df.to_numpy().astype(bool).sum(axis=1)
+        genecount_df, missing_mat = self._apply_flagged_cells(genecount_df, missing_mat)
+
         # Convert counts df to numpy
         genecount_mat = genecount_df.to_numpy()
 
@@ -187,13 +214,15 @@ class OddsRatioResults:
         # Calculate the total occupancy of each HOG (number of species present)
         total_occ_arr = occ_bool_mat.sum(axis=1).reshape(genecount_mat.shape[0], 1)
 
-        # Matrix where 1=species is absent from the HOG, 0=species is present
-        loss_bool_mat = np.asarray(genecount_mat == 0).astype(float)
+        # Matrix where 1=species is absent from the HOG, 0=species is present (or missing)
+        loss_bool_mat = np.asarray((genecount_mat == 0) & ~missing_mat).astype(float)
 
         # Matrix where 1=gene with more than 1 copy, 0=gene with 1 or no copies
         dup_bool_mat = np.asarray(genecount_mat > 1).astype(float)
 
         self.genecount_df = genecount_df
+        self.missing_mat = missing_mat
+        self.flagged_hog_idx = np.where(missing_mat.any(axis=1))[0]
         self.hog_list = hog_list
         self.all_species_arr = all_species_arr
         self.total_occ_arr = total_occ_arr
@@ -209,6 +238,41 @@ class OddsRatioResults:
         # should be a good proxy for how reliable duplication calls will be
         if hasattr(self, "buscos"):
             self.dup_busco_arr = sc_busco_arr
+
+    def _apply_flagged_cells(self, genecount_df, missing_mat):
+        """Subtract flagged copies from the counts and mark cells left with no copies as missing."""
+        flagged = self.flagged_cells
+        if flagged is None or len(flagged) == 0:
+            return genecount_df, missing_mat
+
+        hog_pos = {hog: i for i, hog in enumerate(genecount_df.index)}
+        sp_pos = {sp: j for j, sp in enumerate(genecount_df.columns)}
+        counts = genecount_df.to_numpy().copy()
+        n_applied = n_skipped = n_clipped = 0
+        for hog, species, n_flagged in flagged[["HOG", "species", "n_flagged"]].itertuples(index=False):
+            if hog not in hog_pos or species not in sp_pos:
+                n_skipped += 1
+                continue
+            i, j = hog_pos[hog], sp_pos[species]
+            if counts[i, j] == 0:
+                n_skipped += 1  # nothing to remove: the species has no copy in this HOG
+                continue
+            if n_flagged > counts[i, j]:
+                n_clipped += 1
+            counts[i, j] = max(counts[i, j] - n_flagged, 0)
+            missing_mat[i, j] = counts[i, j] == 0
+            n_applied += 1
+        _cprint(
+            f"Flagged cells: {n_applied} applied ({int(missing_mat.sum())} left missing), "
+            f"{n_skipped} skipped (not in the analysis or no copy), {n_clipped} had more flags than copies"
+        )
+        return pd.DataFrame(counts, index=genecount_df.index, columns=genecount_df.columns), missing_mat
+
+    def weight_matrix(self, test, rows):
+        """(len(rows), n_species) species weights for a test: the BUSCO weight, 0 for missing cells."""
+        busco = getattr(self, f"{test}_busco_arr", None)
+        base = np.ones(len(self.all_species_arr)) if busco is None else np.asarray(busco, dtype=float)
+        return base[None, :] * (~self.missing_mat[rows])
 
     def _define_foreground(self):
         """Function to make a numpy vector corresponding to whether
@@ -268,6 +332,9 @@ class OddsRatioResults:
                 "Log odds ratio of duplication": self.dup_lor_arr.flatten(),
             }
         )
+        if self.flagged_cells is not None and len(self.flagged_cells):
+            results_df["Missing flagged cells"] = self.missing_mat.sum(axis=1)
+            results_df["Occupancy (before flagging)"] = self.occ_unflagged_arr
         results_df = results_df.set_index("HOG")
 
         return results_df
@@ -438,6 +505,19 @@ class PermulationTestResults:
         # Column stores labels like "loss_fg"/"dup_bg" or empty strings.
         return vals.fillna("").astype(str).ne("")
 
+    def _report_flag_effect(self, loss_idx, dup_idx):
+        """Print how flagging changed which HOGs are tested."""
+        occ_before = self.true_odds.occ_unflagged_arr
+        occ_after = self.true_odds.total_occ_arr.ravel()
+        tested_loss_before = (occ_before >= self.min_occ) & (occ_before <= self.max_occ)
+        tested_dup_before = occ_before >= self.min_occ
+        n_hogs = len(self.true_odds.flagged_hog_idx)
+        _cprint(
+            f"Flagging touched {n_hogs} HOGs; occupancy changed in {int((occ_before != occ_after).sum())}. "
+            f"Tested for loss: {len(loss_idx)} (was {int(tested_loss_before.sum())}), "
+            f"for duplication: {len(dup_idx)} (was {int(tested_dup_before.sum())})."
+        )
+
     def _count_permulation_significant_hits(self):
         return {
             key: self.results_fltrd_dfs[key][
@@ -522,6 +602,15 @@ class PermulationTestResults:
         true_loss = self.true_odds.loss_lor_arr[loss_idx]
         true_dup = self.true_odds.dup_lor_arr[dup_idx]
 
+        # Tested HOGs with a missing (flagged) cell: positions within loss_idx / dup_idx, and their weights
+        flagged_hogs = self.true_odds.flagged_hog_idx
+        loss_flag_pos = np.where(np.isin(loss_idx, flagged_hogs))[0]
+        dup_flag_pos = np.where(np.isin(dup_idx, flagged_hogs))[0]
+        loss_flag_w = self.true_odds.weight_matrix("loss", loss_idx[loss_flag_pos])
+        dup_flag_w = self.true_odds.weight_matrix("dup", dup_idx[dup_flag_pos])
+        if len(flagged_hogs):
+            self._report_flag_effect(loss_idx, dup_idx)
+
         # Permulations are processed in chunks to bound memory (n_hogs x chunk matrices)
         chunk_size = 100
         for start in tqdm(range(0, self.permulation_reps, chunk_size)):
@@ -531,6 +620,14 @@ class PermulationTestResults:
 
             new_loss = calculate_odds_batch(fg_chunk, bg_chunk, loss_mat, busco_arr=loss_busco)
             new_dup = calculate_odds_batch(fg_chunk, bg_chunk, dup_mat, busco_arr=dup_busco)
+            if len(loss_flag_pos):
+                new_loss[loss_flag_pos] = calculate_odds_batch_weighted(
+                    fg_chunk, bg_chunk, loss_mat[loss_flag_pos], loss_flag_w
+                )
+            if len(dup_flag_pos):
+                new_dup[dup_flag_pos] = calculate_odds_batch_weighted(
+                    fg_chunk, bg_chunk, dup_mat[dup_flag_pos], dup_flag_w
+                )
 
             # Count, per HOG, the permulations whose log odds ratio is at least as extreme as the
             # true one in each direction. Ties count as "as extreme" (inclusive), the standard
@@ -835,6 +932,13 @@ class PermulationTestResults:
                     file_obj,
                 )
             _emit(f"Gene count file: {self.true_odds.genecount_csv}", file_obj)
+            flagged = self.true_odds.flagged_cells
+            if flagged is not None and len(flagged):
+                _emit(
+                    f"Flagged cells: {len(flagged)} species-by-HOG cells in {len(self.true_odds.flagged_hog_idx)} "
+                    f"HOGs treated as contaminated ({int(self.true_odds.missing_mat.sum())} left missing)",
+                    file_obj,
+                )
             _emit(
                 f"Hierarchical orthogroup file: {self.true_odds.hog_node_genes_tsv}\n",
                 file_obj,
@@ -1004,8 +1108,15 @@ def odds_ratio_test(
     correct_for_buscos=True,
     save_pickle=True,
     dir_suffix=None,
+    flagged_cells_file=None,
+    flag_strengths=("strong",),
 ):
-    """Run the full odds ratio test."""
+    """Run the full odds ratio test.
+
+    flagged_cells_file: optional table of suspected-contamination gene copies (see
+    load_flagged_cells); flagged copies are removed and emptied cells are treated as missing in
+    that HOG only. flag_strengths: which strength labels of a gene-level table to use.
+    """
 
     if results_dir is not None:
         if fg_name is None:
@@ -1033,6 +1144,12 @@ def odds_ratio_test(
     if genecount_csv is None:
         genecount_csv = orthogroup_gene_count.main(hog_node_genes_tsv)
 
+    flagged_cells = (
+        load_flagged_cells(flagged_cells_file, strengths=flag_strengths)
+        if flagged_cells_file is not None
+        else None
+    )
+
     # Get the true odds ratio results
     true_odds = OddsRatioResults(
         genecount_csv=genecount_csv,
@@ -1041,6 +1158,7 @@ def odds_ratio_test(
         foreground_list_filename=foreground_list_filename,
         background_list_filename=background_list_filename,
         buscos_filename=buscos_filename,
+        flagged_cells=flagged_cells,
     )
 
     # Permulated tip values are read from the CSV written by permulations.R.

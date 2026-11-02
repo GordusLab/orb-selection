@@ -231,6 +231,58 @@ def calculate_odds_batch(foreground_mat, background_mat, test_bool_mat, busco_ar
     return np.log((foreground_yes / foreground_no) / (background_yes / background_no))
 
 
+def calculate_odds_batch_weighted(foreground_mat, background_mat, test_bool_mat, weight_mat):
+    """Log odds ratios with a separate species weight for every HOG.
+
+    Like calculate_odds_batch, but `weight_mat` is (n_hogs, n_species) instead of one weight per
+    species, so a species can be given weight 0 (treated as missing) in some HOGs only. With
+    weight_mat = busco_arr[None, :] repeated over HOGs the result equals calculate_odds_batch.
+
+    Args:
+        foreground_mat, background_mat: (n_species, n_assignments) 1/0 matrices.
+        test_bool_mat: (n_hogs, n_species) 1/0 matrix, 1 = species has the event.
+        weight_mat: (n_hogs, n_species) weights; 0 removes the species from that HOG's test.
+
+    Returns:
+        (n_hogs, n_assignments) array of log odds ratios.
+    """
+    foreground_mat = np.asarray(foreground_mat, dtype=float)
+    background_mat = np.asarray(background_mat, dtype=float)
+    weighted_events = test_bool_mat * weight_mat
+
+    foreground_yes = weighted_events @ foreground_mat + 0.5
+    background_yes = weighted_events @ background_mat + 0.5
+    foreground_no = weight_mat @ foreground_mat - (foreground_yes - 0.5) + 0.5
+    background_no = weight_mat @ background_mat - (background_yes - 0.5) + 0.5
+
+    return np.log((foreground_yes / foreground_no) / (background_yes / background_no))
+
+
+def load_flagged_cells(path, strengths=("strong",)):
+    """Number of flagged gene copies per (HOG, species) cell from a flag table.
+
+    The table is a CSV/TSV with a HOG column and a species column. A gene-level table (one row per
+    flagged gene) has a `strength` column: only rows whose strength is in `strengths` are counted, one
+    flagged copy per row. A cell-level table has an `n_flagged` column that is used as given.
+
+    Returns:
+        DataFrame with columns HOG, species, n_flagged (one row per cell).
+    """
+    path = _resolve_repo_path(path)
+    sep = "\t" if str(path).endswith((".tsv", ".txt")) else ","
+    table = pd.read_csv(path, sep=sep)
+    for col in ("HOG", "species"):
+        if col not in table.columns:
+            raise ValueError(f"Flag table {path} needs a '{col}' column (found {list(table.columns)}).")
+    if "strength" in table.columns:
+        keep = table["strength"].isin(list(strengths))
+        table = table[keep]
+        return table.groupby(["HOG", "species"]).size().rename("n_flagged").reset_index()
+    if "n_flagged" not in table.columns:
+        raise ValueError(f"Flag table {path} needs a 'strength' (gene-level) or 'n_flagged' (cell-level) column.")
+    return table.groupby(["HOG", "species"], as_index=False)["n_flagged"].sum()
+
+
 def permulated_foreground_matrices(species_arr, tip_values, included_idx):
     """Species-by-permulation foreground/background matrices in analysis species order.
 

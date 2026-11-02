@@ -54,6 +54,19 @@ def main():
     parser.add_argument("--fg-name", default="orbweavers")
     parser.add_argument("--bg-name", default="non-orbweavers")
     parser.add_argument(
+        "--flagged-cells",
+        default=None,
+        help="Table of suspected-contamination gene copies (HOG, species, and either 'strength' or "
+        "'n_flagged' columns). Flagged copies are removed; a species left with no copy in a HOG is "
+        "treated as missing in that HOG only.",
+    )
+    parser.add_argument(
+        "--flag-strengths",
+        nargs="+",
+        default=["strong"],
+        help="Strength labels to use from a gene-level flag table, e.g. 'strong' or 'strong moderate'",
+    )
+    parser.add_argument(
         "--no-pickle",
         action="store_true",
         help="Do not save results.pkl (it includes every permulated tip assignment)",
@@ -77,6 +90,8 @@ def main():
         bg_name=args.bg_name,
         save_pickle=not args.no_pickle,
         dir_suffix=args.dir_suffix,
+        flagged_cells_file=args.flagged_cells,
+        flag_strengths=tuple(args.flag_strengths),
     )
     print("DONE")
 

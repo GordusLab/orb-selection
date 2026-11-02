@@ -114,3 +114,14 @@ The species-removal analysis uses `data/hub_species_to_exclude.txt`, `data/orbwe
 ## Presentation figures
 
 The last section of `scripts/07_figures_tables/Odds Ratio Test Plots.ipynb` draws figures explaining what a permulation is, why it differs from a random shuffle, and where the candidate HOG falls in its null distribution. They are saved to `figures/presentation/`.
+
+## Cell-level flags (suspected contamination)
+
+A species-by-HOG cell can be flagged when that species' member of the HOG looks like a contaminant. `--flagged-cells FILE` (`flagged_cells_file` in `odds_ratio_test()`) treats flagged cells as missing data in that HOG only; the species stays in every other HOG and the permulations are unchanged (same tree, same foreground count).
+
+- The table is a CSV/TSV with `HOG` and `species` columns plus either `strength` (gene-level, one row per flagged gene; `--flag-strengths strong` or `--flag-strengths strong moderate` chooses which rows count) or `n_flagged` (cell-level). The column names are provisional until the final flag table exists (`load_flagged_cells` in `odds_ratio_test_helpers.py`).
+- Flagged copies are subtracted from the gene counts, which can change a duplication call (count > 1). A species left with no copy is missing, not absent: it counts as neither a loss nor a duplication, and it is left out of that HOG's occupancy.
+- Missing cells get weight 0 in that HOG's test. `calculate_odds_batch_weighted` takes a HOG-by-species weight matrix (BUSCO weight times 0 or 1) in place of the single per-species BUSCO vector, and is used only for HOGs with at least one missing cell, for the true values and in every permulation. All other HOGs use the unchanged code, so their results are identical.
+- The log shows how many HOGs were touched, how many changed occupancy, and how many HOGs are tested for loss and duplication before and after. `results_all.csv` gets `Missing flagged cells` and `Occupancy (before flagging)` columns, and `results_summary.txt` reports the flagged cells.
+- Checks: with an empty table the log odds ratios equal the existing 100k `results_all.csv` to 1e-15; `calculate_odds_batch_weighted` equals `calculate_odds_batch` with BUSCO weights; a hand-computed toy example matches; masking the 8 non-orb-weaver carriers of N5.HOG0071799 gives a loss log odds ratio of -6.03 (-3.26 as analysed) and duplication 3.49 (3.64).
+

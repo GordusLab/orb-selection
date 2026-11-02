@@ -1,0 +1,14 @@
+Permulation-based GO enrichment
+permulations: 1000000 (data/perms_tip_values_1M.csv)
+term size filter: 5-500 genes; occupancy 30-88 (loss), >= 30 (duplication)
+fg = higher log odds ratio in orb-weavers (event more likely in orb-weavers); bg = more likely in non-orb-weavers
+
+== loss ==
+BP: 1326 terms | p<=0.025: fg 7, bg 24 | BH q<0.05: fg 0, bg 0 | max-T p<0.05: fg 0, bg 0 | smallest q: fg 0.846, bg 0.745
+MF: 584 terms | p<=0.025: fg 1, bg 20 | BH q<0.05: fg 0, bg 0 | max-T p<0.05: fg 0, bg 0 | smallest q: fg 0.715, bg 0.715
+CC: 333 terms | p<=0.025: fg 5, bg 10 | BH q<0.05: fg 0, bg 0 | max-T p<0.05: fg 0, bg 0 | smallest q: fg 0.635, bg 0.635
+
+== dup ==
+BP: 1774 terms | p<=0.025: fg 24, bg 56 | BH q<0.05: fg 0, bg 0 | max-T p<0.05: fg 0, bg 0 | smallest q: fg 0.522, bg 0.186
+MF: 737 terms | p<=0.025: fg 10, bg 18 | BH q<0.05: fg 0, bg 0 | max-T p<0.05: fg 0, bg 0 | smallest q: fg 0.948, bg 0.948
+CC: 472 terms | p<=0.025: fg 4, bg 29 | BH q<0.05: fg 0, bg 0 | max-T p<0.05: fg 0, bg 0 | smallest q: fg 0.637, bg 0.497

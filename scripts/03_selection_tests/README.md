@@ -176,6 +176,24 @@ results_with_locs = convert_hyphy_results_to_locs(filtered.results_df)
 results_with_locs.to_csv('../../results/relax_significant_with_locs.csv', index=False)
 ```
 
+## Permuted-label RELAX null
+
+Calibrates the real RELAX results against permulated phenotype labelings (the same
+`data/perms_tip_values_100k.csv` used for the odds ratio test). A fixed random subset of
+HOGs is re-run under many permuted foreground labelings, so each labeling is applied to the
+same genes; genome-wide statistics (fraction significant, fraction with k > 1, median log2 k)
+are then compared with the real labeling on the same HOGs. RELAX foreground is the
+non-orb-weavers, i.e. the tips with value 0 in a permulation row.
+
+1. `python make_permuted_relax_manifest.py --outdir DIR` -- samples HOGs (default: runtime tier A,
+   60 HOGs) and labelings (default: 30) and writes `DIR/manifest.tsv` and `DIR/hogs.txt`
+2. `sbatch --array=1-<n_tasks> run_relax_permuted.sh DIR/manifest.tsv WD OUT_ROOT HYPHY_ANALYSES` --
+   one RELAX run per (HOG, labeling), reusing the real run's alignment and IQ-TREE tree
+3. `python summarize_permuted_relax.py --perm-root OUT_ROOT --hogs DIR/hogs.txt`
+
+Before submitting the full array, check that one permuted tree under `OUT_ROOT/<perm_id>/` has the
+expected `{Foreground}` labels.
+
 ## Dependencies
 
 The module requires:

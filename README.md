@@ -117,6 +117,18 @@ The script and notebook in [`scripts/05_phyloglm`](scripts/05_phyloglm) fit a ph
 1. Run phyloglm analysis in parallel on ~12000 genes: [`phyloglm.R`](scripts/05_phyloglm/phyloglm.R)
 2. Inspect significant results: [`PhyloGLM Analysis.ipynb`](scripts/05_phyloglm/PhyloGLM%20Analysis.ipynb)
 
+### Permulation null for phyloglm
+
+The model-based p-values from step 1 are inflated under permuted phenotype labelings, so per-gene
+empirical p-values are computed from the same permulations used for the odds ratio test
+(`data/perms_tip_values_100k.csv`). The model is `gene_count ~ orb_weaving + BUSCO fraction complete +
+BUSCO fraction duplicated` (Poisson GEE; `--no-busco` drops the covariates).
+
+1. Small calibration run (random gene subset x labelings, compares genome-wide statistics against the real labeling): [`phyloglm_permuted.R`](scripts/05_phyloglm/phyloglm_permuted.R)
+2. Full gene x labeling run, one SLURM array task per chunk of labelings (task 0 = real labeling): [`run_phyloglm_permuted.sh`](scripts/05_phyloglm/run_phyloglm_permuted.sh) calls [`phyloglm_permuted_chunk.R`](scripts/05_phyloglm/phyloglm_permuted_chunk.R)
+3. Combine chunks into per-gene empirical p-values (BH q-values) and genome-wide null statistics: [`summarize_phyloglm_permuted.R`](scripts/05_phyloglm/summarize_phyloglm_permuted.R)
+4. Optionally extend the strongest genes to more labelings (`phyloglm_permuted_chunk.R --genes FILE --perms data/perms_tip_values_500k.csv`, run through `run_phyloglm_permuted.sh` with `EXTRA_ARGS`) and merge with [`summarize_phyloglm_extend.R`](scripts/05_phyloglm/summarize_phyloglm_extend.R)
+
 ## Stage 06: Ontology enrichment analysis
 
 The scripts in [`scripts/06_enrichment`](scripts/06_enrichment) create significant gene ID lists from HyPhy and `odds_ratio_test.py` results and run GO enrichment summaries.

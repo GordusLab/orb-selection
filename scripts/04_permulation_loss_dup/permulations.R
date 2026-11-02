@@ -86,11 +86,13 @@ save_tip_values <- function(testCatPerms, output_csv_path) {
     write.csv(tip_df, output_csv_path, row.names = FALSE)
 }
 
-# Initial run
-testCatPerms <- run_categorical_permulations(
-    foreground_list_filename = here("data/orbweavers-list.txt"),
-    ntrees = 10000,
-    save_rdata_path = here("data/perms10000.RData"),
-)
+# Initial run (only when run directly, so permulations_batch.R can source the functions above)
+if (sys.nframe() == 0) {
+    testCatPerms <- run_categorical_permulations(
+        foreground_list_filename = here("data/orbweavers-list.txt"),
+        ntrees = 10000,
+        save_rdata_path = here("data/perms10000.RData"),
+    )
 
-save_tip_values(testCatPerms, here("data/perms_tip_values.csv"))
+    save_tip_values(testCatPerms, here("data/perms_tip_values.csv"))
+}

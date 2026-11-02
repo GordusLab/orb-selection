@@ -249,6 +249,25 @@ def permulated_foreground_matrices(species_arr, tip_values, included_idx):
     return foreground, background
 
 
+def load_permulation_matrices(csv_path, species_arr, included_idx):
+    """Species-by-permulation foreground/background matrices in analysis species order."""
+    tips = pd.read_csv(csv_path)
+    species_cols = [c for c in tips.columns if c != "perm_id"]
+    values = tips[species_cols].to_numpy(dtype=float).T  # (n_csv_species, n_perm)
+    col_index = {name: i for i, name in enumerate(species_cols)}
+
+    missing = [species_arr[i] for i in included_idx if species_arr[i] not in col_index]
+    if missing:
+        raise ValueError(f"Species in the analysis but not in the permulation CSV: {missing[:5]}")
+
+    foreground = np.zeros((len(species_arr), values.shape[1]))
+    for idx in included_idx:
+        foreground[idx] = (values[col_index[species_arr[idx]]] == 1.0).astype(float)
+    background = np.zeros_like(foreground)
+    background[included_idx] = 1.0 - foreground[included_idx]
+    return foreground, background
+
+
 def directional_q_values(results_df, min_occ, max_occ):
     """Benjamini-Hochberg q-values for the two pre-specified directions.
 
@@ -324,6 +343,7 @@ __all__ = [
     "directional_q_values",
     "drop_empty_cols",
     "filter_for_sp_of_interest",
+    "load_permulation_matrices",
     "load_permulation_tip_values_from_csv",
     "occupancy_filter",
     "permulated_foreground_matrices",

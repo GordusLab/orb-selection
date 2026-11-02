@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-02 - Large permulation sets, directional correction, power analysis, enrichment and presentation figures
+
+### Added
+
+- Batched permulation generation (`permulations_batch.R`, `permulations_batch_slurm.sh`, `run_permulation_batches.sh`, `combine_permulation_batches.py`) and 100k, 500k and 1M permulation sets.
+- `run_odds_ratio_test.py` and `run_odds_ratio_test_slurm.sh` to run the odds ratio test from the command line or on SLURM.
+- Directional q-values (loss in non-orb-weavers, duplication in orb-weavers) next to the stacked two-tail q-values, and add-one empirical p-values.
+- `power_analysis.py` (synthetic-gene power of the permulation test) with results in `results/power_analysis/`.
+- `scripts/06_enrichment/permulation_enrichment.py` and `export_go_term_genes.R`: permulation-based GO enrichment of loss/duplication log odds ratios (results in `results/permulation_enrichment/`).
+- Species-removal robustness option: `--foreground-list` / `--background-list` in the test runner, an exclusion file for permulation generation, and `data/*_nohubs.txt` lists.
+- Presentation figures section in `Odds Ratio Test Plots.ipynb`, with PNGs in `figures/presentation/`.
+- Results of the odds ratio test at 10k, 100k, 500k and 1M permulations in `results/odds_ratio_test/Results_Nov02/`.
+
+### Changed
+
+- The odds ratio test evaluates only the HOGs that are tested (loss: occupancy 30-88, duplication: occupancy 30 and above); other HOGs get empty p-values.
+- Permulation loading helper moved to `odds_ratio_test_helpers.py` and shared with the enrichment script; removed `save_loc_list`.
+- `Odds Ratio Test Plots.ipynb` loads results from the Nov 02 100k run.
+
 ## 2026-09-02 - aBSREL Removal
 
 ### Removed

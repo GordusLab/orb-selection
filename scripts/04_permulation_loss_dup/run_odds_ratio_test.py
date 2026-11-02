@@ -38,6 +38,13 @@ def main():
         default=None,
         help="Number of permulations to use (default: every row of the CSV)",
     )
+    parser.add_argument("--foreground-list", default="data/orbweavers-list.txt")
+    parser.add_argument(
+        "--background-list",
+        default=None,
+        help="Background species (default: every other species in the gene-count table). "
+        "Give both lists to analyse a subset of species.",
+    )
     parser.add_argument("--min-occ", type=int, default=30)
     parser.add_argument("--max-occ", type=int, default=88, help="Upper occupancy bound for loss")
     parser.add_argument("--alpha", type=float, default=0.05, help="Two-sided level")
@@ -62,6 +69,8 @@ def main():
         alpha=args.alpha,
         permulation_reps=reps,
         permulations_tip_values_csv=args.permulations_csv,
+        foreground_list_filename=args.foreground_list,
+        background_list_filename=args.background_list,
         species_of_interest=args.species_of_interest,
         results_dir=args.results_dir,
         fg_name=args.fg_name,

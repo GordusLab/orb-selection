@@ -20,6 +20,10 @@
 |`orthorun_list_fams_busco90.csv`| List of species of accessed transcriptomes filtered to those with at least 90% complete BUSCOs and no more than 30% duplicated BUSCOs.|
 |`perms10000.RData`| RData object from the permulation run used in the log odds ratio test analysis.|
 |`perms_tip_values.csv`| 10000 permulated phenotype vectors used in the log odds ratio test analysis.|
+|`perms_tip_values_100k.csv`, `perms_tip_values_500k.csv`, `perms_tip_values_1M.csv`| 100,000 / 500,000 / 1,000,000 permulated phenotype vectors (generated in batches by [`permulations_batch.R`](../scripts/04_permulation_loss_dup/permulations_batch.R)); not tracked in GitHub due to size. The 500k and 1M sets extend the 100k set.|
+|`hub_species_to_exclude.txt`| Nine species dropped in the species-removal robustness analysis of the log odds ratio test.|
+|`orbweavers-list_nohubs.txt`, `non-orb-weavers-list_nohubs.txt`| The orb-weaver and non-orb-weaver lists without the species in `hub_species_to_exclude.txt`.|
+|`udiv_go_term_gene_sets.tsv`| GO term to *U. diversus* gene sets used by the permulation-based enrichment ([`permulation_enrichment.py`](../scripts/06_enrichment/permulation_enrichment.py)).|
 |`ptep_GO.gmt`| GMT file containing GO terms for all *P. tepidariorum* genes; combined with `udiv_GO.gmt` for use as the reference for creating the network plot in [Figure 5](figures/figure_5). |
 |`ptep_gene_ontology.gaf`| Gene annotation file from _P. tepidariorum_ (Zhu et al. 2023) used to annotate orthogroups. |
 |`ptep_go_annots.all.tsv`| GO annotations for _P. tepidariorum_ gene IDs used in the ontology enrichment pipeline [scripts/06_enrichment](scripts/06_enrichment).|

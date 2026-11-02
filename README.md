@@ -107,6 +107,16 @@ The scripts and notebooks in [`scripts/04_permulation_loss_dup`](scripts/04_perm
 1. Generate and export permulation tip assignments: [`permulations.R`](scripts/04_permulation_loss_dup/permulations.R)
 2. Run loss/duplication odds-ratio test module [`odds_ratio_test.py`](scripts/04_permulation_loss_dup/odds_ratio_test.py) using the workflow in the [`Odds Ratio Permulation Test.ipynb`](scripts/04_permulation_loss_dup/Odds%20Ratio%20Permulation%20Test.ipynb) notebook
 
+### Larger permulation sets and cluster runs
+
+Because the smallest possible p-value is `1 / (permulations + 1)`, a Benjamini-Hochberg correction over thousands of HOGs needs far more than 10,000 permulations to call a single gene.
+The extended workflow generates 100,000 to 1,000,000 permulations in batches and runs the test on a cluster:
+
+1. Generate permulations in batches (SLURM array or local): [`permulations_batch_slurm.sh`](scripts/04_permulation_loss_dup/permulations_batch_slurm.sh), [`run_permulation_batches.sh`](scripts/04_permulation_loss_dup/run_permulation_batches.sh), then concatenate with [`combine_permulation_batches.py`](scripts/04_permulation_loss_dup/combine_permulation_batches.py)
+2. Run the odds-ratio test from the command line or SLURM: [`run_odds_ratio_test.py`](scripts/04_permulation_loss_dup/run_odds_ratio_test.py), [`run_odds_ratio_test_slurm.sh`](scripts/04_permulation_loss_dup/run_odds_ratio_test_slurm.sh). P-values use the add-one estimator, and q-values are given both with the two tails of each test stacked and per pre-specified direction (loss in non-orb-weavers, duplication in orb-weavers)
+3. Check what the test could detect with synthetic genes: [`power_analysis.py`](scripts/04_permulation_loss_dup/power_analysis.py)
+4. Robustness to species: `permulations_batch.R` accepts a file of species to drop (for example [`data/hub_species_to_exclude.txt`](data/hub_species_to_exclude.txt)) and `run_odds_ratio_test.py` accepts `--foreground-list` and `--background-list` (for example the `*_nohubs.txt` lists)
+
 Data note: Stage 04 uses some cached pickle inputs/outputs that are external to this repository due to size.
 
 ## Stage 05: Phylogenetic regression

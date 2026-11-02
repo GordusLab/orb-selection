@@ -190,3 +190,9 @@ miniconda3/
 
 # Local scratch copies of cluster outputs
 /inspect/
+
+# Large permulation sets and their batches
+data/perms_tip_values_*k.csv
+data/perms_tip_values_1M.csv
+data/perms_tip_values_nohubs_*.csv
+data/perms_batches*/

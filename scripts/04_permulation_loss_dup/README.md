@@ -87,3 +87,30 @@ call `directional_q_values(results_df, min_occ, max_occ)` on the `results_all.cs
 The permulation loop only evaluates the HOGs that are tested: loss for occupancy `min_occ`-`max_occ` and duplication for occupancy `min_occ` and above.
 In `results_all.csv`, a HOG outside a test's range has an empty p-value (and q-value) for that test, for example the loss p-values of HOGs present in more than `max_occ` species.
 Log odds ratios are still reported for every HOG.
+
+## Running from the command line
+
+`run_odds_ratio_test.py` wraps `odds_ratio_test()` with the notebook's defaults (use `run_odds_ratio_test_slurm.sh` on a cluster). It uses every row of the permulation CSV unless `--reps` is given.
+`--foreground-list` / `--background-list` restrict the analysis to a subset of species (both lists must be given), `--max-occ` sets the upper occupancy bound for loss, and `--no-pickle` skips the large `results.pkl`.
+
+```bash
+python scripts/04_permulation_loss_dup/run_odds_ratio_test.py \
+    --permulations-csv data/perms_tip_values_1M.csv --dir-suffix 1M_addone --no-pickle
+```
+
+## Power analysis
+
+`power_analysis.py` asks what the test could detect if genes really tracked orb-weaving. It generates synthetic genes whose loss (or duplication) follows the true labeling to a chosen degree
+("1.0 vs 0.0" follows it perfectly, "0.5 vs 0.5" is a negative control), tests them against every permulation like a real HOG, and mixes them into the real p-values to see whether Benjamini-Hochberg
+would call 1, 2, 5 or 20 such genes, with both tails stacked and with the pre-specified tail only. The synthetic genes have independent species-level noise, so the rates are an upper bound on real power.
+Results are in `results/power_analysis/`.
+
+## Permulation generation options
+
+`permulations_batch.R` takes `<batch_id> [ntrees] [outdir] [exclude_file] [seed_base]`. `exclude_file` lists extra species to drop from the tree (foreground species that are dropped no longer count),
+and `seed_base` (seed = `seed_base + batch_id`) should differ between analyses. `combine_permulation_batches.py` has `--max-batch` and orders batches numerically.
+The species-removal analysis uses `data/hub_species_to_exclude.txt`, `data/orbweavers-list_nohubs.txt` and `data/non-orb-weavers-list_nohubs.txt`.
+
+## Presentation figures
+
+The last section of `scripts/07_figures_tables/Odds Ratio Test Plots.ipynb` draws figures explaining what a permulation is, why it differs from a random shuffle, and where the candidate HOG falls in its null distribution. They are saved to `figures/presentation/`.

@@ -23,6 +23,9 @@
 #   NTREES       permulations per batch (default 2000; about 1 s per permulation on Rockfish)
 #   OUT          output directory (default data/perms_batches, relative to the repo root)
 #   REPO_DIR     repo root (default: the directory sbatch was run from)
+#   EXCLUDE_FILE file (relative to the repo root) listing species to drop from the tree, one per line
+#                (default: none beyond the standard excluded tips)
+#   SEED_BASE    seed = SEED_BASE + task id (default 20260000); use a different base for a different analysis
 #   R_MODULES    modules to load for an R that has RERconverge (default: Rockfish's gfbf/2023b
 #                toolchain plus R/4.5.1-gfbf-2023b; the toolchain must be loaded before R)
 #   R_LIBS_USER  user R library containing RERconverge (default: $HOME/R/x86_64-pc-linux-gnu-library/4.5)
@@ -55,5 +58,5 @@ fi
 
 echo "Batch $id: $NTREES permulations, started $(date)"
 # --vanilla skips the repo's .Rprofile, which would activate renv and hide the user library holding RERconverge
-Rscript --vanilla scripts/04_permulation_loss_dup/permulations_batch.R "$SLURM_ARRAY_TASK_ID" "$NTREES" "$OUT"
+Rscript --vanilla scripts/04_permulation_loss_dup/permulations_batch.R "$SLURM_ARRAY_TASK_ID" "$NTREES" "$OUT" "${EXCLUDE_FILE:-NONE}" "${SEED_BASE:-20260000}"
 echo "Batch $id finished $(date)"

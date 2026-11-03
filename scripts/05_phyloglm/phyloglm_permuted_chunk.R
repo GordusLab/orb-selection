@@ -10,13 +10,16 @@
 # Usage:
 #   Rscript phyloglm_permuted_chunk.R --chunk K --outdir DIR
 #       [--chunk-size 100] [--cores N] [--perms data/perms_tip_values_100k.csv]
-#       [--genes FILE] [--perm-ids FILE] [--no-busco]
+#       [--genes FILE] [--perm-ids FILE] [--no-busco] [--model poisson|logistic]
 #
 #   --chunk 0     fit the real labeling (data/orbweavers-list.txt)
 #   --chunk K>=1  fit labelings (K-1)*chunk-size + 1 .. K*chunk-size of the perms
 #                 file, in file order (or in --perm-ids order, if given)
 #   --genes       restrict to the HOGs in FILE (testing); default: every HOG with
 #                 occupancy >= 30 and more than one distinct count
+#   --model       poisson: count ~ orb_weaving (Poisson GEE, as phyloglm.R); logistic: presence (count > 0)
+#                 ~ orb_weaving (phylogenetic logistic regression, comparable to the odds ratio loss test);
+#                 for logistic the default gene set is the HOGs whose presence varies
 #   --cores       parallel over genes within each labeling (default:
 #                 SLURM_CPUS_PER_TASK, else 1)
 #
@@ -47,6 +50,9 @@ perms_file <- get_arg("--perms", here("data", "perms_tip_values_100k.csv"))
 genes_file <- get_arg("--genes")
 perm_ids_file <- get_arg("--perm-ids")
 use_busco <- !("--no-busco" %in% args)
+# --model poisson (gene count, Poisson GEE; default) or logistic (gene presence/absence, logistic_MPLE)
+model <- get_arg("--model", "poisson")
+if (!model %in% c("poisson", "logistic")) stop("--model must be poisson or logistic")
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 out_file <- file.path(outdir, sprintf("chunk_%05d.rds", chunk))
@@ -77,7 +83,7 @@ rownames(counts) <- gc$HOG
 genes <- if (!is.null(genes_file)) {
   read_lines(genes_file)
 } else {
-  rownames(counts)[apply(counts, 1, function(r) length(unique(r)) > 1)]
+  rownames(counts)[apply(counts, 1, function(r) length(unique(if (model == "logistic") r > 0 else r)) > 1)]
 }
 
 # per-species BUSCO covariates (columns as in odds_ratio_test.py), standardized
@@ -95,12 +101,14 @@ model_formula <- if (use_busco) count ~ orb_weaving + f_total + f_dup else count
 # returns c(z, converged); NA if the fit errors
 fit_gene <- function(g, orb) {
   y <- as.integer(counts[g, ])
+  if (model == "logistic") y <- as.integer(y > 0)
   if (length(unique(y)) < 2) return(c(NA, NA))
   df <- data.frame(count = y, orb_weaving = orb[tips], busco_cov[tips, ], row.names = tips)
   converged <- TRUE
   fit <- tryCatch(
     withCallingHandlers(
-      phyloglm(model_formula, data = df, phy = tree, method = "poisson_GEE"),
+      phyloglm(model_formula, data = df, phy = tree,
+               method = if (model == "logistic") "logistic_MPLE" else "poisson_GEE"),
       warning = function(w) {
         if (grepl("converge", conditionMessage(w))) converged <<- FALSE
         invokeRestart("muffleWarning")
@@ -134,8 +142,8 @@ if (chunk == 0) {
   names(labelings) <- perms$perm_id[rows]
 }
 
-cat(sprintf("chunk %d: %d genes x %d labelings on %d cores (busco=%s)\n",
-            chunk, length(genes), length(labelings), cores, use_busco))
+cat(sprintf("chunk %d: %d genes x %d labelings on %d cores (model=%s, busco=%s)\n",
+            chunk, length(genes), length(labelings), cores, model, use_busco))
 t0 <- Sys.time()
 # Each finished labeling is saved to DIR/partial/ as it completes, so a chunk killed
 # by the time limit or a node failure resumes from there, and progress can be read off
@@ -167,7 +175,7 @@ storage.mode(converged) <- "integer"
 rownames(z) <- rownames(converged) <- genes
 
 tmp <- paste0(out_file, ".tmp")
-saveRDS(list(z = z, converged = converged, busco = use_busco), tmp)
+saveRDS(list(z = z, converged = converged, busco = use_busco, model = model), tmp)
 file.rename(tmp, out_file)
 unlink(list.files(partial_dir, pattern = sprintf("^%05d_", chunk), full.names = TRUE))
 cat(sprintf("chunk %d done in %.1f min\n", chunk, as.numeric(difftime(Sys.time(), t0, units = "mins"))))

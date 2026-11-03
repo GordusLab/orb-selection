@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-03 - Contamination flags, flagged odds ratio test runs, phyloGLM flags and logistic null
+
+### Added
+
+- Gene-level and cell-level contamination flag tables (`data/flag_table_genes.csv`, `data/flag_table_cells.csv`, `data/flag_table_README.txt`): genes that are near-identical to a gene in another family within the same sequencing project (BioProject PRJDB7399), with strength labels (strong, moderate, weak). Documented in `data/README.md`.
+- Cell-level flag option for the odds ratio test (`--flagged-cells`, `--flag-strengths` in `run_odds_ratio_test.py`; `load_flagged_cells` and `calculate_odds_batch_weighted` in `odds_ratio_test_helpers.py`; described in `scripts/04_permulation_loss_dup/README.md`). A flagged copy is subtracted from the gene count; a species left with no copy in a HOG is treated as missing (weight 0 in that HOG), not absent. Permulations and the tree are unchanged.
+- 1M-permulation odds ratio test runs with flags: `Run4_occ_30-88_1000000x_1M_flags_strong` and `Run5_occ_30-88_1000000x_1M_flags_strong_moderate` in `results/odds_ratio_test/Results_Nov02/`.
+- Contamination-flag option for the phyloGLM permulation script (`--flagged-cells`, `--flag-strengths`, `--flagged-only` in `phyloglm_permuted_chunk.R`), with the same missing-cell rule, and a logistic presence/absence model (`--model logistic`) with per-labeling checkpoints. Results in `results/phyloglm/permulation_null_logistic/` and `results/phyloglm/permulation_null_logistic_flagged/`, with a new section in `PhyloGLM Analysis.ipynb`.
+- Extended permulation of the 43 genes that pass BH on the logistic model p-values to 500,000 labelings (`results/phyloglm/permulation_null_logistic_top43/`, merged with `summarize_phyloglm_extend.R`). One gene, `N5.HOG0071799`, reaches permulation BH q = 0.043 (1 exceedance in 500,000 labelings); two more reach q = 0.086; the rest have q of 0.2 or more. Notebook cells added after the logistic section.
+
+### Changed
+
+- `PhyloGLM Analysis.ipynb` reading note for the presence/absence model: the logistic model-based p-values are too small on average under permuted labelings (8.0% of genes at p <= 0.05, 4.4-12.7% across labelings), and permuted labelings produce tails as heavy as the real one.
+- `Odds Ratio Test Plots.ipynb`: histograms built up step by step, one-sided volcano cutoffs, permulation counts and the minimum q-value line on the final volcano plots, and the history volcano plots share the y-axis of the final ones (figures saved to `figures/presentation/`).
+- `Hyphy Omega Plots.ipynb` and `omega_plots.py`: plots for the talk.
+
 ## 2026-11-02 - Large permulation sets, directional correction, power analysis, enrichment and presentation figures
 
 ### Added

@@ -10,7 +10,8 @@
 - `power_analysis.py` (synthetic-gene power of the permulation test) with results in `results/power_analysis/`.
 - `scripts/06_enrichment/permulation_enrichment.py` and `export_go_term_genes.R`: permulation-based GO enrichment of loss/duplication log odds ratios (results in `results/permulation_enrichment/`).
 - Species-removal robustness option: `--foreground-list` / `--background-list` in the test runner, an exclusion file for permulation generation, and `data/*_nohubs.txt` lists.
-- Presentation figures section in `Odds Ratio Test Plots.ipynb`, with PNGs in `figures/presentation/`.
+- `Odds Ratio Test Plots.ipynb` reorganized into figures for the talk (PNGs in `figures/presentation/`): trees on one shared canvas, the development of the method (random re-labeling null, permulation null, an example gene that is significant only under the old null, volcano plots with the criteria added one at a time), the candidate HOG, and the final volcano plots (10k, 100k, 1M permulations, and 1M with suspect samples removed). The manuscript-style plots that were at the top of the notebook were removed and are in git history.
+- `data/ort_method_history/` (log odds ratios and cutoffs of the July 2025 random re-labeling run) and `data/hog0071799_identity_to_araneus_inustus.csv`.
 - Results of the odds ratio test at 10k, 100k, 500k and 1M permulations in `results/odds_ratio_test/Results_Nov02/`.
 
 ### Changed

@@ -1019,7 +1019,7 @@ def plot_omega_single_gene(
     if k:
         plt.text(
             0.7 if font_scale == 1.0 else 0.97, 0.9 if font_scale == 1.0 else 0.86,
-            f'$\\it{{k}}$={round(x["k"], 2)}\n$\\it{{p}}$={x["p_value"]:.2e}',
+            f'$\\it{{k}}$={round(x["k"], 2)}\n$\\it{{p}}$={_fmt_p(x["p_value"])}',
             fontsize=13 * font_scale,
             ha='left' if font_scale == 1.0 else 'right', va='center', transform=ax.transAxes,
             bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'),
@@ -1060,6 +1060,11 @@ def plot_omega_single_gene(
     )
 
     return fig, ax
+
+
+def _fmt_p(p):
+    """Plain decimal for p >= 0.01 (e.g. 0.5), scientific notation otherwise."""
+    return f'{p:.2g}' if p >= 0.01 else f'{p:.2e}'
 
 
 def plot_omega_example_gene(

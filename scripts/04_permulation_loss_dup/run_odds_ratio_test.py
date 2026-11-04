@@ -9,6 +9,7 @@ Example (from anywhere inside the repo):
 """
 
 import argparse
+import gzip
 import os
 import sys
 
@@ -24,8 +25,9 @@ from odds_ratio_test_helpers import _resolve_repo_path  # noqa: E402
 
 
 def count_csv_rows(path):
-    """Number of data rows (excluding the header) in a CSV."""
-    with open(path, encoding="utf-8") as file_obj:
+    """Number of data rows (excluding the header) in a CSV, plain or gzipped (.gz)."""
+    opener = gzip.open if str(path).endswith(".gz") else open
+    with opener(path, "rt", encoding="utf-8") as file_obj:
         return sum(1 for _ in file_obj) - 1
 
 

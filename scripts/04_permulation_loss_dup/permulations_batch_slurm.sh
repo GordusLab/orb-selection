@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=permulation_batches
+#SBATCH --chdir=PATH_TO_SCRATCH
 #SBATCH --partition=shared
 #SBATCH --account=agordus1
 #SBATCH --time=01:30:00
@@ -7,22 +8,26 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=4000M  # one CPU's share on shared (4000 MB/CPU); measured peak is ~360 MB. Larger requests are charged extra CPUs.
-#SBATCH --output=permulation_batches_%A_%a.out
-#SBATCH --error=permulation_batches_%A_%a.err
+#SBATCH --output=PATH_TO_REPORTS/%x/%A_%a.out
+#SBATCH --error=PATH_TO_REPORTS/%x/%A_%a.err
 
 # One categorical-permulation batch per array task (permulations_batch.R).
 # Each task is independent and resumable: a task whose output CSV already exists exits immediately,
 # so a failed or requeued task can simply be resubmitted.
 #
-# Usage (from the repo root on the cluster):
-#   sbatch scripts/04_permulation_loss_dup/permulations_batch_slurm.sh
+# Usage: submit from the scratch directory, with the real paths on the command line (the placeholders
+# above are overridden; see "Launching jobs and storing SLURM logs" in CLAUDE.md):
+#   S=/scratch4/agordus1/crunnel2; N=$(date +%y%m%d)_permulation_batches; mkdir -p $S/reports/$N
+#   cd $S && sbatch --chdir=$S --job-name=$N --output=$S/reports/$N/%A_%a.out --error=$S/reports/$N/%A_%a.err \
+#       --export=ALL,REPO_DIR=$HOME/orb-selection \
+#       $HOME/orb-selection/scripts/04_permulation_loss_dup/permulations_batch_slurm.sh
 #   # then combine locally or on the cluster:
 #   python scripts/04_permulation_loss_dup/combine_permulation_batches.py --include data/perms_tip_values.csv
 #
 # Settings (environment variables, pass with sbatch --export=ALL,NAME=value):
 #   NTREES       permulations per batch (default 2000; about 1 s per permulation on Rockfish)
 #   OUT          output directory (default data/perms_batches, relative to the repo root)
-#   REPO_DIR     repo root (default: the directory sbatch was run from)
+#   REPO_DIR     repo root (default: PATH_TO_orb-selection; the job starts in the scratch directory)
 #   EXCLUDE_FILE file (relative to the repo root) listing species to drop from the tree, one per line
 #                (default: none beyond the standard excluded tips)
 #   SEED_BASE    seed = SEED_BASE + task id (default 20260000); use a different base for a different analysis
@@ -37,7 +42,7 @@ set -euo pipefail
 
 NTREES="${NTREES:-2000}"
 OUT="${OUT:-data/perms_batches}"
-REPO_DIR="${REPO_DIR:-$SLURM_SUBMIT_DIR}"
+REPO_DIR="${REPO_DIR:-PATH_TO_orb-selection}"
 
 cd "$REPO_DIR"
 

@@ -21,6 +21,7 @@
 # (see submit_tiers.sh).
 
 #SBATCH --job-name=relax_permuted
+#SBATCH --chdir=PATH_TO_SCRATCH
 #SBATCH --partition=PATH_TO_PARTITION
 #SBATCH --account=PATH_TO_ACCOUNT
 #SBATCH --time=12:00:00
@@ -28,6 +29,10 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --output=PATH_TO_REPORTS/%x/%A_%a.out
 #SBATCH --error=PATH_TO_REPORTS/%x/%A_%a.err
+
+# Submit from the scratch directory with real paths on the command line (see "Launching jobs and
+# storing SLURM logs" in CLAUDE.md), e.g. --chdir=$S --job-name=$(date +%y%m%d)_relax_permuted
+# --output=$S/reports/<job-name>/%A_%a.out --error=...%A_%a.err, after mkdir -p $S/reports/<job-name>.
 
 set -e
 

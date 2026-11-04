@@ -113,6 +113,34 @@ resumability pattern worth preserving when editing them:
   run-time records) to right-size `--time`/`--cpus-per-task` per job batch; `requeue_failed.sh`
   handles re-submitting OOM-killed tasks at higher memory.
 
+### Launching jobs and storing SLURM logs on Rockfish
+
+Run jobs from the scratch directory, never from the repo clone (`~/orb-selection`): SLURM
+writes logs relative to where `sbatch` is called, and logs left in the repo show up as untracked
+files. Follow what the earlier scripts (`prep_for_hyphy2.sh`, `run_selection_tests.sh`) do:
+- `#SBATCH --chdir=/scratch4/agordus1/crunnel2`
+- `#SBATCH --job-name=<YYMMDD>_<what_it_does>` — date prefix is the submission date (e.g.
+  `261002_run_selection_tests`); extra tags such as the tier or a requeue ID go at the end.
+- `#SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out` and the same path with
+  `.err` for `--error` (`%x` = job name, so each submission gets its own folder under `reports/`).
+  Create the folder before submitting (`mkdir -p .../reports/<job-name>`), because SLURM does not
+  create the directory itself.
+- Scripts that are meant to be portable keep the same layout with a placeholder
+  (`PATH_TO_REPORTS/%x/%A_%a.out`), consistent with the placeholder rule above. When submitting a
+  job for Calvin, pass the real values on the command line, e.g.
+  `sbatch --chdir=/scratch4/agordus1/crunnel2 --job-name=<YYMMDD>_<name> --output=... --error=... script.sh`
+  (command-line options override `#SBATCH` lines), instead of hardcoding them in a repo script.
+- Don't write `*.out`/`*.err` into the repo. If any end up there, move them to the matching
+  `reports/<YYMMDD>_<job-name>/` folder.
+
+## Git commits
+
+Every commit that Claude Code makes must end with the trailer given in the session's attribution
+reminder (currently `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`), so Claude's
+commits can be told apart from Calvin's, which all share the same author name. Use the model name
+from the reminder of the session that makes the commit. Commits Calvin makes himself carry no
+trailer.
+
 ## Working efficiently with Claude Code
 
 See the global `CLAUDE.md` for general cost/context habits. Repo-specific additions: several

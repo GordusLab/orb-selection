@@ -95,7 +95,7 @@ Log odds ratios are still reported for every HOG.
 
 ```bash
 python scripts/04_permulation_loss_dup/run_odds_ratio_test.py \
-    --permulations-csv data/perms_tip_values_1M.csv --dir-suffix 1M_addone --no-pickle
+    --permulations-csv data/perms_tip_values_1M.csv.gz --dir-suffix 1M_addone --no-pickle
 ```
 
 ## Power analysis

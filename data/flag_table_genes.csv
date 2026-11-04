@@ -1,4 +1,4 @@
-species,gene_id,HOG,partner_species,partner_gene,partner_family,partner_is_hub,protein_identity,aligned_aa,nt_identity,aligned_codons,n_species_sharing,strength
+species,gene_id,HOG,partner_species,partner_gene,partner_family,partner_is_suspect,protein_identity,aligned_aa,nt_identity,aligned_codons,n_species_sharing,strength
 Floronia_bucculenta,ICGA01015441.1.p1,N5.HOG0047436,Araneus_inustus,IAHS01012669.1.p1,Araneidae,True,100.0,466,100.0,466,27,moderate
 Zelotes_iriomotensis,IAHP01030960.1.p1,N5.HOG0016545,Araneus_inustus,IAHS01005750.1.p1,Araneidae,True,100.0,462,100.0,462,27,moderate
 Ozyptila_nongae,ICBR01034448.1.p1,,Araneus_inustus,IAHS01012842.1.p1,Araneidae,True,100.0,441,100.0,441,35,moderate

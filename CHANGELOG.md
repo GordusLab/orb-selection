@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-04 - Flag table scripts
+
+### Added
+
+- `scripts/04_permulation_loss_dup/flag_table/`: the scripts that build the contamination flag tables (DIAMOND scan of the suspect samples, candidate selection, sequence extraction, coding-sequence identity and strength labels, gene-level and cell-level tables), with a README. Steps 2 and 4 reproduce the committed tables exactly from the saved scan output; steps 1 and 3 are written from the commands run on the server and were not re-run.
+
+### Changed
+
+- `data/flag_table_genes.csv`: column `partner_is_hub` renamed `partner_is_suspect` (nothing in the code reads it). `data/flag_table_README.txt` now states the final rules (20-species limit, strength labels) and counts; it still described the first version (6-species limit, 7,822 genes). `data/README.md` and the stage 04 README call the nine species suspect samples and point to the scripts.
+
 ## 2026-11-04 - Presentation figure output, SLURM log convention
 
 ### Added

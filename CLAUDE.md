@@ -133,13 +133,41 @@ files. Follow what the earlier scripts (`prep_for_hyphy2.sh`, `run_selection_tes
 - Don't write `*.out`/`*.err` into the repo. If any end up there, move them to the matching
   `reports/<YYMMDD>_<job-name>/` folder.
 
-## Git commits
+## Git: commits, branches, and several agents
+
+### Commits
 
 Every commit that Claude Code makes must end with the trailer given in the session's attribution
 reminder (currently `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`), so Claude's
 commits can be told apart from Calvin's, which all share the same author name. Use the model name
 from the reminder of the session that makes the commit. Commits Calvin makes himself carry no
 trailer.
+
+### Branches
+
+Calvin works directly on `main`; nothing about that changes. Claude instances protect `main` and
+each other with these rules:
+
+1. **One agent, one branch, one checkout.** A Claude works on its own branch
+   `claude/<YYMMDD>-<topic>`, created from an up-to-date `main`. If another agent is active in the
+   same folder, it uses its own `git worktree` (a second folder on the same repo). Two writers in
+   one working directory overwrite each other's files and notebooks.
+2. **Stage only your own files** (`git add <paths>`, never `git add -A`). Check `git status` before
+   switching branches or starting work, and leave files that belong to someone else alone. Never run
+   `reset --hard`, `checkout .`, `clean -f`, a force-push, or an amend of published commits without
+   asking.
+3. **Merging.** A Claude merges into `main` only when Calvin asks. First merge `main` into the
+   branch and resolve any conflicts there, then fast-forward `main` (`git merge --ff-only`).
+   Calvin's own commits on `main` are never rewritten.
+4. **Pushing.** A Claude may push its own `claude/*` branches without asking, since they cannot
+   affect `main`. Pushing `main` needs Calvin's go-ahead each time.
+5. **Rockfish and the Will server.** The clone there keeps `main` read-only (`git pull --ff-only`
+   only). Claude may edit on those machines, but only on a `claude/...` branch, and must commit and
+   push it before ending the session and never leave uncommitted changes in the clone. SLURM logs
+   and other outputs do not go in the repo (see the SLURM section above), except files that are
+   deliberately committed.
+6. **Cleanup.** Delete a branch (local and on GitHub) once it is merged into `main`, after
+   confirming with `git branch --merged main`.
 
 ## Working efficiently with Claude Code
 

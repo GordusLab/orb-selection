@@ -6,7 +6,7 @@
 
 - Hub-removal (89 species, loss occupancy 30-79) odds ratio test results at 100,000 and 500,000 permulations: `Run4_occ_30-79_100000x_nohubs_100k` and `Run5_occ_30-79_500000x_nohubs_500k` in `results/odds_ratio_test/Results_Nov02/`.
 - Gzipped permulation sets committed to `data/`: `perms_tip_values_{100k,500k,1M}.csv.gz` and `perms_tip_values_nohubs_{100k,500k}.csv.gz` (the plain 1M CSV is 203 MB, over GitHub's file limit). The test runner, power analysis and enrichment script read `.csv.gz` paths directly (`count_csv_rows` in `run_odds_ratio_test.py` handles gzip). The plain `.csv` files stay git-ignored.
-- `CLAUDE.md`: every Claude Code commit carries the `Co-Authored-By` trailer.
+- `CLAUDE.md`: every Claude Code commit carries the `Co-Authored-By` trailer, and a branch convention for several agents (one branch and checkout per agent, `main` merged only on request, read-only `main` on Rockfish and the Will server).
 
 ### Changed
 

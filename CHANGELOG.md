@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-05 - phyloGLM presence/absence at 1M labelings, comparison with the ORT
+
+### Added
+
+- `results/phyloglm/permulation_null_logistic_1M/`: the logistic (presence/absence) phyloGLM table with the strong contamination flags applied to all genes (`final_merged_flag_filtered.csv`, 10,519 genes; flagged HOGs use the flagged refit and 190 HOGs below occupancy 30 after flagging are dropped). The 42 genes that pass BH on the model p-values were refit under 1,000,000 permulated labelings (rows 1-1M of `perms_tip_values_1M.csv`; the first 500,000 rows are the 500k set). No gene passes FDR (smallest BH q 0.17); `N5.HOG0071799` has permulation p = 0.012 (q 0.96) once its contaminated copies are removed.
+- `ort_vs_phyloglm_loss.csv` / `.png` in the same folder: the 1M ORT run with flags (`Run4_occ_30-88_1000000x_1M_flags_strong`) joined to the phyloGLM results for the 8,126 HOGs tested by both (Spearman 0.68 for signed ORT evidence vs phyloGLM z).
+- `PhyloGLM Analysis.ipynb`: four cells after the logistic section with the 1M result, the ORT comparison and why `N5.HOG0071799` weakens in phyloGLM when its contaminated copies are removed.
+
 ## 2026-11-04 - Flag table scripts
 
 ### Added

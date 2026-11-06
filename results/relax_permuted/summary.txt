@@ -1,0 +1,8 @@
+60 HOGs; 30 complete labelings
+
+statistic                 real  null mean    2.5%   97.5%  p(null >= real)
+frac_sig                 0.417      0.369   0.274   0.526  0.323
+frac_k_gt_1              0.600      0.568   0.327   0.809  0.452
+median_log2_k            0.043      0.020  -0.038   0.103  0.226
+frac_sig_intensified     0.317      0.212   0.048   0.497  0.161
+frac_sig_relaxed         0.100      0.158   0.029   0.342  0.710

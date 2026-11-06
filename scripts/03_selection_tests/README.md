@@ -194,6 +194,17 @@ non-orb-weavers, i.e. the tips with value 0 in a permulation row.
 Before submitting the full array, check that one permuted tree under `OUT_ROOT/<perm_id>/` has the
 expected `{Foreground}` labels.
 
+`summarize_permuted_relax.py` needs every sampled HOG in every labeling. An alternative is
+`compare_permuted_relax.py`: `extract --perm-root OUT_ROOT --out perm_results.tsv` (standard library only, can
+run on the cluster) writes one row per finished run, and `compare --results perm_results.tsv --hogs hogs.txt`
+reports the same statistics plus the fractions that are significant and intensified or relaxed.
+
+Result (60 HOGs x 30 labelings, 4 Nov 2026; `results/relax_permuted/`): the real labeling lies inside the permuted null on
+every statistic (fraction p <= 0.05: real 0.417, permuted mean 0.369, p = 0.32; significant and intensified 0.317 vs 0.212,
+p = 0.16). The original sample included `N5.HOG0058857` (a 14.6 h outlier); it was replaced by `N5.HOG0055575` using the
+same 30 labelings (`results/relax_permuted/hogs.txt` is the final list). With 60 HOGs and 30 labelings the test has
+low power.
+
 ## Dependencies
 
 The module requires:

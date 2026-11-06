@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-06 - RELAX permuted-label null result, strong + moderate phyloGLM flag null
+
+### Added
+
+- `results/relax_permuted/`: final RELAX permuted-label comparison (60 tier-A HOGs x 30 permulated labelings, 1,800 runs): `perm_results.tsv` (p and k per run), `hogs.txt`, `null_stats.csv` (per-labeling statistics) and `summary.txt`. The real labeling is inside the null on every statistic (fraction p <= 0.05: 0.417 vs permuted mean 0.369, p = 0.32; fraction significant and intensified 0.317 vs 0.212, p = 0.16). The 14.6 h HOG `N5.HOG0058857` was replaced by `N5.HOG0055575`.
+- `scripts/03_selection_tests/compare_permuted_relax.py`: extracts finished permuted RELAX runs into a table and compares them with the real labeling (adds significant-and-intensified/relaxed fractions to `summarize_permuted_relax.py`'s statistics); described in the stage 03 README.
+- `results/phyloglm/permulation_null_logistic_flagged_strongmod/`: logistic phyloGLM null (2,000 labelings) for the 606 HOGs touched by strong + moderate contamination flags. Under strong + moderate flags `N5.HOG0071799` has no non-orb-weaver carrier left (33 of 40 orb-weavers, 0 of 50 non-orb-weavers); its z is 4.48 and permulation p 0.012 at 2,000 labelings, in line with the strong-flag result (p = 0.012 at 1M). 42 genes pass BH on the model p-values in the merged table; they were not extended to 1M labelings.
+
 ## 2026-11-05 - phyloGLM presence/absence at 1M labelings, comparison with the ORT
 
 ### Added

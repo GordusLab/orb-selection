@@ -45,3 +45,36 @@ and near-identical isoforms/alleles within a species and HOG.
       weighted loss/duplication odds ratios, BUSCO weighting, contamination-flag handling, cheap
       per-test cost) and what is not.
 - [ ] Record ORT vs phyloGLM cost (~5 orders of magnitude cheaper per test) with the measured numbers.
+
+## 5. Tails and significance thresholds
+
+Added 2026-11-06 from the ORT statistics session (the full-run equivalence check and results are
+in the lab notebook entry and the session archive `~/claude-sessions/2026-11-04_ort_permulations_mtc`).
+
+- [ ] Bring back a tail option (e.g. `--tails prespecified|both|less|greater`; `prespecified` as the
+      default). The April 2026 script had `alternative="less"/"greater"` (one test per run, runs named
+      `Loss_LT` / `Dup_RT`); the current code always computes all four tails.
+      `prespecified` = loss in non-orb-weavers and duplication in orb-weavers only, each at the full
+      alpha; `both` = the current behavior (alpha / 2 per direction).
+- [ ] Decide which alpha the hit lists use. Today `fltrd_hits.csv`, the per-direction counts, the
+      UpSet inputs and the GO lists test all four directions at alpha / 2 = 0.025, including the two
+      directions that were not pre-specified (loss more likely in fg, duplication more likely in bg).
+      The directional q-values (BH within each pre-specified tail, q < 0.05) are unaffected by alpha.
+      A tail option would change which HOGs count as hits at the alpha level, not the directional q.
+- [ ] Keep the stacked-tails q available under `both` (N5.HOG0071799 has stacked q = 0.066 but
+      directional q = 0.033 at 500k and 1M, so the choice matters for that gene).
+
+## 6. Provenance and housekeeping
+
+- [ ] Record the exact batch range of the 500k permulation set. The 1M set is array batches 46-495
+      (2,000 each) on top of the 100k set; the 500k batch range was not in the logged submit
+      commands (likely the first ~245 extension batches). Check by comparing the first 500,000 rows of
+      `data/perms_tip_values_500k.csv` with the 1M file, or the combine command on Rockfish
+      (`combine_permulation_batches.py` has `--max-batch`).
+- [ ] Widen the x-range of the 3a-3c and 5a plots together in `Odds Ratio Test Plots.ipynb` so the one
+      HOG with log odds ratio below -6.6 is no longer clipped (both sets must be widened to stay
+      comparable).
+- [ ] First real use of the edited SLURM scripts (`run_odds_ratio_test_slurm.sh`,
+      `permulations_batch_slurm.sh`): the `reports/<YYMMDD>_<job-name>/` folder must exist before
+      `sbatch`, and the `PATH_TO_*` placeholders must be overridden on the command line (see
+      `CLAUDE.md`).

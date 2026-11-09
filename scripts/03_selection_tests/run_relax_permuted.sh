@@ -16,7 +16,7 @@
 # --partition/--account/--output/--time/--cpus-per-task on the sbatch command line as needed.
 #
 # Resumable like the stage 02/03 scripts: finished outputs (JSON containing
-# "p-value") are skipped, so a requeued task picks up where it left off. Size
+# the RELAX relaxation parameter, i.e. the final test, not just any "p-value") are skipped, so a requeued task picks up where it left off. Size
 # --time/--cpus-per-task like the real RELAX tier for the sampled HOGs
 # (see submit_tiers.sh).
 
@@ -60,7 +60,7 @@ mkdir -p "$PERM_DIR"
 PERM_TREE="${PERM_DIR}/${CURRENT_HOG}.nonorb_fg.tree"
 RELAX_OUT="${PERM_DIR}/${CURRENT_HOG}_RELAX.json"
 
-if grep -qs "p-value" "$RELAX_OUT"; then
+if grep -qs "relaxation or intensification parameter" "$RELAX_OUT"; then
 	echo "RELAX for ${CURRENT_HOG} under ${PERM_ID} already complete."
 	exit 0
 fi

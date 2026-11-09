@@ -15,6 +15,8 @@
 #SBATCH --output=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.out
 #SBATCH --error=/scratch4/agordus1/crunnel2/reports/%x/%A_%a.err
 
+# Completion markers: HyPhy writes the output JSON early (BUSTED-PH after the plain BUSTED fit, before the comparative and background tests),
+# so a JSON that merely contains "p-value" can be a partial run. A finished BUSTED-PH JSON holds the comparative block; a finished RELAX JSON holds the relaxation parameter.
 set -e
 
 module load anaconda
@@ -41,7 +43,7 @@ done
 case "$TEST_INDEX" in
 	1)
 		BUSTEDPH_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_orb_fg.json"
-		if grep -qs "p-value" "$BUSTEDPH_ORB_OUT"; then
+		if grep -qsE "Comparative selection test results|test results shared distributions" "$BUSTEDPH_ORB_OUT"; then
 			echo "BUSTED-PH, orb fg already complete."
 		else
 			hyphy busted-ph \
@@ -59,7 +61,7 @@ case "$TEST_INDEX" in
 		;;
 	2)
 		BUSTEDPH_NON_ORB_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_BUSTED-PH_non_orb_fg.json"
-		if grep -qs "p-value" "$BUSTEDPH_NON_ORB_OUT"; then
+		if grep -qsE "Comparative selection test results|test results shared distributions" "$BUSTEDPH_NON_ORB_OUT"; then
 			echo "BUSTED-PH, non-orb fg already complete."
 		else
 			hyphy busted-ph \
@@ -77,7 +79,7 @@ case "$TEST_INDEX" in
 		;;
 	3)
 		RELAX_OUT="${WD}/${CURRENT_HOG}/${CURRENT_HOG}_RELAX.json"
-		if grep -qs "p-value" "$RELAX_OUT"; then
+		if grep -qs "relaxation or intensification parameter" "$RELAX_OUT"; then
 			echo "RELAX already complete."
 		else
 			hyphy relax \

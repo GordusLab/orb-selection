@@ -26,6 +26,9 @@ set -e
 
 module load anaconda
 conda activate "$CONDA_ENV"
+export PATH="${CONDA_ENV}/bin:${PATH}"   # 'conda activate' alone left a python without biopython on PATH in the first submission
+"${CONDA_ENV}/bin/python" -c "import Bio" || { echo "biopython missing in $CONDA_ENV" >&2; exit 1; }
+command -v hyphy >/dev/null || { echo "hyphy not found" >&2; exit 1; }
 
 HOG="$(sed "${SLURM_ARRAY_TASK_ID}q;d" "$HOG_LIST")"
 [ -n "$HOG" ] || { echo "no HOG for task ${SLURM_ARRAY_TASK_ID}" >&2; exit 1; }
@@ -39,7 +42,7 @@ NONORB_TREE="${O}/${HOG}.nonorb_fg.pruned.tree"
 if [ ! -s "$ALN" ] || [ ! -s "$TREE" ]; then
 	REMOVE="$(awk -F'\t' -v h="$HOG" '$1==h {print $2}' "$MANIFEST")"
 	[ -n "$REMOVE" ] || { echo "no tips to remove for $HOG in $MANIFEST" >&2; exit 1; }
-	python "${REPO}/scripts/03_selection_tests/contamination_impact/06_prune_hog.py" \
+	"${CONDA_ENV}/bin/python" "${REPO}/scripts/03_selection_tests/contamination_impact/06_prune_hog.py" \
 		--nex "${WD_ORIG}/${HOG}/${HOG}_NT.trim.dedup.nex" --tree "${WD_ORIG}/${HOG}/iqtree/${HOG}.treefile" \
 		--remove "$REMOVE" --out-nex "$ALN" --out-tree "$TREE"
 fi

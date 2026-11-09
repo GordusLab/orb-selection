@@ -3,6 +3,7 @@
 
 The alignment is NOT re-trimmed or re-aligned; the tree is the existing IQ-TREE tree with the tips pruned (single-child nodes
 collapsed, branch lengths summed). HyPhy re-estimates branch lengths. Re-label the pruned tree afterwards with label-tree.bf.
+Output format mimics remove-duplicates exactly (leading space per matrix row, ';' right after the last row): HyPhy rejects the tidier variant.
 Fails loudly if a requested tip is missing, or if fewer than --min-side tips remain.
 usage: 06_prune_hog.py --nex IN.nex --tree IN.treefile --remove 'sp|id;sp|id' --out-nex OUT.nex --out-tree OUT.tree
 """
@@ -35,7 +36,7 @@ new = (head + "TAXLABELS\n\t\t" + ' '.join(f"'{labels[i]}'" for i in keep) + "\n
 rest = txt[m.end():]
 # rebuild everything after the taxa block: characters block header up to MATRIX unchanged
 pre = re.search(r"(BEGIN CHARACTERS;.*?MATRIX\s*\n)", txt, re.S).group(1)
-new = head + "TAXLABELS\n\t\t" + ' '.join(f"'{labels[i]}'" for i in keep) + "\n;\nEND;\n\n" + pre + '\n'.join(seqs[i] for i in keep) + "\n;\nEND;\n"
+new = head + "TAXLABELS\n\t\t" + ' '.join(f"'{labels[i]}'" for i in keep) + "\n;\nEND;\n\n" + pre + '\n'.join(' ' + seqs[i] for i in keep) + ";\nEND;"
 open(a.out_nex, 'w').write(new)
 
 tr = Phylo.read(a.tree, 'newick')

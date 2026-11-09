@@ -61,14 +61,14 @@ case "$TEST" in
 	bustedph_orb|bustedph_nonorb)
 		if [ "$TEST" = bustedph_orb ]; then T="$ORB_TREE"; N=orb_fg; else T="$NONORB_TREE"; N=non_orb_fg; fi
 		OUT="${O}/${HOG}_BUSTED-PH_${N}.pruned.json"
-		if grep -qs "p-value" "$OUT"; then echo "already complete"; else
+		if grep -qs "Comparative selection test results" "$OUT"; then echo "already complete"; else
 			hyphy busted-ph "CPU=${SLURM_CPUS_PER_TASK}" --alignment "$ALN" --tree "$T" --branches Foreground \
 				--multiple-hits Double+Triple --srv Yes --error-sink Yes \
 				--intermediate-fits "${O}/${HOG}_BUSTED-PH_${N}.pruned_intermediate.json" --output "$OUT" ENV="TOLERATE_NUMERICAL_ERRORS=1;"
 		fi ;;
 	relax)
 		OUT="${O}/${HOG}_RELAX.pruned.json"
-		if grep -qs "p-value" "$OUT"; then echo "already complete"; else
+		if grep -qs "relaxation or intensification parameter" "$OUT"; then echo "already complete"; else
 			hyphy relax "CPU=${SLURM_CPUS_PER_TASK}" --alignment "$ALN" --tree "$NONORB_TREE" --test Foreground \
 				--multiple-hits Double+Triple --srv Yes --error-sink Yes \
 				--intermediate-fits "${O}/${HOG}_RELAX.pruned_intermediate.json" --output "$OUT" ENV="TOLERATE_NUMERICAL_ERRORS=1;"

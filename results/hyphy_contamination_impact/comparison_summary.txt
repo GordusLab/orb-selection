@@ -1,0 +1,63 @@
+HOGs analysed: 4756
+  strong: 331 HOGs with >=1 flagged sequence retained (7.0%)
+  strong+moderate: 359 HOGs with >=1 flagged sequence retained (7.5%)
+  any (incl. weak): 660 HOGs with >=1 flagged sequence retained (13.9%)
+Retained-tip count (n_tips) median: unaffected(strong) 100.0  affected(strong) 101.0
+
+=== RELAX (p<=0.05) ===
+total significant: 2197 of 4756 (46.2%)
+strong             affected n= 331 sig= 134 (40.5%) | unaffected n=4425 sig=2063 (46.6%) | Fisher p=0.0343 | adj OR (ln n_tips) 0.77 [0.61,0.96] p=0.0215 | median p aff/unaff 0.119/0.0738 KS p=0.0518 | median log2 k aff/unaff 0.023/0.037 MW p=0.0845
+strong+moderate    affected n= 359 sig= 146 (40.7%) | unaffected n=4397 sig=2051 (46.6%) | Fisher p=0.0317 | adj OR (ln n_tips) 0.77 [0.62,0.96] p=0.0209 | median p aff/unaff 0.119/0.0738 KS p=0.0412 | median log2 k aff/unaff 0.023/0.037 MW p=0.0326
+any (incl. weak)   affected n= 660 sig= 249 (37.7%) | unaffected n=4096 sig=1948 (47.6%) | Fisher p=2.39e-06 | adj OR (ln n_tips) 0.68 [0.57,0.80] p=5.69e-06 | median p aff/unaff 0.161/0.0654 KS p=2.46e-07 | median log2 k aff/unaff 0.012/0.039 MW p=1.4e-06
+
+  -- RELAX relaxed only (Test = non-orb, Reference = orb; "intensified" = stronger in non-orb) --
+  strong             affected 12.7% (n=331)  unaffected 12.8%  adj OR 0.99 p=0.945
+  strong+moderate    affected 13.1% (n=359)  unaffected 12.8%  adj OR 1.03 p=0.868
+  any (incl. weak)   affected 13.2% (n=660)  unaffected 12.7%  adj OR 1.04 p=0.751
+
+  -- RELAX intensified only (Test = non-orb, Reference = orb; "intensified" = stronger in non-orb) --
+  strong             affected 27.8% (n=331)  unaffected 33.8%  adj OR 0.74 p=0.0182
+  strong+moderate    affected 27.6% (n=359)  unaffected 33.9%  adj OR 0.73 p=0.0111
+  any (incl. weak)   affected 24.5% (n=660)  unaffected 34.8%  adj OR 0.62 p=5.61e-07
+
+=== BUSTED-PH orb fg (hit rule) ===
+total significant: 2 of 4756 (0.0%)
+strong             affected n= 331 sig=   0 (0.0%) | unaffected n=4425 sig=   2 (0.0%) | Fisher p=1 | adj OR (ln n_tips) 0.00 [0.00,inf] p=0.998 | median p aff/unaff 0.569/0.299 KS p=2.89e-05 | median omega_test aff/unaff 0.083/0.109 MW p=1.99e-07
+strong+moderate    affected n= 359 sig=   0 (0.0%) | unaffected n=4397 sig=   2 (0.0%) | Fisher p=1 | adj OR (ln n_tips) 0.00 [0.00,inf] p=0.998 | median p aff/unaff 0.595/0.296 KS p=5.57e-06 | median omega_test aff/unaff 0.083/0.109 MW p=1.89e-08
+any (incl. weak)   affected n= 660 sig=   1 (0.2%) | unaffected n=4096 sig=   1 (0.0%) | Fisher p=0.258 | adj OR (ln n_tips) 7.30 [0.42,125.63] p=0.171 | median p aff/unaff 0.664/0.259 KS p=7.42e-15 | median omega_test aff/unaff 0.039/0.116 MW p=1e-114
+
+=== BUSTED-PH orb fg (comparative p<=0.05 only) ===
+total significant: 1695 of 4756 (35.6%)
+strong             affected n= 331 sig=  87 (26.3%) | unaffected n=4425 sig=1608 (36.3%) | Fisher p=0.000216 | adj OR (ln n_tips) 0.60 [0.46,0.77] p=7.02e-05 | median p aff/unaff 0.569/0.299 KS p=2.89e-05
+strong+moderate    affected n= 359 sig=  96 (26.7%) | unaffected n=4397 sig=1599 (36.4%) | Fisher p=0.000236 | adj OR (ln n_tips) 0.61 [0.48,0.78] p=8.57e-05 | median p aff/unaff 0.595/0.296 KS p=5.57e-06
+any (incl. weak)   affected n= 660 sig= 152 (23.0%) | unaffected n=4096 sig=1543 (37.7%) | Fisher p=7.26e-14 | adj OR (ln n_tips) 0.50 [0.42,0.61] p=4.93e-12 | median p aff/unaff 0.664/0.259 KS p=7.42e-15
+
+=== BUSTED-PH non-orb fg (hit rule) ===
+total significant: 21 of 4756 (0.4%)
+strong             affected n= 331 sig=   1 (0.3%) | unaffected n=4425 sig=  20 (0.5%) | Fisher p=1 | adj OR (ln n_tips) 0.68 [0.09,5.13] p=0.713 | median p aff/unaff 0.585/0.341 KS p=0.00133 | median omega_test aff/unaff 0.088/0.111 MW p=5.38e-08
+strong+moderate    affected n= 359 sig=   2 (0.6%) | unaffected n=4397 sig=  19 (0.4%) | Fisher p=0.67 | adj OR (ln n_tips) 1.34 [0.31,5.80] p=0.696 | median p aff/unaff 0.577/0.341 KS p=0.00131 | median omega_test aff/unaff 0.087/0.111 MW p=1.11e-08
+any (incl. weak)   affected n= 660 sig=   3 (0.5%) | unaffected n=4096 sig=  18 (0.4%) | Fisher p=1 | adj OR (ln n_tips) 1.18 [0.34,4.07] p=0.788 | median p aff/unaff 0.62/0.296 KS p=2.22e-12 | median omega_test aff/unaff 0.042/0.118 MW p=9.65e-118
+
+=== BUSTED-PH non-orb fg (comparative p<=0.05 only) ===
+total significant: 1589 of 4756 (33.4%)
+strong             affected n= 331 sig=  94 (28.4%) | unaffected n=4425 sig=1495 (33.8%) | Fisher p=0.0462 | adj OR (ln n_tips) 0.74 [0.58,0.96] p=0.0206 | median p aff/unaff 0.585/0.341 KS p=0.00133
+strong+moderate    affected n= 359 sig= 104 (29.0%) | unaffected n=4397 sig=1485 (33.8%) | Fisher p=0.0711 | adj OR (ln n_tips) 0.77 [0.61,0.98] p=0.0327 | median p aff/unaff 0.577/0.341 KS p=0.00131
+any (incl. weak)   affected n= 660 sig= 152 (23.0%) | unaffected n=4096 sig=1437 (35.1%) | Fisher p=5.43e-10 | adj OR (ln n_tips) 0.57 [0.47,0.69] p=1.12e-08 | median p aff/unaff 0.62/0.296 KS p=2.22e-12
+
+=== position of retained flagged tips ===
+strong: 548 tips in 331 HOGs; orb-weaver tips (orb-fg, RELAX Reference): 312; non-orb tips (non-orb-fg, RELAX Test): 236; partner copy also retained: 213
+   by species: {'Araneus_inustus': 312, 'Pseudomicrargus_latitegulatus': 55, 'Arcuphantes_paiki': 34, 'Drapetisca_socialis': 34, 'Floronia_bucculenta': 30, 'Phrurolithus_coreanus': 26, 'Ozyptila_nongae': 23, 'Zelotes_iriomotensis': 20, 'Latrodectus_hasseltii': 14}
+strong+moderate: 631 tips in 359 HOGs; orb-weaver tips (orb-fg, RELAX Reference): 342; non-orb tips (non-orb-fg, RELAX Test): 289; partner copy also retained: 258
+   by species: {'Araneus_inustus': 342, 'Pseudomicrargus_latitegulatus': 74, 'Drapetisca_socialis': 38, 'Arcuphantes_paiki': 38, 'Floronia_bucculenta': 36, 'Ozyptila_nongae': 33, 'Phrurolithus_coreanus': 30, 'Zelotes_iriomotensis': 24, 'Latrodectus_hasseltii': 16}
+any: 2048 tips in 660 HOGs; orb-weaver tips (orb-fg, RELAX Reference): 443; non-orb tips (non-orb-fg, RELAX Test): 1605; partner copy also retained: 1517
+   by species: {'Araneus_inustus': 443, 'Zelotes_iriomotensis': 316, 'Phrurolithus_coreanus': 273, 'Ozyptila_nongae': 247, 'Pseudomicrargus_latitegulatus': 181, 'Floronia_bucculenta': 160, 'Drapetisca_socialis': 152, 'Arcuphantes_paiki': 144, 'Latrodectus_hasseltii': 132}
+strong flagged tips: partner in another family retained too in 0.389 of cases
+
+=== hit lists that feed GO enrichment: how many hits are affected HOGs ===
+RELAX relaxed (orb-relaxed? see note): 609 HOGs; affected strong 42 (expected by chance 42.4), +moderate 47, any 87 (exp 84.5)
+RELAX intensified: 1588 HOGs; affected strong 92 (expected by chance 110.5), +moderate 99, any 162 (exp 220.4)
+BUSTED-PH orb fg hits: 2 HOGs; affected strong 0 (expected by chance 0.1), +moderate 0, any 1 (exp 0.3)
+BUSTED-PH non-orb fg hits: 21 HOGs; affected strong 1 (expected by chance 1.5), +moderate 2, any 3 (exp 2.9)
+BUSTED-PH orb hit HOGs: ['N5.HOG0052434', 'N5.HOG0068277'] {'N5.HOG0052434': {'n_tips': 142, 'ret_strong': 0, 'ret_sm': 0, 'ret_any': 0, 'n_flag_table_genes': 0}, 'N5.HOG0068277': {'n_tips': 96, 'ret_strong': 0, 'ret_sm': 0, 'ret_any': 8, 'n_flag_table_genes': 8}}
+ raw-p candidate N5.HOG0052434 {'n_tips': 142, 'ret_strong': 0, 'ret_sm': 0, 'ret_any': 0} shared_pval 2.21654472554178e-10
+ raw-p candidate N5.HOG0068277 {'n_tips': 96, 'ret_strong': 0, 'ret_sm': 0, 'ret_any': 8} shared_pval 0.01558252457744291

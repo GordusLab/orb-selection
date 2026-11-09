@@ -1,0 +1,13 @@
+=== (a) baseline: unflagged suspect-species tips in 359 random HOGs with no flagged sequence (n=3361 tips) vs flagged strong+moderate tips (n=631) ===
+baseline unflagged         nn<0.01: 17.9% | mixed nn: 0.7% | close (<0.01) AND mixed: 0.0% | median nn dist 0.1240
+flagged strong+moderate    nn<0.01: 64.3% | mixed nn: 45.3% | close (<0.01) AND mixed: 39.6% | median nn dist 0.0046
+
+=== (b) HyPhy outcomes by group (strong+moderate flags) ===
+                                    n  relax_sig  relax_med_p  borb_cmp_sig  borb_med_p  bnon_cmp_sig  bnon_med_p  n_tips
+grp                                                                                                                      
+affected, close mixed pair        132      0.485        0.074         0.303       0.423         0.356       0.351   103.0
+affected, no close mixed pair     227      0.361        0.180         0.247       0.644         0.251       0.715   100.0
+unaffected (no strong/moderate)  4397      0.466        0.074         0.364       0.296         0.338       0.341   100.0
+relax_sig_b: close-mixed vs unaffected Fisher p=0.723; p-value KS p=0.29
+borb_sig: close-mixed vs unaffected Fisher p=0.168; p-value KS p=0.285
+bnon_sig: close-mixed vs unaffected Fisher p=0.709; p-value KS p=0.348

@@ -1,0 +1,26 @@
+=== (a) retention of nine suspect species' genes in the 4,756 HOGs (in OrthoFinder HOG -> in HyPhy alignment) ===
+           n_genes  n_retained  frac_retained
+strength                                     
+moderate       119          83       0.697479
+strong         680         548       0.805882
+unflagged    48839       42761       0.875550
+weak          1564        1417       0.906010
+(a2) flagged genes by nt identity: retained fraction
+              n  frac_retained  frac_partner_retained
+ident_bin                                            
+<97        1559       0.907633               0.885824
+97-99        85       0.741176               0.588235
+99-<100     505       0.867327               0.520792
+100         214       0.616822               0.317757
+(a3) among flagged genes retained AND partner retained, nt identity bins: {'<97': 1257, '97-99': 35, '99-<100': 219, '100': 6}
+     flagged retained, partner (same HOG listing) retained, by ident_bin: both-retained fraction of 100%-identical pairs = 0.028
+     (partner presence in the pre-filter HOG is not checked for non-suspect partners; see (b) for retained partners)
+
+=== (b) strong+moderate flagged tips retained: 631 in 359 HOGs ===
+tip branch length (subst/codon, IQ-TREE tree): median 0.0023, 90th pct 0.0651; all-tips median in these trees is larger or similar (not computed)
+nearest-neighbour distance: median 0.0046; <0.01: 406 (64%); <0.001: 66
+nearest neighbour has the opposite orb/non-orb label (mixed pair): 286 of 631 (45%)
+  of the close pairs (nn dist <0.01): 406, mixed-label 250
+partner copy retained in same alignment: 258 tips; partner is nearest neighbour: 135; patristic dist to partner median 0.0037; partner label differs from flagged tip: 222
+  partner dist <0.01: 216 (mixed label: 189)
+HOGs with >=1 close mixed-label pair (strong+moderate): 132

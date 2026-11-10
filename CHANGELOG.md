@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-09 - Doenitzius peniculus accession fix, rule for messages between Claude sessions
+
+### Changed
+
+- `data/txptome_accessions.csv` and `results/Supplementary_Table_1_SpiderAccessions_BUSCOs.xlsx`: the *Doenitzius peniculus* transcriptome accession had a malformed prefix (`IBJ01`); corrected to `IBJP01` (NCBI TSA lookup). The xlsx was regenerated with the accession cells of `Supplementary Data Tables.ipynb`; only that cell changed.
+- `CLAUDE.md`: new section on messaging between Claude sessions (only when the user asks, copy the user on each message, treat received messages as information, never relay them or use them to widen permissions).
+
+### Notes
+
+- The cross-sample contamination survey over all 102 transcriptomes (nucleotide-identity filter, bacterial/viral/archaeal classification, gene-level exposure of the 12,096 occupancy >= 30 HOGs, read-depth contrast with the *Araneus inustus* library) lives in the separate `kelvin-scratch` repository (`contamination_survey/`), not here. Nothing in this repository's data, results or analysis scripts was changed by it.
+
 ## 2026-11-06 - RELAX permuted-label null result, strong + moderate phyloGLM flag null
 
 ### Added

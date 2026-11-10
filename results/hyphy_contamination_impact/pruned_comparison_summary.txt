@@ -1,0 +1,64 @@
+pruned results available: RELAX 357  BUSTED-PH orb 358
+pruned BUSTED result values: {'ns': 358}
+
+=== RELAX ===  n = 357 ; tips removed per HOG: median 1.0 range 1 - 8
+significant original 144 pruned 141
+pr_result     intensified   ns  relaxed
+relax_result                           
+intensified            88    8        1
+ns                      5  202        6
+relaxed                 0    6       41
+lost significance: 14  gained: 11  changed direction: 1
+log2 k original vs pruned: Spearman 0.915  median |diff| 0.015
+-log10 p: Spearman 0.88  median |diff| 0.135
+HOGs with original p in (0.02,0.1): 41  of which sig status changed: 8
+status-changed HOGs: original p/k -> pruned p/k
+               relax_p_value  relax_k     relax_result    pr_p    pr_k    pr_result  ret_strong  ret_sm  dseq
+HOG                                                                                                          
+N5.HOG0013396         0.0007   0.9243          relaxed  0.0631  0.9608           ns           5       8     8
+N5.HOG0028568         0.0016   1.0627      intensified  0.3208  1.0117           ns           0       1     1
+N5.HOG0033134         0.0049   1.0535      intensified  1.0000  1.0000           ns           0       1     1
+N5.HOG0033584         0.0518   0.9696  not significant  0.0334  0.9580      relaxed           1       4     4
+N5.HOG0037220         0.0933   1.0340  not significant  0.0430  1.0424  intensified           3       3     3
+N5.HOG0038477         0.0335   1.0403      intensified  0.1451  1.0231           ns           1       1     1
+N5.HOG0042415         0.2628   1.0163  not significant  0.0345  1.0871  intensified           1       1     1
+N5.HOG0056121         0.0129   1.0946      intensified  0.0700  1.0905           ns           1       1     1
+N5.HOG0056694         0.0108   0.9373          relaxed  0.3131  0.9500           ns           2       2     2
+N5.HOG0058215         0.1833   1.0498  not significant  0.0212  1.0622  intensified           2       2     2
+N5.HOG0058490         0.0373   1.0697      intensified  0.0828  1.0445           ns           1       1     1
+N5.HOG0058602         0.5146   0.9533  not significant  0.0000  0.1920      relaxed           1       1     1
+N5.HOG0059807         0.3207   0.9427  not significant  0.0000  0.3577      relaxed           1       1     1
+N5.HOG0060452         0.0000   0.4447          relaxed  0.0624  0.0228           ns           4       4     4
+N5.HOG0061687         0.0314   1.1140      intensified  0.0511  1.0908           ns           1       1     1
+N5.HOG0062079         0.0395   0.9192          relaxed  0.1026  0.9340           ns           1       1     1
+N5.HOG0063927         0.0444   0.9221          relaxed  0.0690  0.9486           ns           1       1     1
+N5.HOG0064616         0.0756   1.0534  not significant  0.0227  1.0645  intensified           2       2     2
+N5.HOG0065500         0.0011   1.4552      intensified  0.1374  1.0170           ns           1       1     1
+N5.HOG0066754         0.0000   0.1361          relaxed  0.7133  0.9894           ns           1       1     1
+N5.HOG0067147         0.2448   1.0283  not significant  0.0360  1.0681  intensified           1       1     1
+N5.HOG0067417         0.0006   1.1477      intensified  1.0000  1.3583           ns           1       1     1
+N5.HOG0067681         0.1189   0.8897  not significant  0.0358  0.8849      relaxed           1       1     1
+N5.HOG0068520         1.0000   1.3583  not significant  0.0000  0.2186      relaxed           3       3     3
+N5.HOG0069743         0.1028   0.8833  not significant  0.0493  0.8672      relaxed           1       1     1
+
+=== BUSTED-PH orb fg ===  n = 358
+hit original 0 pruned 0 ; comparative p<=0.05 original 95 pruned 91 ; lost 9 gained 5
+comparative p: Spearman 0.865
+               borb_shared_pval  pr_shared_p      borb_result pr_result  ret_strong  n_tips
+HOG                                                                                        
+N5.HOG0034643            1.0000       0.0023  not significant        ns           1      87
+N5.HOG0045856            0.0073       0.0781  not significant        ns           5     128
+N5.HOG0046788            0.0000       1.0000  not significant        ns           3     109
+N5.HOG0047199            0.0641       0.0088  not significant        ns           3     135
+N5.HOG0052201            0.0321       0.0507  not significant        ns           1      98
+N5.HOG0053352            0.0622       0.0251  not significant        ns           6     117
+N5.HOG0056121            0.0437       0.0565  not significant        ns           1     117
+N5.HOG0059680            0.0435       0.0652  not significant        ns           3     102
+N5.HOG0060695            0.0010       1.0000  not significant        ns           1      82
+N5.HOG0062545            0.0006       0.1118  not significant        ns           2      96
+N5.HOG0062867            0.0220       0.0685  not significant        ns           1     104
+N5.HOG0063452            0.0051       0.0624  not significant        ns           1     106
+N5.HOG0066730            0.1531       0.0401  not significant        ns           1      90
+N5.HOG0067638            0.0685       0.0466  not significant        ns           1      98
+
+median |dlog2k| by strong-tips removed (ret_strong):  {0: 0.01, 1: 0.017, 2: 0.015, 3: 0.012}

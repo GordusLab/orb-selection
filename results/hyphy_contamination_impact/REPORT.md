@@ -40,3 +40,20 @@ Raw text outputs: `comparison_summary.txt`, `pairs_and_retention_summary.txt`, `
 - The lower hit rate in "any" HOGs is probably confounded: weak-flag HOGs are conserved genes (median omega_test 0.04 vs 0.12), which have less power. Not tested.
 - Group-level null results cannot show that individual HOGs are unchanged: a mixed close pair could push p either way. Only a pruned re-run answers that per HOG.
 - Direction of transfer (which sample is the source) is unknown, so "flagged side" is not necessarily the contaminated side.
+
+## Pruned re-run (359 HOGs, flagged strong/moderate tips removed; RELAX + BUSTED-PH orb fg), 2026-11-10
+Scripts `06..10_*`; table `pruned_summary.tsv`, comparison `pruned_comparison_summary.txt`, `pruned_vs_original.csv`.
+Status at the time of this comparison: 357 of 359 RELAX and 358 of 359 BUSTED-PH orb runs finished (3 tier-B/C tasks still running or resubmitted; they are not included). Only the first-fit tips were removed (median 1 per HOG, max 8); trees were pruned, not re-inferred.
+
+**Evidence**
+- RELAX (n=357): 144 significant before, 141 after. 25 HOGs changed status (14 lost, 11 gained, so no net direction); one HOG switched relaxed -> intensified. Of the 25, 23 are in HOGs with a strong flagged tip, 2 in moderate-only HOGs (strong HOGs are most of the set, 329 of 357, so this is not informative).
+- Effect sizes barely move: Spearman of log2 k 0.915, median |change| 0.015; -log10 p Spearman 0.88.
+- Most status changes are near the threshold or at k within about 0.1 of 1 (e.g. p 0.03 -> 0.15). Of 41 HOGs with an original p between 0.02 and 0.1, 8 changed status.
+- A few large changes: HOG0058602, 0059807, 0068520 (not significant -> relaxed with k 0.19-0.36), HOG0066754 and 0060452 (strongly relaxed -> not significant), HOG0043408, 0048515, 0047291 (k shifts). HOG0066754 and 0060452 had 1 and 4 strong-flagged tips removed.
+- BUSTED-PH orb: 0 hits before and 0 after in these HOGs (matches the earlier 0/331). Comparative p <= 0.05: 95 -> 91 (9 lost, 5 gained). Spearman of comparative p 0.865.
+
+**Guess / unproven**
+- I did not re-run unpruned HOGs under identical settings, so the run-to-run noise of HyPhy optimisation is unknown. Part or all of the near-threshold flips could be optimisation noise rather than a contamination effect.
+- The large single-HOG changes (p of 1.0 or ~0 with extreme k, three with k 0.19-0.36 after pruning, original k 1.3583 with p 1.0 for HOG0068520) look like unstable fits (the runs use TOLERATE_NUMERICAL_ERRORS=1); they should be checked individually before being interpreted.
+- Overall reading: no sign of a systematic effect on RELAX or BUSTED-PH conclusions; at most a handful of individual HOGs (the large-change list above) deserve a closer look.
+- Not done: IQ-TREE re-inference on pruned alignments (prune before dedup); the two remaining RELAX tasks; the non-orb BUSTED-PH test.

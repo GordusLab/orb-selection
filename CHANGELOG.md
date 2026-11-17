@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-17 - Odds ratio test talk figures with suspect samples removed, 10k and 100k flagged runs
+
+### Added
+
+- `results/odds_ratio_test/Results_Nov17/`: 10,000- and 100,000-permulation odds ratio test runs with the strong + moderate contamination flags (`Run1_occ_30-88_10000x_10k_flags_strong_moderate`, `Run2_occ_30-88_100000x_100k_flags_strong_moderate`), so the 10k -> 100k -> 1M volcano plots all have the suspect samples treated as missing. The permulations are nested: the first 10,000 and 100,000 rows of `perms_tip_values_1M.csv` (the 100k file is identical to its first 100,000 rows). They pair with the existing 1M run `Results_Nov02/Run5_occ_30-88_1000000x_1M_flags_strong_moderate`; no pickles were saved.
+- `scripts/07_figures_tables/ort_permulation_animation.py`: click-through slides (numbered PNGs) showing the log odds ratio distribution of real permulated labelings with the bins of HOG0029234 (absent in every Linyphiid) and HOG0071799 highlighted, a running tally of permulations as extreme as the real labeling, and the 1M p-values. The shown permulations are stratified on whether the clade gene is as extreme as the real labeling (`--n-extreme`); the talk version shows 8 of 20, more than its p-value of 0.14 implies. It checks every frame for overlapping text and arrows.
+- `scripts/07_figures_tables/run_notebook_cells.py`: runs chosen cells of a notebook headlessly in the project kernel and writes the executed copy elsewhere, optionally redirecting the saved figures to another folder.
+
+### Changed
+
+- `Odds Ratio Test Plots.ipynb`: new section 4.0 (histograms of the real log odds ratios, without and with the Gaussian fit and permulation null); the 2.3 and 4.1 volcano plots use the flagged runs only, a red p-value floor line with the HOGs at the floor ringed, no counts under the titles and no special label for HOG0071799, dots in the light version of the panel colour (light steelblue for missing, light salmon for multicopy; the UpSet colours) except the significant corner (past the old cutoff and empirical p < 0.05), which is steelblue / salmon; `save()` takes `transparent=` and the volcano and histogram cells save on a white background; y-axis of the volcano plots goes to 7.6; saved outputs of the run cells are included.
+
 ## 2026-11-06 - RELAX permuted-label null result, strong + moderate phyloGLM flag null
 
 ### Added

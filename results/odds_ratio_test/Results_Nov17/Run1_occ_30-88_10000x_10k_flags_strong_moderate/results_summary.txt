@@ -1,0 +1,69 @@
+*********************** RESULTS ***********************
+
+Permulation test with 10000 repetitions
+Minimum occupancy: 30; max occupancy (loss): 88
+Analysis run on 2026-11-17 at 14:51:55
+Foreground list: /Users/calvin/orb-selection/data/orbweavers-list.txt
+Gene count file: /Users/calvin/orb-selection/data/N5.GeneCount.tsv
+Flagged cells: 7881 species-by-HOG cells in 2467 HOGs treated as contaminated (6968 left missing)
+Hierarchical orthogroup file: /Users/calvin/orb-selection/data/N5.tsv
+
+Total number of HOGs in node: 107986
+Total number of HOGs within occupancy threshold: 8150 (loss), 11953 (duplication)
+Total species: 98
+Foreground count: 41
+Background count: 57
+True mean, loss: -0.489
+True standard deviation, loss: 1.541
+True mean, duplication: 0.019
+True standard deviation, duplication: 1.097
+
+
+** Permulation P-VALUES ** 
+
+Probability that the null is true for MEAN, loss (alt=less): 0.138
+Probability that the null is true for MEAN, duplication (alt=greater): 0.431
+
+
+Permulated average mean, loss: -0.024
+Permulated average standard deviation, loss: 1.416
+Permulated average mean, duplication: 0.005
+Permulated average standard deviation, duplication: 1.068
+User-defined significance threshold: 0.05 (two-sided; 0.025 per direction)
+Permulation-derived alpha threshold, loss: [-2.800, 2.751]
+Permulation-derived alpha threshold, duplication: [-2.088, 2.097]
+
+Significant HOGs (all): 710
+
+  - loss_fg: 95
+
+  - loss_bg: 181
+
+  - dup_fg: 220
+
+  - dup_bg: 245
+
+
+Pre-specified directions (BH within each tail):
+  - loss more likely in non-orb-weavers: 8150 HOGs tested, 0 with q < 0.05, smallest q 0.2963 (N5.HOG0007693)
+  - duplication more likely in orb-weavers: 11953 HOGs tested, 0 with q < 0.05, smallest q 0.7470 (N5.HOG0007702)
+Significant HOGs, Uloborus_diversus present:
+
+  - loss_fg: 41
+
+  - loss_bg: 135
+
+  - dup_fg: 139
+
+  - dup_bg: 180
+
+Significant HOGs, using permulation p-values:
+
+  - loss_fg: 16
+
+  - loss_bg: 73
+
+  - dup_fg: 95
+
+  - dup_bg: 57
+

@@ -1,16 +1,16 @@
-pruned results available: RELAX 357  BUSTED-PH orb 358
-pruned BUSTED result values: {'ns': 358}
+pruned results available: RELAX 359  BUSTED-PH orb 359
+pruned BUSTED result values: {'ns': 359}
 
-=== RELAX ===  n = 357 ; tips removed per HOG: median 1.0 range 1 - 8
-significant original 144 pruned 141
+=== RELAX ===  n = 359 ; tips removed per HOG: median 1.0 range 1 - 8
+significant original 146 pruned 143
 pr_result     intensified   ns  relaxed
 relax_result                           
-intensified            88    8        1
+intensified            90    8        1
 ns                      5  202        6
 relaxed                 0    6       41
 lost significance: 14  gained: 11  changed direction: 1
-log2 k original vs pruned: Spearman 0.915  median |diff| 0.015
--log10 p: Spearman 0.88  median |diff| 0.135
+log2 k original vs pruned: Spearman 0.916  median |diff| 0.015
+-log10 p: Spearman 0.881  median |diff| 0.137
 HOGs with original p in (0.02,0.1): 41  of which sig status changed: 8
 status-changed HOGs: original p/k -> pruned p/k
                relax_p_value  relax_k     relax_result    pr_p    pr_k    pr_result  ret_strong  ret_sm  dseq
@@ -41,9 +41,9 @@ N5.HOG0067681         0.1189   0.8897  not significant  0.0358  0.8849      rela
 N5.HOG0068520         1.0000   1.3583  not significant  0.0000  0.2186      relaxed           3       3     3
 N5.HOG0069743         0.1028   0.8833  not significant  0.0493  0.8672      relaxed           1       1     1
 
-=== BUSTED-PH orb fg ===  n = 358
-hit original 0 pruned 0 ; comparative p<=0.05 original 95 pruned 91 ; lost 9 gained 5
-comparative p: Spearman 0.865
+=== BUSTED-PH orb fg ===  n = 359
+hit original 0 pruned 0 ; comparative p<=0.05 original 96 pruned 92 ; lost 9 gained 5
+comparative p: Spearman 0.866
                borb_shared_pval  pr_shared_p      borb_result pr_result  ret_strong  n_tips
 HOG                                                                                        
 N5.HOG0034643            1.0000       0.0023  not significant        ns           1      87

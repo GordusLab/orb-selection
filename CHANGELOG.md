@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-18 - Optional foreground list for permulation batches
+
+### Changed
+
+- `scripts/04_permulation_loss_dup/permulations_batch.R` and `permulations_batch_slurm.sh`: optional sixth argument / `FOREGROUND_FILE` setting for the orb-weaver list the permulations are built on (default `data/orbweavers-list.txt`), so a different phenotype labeling can be permulated (for a robustness check, together with `exclude_file` for dropping species from the tree). Described in the stage 04 README.
+
 ## 2026-11-17 - Odds ratio test talk figures with suspect samples removed, 10k and 100k flagged runs
 
 ### Added

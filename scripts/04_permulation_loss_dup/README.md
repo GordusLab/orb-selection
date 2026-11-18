@@ -107,7 +107,7 @@ Results are in `results/power_analysis/`.
 
 ## Permulation generation options
 
-`permulations_batch.R` takes `<batch_id> [ntrees] [outdir] [exclude_file] [seed_base]`. `exclude_file` lists extra species to drop from the tree (foreground species that are dropped no longer count),
+`permulations_batch.R` takes `<batch_id> [ntrees] [outdir] [exclude_file] [seed_base] [foreground_file]` (`foreground_file`: the orb-weaver list the permulations are built on, default `data/orbweavers-list.txt`; `permulations_batch_slurm.sh` passes it as `FOREGROUND_FILE`). `exclude_file` lists extra species to drop from the tree (foreground species that are dropped no longer count),
 and `seed_base` (seed = `seed_base + batch_id`) should differ between analyses. `combine_permulation_batches.py` has `--max-batch` and orders batches numerically.
 The species-removal analysis uses `data/hub_species_to_exclude.txt`, `data/orbweavers-list_nohubs.txt` and `data/non-orb-weavers-list_nohubs.txt`.
 

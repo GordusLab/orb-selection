@@ -3,11 +3,13 @@
 # and be concatenated afterwards with combine_permulation_batches.py.
 #
 # Usage: Rscript permulations_batch.R <batch_id> [ntrees=10000] [outdir=data/perms_batches] \
-#            [exclude_file=NONE] [seed_base=20260000]
+#            [exclude_file=NONE] [seed_base=20260000] [foreground_file=data/orbweavers-list.txt]
 #   exclude_file: text file with one species per line to drop from the tree (in addition to the default
 #                 excluded tips), e.g. for a robustness analysis without some species. Foreground species
 #                 that are dropped simply no longer count.
 #   seed_base:    the seed is seed_base + batch_id; use a different base for a different tree/analysis.
+#   foreground_file: orb-weaver list the permulations are built on (default data/orbweavers-list.txt); give another list
+#                 to permulate a different phenotype labeling, e.g. with one more species counted as an orb-weaver.
 
 library(RERconverge)
 library(here)
@@ -19,6 +21,7 @@ ntrees <- if (length(args) >= 2) as.integer(args[2]) else 10000L
 outdir <- if (length(args) >= 3) args[3] else here("data/perms_batches")
 exclude_file <- if (length(args) >= 4) args[4] else "NONE"
 seed_base <- if (length(args) >= 5) as.integer(args[5]) else 20260000L
+foreground_file <- if (length(args) >= 6) args[6] else here("data/orbweavers-list.txt")
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 # Defines run_categorical_permulations() and save_tip_values(); does not run the 10,000-tree default
@@ -36,7 +39,7 @@ if (exclude_file != "NONE") {
 }
 
 testCatPerms <- run_categorical_permulations(
-    foreground_list_filename = here("data/orbweavers-list.txt"),
+    foreground_list_filename = foreground_file,
     ntrees = ntrees,
     excluded_tips = excluded_tips
 )

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-19 - Talk figures: shuffle and permulation trees with the Linyphiid gene, volcano variants, filtered-presence tree
+
+### Changed
+
+- `Odds Ratio Test Plots.ipynb`: section 1.1 now draws two figures from one function (`permulation_figure`): real labeling, three shuffles, three permulations and the HOG0029234 presence/absence row at the bottom (`1_what_is_a_permulation.png`), and the same with the shuffles only (`1_what_is_a_shuffle.png`); both on the shared 4800 x 3000 canvas. Section 1.2 gets a tree of HOG0071799 after the suspect copies are removed, with the Deinopis copy (97.6% identical to the *Araneus inustus* copy) also dropped (`overlay_2b_tree_after_suspect_copies_removed.png`; picture only, the test results are unchanged). `results_two_directions` (4.1) takes `show_floor` and `show_correction`, and also saves `5_volcano_*_cutoff_only.png` (no floor line) and `5_volcano_*_no_lines.png` (no floor and no correction line, and no rings or large dots that depend on them). Saved outputs of the tree cells are included.
+
 ## 2026-11-18 - Optional foreground list for permulation batches
 
 ### Changed
